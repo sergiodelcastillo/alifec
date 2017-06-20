@@ -1,0 +1,36 @@
+class BattleRun
+!!!152443.java!!!	BattleRun(in op1 : int, in op2 : int, in nutri : int, in name1 : String, in name2 : String, in n : String)
+		if(op1 == op2)  
+			throw  new CreateBattleException("Opponent 1 and 2 can not be the same.");
+		if(nutri <0 || op1 < 0 || op2 < 0 )
+			throw  new CreateBattleException("Unknown error, can not create this battle.");
+		
+		this.ID1 = op1;
+		this.ID2 = op2;
+		this.nutrientID = nutri;
+		this.nutrient = n;
+		this.name1 = name1;
+		this.name2 = name2;
+!!!152571.java!!!	winnerName() : String
+		return (winnerID == ID1) ? name1 : name2;
+!!!152699.java!!!	energy1() : float
+       return (winnerID == ID1) ? winner_energy : 0.f;
+!!!152827.java!!!	energy2() : float
+       return (winnerID == ID2) ? winner_energy : 0.f;
+!!!152955.java!!!	toString() : String
+		return name1.toUpperCase() +
+				 " vs "+name2.toUpperCase() +
+				 " in " +nutrient.toUpperCase();
+!!!153083.java!!!	equals(inout ob : Object) : boolean
+		if(ob == null || !(ob instanceof BattleRun))
+			return false;
+		BattleRun b = (BattleRun) ob;
+		return nutrientID == b.nutrientID &&
+				 ID1 == b.ID1 &&
+				 ID2 == b.ID2 ;
+!!!153211.java!!!	hashCode() : int
+        int hash = 7;
+        hash = 11 * hash + this.nutrientID;
+        hash = 11 * hash + this.ID1;
+        hash = 11 * hash + this.ID2;
+        return hash;

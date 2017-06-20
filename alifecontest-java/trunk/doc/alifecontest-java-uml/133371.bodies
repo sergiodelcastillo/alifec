@@ -1,0 +1,30 @@
+class MiComboboxModel
+!!!156027.java!!!	MiComboboxModel(inout m : Hashtable<String, Integer>)
+		if(m == null || m.size() == 0)
+			System.out.println("error modelo nulo");
+
+		model = m;
+		
+      if(model.keys().hasMoreElements())
+			selected = model.keys().nextElement();
+!!!156155.java!!!	getSize() : int
+		return model.size();
+!!!156283.java!!!	getElementAt(in index : int) : Object
+		if(model.size() < index ) {
+			System.out.println("error:MiComboboxModel.getElementAt("+index+")");
+			return null;
+		}
+		
+		Enumeration<String> e = model.keys();
+		
+		for(int i = 0; i < index ; i++)
+			e.nextElement();
+			
+		return e.nextElement();
+!!!156411.java!!!	setSelectedItem(inout anItem : Object) : void
+		if(anItem != null)
+			selected = anItem.toString();
+!!!156539.java!!!	getSelectedItem() : Object
+		return selected;
+!!!156667.java!!!	remove(in colony : String) : boolean
+		return model.remove(colony) != null;

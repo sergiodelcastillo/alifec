@@ -1,0 +1,3 @@
+class CreateRankingException
+!!!132091.java!!!	CreateRankingException(in what : String)
+      super(what);

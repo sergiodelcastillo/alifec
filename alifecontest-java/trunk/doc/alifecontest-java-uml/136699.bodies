@@ -1,0 +1,9 @@
+class VerticalBar
+!!!171771.java!!!	getNutrient(inout p : Point) : float
+      boolean b = (p.x > Defs.RADIUS-5) && (p.x > Defs.RADIUS+5);
+      
+      return  (float) (b ? Defs.MAX_NUTRI / 4.2 : 0.0);
+!!!171899.java!!!	toString() : String
+		return "VerticalBar";
+!!!172027.java!!!	getID() : int
+		return ID;

@@ -1,0 +1,14 @@
+class Movx
+!!!128891.java!!!	move(inout mov : Movement) : void
+		mov.dx = new java.util.Random().nextInt(3)-1;
+      mov.dy = 0;
+//      System.out.println(Petri.getInstance().getDistNutri());
+!!!129019.java!!!	mitosis() : boolean
+       //never is duplicated
+        return false;
+!!!129147.java!!!	getName() : String
+      return "MovX";
+!!!129275.java!!!	getAuthor() : String
+        return "Author";
+!!!129403.java!!!	getAffiliation() : String
+		return "UTN-FRSF";

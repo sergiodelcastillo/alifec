@@ -1,0 +1,13 @@
+class Lattice
+!!!170619.java!!!	getNutrient(inout p : Point) : float
+      boolean b = ((p.x+p.y)% Defs.DIAMETER/4 <= 1) || 
+                  ((p.y-p.x)%Defs.DIAMETER/3 <= 1 );
+
+      return (float) ( b ? 1.277 * Defs.MAX_NUTRI * 
+                      (Defs.DIAMETER - p.x) * 
+                      (Defs.DIAMETER - p.y) / 
+                      (Defs.DIAMETER * Defs.DIAMETER) : 0.0);
+!!!170747.java!!!	toString() : String
+		return "Lattice";
+!!!170875.java!!!	getID() : int
+		return ID;

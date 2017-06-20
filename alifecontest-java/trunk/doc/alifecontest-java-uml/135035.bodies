@@ -1,0 +1,154 @@
+class TournamentUI
+!!!180347.java!!!	TournamentUI(inout cui : ContestUI)
+		setBorder(border);
+		this.father = cui;
+		this.tm		= cui.getContest().getTournamentManager();
+		this.tPanel = new Vector<TournamentPanel>(tm.size());
+		this.tScroll = new Vector<JScrollPane>(tm.size());
+
+		border.setTitle(tm.getSelected().NAME);
+		this.setLayout(new BorderLayout());
+		this.add(createMenuBar(), BorderLayout.SOUTH);
+		JScrollPane sp =  new JScrollPane();
+
+		for(int i = 0; i < tm.size(); i++){
+			Tournament t = tm.getTournament(i);
+			addTournament(t);
+		}
+		
+		add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);	
+		addColony.setEnabled(false);		
+!!!180475.java!!!	createMenuBar() : JMenuBar
+		JMenuBar menuBar = new JMenuBar();
+
+		addColony = new JButton(new ImageIcon("icons/openColony.png"));
+		delColony = new JButton(new ImageIcon("icons/deleteColony.png"));
+		//JButton firstTourn = new JButton("First");
+		prevTournament = new JButton(new ImageIcon("icons/prevTournament.png"));
+		nextTournament = new JButton(new ImageIcon("icons/nextTournament.png"));
+		ranking = new JButton(new ImageIcon("icons/ranking.png"));
+		addTournament = new JButton(new ImageIcon("icons/addTournament.png"));
+		delTournament = new JButton(new ImageIcon("icons/delTournament.png"));
+
+		// setTool Tip!
+		addColony.setToolTipText("Add Colony");
+		delColony.setToolTipText("Delete Colony");
+	//	firstTourn.setToolTipText("First Tournament");
+		prevTournament.setToolTipText("Previous Tournament");
+		nextTournament.setToolTipText("Next Microorganism");
+		ranking.setToolTipText("Ranking");
+		addTournament.setToolTipText("Add Tournament");
+		delTournament.setToolTipText("delete Tournament");
+
+      addColony.addActionListener(this);
+      delColony.addActionListener(this);
+      prevTournament.addActionListener(this);
+      nextTournament.addActionListener(this);
+      ranking.addActionListener(this);
+      addTournament.addActionListener(this);
+      delTournament.addActionListener(this);
+     
+		// -- crear los listeners!
+		
+		menuBar.add(addColony);
+		menuBar.add(delColony);
+		//menuBar.add(firstTourn);
+		menuBar.add(prevTournament);
+		menuBar.add(nextTournament);
+		menuBar.add(ranking);
+		menuBar.add(delTournament);
+		menuBar.add(addTournament);
+		return menuBar;
+!!!180603.java!!!	updateLast() : void
+		tPanel.lastElement().update();
+!!!180731.java!!!	updateAll() : void
+   	for (TournamentPanel tp  : tPanel)
+			tp.update();
+!!!180859.java!!!	actionPerformed(inout e : ActionEvent) : void
+      if(e.getSource().equals(addColony)){
+         JFileChooser fc = new JFileChooser();
+         fc.setFileFilter(new JavaFile());
+								
+				if(fc.showOpenDialog(father) == 0 && 
+					fc.getSelectedFile() != null &&
+					fc.getSelectedFile().isFile()){
+					try {
+/*						String name = fc.getSelectedFile().getName();
+						String path = fc.getSelectedFile().getPath();
+						String colony = father.getContest().getEnvironment().getOponents().lastElement().getName();
+						System.out.println("ver");
+						father.getContest().getEnvironment().addColony(name,"", path);
+						tm.lastElement().addColony(colony);
+						tPanel.lastElement().update();
+						father.repaint();*/
+					} catch (IllegalArgumentException ex) {
+                  Message.printErr(father, "Invalid File");
+               }
+            }
+      } else if(e.getSource().equals(delColony)) {
+         new DeleteColony(father).setVisible(true);		 
+      } else if(e.getSource().equals(prevTournament)) {
+         remove(tScroll.elementAt(tm.getSelectedID()));
+         tm.prev();
+         add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
+         border.setTitle(tm.getSelected().NAME);
+			updateUI();
+		} else if(e.getSource().equals(nextTournament)) {
+         remove(tScroll.elementAt(tm.getSelectedID()));
+         tm.next();
+         add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
+         border.setTitle(tm.getSelected().NAME);
+         updateUI();
+      } else if(e.getSource().equals(ranking)) {
+         new ContestReport(father);
+      } else if(e.getSource().equals(addTournament)) {
+         String txt = "Are you sure you want to add a new tournament?";
+							
+			if(Message.printYesNoCancel(father, txt)){
+				try {
+					father.getBattleUI().setHastTournament(true);
+					remove(tScroll.elementAt(tm.getSelectedID()));
+					tm.newTournament(father.getContest().getEnvironment().getNames());
+					addTournament(tm.lastElement());
+					father.getBattleUI().clear();
+					border.setTitle(tm.getSelected().NAME);
+					add(tScroll.elementAt(tm.getSelectedID()));
+					updateUI();
+				} catch(CreateTournamentException ex){
+					Message.printErr(father,"can't create a new Tournament");
+				}
+			}
+      } else if(e.getSource().equals(delTournament)) {
+         int selected = tm.getSelectedID();
+         String txt = "Are you sure you want to delete " + tm.getSelected().NAME + "?";
+
+			if(Message.printYesNoCancel(father, txt)){
+            boolean success = tm.size() > 1  && tm.removeSelected();
+          		
+            if( !success ) {
+               Message.printErr(father,"The tournament can't be removed");
+ 				} else {
+					if(tm.getSelected().equals(tm.lastElement())){
+						father.getBattleUI().setHastTournament(false);
+					}
+					remove(tScroll.elementAt(tm.getSelectedID()));
+					tPanel.remove(selected);
+					tScroll.remove(selected);
+					add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
+					border.setTitle(tm.getSelected().NAME);
+					updateUI();
+				}
+			}
+		}
+!!!180987.java!!!	addTournament(inout t : Tournament) : void
+      TournamentPanel tp = new TournamentPanel(father, t, getBackground());
+      tPanel.addElement(tp);
+		tScroll.addElement(new JScrollPane(tp));
+!!!181115.java!!!	penalice(in colonyName : String) : void
+			father.getContest().getEnvironment().delete(colonyName);
+	      tm.lastElement().penalice(colonyName);
+	      tPanel.lastElement().update();
+!!!181243.java!!!	delete(in colonyName : String) : boolean
+		boolean status = tm.lastElement().delete(colonyName);
+		tPanel.lastElement().update();
+		return status;

@@ -1,0 +1,37 @@
+class Petri
+!!!147195.java!!!	createInstance() : void
+		 if(INSTANCE == null)
+			 INSTANCE = new Petri();
+!!!147323.java!!!	getInstance() : Petri
+		  if(INSTANCE == null)
+			  createInstance();
+		  
+		  return INSTANCE;
+!!!147451.java!!!	getOponent(in x : int, in y : int) : int
+		 if(env.microorganism[x][y] == null)
+			 return -1;  // cant
+       
+		 return env.microorganism[x][y].id;
+!!!147579.java!!!	getEnergy(in x : int, in y : int) : float
+		 if(env.microorganism[x][y] == null)
+			 return 0.0f;
+		 return env.microorganism[x][y].ene;
+!!!147707.java!!!	getNutrient(in x : int, in y : int) : float
+		 return agar.getNutrient(x, y);
+!!!147835.java!!!	canCompite(in x1 : int, in y1 : int, in x2 : int, in y2 : int) : boolean
+
+        return env.microorganism[x1][y1] != null &&
+               env.microorganism[x2][y2] != null &&
+               env.microorganism[x1][y1] !=
+               env.microorganism[x2][y2];
+		  
+!!!147963.java!!!	canCompite(inout a : Point, inout b : Point) : boolean
+		  return canCompite(a.x, a.y, b.x, b.y);
+!!!148091.java!!!	inDish(in x : int, in y : int) : boolean
+		  return env.inDish(x, y);
+!!!148219.java!!!	inDish(inout p : Point) : boolean
+		  return env.inDish(p.x, p.y);
+!!!148347.java!!!	getDistNutri() : int
+			return env.getAgar().getDistNutri();
+!!!148475.java!!!	setEnvironment(inout e : Environment) : void
+	  	this.env = e;

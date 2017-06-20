@@ -1,0 +1,12 @@
+class Rings
+!!!171003.java!!!	getNutrient(inout p : Point) : float
+       int R = Defs.RADIUS;
+       
+       boolean b = ((p.x-R)*(p.x-R)+(p.y-R)*(p.y-R) >  40 ) && 
+                   ((p.x-R)*(p.x-R)+(p.y-R)*(p.y-R) < 115 );
+       
+      return (float) ( b ? Defs.MAX_NUTRI / 1.008 : 0);
+!!!171131.java!!!	toString() : String
+		return "Rings";
+!!!171259.java!!!	getID() : int
+		return ID;

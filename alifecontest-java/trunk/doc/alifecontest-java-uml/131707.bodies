@@ -1,0 +1,7 @@
+class EatRule
+!!!141563.java!!!	apply(inout c : Colony, inout enemy : Colony, inout mo : Cell, inout mov : Movement, inout mitosis : boolean) : boolean
+      if(mo == null)
+         throw  new IllegalArgumentException("Illegal Argument");
+      
+      mo.ene += env.agar.eat(mo.pos, 0.01f);
+      return false;

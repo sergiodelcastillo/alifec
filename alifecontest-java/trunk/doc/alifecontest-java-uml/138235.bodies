@@ -1,0 +1,78 @@
+class GUIdosD
+!!!181371.java!!!	GUIdosD(inout father : ContestUI, inout en : Environment, inout b : DefaultListModel)
+		 super(father, "ALifeContest-java", true);
+ 	
+		init(father);
+      getContentPane().add(centerPanel, BorderLayout.CENTER);
+      getContentPane().add(southPanel, BorderLayout.SOUTH);
+		addKeyListener(this);
+		
+      setDefaultCloseOperation(DISPOSE_ON_CLOSE);   
+
+		thread= new MiThread(father,this, centerPanel, b);
+      
+      pack();
+      setResizable(false);
+ 		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent we) {
+		      thread.interrupt();
+							      
+		      System.out.println("<<<<<falta stop>>>>>");
+//		      thread.stop();
+			}
+		}); 
+      thread.start();
+		thread.setPriority(Thread.MAX_PRIORITY);
+		setVisible(true);
+!!!181499.java!!!	init(inout f : ContestUI) : void
+      Rectangle r = new Rectangle ();
+		centerPanel = new JPanel();
+		southPanel = new JPanel();  
+		JLabel text = new JLabel("P:advance and pause;  ENTER:advance all;  Q: exit ", SwingConstants.LEFT);
+      
+      r.width =K*(2*rel.x+Defs.DIAMETER);
+      r.height= K*(2*rel.x+Defs.DIAMETER+26);
+      r.x = f.getX()+f.getWidth()-r.width;
+      r.y = f.getY();
+
+		centerPanel.setBackground(Color.BLACK);		    
+		centerPanel.setPreferredSize(new Dimension(K*(2*rel.x+Defs.DIAMETER), K*(2*rel.x+Defs.DIAMETER+26)));
+		setBounds(r);
+		centerPanel.addKeyListener(this);	
+		
+		southPanel.setLayout(new BorderLayout());	
+	//	southPanel.setBackground(Color.BLACK);		
+		southPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5)); 
+		southPanel.add(text);
+//		southPanel.setPreferredSize(new Dimension(K*(2*rel.x+Defs.DIAMETER), 20));
+!!!181755.java!!!	keyPressed(inout ev : KeyEvent) : void
+          
+      if(ev.getKeyCode()==KeyEvent.VK_Q){
+			this.thread.interrupt();
+         dispose();
+		}
+      
+		if(thread.isEnd()|| thread.isInterrupted()){
+			return;
+		}
+      
+      if(ev.getKeyCode()== KeyEvent.VK_P){
+			thread.setPause();
+			
+         if(thread.isAlive())
+				thread.avanzar();
+			else {
+            try {
+               thread.bloquear();
+            } catch (InterruptedException ex) {}
+         }
+      }
+    
+      if(ev.getKeyCode()==KeyEvent.VK_ENTER ||
+         ev.getKeyCode()==KeyEvent.VK_SPACE ){   
+			thread.setPlay();
+			  
+			if(thread.isAlive())
+				thread.avanzar();
+      }

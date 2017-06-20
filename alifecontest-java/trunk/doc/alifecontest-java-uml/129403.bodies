@@ -1,0 +1,3 @@
+class CreateColonyException
+!!!131835.java!!!	CreateColonyException(in s : String)
+        super(s);  	 

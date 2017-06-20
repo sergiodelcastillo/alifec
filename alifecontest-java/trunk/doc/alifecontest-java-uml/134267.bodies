@@ -1,0 +1,42 @@
+class OponentInfoManager
+!!!173691.java!!!	OponentInfoManager(in path : String)
+       this.path = path ;
+!!!173819.java!!!	add(in name : String, in author : String, in affiliation : String) : void
+        OponentInfo op = new OponentInfo(name, author, affiliation);
+        add(op, true);
+    
+!!!173947.java!!!	add(inout op : OponentInfo, inout write : boolean) : void
+         if(!oponents.contains(op)){
+            if(write) op.write(path+ File.separator+OPONENTS_FILE);
+            oponents.addElement(op);
+        }
+!!!174075.java!!!	del(in name : String) : void
+        for(OponentInfo op: oponents){
+           if(op.contain(name)){
+              op.del(path + File.separator + OPONENTS_FILE);
+              oponents.remove(op);
+
+           }
+        }
+!!!174203.java!!!	read() : void
+       try {
+         BufferedReader in = new BufferedReader(new FileReader(path+ File.separator+OPONENTS_FILE));
+          String line = "";
+
+          do {
+             try {
+               line = in.readLine();
+               OponentInfo op = new OponentInfo(line);
+               add(op, false);
+             } catch (IllegalArgumentException ex) {
+             }
+          } while(line != null);
+          
+          in.close();
+       } catch (FileNotFoundException ex){
+          FileWriter f = new FileWriter(path+ File.separator+OPONENTS_FILE);
+          f.close();
+          read();
+       }
+!!!174331.java!!!	getOponents() : OponentInfo
+       return this.oponents;

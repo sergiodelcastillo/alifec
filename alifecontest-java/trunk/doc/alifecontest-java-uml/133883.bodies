@@ -1,0 +1,20 @@
+class Compressor
+!!!157947.java!!!	addToZip(in source : String, inout des : ArrayList<String[]>) : void
+   	FileOutputStream dest = new FileOutputStream(source);
+      ZipOutputStream zo = new ZipOutputStream(new BufferedOutputStream(dest));
+
+      for(String[] fichero:des){
+      	FileInputStream im = new FileInputStream(fichero[0]);
+         ZipEntry ze = new ZipEntry(fichero[1]);
+         zo.putNextEntry(ze);
+
+         /*Lectura y escritura con un buffer del origen al archivo .zip*/
+		   BufferedInputStream origin = new BufferedInputStream(im, 500);
+	      byte[] data = new byte[500];
+         int count;
+         while( ( count = origin.read(data, 0, 500) ) != -1 ) {
+         	zo.write(data, 0, count);
+         }
+         origin.close();
+      }
+      zo.close();

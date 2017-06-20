@@ -1,0 +1,63 @@
+class CppColony
+!!!138491.java!!!	main(in args : String) : void
+		CppColony c = new CppColony(1, "Mimo");
+		System.out.println(c.size());
+		Movement m = c.move(10);
+		System.out.println(m.dx + "-" + m.dy) ;
+		System.out.println("name: "+ c.getName());
+		System.out.println("autor: "+ c.getAuthor());
+		System.out.println("aff: "+ c.getAffiliation());
+		System.out.println("size : " + c.size());
+		
+		 m = c.move(3);
+		System.out.println(m == null);
+		System.out.println("dx: " + m.dx);
+		System.out.println("dy: " + m.dy);
+!!!138619.java!!!	loadLibrary() : boolean
+		try {
+		   String os = System.getProperty("os.name").toLowerCase();
+		   
+		   if(os.contains("linux"))
+				System.loadLibrary("cppcolonies");
+			else
+				System.loadLibrary("libcppcolonies"); 
+				
+			return  true;
+		} catch (java.lang.UnsatisfiedLinkError ex){		
+			return false;
+		}
+!!!138747.java!!!	CppColony(in index : int, in colony_name : String)
+		super(index, colony_name);
+
+		if(!createColony(index, colony_name))
+			throw new ClassNotFoundException("Can't find:" + colony_name);
+			
+		createMO(new Point(-1,-1), 0.0f);
+
+		name = getName(index);
+		author = getAuthor(index);
+		affiliation = getAffiliation(index);
+
+		kill(index, 0);
+!!!139003.java!!!	createMO(inout pos : Point, in ene : float) : boolean
+      return createMO(id, pos.x, pos.y, ene);
+!!!139259.java!!!	kill(in indexMO : int) : void
+      if(!kill(id, indexMO))
+			System.out.println("error de eliminar MO");
+!!!139515.java!!!	end() : void
+      end(id);
+!!!139771.java!!!	move(in indexMO : int) : Movement
+   
+		return move(Petri.getInstance(), id, indexMO);
+!!!140027.java!!!	getAuthor() : String
+		return author;
+!!!140283.java!!!	getName() : String
+		return name;
+!!!140539.java!!!	getAffiliation() : String
+		return affiliation;
+!!!140795.java!!!	mitosis(in indexMO : int) : boolean
+      return mitosis(id, indexMO);
+!!!141051.java!!!	update(in indexMO : int, in ene : float, in x : int, in y : int) : void
+      update(id, indexMO, ene, x, y);
+!!!141307.java!!!	clearAll() : void
+	   clearAll(id);

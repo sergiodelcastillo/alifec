@@ -1,0 +1,7 @@
+class Famine
+!!!169851.java!!!	getNutrient(inout p : Point) : float
+      return (float) ( Defs.MAX_NUTRI / 11.062);
+!!!169979.java!!!	toString() : String
+		return "Famine";
+!!!170107.java!!!	getID() : int
+		return ID;

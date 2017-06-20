@@ -1,0 +1,65 @@
+class LogPrintter
+!!!168187.java!!!	print(in path : String, inout ex : Throwable) : boolean
+      String absolutePATH = path + File.separator+LOG_FOLDER;
+      File f = new File(absolutePATH);
+
+      if(!f.exists()) f.mkdir();
+
+      try {
+         String name = "log-"+new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date()).toString();
+
+         PrintWriter pw  = new PrintWriter(absolutePATH + File.separator + name);
+         ex.printStackTrace(pw);
+         pw.close();
+      } catch (FileNotFoundException ex1) {
+         return  false;
+      }
+      return true;
+!!!168315.java!!!	print(in mos_path : String, inout in : InputStream) : boolean
+    	if(in == null || mos_path == null || mos_path.equals("")){
+    		System.out.println("LOGPRINTTER... PARAMETROS NULOS..[ERROR]");
+    		return false;
+    	}
+    		
+   	File url = new File(mos_path);
+      String absolutePATH = url.getParent() + File.separator+LOG_FOLDER;
+      File f = new File(absolutePATH);
+      if(!f.exists()) f.mkdir();
+			  
+      try {
+         String fileName = "log-"+ getName(url.getName())+ "-";
+         fileName += new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date()).toString();
+		 
+         PrintWriter pw  = new PrintWriter(absolutePATH + File.separator + fileName);
+         InputStreamReader isr = new InputStreamReader(in);
+         BufferedReader br = new BufferedReader(isr);
+
+         String line;
+
+         while ((line = br.readLine()) != null) {
+            pw.println(line);
+         }
+         pw.close();
+         
+      } catch (FileNotFoundException ex) {
+         Logger.getLogger(LogPrintter.class.getName()).log(Level.SEVERE, null, ex);
+         return false;
+      } catch (IOException ex1) {
+         Logger.getLogger(LogPrintter.class.getName()).log(Level.SEVERE, null, ex1);
+         return  false;
+      }
+      return true;
+!!!168443.java!!!	getName(in packageName : String) : String
+		String name = new String (packageName);
+		return name.replace(".java", "").replace(".h", "").replace(".c", "");
+				
+!!!168571.java!!!	getErrorFile(in path : String, in name : String) : File
+   	File tmp = new File(path+ File.separator+LOG_FOLDER);
+      if(!tmp.exists()) tmp.mkdir();
+      
+		String url = path+File.separator+LOG_FOLDER+ File.separator ;
+		url += "log-"+name.replace(".java", "")+ "-";
+		url += new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date()).toString() ;
+      
+      File res = new File(url);
+		return res;

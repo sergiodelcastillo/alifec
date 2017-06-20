@@ -1,0 +1,66 @@
+class OponentInfo
+!!!172155.java!!!	OponentInfo(in n : String, in au : String, in af : String)
+        this.name = n;
+        this.author = au;
+        this.affiliation = af.toUpperCase();
+!!!172283.java!!!	OponentInfo(in line : String)
+       if(line == null || line.equalsIgnoreCase(""))
+          throw  new IllegalArgumentException("Ilegal Argument");
+
+       String [] info = line.trim().split(",");
+       
+       if(info.length != 3)
+          throw  new IllegalArgumentException("Ilegal Argument");
+
+       name = info[0];
+       author = info[1];
+       affiliation = info[2].toUpperCase();
+!!!172411.java!!!	write(in path : String) : void
+       FileWriter f = new FileWriter(path, true);
+       BufferedWriter bw = new BufferedWriter(f);
+       bw.append(toString()+"\n");
+       bw.close();
+       f.close();
+!!!172539.java!!!	del(in path : String) : void
+       new File(path).renameTo(new File(path+"_backup"));
+       
+       BufferedReader in = new BufferedReader(new FileReader(path+"_backup"));
+       BufferedWriter out = new BufferedWriter(new FileWriter(path));
+
+
+       String line = "", miLine = toString();
+       do {
+          line = in.readLine();
+          if(!miLine.equalsIgnoreCase(line))
+             out.append(line+"\n");
+       } while (line != null);
+!!!172667.java!!!	getAffiliation() : String
+        return affiliation.toUpperCase();
+!!!172795.java!!!	getAuthor() : String
+        return author;
+!!!172923.java!!!	getName() : String
+        return name;
+!!!173051.java!!!	toString() : String
+        return name + ","+author + ","+affiliation.toUpperCase()+",";
+!!!173179.java!!!	toVector() : Vector<Object>
+       Vector<Object> v = new Vector<Object>();
+       v.addElement(name);
+       v.addElement(author);
+       v.addElement(affiliation);
+       return v;
+!!!173307.java!!!	equals(inout obj : Object) : boolean
+        if(obj != null && obj instanceof OponentInfo){
+            OponentInfo o = (OponentInfo) obj;
+            return name.equalsIgnoreCase(o.name) &&
+                   author.equalsIgnoreCase(o.author)&&
+                   affiliation.equalsIgnoreCase(o.affiliation);
+        }
+        return false;
+!!!173435.java!!!	contain(in name : String) : boolean
+       return this.name.equalsIgnoreCase(name);
+!!!173563.java!!!	hashCode() : int
+        int hash = 5;
+        hash = 67 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 67 * hash + (this.author != null ? this.author.hashCode() : 0);
+        hash = 67 * hash + (this.affiliation != null ? this.affiliation.hashCode() : 0);
+        return hash;

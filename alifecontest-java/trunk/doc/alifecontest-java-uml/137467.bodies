@@ -1,0 +1,8 @@
+class TournamentFilter
+!!!177147.java!!!	accept(inout dir : File, in name : String) : boolean
+		if(name.toLowerCase().indexOf("tournament-") != 0 )
+			return false;
+		if(new File(dir.getAbsolutePath()+File.separator+name).isFile())
+			return false;
+		
+		return  true;

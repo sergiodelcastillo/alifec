@@ -1,0 +1,6 @@
+class DeadMicroorganismException
+!!!132475.java!!!	DeadMicroorganismException(in s : String, inout mo : Microorganism)
+        super(s);
+		  	 this.mo = mo;
+!!!132603.java!!!	getMO() : Microorganism
+		 return mo;

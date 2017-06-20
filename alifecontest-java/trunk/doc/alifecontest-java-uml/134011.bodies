@@ -1,0 +1,503 @@
+class Contest
+!!!158075.java!!!	Contest(in path : String)
+         init(path);
+!!!158203.java!!!	init(in path : String) : void
+      
+	   if(!readConfig(path))
+			throw new CreateContestException("Bad config file");
+
+		System.out.println("Name: " + NAME);
+
+		// compilar los MOs		
+		compile();
+      oponentsInfo = new OponentInfoManager(path+ File.separator+NAME);
+		environment = new Environment(getMOsPath());
+		tournaments = new TournamentManager(PATH + File.separator + NAME, mode);
+		
+		initTournament();
+		
+		oponentsInfo.read();
+		Enumeration<Integer> ids = environment.getOps().elements();
+		
+		while(ids. hasMoreElements() ){
+			Integer i = ids.nextElement();
+         oponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
+		}
+
+!!!158331.java!!!	initTournament() : void
+   	
+		if(tournaments.lastElement() != null && tournaments.lastElement().hasBackUpFile() && mode == COMPETITION_MODE){
+			String msg = "Se encontro un archivo de back up, . Seleccione una opcion:";
+			Object [] list = new Object[]{"Restore with back up file", "Delete back Up File"};
+		
+			String r = Message.printChoose(null, msg, list);
+			if(r == ""){
+				System.out.println("You must be select an option. Can not continue");
+				System.exit(0);
+			}
+			if(r.equals(list[0])){
+				for(String c: environment.getNames()){
+					tournaments.lastElement().addColony(c);
+				}
+			} else {
+				if(new File(tournaments.lastElement().getBattleManager().getPath()+ File.separator+"battles_backup.csv").delete()){
+					System.out.println("Delete back up file [OK]");
+				}else{
+					System.out.println("Delete back up file [FAIL]");
+				}
+				try {
+					tournaments.newTournament(environment.getNames());
+					System.out.println("Creating new Tournament [OK]");
+				}	catch(CreateTournamentException ex){
+					System.out.println("Creating new Tournament [FAIL]");
+				}				
+			}
+		
+		}else {
+			try {
+				tournaments.newTournament(environment.getNames());
+			}	catch(CreateTournamentException ex){
+				System.out.println("No se puede crear el tournament");
+			}
+		}
+
+!!!158459.java!!!	compile() : boolean
+		
+   	System.out.println("\nCompile JAVA Files") ;
+		try {
+			for(File f: AllFilter.get_files_java(getMOsPath())){
+	         
+		      if(compileMOsJava(f.getParent(), f.getName())){
+		      	System.out.println(f.getAbsolutePath() + " [OK]");
+		      } else {
+		        	System.err.println(f.getAbsolutePath() + " [FAIL]");
+				   Message.printErr(null, "Could not compile "+f.getName()+". For more details use make");
+		      }
+	   	}
+	   } catch(exceptions.CompilerException ex){
+	   	Message.printErr(null, ex.getMessage());
+	   }
+
+      System.out.println("\nCompile C++ Files");
+		System.out.print("Update C++ Files: ");
+		
+		if(updateTournamentCpp() &&	updateIncludes()){
+			System.out.println("[OK]");
+			System.out.print("Create libcppcolonies ");	      	
+
+			if(compileAllMOsCpp(getMOsPath())){
+				System.out.println("[OK]");
+			} else{
+				System.out.println("[FAIL]");
+			   Message.printErr(null, "Could not compile one o more microorganisms of C++. For more details use make");
+			}
+
+		} else
+			System.out.println("[FAIL]");
+      
+      return true;
+!!!158587.java!!!	compileMOsJava(in path : String, in name : String) : boolean
+   	try {
+			JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
+
+			if(javac == null)
+				throw new CompilerException("cannot find the java compiler.");
+
+			File out = LogPrintter.getErrorFile(path, name);		
+		   DataOutputStream err = new DataOutputStream(
+		                           new BufferedOutputStream(
+		                           new FileOutputStream(out)));
+		   int s = javac.run(null, null, err,"-d" , ".", path+File.separator+name);
+		   
+		   if(s==0)
+		      out.deleteOnExit();
+		   
+		   return s == 0;
+		} catch(java.io.FileNotFoundException ex){
+			System.out.println("Ocurrio algun error...compile java");
+			return false;
+		}
+
+!!!158715.java!!!	compileAllMOsCpp(in mospath : String) : boolean
+		try {
+
+         String os = System.getProperty("os.name").toLowerCase();
+         String[] console = {""};
+	
+         if(os.contains("linux")){
+/*				String com1 = "g++ -c -fPIC -Wall -Ilib -I\"" + mospath + "\" lib/Environment.cpp -o lib/MOs/Environment.o";
+				String com2 = "g++ -o lib/MOs/libcppcolonies.so -fPIC -Wall -shared -lm -Ilib -I\"" + 
+									mospath	+ "\"  lib/lib_CppColony.cpp lib/MOs/Environment.o";*/
+				String com = "g++ -o lib/MOs/libcppcolonies.so -fPIC -Wall -shared -lm -Ilib -I\"" + 
+									mospath	+ "\"  lib/lib_CppColony.cpp";
+
+            console = new String []{"/bin/bash", "-c", com};            
+      	}else if(os.contains("windows")){
+/*				String com1 = "g++ -c -Wall -Ilib -I\"" + mospath + "\" lib/Environment.cpp -o lib/MOs/Environment.o";
+				String com2 = "g++ -o lib/MOs/libcppcolonies.dll -Wl,--add-stdcall-alias -Wall -shared -lm -Ilib -I\"" + 
+									mospath + "\"  lib/lib_CppColony.cpp lib/MOs/Environment.o";*/
+				String com = "g++ -o lib/MOs/libcppcolonies.dll -Wl,--add-stdcall-alias -Wall -shared -lm -Ilib -I\"" + 
+									mospath + "\"  lib/lib_CppColony.cpp";
+									
+            console = new String []{"cmd.exe", "/C", com};
+         }
+
+         Process p = Runtime.getRuntime().exec(console);
+         p.waitFor();
+      
+         p.getErrorStream().close();
+         p.getInputStream().close();
+         p.getOutputStream().close();
+
+         return p.exitValue() == 0;
+      } catch (IOException ex) {
+         return false;
+      }catch ( InterruptedException e ) {
+         Thread.currentThread().interrupt();
+         return false;
+      }
+!!!158843.java!!!	updateTournamentCpp() : boolean
+ 		Vector<String> names = AllFilter.list_names_cpp(getMOsPath());
+		File env = new File("lib"+ File.separator+ "Environment.cpp");
+		try {
+			PrintWriter pw = new PrintWriter(env);
+
+			pw.println("");
+			pw.println("bool Environment::addColony(string name, int id){");
+			pw.println("	CppColony<Microorganism> *mo = NULL;");
+			pw.println("");
+
+			for(String name: names){
+				pw.println("	if(name == \"" + name +"\"){");
+				pw.println("	   mo = (CppColony < Microorganism > *) new CppColony< "+ name + " >(id);");
+				pw.println("   }");
+			}
+
+			pw.println("");
+			pw.println("	colonies.push_back(mo);");
+			pw.println("");
+			pw.println("   return mo != NULL;");
+			pw.println("}");
+			pw.println("");			pw.close();
+		} catch(java.io.FileNotFoundException ex){
+			return false;
+		}
+		return true;
+!!!158971.java!!!	updateIncludes() : boolean
+	 		Vector<String> files = AllFilter.list_file_cpp(getMOsPath());
+	 		
+		File includes = new File("lib"+ File.separator+ "includemos.h");
+		try {
+			PrintWriter pw = new PrintWriter(includes);
+
+			for(String n: files){
+				pw.println("#include \"" + n+ "\"");
+			}
+			pw.close();
+		} catch(java.io.FileNotFoundException ex){
+			return false;
+		}
+		return true;
+!!!159099.java!!!	existContest(in path : String, in name : String) : boolean
+   	if(path == null || path.equals("")){
+   		System.out.println("contest.existContest: path nulo!");
+   		return false;
+   	}
+   	if(name == null || name.equals("")){
+   		System.out.println("contest.existContest: name nulo!");
+   		return false;
+   	}
+   	   	
+      String contestName = path+File.separator + name;
+		String MOsFolder =  contestName + File.separator + MOS_FOLDER;
+		String ReportFolder = contestName + File.separator + REPORT_FOLDER;
+		String NutrientFile = contestName + File.separator + NUTRIENTS_FILE;
+
+      return   new File(contestName).exists() &&
+               new File(MOsFolder).exists() &&
+               new File(ReportFolder).exists() &&
+               new File(NutrientFile).exists();
+!!!159227.java!!!	existConfig(in path : String) : boolean
+		if(path == null || path.equals("")){
+   		System.out.println("contest.existConfig: path nulo!");
+   		return false;
+   	}
+   	   
+      String [] list = new File(path).list();
+		
+		for(String names: list) {
+			if(names.equals(CONFIG_FILE)){
+            return true;
+         }
+		}
+      return false;
+!!!159355.java!!!	getNutrients() : Hashtable<String, Integer>
+   	
+      Hashtable<String, Integer> nutri = new Hashtable<String, Integer>();
+		String url = PATH + File.separator +NAME+ File.separator + NUTRIENTS_FILE;
+
+      try{
+	      FileReader fr = new FileReader( url);
+	      BufferedReader in = new BufferedReader(fr);
+			String line = "";
+
+         while((line = in.readLine()) != null){
+         	line = line.trim();
+            if(!line.equals("")){
+            	Integer i = new Integer(line);
+
+			   	for(Nutrient n: Agar.nutrient){
+						if(i.intValue() == n.getID()) 
+							nutri.put(n.toString(), n.getID());;
+					}
+
+	            
+	         }
+         }
+	      fr.close();
+      } catch (IOException e){
+			System.out.print("File not Found: ");
+			System.out.println(url);
+		}
+
+      return nutri;
+!!!159483.java!!!	readConfig(in path : String) : boolean
+		 
+		// read the config File!
+		FileReader fr = new FileReader(path+File.separator+CONFIG_FILE);
+		BufferedReader br = new BufferedReader(fr);
+		String line;
+		
+		 while((line = br.readLine()) != null){
+			if(!line.equalsIgnoreCase("")){
+				String [] lineSplit = line.split("=");
+				if(lineSplit.length == 2){
+					if(lineSplit[1].equalsIgnoreCase("."))
+						set(lineSplit[0], path);
+					else 
+						set(lineSplit[0], lineSplit[1]);
+				}
+			}
+		}
+		return !NAME.equals("") && !PATH.equals("");
+!!!159611.java!!!	createConfig(in path : String, in contestName : String) : boolean
+      try {
+         FileWriter fr = new FileWriter(path+File.separator+CONFIG_FILE);
+         PrintWriter pw = new PrintWriter(fr);
+	  
+         pw.println("url=.");
+			pw.println("MOs=.");
+         pw.println("name="+contestName);
+         pw.println("mode=0");
+         pw.println("pause between battles=5");
+
+         fr.close();
+      } catch(IOException ex){
+         return false;
+      }
+      return true;
+!!!159739.java!!!	listContest(in path : String) : Vector<String>
+      String list [] = new File(path).list(new ContestFilter());
+      Vector<String> results = new Vector<String>();
+      for(String name :list){
+         if(existContest(path, name))
+            results.addElement(name);
+
+      }
+      return results;
+!!!159867.java!!!	createContest(in path : String, in name : String, inout examples : boolean) : boolean
+      PrintWriter pw = null;
+      try {
+         String contestName = path + File.separator + name;
+         String MOsFolder = contestName + File.separator + MOS_FOLDER;
+         String ReportFolder = contestName + File.separator + REPORT_FOLDER;
+         new File(contestName).mkdir();
+         new File(MOsFolder).mkdir();
+         new File(ReportFolder).mkdir();
+         File contestFile = new File(contestName + File.separator + NUTRIENTS_FILE);
+         pw = new PrintWriter(contestFile);
+
+         for (Nutrient n : Agar.nutrient)
+            pw.println(n.getID());
+         
+         pw.close();
+
+         // create examples ...!!
+         if(examples)
+	         CodeGenerator.generateExamples(MOsFolder);
+	         
+      } catch (IOException ex) {
+         Logger.getLogger(Contest.class.getName()).log(Level.SEVERE, null, ex);
+         return false;
+      }
+        return true;
+!!!159995.java!!!	createContest(in path : String, inout examples : boolean) : String
+		Calendar c = new GregorianCalendar(); 
+		String name = "Contest" + Integer.toString(c.get(Calendar.YEAR));
+
+      createContest(path, name, examples);
+		return name;
+!!!160123.java!!!	updateConfig(in path : String, in name : String, in mode : int, in pause : int) : void
+		if(PATH.equalsIgnoreCase(path) && 
+			NAME.equalsIgnoreCase(name) && 
+			mode == mode && 
+			pauseBetweenBattles == pause) {
+			//nothing to do!!
+			return;
+		}
+
+		String url = this.PATH+File.separator + CONFIG_FILE;
+		String lines[] = {"url="+path,"name="+name,
+                        "mode=" + mode, "pause between battles=" + pause};
+		
+		File oldConfig = new File(url);
+		oldConfig.renameTo(new File(url+"_backup"));
+		
+		File newConfig = new File(url);
+		PrintWriter pw = new PrintWriter(newConfig);
+		
+		for(String line :lines)
+			pw.println(line);
+		
+		pw.close();
+		
+		if(!NAME.equalsIgnoreCase(name)){
+			new File(PATH+File.separator+NAME).renameTo(
+			new File(PATH+File.separator+name));
+		}
+		
+		new File(url+"_backup")	.delete();	
+!!!160251.java!!!	updateNutrient(in nutrients : int) : void
+		String url = PATH + File.separator + NAME + File.separator + NUTRIENTS_FILE;
+
+	  new File(url).renameTo(new File(url+"_backup"));
+			   
+	  File newNutrient = new File(url);
+	  PrintWriter pw = new PrintWriter(newNutrient);
+			  
+	  for(int nutriID: nutrients)
+		  pw.println(nutriID);
+			  
+	  pw.close();
+			  
+	  new File(url+"_backup").delete();
+!!!160379.java!!!	setMode(in mode : int) : void
+	   this.mode = mode;
+		this.tournaments.setMode(mode);
+
+!!!160507.java!!!	set(in type : String, in option : String) : void
+		type = type.trim().toLowerCase();
+		option = option.trim();
+
+		if(type.equals("") || option.equals("")) 
+			return;
+
+		if(type.equals("url")){
+			PATH = option;
+		} else if(type.equals("mos")){
+//			MOS_FOLDER = option;
+		} else if(type.equals("name")){
+			NAME = option;
+		} else if(type.equals("mode")){
+			mode = new Integer(option).intValue();
+			if(mode != COMPETITION_MODE && mode != PROGRAMMER_MODE)
+				mode = PROGRAMMER_MODE;				
+		} else if(type.equals("pause between battles")){
+			int pause = new Integer(option).intValue();
+			if(pause > 0 && pause < 100000)
+				pauseBetweenBattles = pause;
+		}
+!!!160635.java!!!	getTournamentManager() : TournamentManager
+		return tournaments;
+!!!160763.java!!!	getEnvironment() : Environment
+		return environment;
+!!!160891.java!!!	getMOsPath() : String
+		return this.PATH + File.separator + NAME+ File.separator+ MOS_FOLDER;
+!!!161019.java!!!	getReportPath() : String
+		return this.PATH + File.separator + NAME+ File.separator+ REPORT_FOLDER;
+!!!161147.java!!!	getMode() : int
+		return mode;
+!!!161275.java!!!	getPath() : String
+		return PATH;
+!!!161403.java!!!	getName() : String
+		return NAME;
+!!!161531.java!!!	getTimeWait() : int
+		return pauseBetweenBattles;
+!!!161659.java!!!	isEmpty() : boolean
+		return NAME.equals(""); 
+!!!161787.java!!!	getInfo() : Vector<Vector<Object>>
+       
+      Hashtable<String, Integer> ranking = tournaments.getRanking();
+      Vector<Vector<Object>> info = new Vector<Vector<Object>>();
+
+      Tournament t = tournaments.lastElement();
+      Hashtable<String, Float> acumulated = t.getAcumulatedEnergy();
+      
+      for(OponentInfo oi : oponentsInfo.getOponents()){
+         boolean hayRanking = ranking.containsKey(oi.getName());
+         boolean hayAcumulated = acumulated.containsKey(oi.getName());
+         
+         Vector<Object> tmp = oi.toVector();
+         tmp.addElement(hayRanking?ranking.get(oi.getName()): new Integer(0));
+         tmp.addElement(hayAcumulated?acumulated.get(oi.getName()):new Float(0));
+        
+         info.addElement(tmp);
+      }
+
+      // ordenar por el indice 3 (puntos acumulados)!!
+      for(int i =0; i < info.size()-1; i++){
+         for(int j =0; j < info.size()-1-i; j++){
+            Integer a = ((Integer)info.elementAt(i).elementAt(3));
+            Integer b = (Integer) info.elementAt(i+1).elementAt(3);
+            if( a.compareTo(b)< 0){
+               Vector<Object> tmp = info.elementAt(i+1);
+               info.set(i+1, info.elementAt(i));
+               info.set(i, tmp);
+            }
+         }
+      }
+
+      return info;
+!!!161915.java!!!	createBackUp() : boolean
+      File f = new File(NAME+ File.separator+ BACKUP_FOLDER);
+      ArrayList<String []> files = new ArrayList<String[]>();
+      Stack<File> stack = new Stack<File>();
+      String zipname = "";
+		
+      if(!f.exists()) 
+      	if(!f.mkdirs())
+      		return false;
+      
+ 		zipname = f.getAbsolutePath() + File.separator + "backup-";
+ 		zipname += new SimpleDateFormat("yyyyMMdd-hhmmss").format(new Date()).toString();
+ 		zipname += ".zip";
+ 		
+ 		stack.add(new File(getMOsPath()));
+ 		
+		while(!stack.isEmpty()){
+      	File file = stack.pop();
+       	for(File tmp: file.listFiles(new AllFilter("", ""))){
+         	if(tmp.isFile()){
+         		String path = tmp.getAbsolutePath();
+         		String name =  path.replace(getMOsPath(), "");
+            	files.add(new String[]{path, name});
+          	} else{
+            	stack.push(tmp);
+          	}
+       	}
+    	}		
+		
+       
+      //generate the back up... 
+      try {
+			Compressor.addToZip(zipname, files);					  
+			return true;
+		} catch (java.io.IOException ex){
+			return false;
+		}
+!!!162043.java!!!	needRestore() : boolean
+   	
+
+   	if(tournaments.size() == 0) return false;
+   	
+   	return tournaments.lastElement().hasBackUpFile();
