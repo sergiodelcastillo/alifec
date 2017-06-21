@@ -11,7 +11,7 @@ import lib.Microorganism;
 import lib.Petri;
 import lib.Movement;
 
-public class Tactica1 extends Microorganism{
+public class Tactica1 extends Microorganism {
    Petri petri = Petri.getInstance();
    public void move(Movement mov) {
       mov.dx = mov.dy = 0;

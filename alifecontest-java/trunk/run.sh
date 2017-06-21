@@ -9,7 +9,7 @@ java -jar util.jar compile
 
 echo "ejecutando"
 cd ..
-java  -Djava.library.path="$(pwd)/lib/MOs" lib.contest.ContestUI
+java  -Djava.library.path="$(pwd)/lib/MOs" lib.ContestUI
 
 ## borrar los compilados y temporales
 cd util

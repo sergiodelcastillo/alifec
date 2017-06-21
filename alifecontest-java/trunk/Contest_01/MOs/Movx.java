@@ -9,7 +9,7 @@ package lib.MOs;
 import lib.Microorganism;
 import lib.Movement;
 
-public class Movx extends Microorganism{
+public class Movx extends Microorganism {
 
      // relative movement.
      public void move(Movement mov){

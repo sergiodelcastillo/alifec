@@ -2557,9 +2557,9 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.CreateRankingException;
-import exceptions.CreateTournamentException;
-import exceptions.CreateContestException;
+import CreateRankingException;
+import CreateTournamentException;
+import CreateContestException;
 import java.io.BufferedReader;
 import java.util.Stack;
 import java.io.File;
@@ -2581,16 +2581,16 @@ import java.util.logging.Logger;
 import lib.Agar;
 import lib.Colony;
 import lib.Environment;
-import lib.nutrients.Nutrient;
-import lib.oponentInfo.OponentInfo;
-import lib.oponentInfo.OponentInfoManager;
-import lib.tournament.Tournament;
-import lib.tournament.TournamentManager;
+import lib.Nutrient;
+import lib.OponentInfo;
+import lib.OponentInfoManager;
+import lib.Tournament;
+import lib.TournamentManager;
 import lib.AllFilter;
-import lib.contest.Message;
+import lib.Message;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import exceptions.CompilerException;
+import CompilerException;
 import java.io.DataOutputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -2619,7 +2619,7 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.CreateRankingException;
+import CreateRankingException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -2654,8 +2654,8 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.CreateTournamentException;
-import exceptions.CreateContestException;
+import CreateTournamentException;
+import CreateContestException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -2682,8 +2682,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import lib.battles.BattleUI;
-import lib.tournament.TournamentUI;
+import lib.BattleUI;
+import lib.TournamentUI;
 import java.awt.event.InputEvent;
 ${definition}"
       associated_classes
@@ -2773,7 +2773,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import java.util.Hashtable;
 import lib.Agar;
-import lib.nutrients.Nutrient;
+import lib.Nutrient;
 ${definition}"
       associated_classes
 	class_ref 135675 // DialogPreferences

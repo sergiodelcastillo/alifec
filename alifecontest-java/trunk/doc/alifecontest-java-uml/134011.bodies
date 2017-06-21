@@ -74,7 +74,7 @@ class Contest
 				   Message.printErr(null, "Could not compile "+f.getName()+". For more details use make");
 		      }
 	   	}
-	   } catch(exceptions.CompilerException ex){
+	   } catch(CompilerException ex){
 	   	Message.printErr(null, ex.getMessage());
 	   }
 
@@ -178,7 +178,8 @@ class Contest
 			pw.println("");
 			pw.println("   return mo != NULL;");
 			pw.println("}");
-			pw.println("");			pw.close();
+			pw.println("");
+			pw.close();
 		} catch(java.io.FileNotFoundException ex){
 			return false;
 		}

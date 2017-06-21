@@ -12,7 +12,7 @@ import lib.Microorganism;
 import lib.Movement;
 import lib.Petri;
 
-public class Tactica2 extends Microorganism{
+public class Tactica2 extends Microorganism {
 
     public void move(Movement mov) {
         Point p = new Point();
@@ -23,7 +23,7 @@ public class Tactica2 extends Microorganism{
                   p.y = pos.y+j;
                  if(Petri.getInstance().inDish(p) &&
                     Petri.getInstance().canCompite(pos, p)){
-                     if(Petri.getInstance().getEnergy(p.x, p.y) < ene-Defs.LESS_MOVE){
+                     if(Petri.getInstance().getEnergy(p.x, p.y) < ene- Defs.LESS_MOVE){
                         mov.dx = i;
                         mov.dy = j;
                         return;

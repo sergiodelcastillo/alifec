@@ -7,7 +7,7 @@
 
 @echo ejecutando
 @ cd ..
-@java  -Djava.library.path="%cd%\lib\MOs" lib.contest.ContestUI
+@java  -Djava.library.path="%cd%\lib\MOs" lib.ContestUI
 
 % borrar los compilados %
 @ cd util

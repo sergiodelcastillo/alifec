@@ -8,7 +8,7 @@ package lib.MOs;
 import lib.Microorganism;
 import lib.Movement;
 
-public class RandomColony extends Microorganism{
+public class RandomColony extends Microorganism {
 
     public void move(Movement mov) {
        // you should do this source code to not throw exceptions ;)

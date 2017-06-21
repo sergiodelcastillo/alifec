@@ -15,7 +15,7 @@ open
   
 package_ref 129019 // battles
   
-package_ref 129915 // src
+package_ref 129915 // simulation_ui
   classview_ref 130683 // vista
 end
 end

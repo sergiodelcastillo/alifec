@@ -2,6 +2,7 @@
   <library name="util">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/util/util.jar!/" />
+      <root url="file://$PROJECT_DIR$/Contest_01/MOs" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

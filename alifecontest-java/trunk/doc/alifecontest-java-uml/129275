@@ -1485,7 +1485,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import lib.Colony;
-import lib.contest.ContestUI;
+import lib.ContestUI;
 import lib.Environment;
 ${definition}"
       associated_classes
@@ -1510,7 +1510,7 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.CreateRankingException;
+import CreateRankingException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -1520,7 +1520,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lib.battles.BattleManager;
+import lib.BattleManager;
 ${definition}"
       associated_classes
 	class_ref 133243 // Tournament
@@ -1545,8 +1545,8 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.CreateRankingException;
-import exceptions.CreateTournamentException;
+import CreateRankingException;
+import CreateTournamentException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -1554,7 +1554,7 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
-import lib.contest.Contest;
+import lib.Contest;
 ${definition}"
       associated_classes
 	class_ref 134139 // TournamentManager
@@ -1589,7 +1589,7 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import lib.contest.ContestUI;
+import lib.ContestUI;
 ${definition}"
       associated_classes
 	class_ref 137595 // TournamentPanel
@@ -1603,7 +1603,7 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.CreateTournamentException;
+import CreateTournamentException;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -1617,10 +1617,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 import lib.Colony;
-import lib.contest.ContestReport;
-import lib.contest.Contest;
-import lib.contest.ContestUI;
-import lib.contest.Message;
+import lib.ContestReport;
+import lib.Contest;
+import lib.ContestUI;
+import lib.Message;
 import lib.Environment;
 ${definition}"
       associated_classes

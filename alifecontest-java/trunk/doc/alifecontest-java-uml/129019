@@ -1579,7 +1579,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lib.contest.Contest;
+import lib.Contest;
 ${definition}"
       associated_classes
 	class_ref 132603 // BattleManager
@@ -1591,7 +1591,7 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.CreateBattleException;
+import CreateBattleException;
 ${definition}"
       associated_classes
 	class_ref 131835 // BattleRun
@@ -1603,8 +1603,8 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.CreateBattleException;
-import exceptions.CreateContestException;
+import CreateBattleException;
+import CreateContestException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -1633,16 +1633,16 @@ import lib.Agar;
 import lib.Colony;
 import lib.JavaColony;
 import lib.Environment;
-import lib.contest.Contest;
-import lib.contest.ContestUI;
-import lib.contest.Message;
-import lib.nutrients.Nutrient;
-import src.GUIdosD;
+import lib.Contest;
+import lib.ContestUI;
+import lib.Message;
+import lib.Nutrient;
+import GUIdosD;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import javax.swing.DefaultListModel;
-import lib.battles.MiComboboxModel;
-import lib.tournament.Tournament;
+import lib.MiComboboxModel;
+import lib.Tournament;
 ${definition}"
       associated_classes
 	class_ref 132731 // BattleUI

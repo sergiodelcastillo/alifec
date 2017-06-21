@@ -1,5 +1,5 @@
 format 58
-"src" // alifecontest-java-model::src
+"simulation_ui" // alifecontest-java-model::simulation_ui
   revision 3
   modified_by 123 "yeyo"
   // class settings
@@ -26,9 +26,9 @@ format 58
   package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default show_stereotype_properties default
   
-  java_dir "src"
-  java_package "src"
-  classview 129403 "src"
+  java_dir "simulation_ui"
+  java_package "simulation_ui"
+  classview 129403 "simulation_ui"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_multiplicity default show_members_initialization default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default show_stereotype_properties default
     //collaboration diagram settings
@@ -794,7 +794,7 @@ ${members}}
     end
   end
 
-  deploymentview 129147 "src"
+  deploymentview 129147 "simulation_ui"
     //deployment diagram settings
     package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default show_stereotype_properties default
@@ -814,8 +814,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import lib.*;
-import lib.battles.BattleRun;
-import lib.contest.ContestUI;
+import lib.BattleRun;
+import lib.ContestUI;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.DefaultListModel;
@@ -833,7 +833,7 @@ ${definition}"
       java_src "${comment}
 ${package}
 ${imports}
-import exceptions.MoveMicroorganismException;
+import MoveMicroorganismException;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -849,11 +849,11 @@ import javax.swing.JPanel;
 import lib.Defs;
 import lib.Colony;
 import lib.Environment;
-import lib.battles.BattleRun;
-import lib.battles.BattleUI;
-import lib.contest.ContestUI;
-import lib.contest.LogPrintter;
-import lib.contest.Message;
+import lib.BattleRun;
+import lib.BattleUI;
+import lib.ContestUI;
+import lib.LogPrintter;
+import lib.Message;
 import javax.swing.DefaultListModel;
 ${definition}"
       associated_classes
