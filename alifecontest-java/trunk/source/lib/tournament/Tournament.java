@@ -96,7 +96,7 @@ public class Tournament implements Comparable<Tournament> {
 
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
         Hashtable<String, Integer> h = new Hashtable<String, Integer>();
-        Hashtable<String, Float> acumulated = getAcumulatedEnergy();
+        Hashtable<String, Float> acumulated = getAccumulatedEnergy();
         int MAX = 3;
         int size = MAX > acumulated.size() ? acumulated.size() : MAX;
 
@@ -140,7 +140,7 @@ public class Tournament implements Comparable<Tournament> {
     }
 
     
-    public Hashtable<String, Float> getAcumulatedEnergy() {
+    public Hashtable<String, Float> getAccumulatedEnergy() {
         Hashtable<String, Float> table = battleManager.getResults();
 
         for (String c : colonies) {
@@ -168,10 +168,6 @@ public class Tournament implements Comparable<Tournament> {
     public boolean read() {
         try {
             battleManager.read();
-        } catch (FileNotFoundException ex) {
-            System.out.println("Tournamenent.read()");
-            Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         } catch (IOException ex) {
             System.out.println("Tournamenent.read()");
             Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);

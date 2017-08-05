@@ -1,6 +1,6 @@
 package lib; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @author Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 
 import java.awt.*;
@@ -14,14 +14,15 @@ public class CppColony extends Colony {
         try {
             String os = System.getProperty("os.name").toLowerCase();
 
+            //add the current path to java library path
+            try {
+                addLibraryPath(path);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            //load the library according to the os
             if (os.contains("linux")) {
-                try {
-                    addLibraryPath(path);
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
-
-
                 System.loadLibrary("cppcolonies");
             } else
                 System.loadLibrary("libcppcolonies");
@@ -38,25 +39,27 @@ public class CppColony extends Colony {
      * @param pathToAdd the path to add
      * @throws Exception
      */
-    private static void addLibraryPath(String pathToAdd) throws NoSuchFieldException, IllegalAccessException {
+    private static void addLibraryPath(String pathToAdd)
+            throws NoSuchFieldException, IllegalAccessException {
         final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
         usrPathsField.setAccessible(true);
 
         //get array of paths
-        final String[] paths = (String[])usrPathsField.get(null);
+        final String[] paths = (String[]) usrPathsField.get(null);
 
         //check if the path to add is already present
-        for(String path : paths) {
-            if(path.equals(pathToAdd)) {
+        for (String path : paths) {
+            if (path.equals(pathToAdd)) {
                 return;
             }
         }
 
         //add the new path
         final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
-        newPaths[newPaths.length-1] = pathToAdd;
+        newPaths[newPaths.length - 1] = pathToAdd;
         usrPathsField.set(null, newPaths);
     }
+
     /**
      * Sets the java library path to the specified path
      *

@@ -67,7 +67,7 @@ public class BattleUI extends JPanel implements ActionListener {
         }
     }
 
-    void restoreBattles(Vector<String[]> backup) {
+    private void restoreBattles(Vector<String[]> backup) {
         if (backup.size() == 0) {
             Tournament t = father.getContest().getTournamentManager().lastElement();
             String url = t.getBattleManager().getPath() + File.separator + BattleManager.BACKUP_FILE;
@@ -140,12 +140,10 @@ public class BattleUI extends JPanel implements ActionListener {
             }
         }
 
-        for (String[] d : todelete) {
-            backup.remove(d);
-        }
+        backup.removeAll(todelete);
     }
 
-    Vector<String[]> readBattles(String name) {
+    private Vector<String[]> readBattles(String name) {
         Vector<String[]> res = new Vector<String[]>();
         Tournament t = father.getContest().getTournamentManager().lastElement();
         String url = t.getBattleManager().getPath() + File.separator + name;

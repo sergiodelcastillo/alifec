@@ -1,6 +1,11 @@
-package lib; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
+package lib;
+
+/**
+ * @author: Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
+ * <p>
+ * The Movement class represents the relative movement which can be
+ * performed by a Microorganism.
  */
 
 public class Movement {

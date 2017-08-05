@@ -28,12 +28,12 @@ public class Battle {
 
     public Battle(String line) {
         if (line == null || line.equalsIgnoreCase(""))
-            throw new IllegalArgumentException("Illegal Argument");
+            throw new IllegalArgumentException("The line ("+ line+") is empty");
 
         String[] tmp = line.split(",");
 
         if (tmp.length != 5)
-            throw new IllegalArgumentException("Illegal Argument");
+            throw new IllegalArgumentException("The line (" + line + ") should have 5 columns");
 
         name_1 = tmp[0];
         name_2 = tmp[1];

@@ -8,18 +8,18 @@ package lib.oponentInfo;
 import java.io.*;
 import java.util.Vector;
 
-public class OponentInfo {
-    String name = "";
-    String author = "";
-    String affiliation = "";
+public class OpponentInfo {
+    private String name = "";
+    private String author = "";
+    private String affiliation = "";
 
-    public OponentInfo(String n, String au, String af) {
+    public OpponentInfo(String n, String au, String af) {
         this.name = n;
         this.author = au;
         this.affiliation = af.toUpperCase();
     }
 
-    public OponentInfo(String line) {
+    public OpponentInfo(String line) {
         if (line == null || line.equalsIgnoreCase(""))
             throw new IllegalArgumentException("Illegal Argument");
 
@@ -83,8 +83,8 @@ public class OponentInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof OponentInfo) {
-            OponentInfo o = (OponentInfo) obj;
+        if (obj != null && obj instanceof OpponentInfo) {
+            OpponentInfo o = (OpponentInfo) obj;
             return name.equalsIgnoreCase(o.name) &&
                     author.equalsIgnoreCase(o.author) &&
                     affiliation.equalsIgnoreCase(o.affiliation);

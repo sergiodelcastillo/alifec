@@ -1,6 +1,6 @@
 package lib; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @author: Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 
 import java.awt.Point;
@@ -8,12 +8,11 @@ import java.awt.Point;
 public abstract class Microorganism {
     private static final long serialVersionUID = 0L;
     /**
-     * Posicion absoluta del Microorganismo en
-     * el entorno .
+     * Absolute position of the microorganism
      */
     public Point pos;
     /**
-     * energia actual del microorganismo.
+     * Current energy of the microorganism
      */
     public float ene;
 

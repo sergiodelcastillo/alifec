@@ -16,13 +16,12 @@ public class InclinedPlane extends Nutrient {
     public static final int ID = 1;
 
     /**
-     * Genera una distribucion de nutrientes en forma de un plano inclinado.
+     * It generates the Inclined Plane nutrient distribution
      */
     @Override
     public float getNutrient(Point p) {
         return (float) (Defs.MAX_NUTRI * (Defs.DIAMETER - p.x) * (Defs.DIAMETER - p.y) /
                 (Defs.DIAMETER * Defs.DIAMETER) / 2.875);
-
     }
 
 

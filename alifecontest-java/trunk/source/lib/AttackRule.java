@@ -1,6 +1,6 @@
 package lib; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @author: Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 
 public class AttackRule extends ColonyRule {
@@ -13,7 +13,7 @@ public class AttackRule extends ColonyRule {
         int x = mo.pos.x + mov.dx;
         int y = mo.pos.y + mov.dy;
 
-        if (!env.inDish(x, y) || !canCompite(mo.pos, x, y))
+        if (!env.inDish(x, y) || !canCompete(mo.pos, x, y))
             return false;
 
         Cell enemyMO = env.microorganism[x][y];
@@ -51,7 +51,7 @@ public class AttackRule extends ColonyRule {
         return false;
     }
 
-    private final boolean canCompite(java.awt.Point a, int x, int y) {
+    private boolean canCompete(java.awt.Point a, int x, int y) {
         return env.microorganism[a.x][a.y] != null &&
                 env.microorganism[x][y] != null &&
                 env.microorganism[a.x][a.y].id != env.microorganism[x][y].id;

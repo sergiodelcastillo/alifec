@@ -104,7 +104,7 @@ public class TournamentPanel extends JList {
         synchronized (Tournament.class) {
 
             DefaultListModel model = new DefaultListModel();
-            Hashtable<String, Float> h = current.getAcumulatedEnergy();
+            Hashtable<String, Float> h = current.getAccumulatedEnergy();
             int index = 0;
 
             for (Iterator<String> i = h.keySet().iterator(); i.hasNext(); index++) {

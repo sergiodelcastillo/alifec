@@ -1,6 +1,6 @@
 package lib; /**
  * @author Sergio Del Castillo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 
 import exceptions.MoveMicroorganismException;
@@ -76,7 +76,7 @@ public class Environment {
         System.out.println("\nLoading C++ Colonies ");
         System.out.print("Loading C++ Library ");
 ///"/home/yeyo/work/alifec_new/alifec/alifecontest-java/trunk/Contest_01/MOs/lib/MOs/"
-        if (CppColony.loadLibrary(path+ File.separator+"lib" + File.separator + "MOs" + File.separator)) {
+        if (CppColony.loadLibrary(path + File.separator + "lib" + File.separator + "MOs" + File.separator)) {
             System.out.println("[OK]");
 
             for (String name : AllFilter.list_names_cpp(path)) {
@@ -138,7 +138,7 @@ public class Environment {
 
         c.clear();
 
-        for (int index = 0; index < Defs.MO_INITIAL;) {
+        for (int index = 0; index < Defs.MO_INITIAL; ) {
             Point p = new Point(r.nextInt(Defs.DIAMETER), r.nextInt(Defs.DIAMETER));
 
             if (createInstance(p, Defs.E_INITIAL, c.id))
@@ -198,7 +198,7 @@ public class Environment {
 
         if (new Random().nextInt(4) > 1)
             agar.moveRandom();
-        
+
         return updateStatus();
     }
 
@@ -208,7 +208,7 @@ public class Environment {
      * @return true if the battles was finished, false otherwise.
      */
     private boolean updateStatus() {
-        if (c1 == null || c2 == null){
+        if (c1 == null || c2 == null) {
             return true;
         }
 
@@ -226,7 +226,6 @@ public class Environment {
 
         return false;
     }
-
 
 
     public boolean inDish(int x, int y) {
@@ -255,7 +254,7 @@ public class Environment {
         if (!inDish(x, y)) {
             return false;
         }
-        
+
         Cell mo = microorganism[x][y];
 
         microorganism[x][y] = null;

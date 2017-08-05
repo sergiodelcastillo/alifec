@@ -14,14 +14,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GUIdosD extends JDialog {
     static int K = 8;
     static Point rel = new Point(2, 2);
-    java.util.concurrent.atomic.AtomicReference<JPanel> centerPanel = new java.util.concurrent.atomic.AtomicReference<JPanel>();
-    java.util.concurrent.atomic.AtomicReference<JPanel> southPanel = new java.util.concurrent.atomic.AtomicReference<JPanel>();
-/*   JPanel centerPanel;
-   JPanel southPanel;		*/
+    AtomicReference<JPanel> centerPanel = new AtomicReference<JPanel>();
+    AtomicReference<JPanel> southPanel = new AtomicReference<JPanel>();
+
     final MiThread thread;
 
     /**
@@ -100,10 +100,10 @@ public class GUIdosD extends JDialog {
         setBounds(r);
 
         southPanel.get().setLayout(new BorderLayout());
-        //	southPanel.setBackground(Color.BLACK);
+
         southPanel.get().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         southPanel.get().add(text);
-//		southPanel.setPreferredSize(new Dimension(K*(2*rel.x+Defs.DIAMETER), 20));
+
     }
 
 }

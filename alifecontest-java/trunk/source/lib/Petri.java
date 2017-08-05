@@ -1,6 +1,6 @@
 package lib; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @author: Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 
 import java.awt.*;
@@ -55,7 +55,7 @@ public class Petri {
      * @param y
      * @return  return the  Colony identifier in the position x,y. return -1 if the position is empty.
      */
-    public int getOponent(int x, int y) {
+    public int getOpponent(int x, int y) {
         if (env.microorganism[x][y] == null)
             return -1;  // cant
 

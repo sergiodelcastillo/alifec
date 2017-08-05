@@ -1,9 +1,9 @@
-package lib; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 
+package lib;
 /**
+ * @author Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
+ *
  * This class define the important constant to alifec.
  * A player can use them.
  */

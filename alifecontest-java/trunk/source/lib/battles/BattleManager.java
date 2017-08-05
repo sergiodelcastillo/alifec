@@ -85,8 +85,7 @@ public class BattleManager {
             }
         }
 
-        for (Battle b : tmp)
-            battles.remove(b);
+        battles.removeAll(tmp);
     }
 
     public boolean penalice(String name) {
@@ -103,7 +102,7 @@ public class BattleManager {
                 }
             }
 
-            for (Battle b : tmp) battles.remove(b);
+            battles.removeAll(tmp);
         } catch (java.io.FileNotFoundException ex) {
             System.err.println("BattleManager.penalice()--> FIleNotFoundException");
             return false;
@@ -150,7 +149,7 @@ public class BattleManager {
         try {
             return max(getResults().values());
         } catch (java.util.NoSuchElementException ex) {
-            return new Float(0);
+            return 0f;
         }
     }
 
@@ -176,9 +175,6 @@ public class BattleManager {
             for (Battle b : battles) {
                 b.save(getBattlesFileName());
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BattleManager.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         } catch (IOException ex) {
             Logger.getLogger(BattleManager.class.getName()).log(Level.SEVERE, null, ex);
             return false;

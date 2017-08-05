@@ -13,8 +13,8 @@ import lib.Agar;
 import lib.AllFilter;
 import lib.Environment;
 import lib.nutrients.Nutrient;
-import lib.oponentInfo.OponentInfo;
-import lib.oponentInfo.OponentInfoManager;
+import lib.oponentInfo.OpponentInfo;
+import lib.oponentInfo.OpponentInfoManager;
 import lib.tournament.Tournament;
 import lib.tournament.TournamentManager;
 
@@ -76,7 +76,7 @@ public class Contest {
     /**
      * info of all oponents
      */
-    private OponentInfoManager oponentsInfo;
+    private OpponentInfoManager oponentsInfo;
 
     /**
      * Absolute path of Contest.
@@ -112,7 +112,7 @@ public class Contest {
 
         // compile all MOs
         compile();
-        oponentsInfo = new OponentInfoManager(path + File.separator + NAME);
+        oponentsInfo = new OpponentInfoManager(path + File.separator + NAME);
         environment = new Environment(getMOsPath());
         tournaments = new TournamentManager(PATH + File.separator + NAME, mode);
 
@@ -127,7 +127,7 @@ public class Contest {
         }
     }
 
-    void initTournament() {
+    private void initTournament() {
         if (tournaments.lastElement() != null && tournaments.lastElement().hasBackUpFile() && mode == COMPETITION_MODE) {
             Vector<String> conflict = new Vector<String>();
 
@@ -154,7 +154,7 @@ public class Contest {
         }
     }
 
-    public void delete_backup() {
+    void delete_backup() {
         String p = tournaments.lastElement().getBattleManager().getPath();
 
         if (new File(p + File.separator + "battles_backup.csv").delete()) {
@@ -170,7 +170,7 @@ public class Contest {
         }
     }
 
-    boolean get_conflict(Vector<String> c) {
+    private boolean get_conflict(Vector<String> c) {
         Vector<String[]> battles = new Vector<String[]>();
         Vector<String[]> backup = new Vector<String[]>();
         String t = PATH + File.separator + NAME + File.separator + tournaments.lastElement().NAME;
@@ -315,6 +315,7 @@ public class Contest {
      * @return true if is successfully
      */
     private boolean compileAllMOsCpp(String mospath) {
+        //@Todo Use a file with the pattern instead of hiring it in the source code
         try {
 
             String os = System.getProperty("os.name").toLowerCase();
@@ -746,9 +747,9 @@ public class Contest {
         Vector<Vector<Object>> info = new Vector<Vector<Object>>();
 
         Tournament t = tournaments.lastElement();
-        Hashtable<String, Float> acumulated = t.getAcumulatedEnergy();
+        Hashtable<String, Float> acumulated = t.getAccumulatedEnergy();
 
-        for (OponentInfo oi : oponentsInfo.getOponents()) {
+        for (OpponentInfo oi : oponentsInfo.getOpponents()) {
             boolean hayRanking = ranking.containsKey(oi.getName());
             boolean hayAcumulated = acumulated.containsKey(oi.getName());
 

@@ -2,119 +2,44 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="4affb18c-b86c-498b-bf12-810bfc070833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/unnamed.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/delete-cntst-old/MOs/Movx.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/delete-cntst-old/MOs/Movx.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/delete-cntst-old/MOs/RandomColony.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/delete-cntst-old/MOs/Tactica1.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/delete-cntst-old/MOs/Tactica2.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/delete-cntst-old/competitors" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/delete-cntst-old/nutrients" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Fast2DThread.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Fast2DUI.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/AgarTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/AttackRuleTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/ColonyTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/EatRuleTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/EnvironmentTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/JavaColonyTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/LifeRuleTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/LoveRuleTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/MicroorganismTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/MoveRuleTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/MovementTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/lib/PetriTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/testing/testing.iml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/CompilerException.java" afterPath="$PROJECT_DIR$/source/exceptions/CompilerException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/CreateBattleException.java" afterPath="$PROJECT_DIR$/source/exceptions/CreateBattleException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/CreateColonyException.java" afterPath="$PROJECT_DIR$/source/exceptions/CreateColonyException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/CreateContestException.java" afterPath="$PROJECT_DIR$/source/exceptions/CreateContestException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/CreateRankingException.java" afterPath="$PROJECT_DIR$/source/exceptions/CreateRankingException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/CreateTournamentException.java" afterPath="$PROJECT_DIR$/source/exceptions/CreateTournamentException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/DeadColonyException.java" afterPath="$PROJECT_DIR$/source/exceptions/DeadColonyException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/DeadMicroorganismException.java" afterPath="$PROJECT_DIR$/source/exceptions/DeadMicroorganismException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/exceptions/MoveMicroorganismException.java" afterPath="$PROJECT_DIR$/source/exceptions/MoveMicroorganismException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Agar.java" afterPath="$PROJECT_DIR$/source/lib/Agar.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/AllFilter.java" afterPath="$PROJECT_DIR$/source/lib/AllFilter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/AttackRule.java" afterPath="$PROJECT_DIR$/source/lib/AttackRule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Cell.java" afterPath="$PROJECT_DIR$/source/lib/Cell.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Colony.java" afterPath="$PROJECT_DIR$/source/lib/Colony.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/ColonyRule.java" afterPath="$PROJECT_DIR$/source/lib/ColonyRule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/CppColony.h" afterPath="$PROJECT_DIR$/cpp/CppColony.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/CppColony.java" afterPath="$PROJECT_DIR$/source/lib/CppColony.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Data.h" afterPath="$PROJECT_DIR$/cpp/Data.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Defs.h" afterPath="$PROJECT_DIR$/cpp/Defs.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Defs.java" afterPath="$PROJECT_DIR$/source/lib/Defs.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/EatRule.java" afterPath="$PROJECT_DIR$/source/lib/EatRule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Environment.cpp" afterPath="$PROJECT_DIR$/cpp/Environment.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Environment.h" afterPath="$PROJECT_DIR$/cpp/Environment.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Environment.java" afterPath="$PROJECT_DIR$/source/lib/Environment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/JavaColony.java" afterPath="$PROJECT_DIR$/source/lib/JavaColony.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/LifeRule.java" afterPath="$PROJECT_DIR$/source/lib/LifeRule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/LoveRule.java" afterPath="$PROJECT_DIR$/source/lib/LoveRule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Microorganism.h" afterPath="$PROJECT_DIR$/cpp/Microorganism.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Microorganism.java" afterPath="$PROJECT_DIR$/source/lib/Microorganism.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/MoveRule.java" afterPath="$PROJECT_DIR$/source/lib/MoveRule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Movement.java" afterPath="$PROJECT_DIR$/source/lib/Movement.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Petri.h" afterPath="$PROJECT_DIR$/cpp/Petri.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/Petri.java" afterPath="$PROJECT_DIR$/source/lib/Petri.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/battles/Battle.java" afterPath="$PROJECT_DIR$/source/lib/battles/Battle.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/battles/BattleManager.java" afterPath="$PROJECT_DIR$/source/lib/battles/BattleManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/battles/BattleRun.java" afterPath="$PROJECT_DIR$/source/lib/battles/BattleRun.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/battles/BattleUI.java" afterPath="$PROJECT_DIR$/source/lib/battles/BattleUI.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/battles/MiComboboxModel.java" afterPath="$PROJECT_DIR$/source/lib/battles/MiComboboxModel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/CodeGenerator.java" afterPath="$PROJECT_DIR$/source/lib/contest/CodeGenerator.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/Compressor.java" afterPath="$PROJECT_DIR$/source/lib/contest/Compressor.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/Contest.java" afterPath="$PROJECT_DIR$/source/lib/contest/Contest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/ContestFilter.java" afterPath="$PROJECT_DIR$/source/lib/contest/ContestFilter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/ContestReport.java" afterPath="$PROJECT_DIR$/source/lib/contest/ContestReport.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/ContestUI.java" afterPath="$PROJECT_DIR$/source/lib/contest/ContestUI.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/DialogAbout.java" afterPath="$PROJECT_DIR$/source/lib/contest/DialogAbout.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/DialogNewContest.java" afterPath="$PROJECT_DIR$/source/lib/contest/DialogNewContest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/DialogPreferences.java" afterPath="$PROJECT_DIR$/source/lib/contest/DialogPreferences.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/LogPrintter.java" afterPath="$PROJECT_DIR$/source/lib/contest/LogPrintter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/Message.java" afterPath="$PROJECT_DIR$/source/lib/contest/Message.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/MessagePanel.java" afterPath="$PROJECT_DIR$/source/lib/contest/MessagePanel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/SelectColoniesUI.java" afterPath="$PROJECT_DIR$/source/lib/contest/SelectColoniesUI.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/contest/SolveConflictUI.java" afterPath="$PROJECT_DIR$/source/lib/contest/SolveConflictUI.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/includemos.h" afterPath="$PROJECT_DIR$/cpp/includemos.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/lib_CppColony.cpp" afterPath="$PROJECT_DIR$/cpp/lib_CppColony.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/lib_CppColony.h" afterPath="$PROJECT_DIR$/cpp/lib_CppColony.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/nutrients/Famine.java" afterPath="$PROJECT_DIR$/source/lib/nutrients/Famine.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/nutrients/InclinedPlane.java" afterPath="$PROJECT_DIR$/source/lib/nutrients/InclinedPlane.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/nutrients/Lattice.java" afterPath="$PROJECT_DIR$/source/lib/nutrients/Lattice.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/nutrients/Nutrient.java" afterPath="$PROJECT_DIR$/source/lib/nutrients/Nutrient.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/nutrients/Rings.java" afterPath="$PROJECT_DIR$/source/lib/nutrients/Rings.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/nutrients/TwoGaussians.java" afterPath="$PROJECT_DIR$/source/lib/nutrients/TwoGaussians.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/nutrients/VerticalBar.java" afterPath="$PROJECT_DIR$/source/lib/nutrients/VerticalBar.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/oponentInfo/OponentInfo.java" afterPath="$PROJECT_DIR$/source/lib/oponentInfo/OponentInfo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/oponentInfo/OponentInfoManager.java" afterPath="$PROJECT_DIR$/source/lib/oponentInfo/OponentInfoManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/tournament/JavaFile.java" afterPath="$PROJECT_DIR$/source/lib/tournament/JavaFile.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/tournament/Tournament.java" afterPath="$PROJECT_DIR$/source/lib/tournament/Tournament.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/tournament/TournamentFilter.java" afterPath="$PROJECT_DIR$/source/lib/tournament/TournamentFilter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/tournament/TournamentManager.java" afterPath="$PROJECT_DIR$/source/lib/tournament/TournamentManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/tournament/TournamentPanel.java" afterPath="$PROJECT_DIR$/source/lib/tournament/TournamentPanel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/lib/tournament/TournamentUI.java" afterPath="$PROJECT_DIR$/source/lib/tournament/TournamentUI.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/GUIdosD.java" afterPath="$PROJECT_DIR$/source/simulation_ui/GUIdosD.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/MiThread.java" afterPath="$PROJECT_DIR$/source/simulation_ui/MiThread.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/util.xml" afterPath="$PROJECT_DIR$/.idea/libraries/util.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Contest_01/MOs/YeyoMO.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Contest_01/MOs/Movx.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Contest_01/MOs/RandomColony.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Contest_01/MOs/movx.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/source/exceptions/CreateColonyException.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/source/exceptions/DeadColonyException.java" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/source/lib/oponentInfo/OponentInfo.java" afterPath="$PROJECT_DIR$/source/lib/oponentInfo/OpponentInfo.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/source/lib/oponentInfo/OponentInfoManager.java" afterPath="$PROJECT_DIR$/source/lib/oponentInfo/OpponentInfoManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/MOs/lib/MOs/Movx.class" afterPath="$PROJECT_DIR$/Contest_01/MOs/lib/MOs/Movx.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/MOs/lib/MOs/RandomColony.class" afterPath="$PROJECT_DIR$/Contest_01/MOs/lib/MOs/RandomColony.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/MOs/Movx.java" afterPath="$PROJECT_DIR$/Contest_01/MOs/Movx.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/MOs/RandomColony.java" afterPath="$PROJECT_DIR$/Contest_01/MOs/RandomColony.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/MOs/Tactica1.java" afterPath="$PROJECT_DIR$/Contest_01/MOs/Tactica1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/MOs/Tactica2.java" afterPath="$PROJECT_DIR$/Contest_01/MOs/Tactica2.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/123.session" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/123.session" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/128251" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/128251" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/MOs/lib/MOs/Environment.cpp" afterPath="$PROJECT_DIR$/Contest_01/MOs/lib/MOs/Environment.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/MOs/lib/MOs/includemos.h" afterPath="$PROJECT_DIR$/Contest_01/MOs/lib/MOs/includemos.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Contest_01/competitors" afterPath="$PROJECT_DIR$/Contest_01/competitors" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/128379" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/128379" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/129019" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/129019" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/129147" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/129147" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/129275" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/129275" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/129915" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/129915" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/134011.bodies" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/134011.bodies" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/run.bat" afterPath="$PROJECT_DIR$/run.bat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/run.sh" afterPath="$PROJECT_DIR$/run.sh" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/alifecontest-java-uml/133243.bodies" afterPath="$PROJECT_DIR$/doc/alifecontest-java-uml/133243.bodies" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/AttackRule.java" afterPath="$PROJECT_DIR$/source/lib/AttackRule.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/CppColony.java" afterPath="$PROJECT_DIR$/source/lib/CppColony.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/Defs.java" afterPath="$PROJECT_DIR$/source/lib/Defs.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/Environment.java" afterPath="$PROJECT_DIR$/source/lib/Environment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/Microorganism.java" afterPath="$PROJECT_DIR$/source/lib/Microorganism.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/MoveRule.java" afterPath="$PROJECT_DIR$/source/lib/MoveRule.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/Movement.java" afterPath="$PROJECT_DIR$/source/lib/Movement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/Petri.java" afterPath="$PROJECT_DIR$/source/lib/Petri.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/battles/Battle.java" afterPath="$PROJECT_DIR$/source/lib/battles/Battle.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/battles/BattleManager.java" afterPath="$PROJECT_DIR$/source/lib/battles/BattleManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/battles/BattleUI.java" afterPath="$PROJECT_DIR$/source/lib/battles/BattleUI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/contest/CodeGenerator.java" afterPath="$PROJECT_DIR$/source/lib/contest/CodeGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/contest/Contest.java" afterPath="$PROJECT_DIR$/source/lib/contest/Contest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/contest/ContestUI.java" afterPath="$PROJECT_DIR$/source/lib/contest/ContestUI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/contest/LogPrintter.java" afterPath="$PROJECT_DIR$/source/lib/contest/LogPrintter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/nutrients/InclinedPlane.java" afterPath="$PROJECT_DIR$/source/lib/nutrients/InclinedPlane.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/tournament/Tournament.java" afterPath="$PROJECT_DIR$/source/lib/tournament/Tournament.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/tournament/TournamentManager.java" afterPath="$PROJECT_DIR$/source/lib/tournament/TournamentManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/tournament/TournamentPanel.java" afterPath="$PROJECT_DIR$/source/lib/tournament/TournamentPanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/lib/tournament/TournamentUI.java" afterPath="$PROJECT_DIR$/source/lib/tournament/TournamentUI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/simulation_ui/GUIdosD.java" afterPath="$PROJECT_DIR$/source/simulation_ui/GUIdosD.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk.iml" afterPath="$PROJECT_DIR$/trunk.iml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -141,6 +66,9 @@
       <find>compileA</find>
       <find>Point</find>
       <find>compile</find>
+      <find>move</find>
+      <find>contract</find>
+      <find>true</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -171,21 +99,42 @@
         <option value="$PROJECT_DIR$/src/GUIdosD.java" />
         <option value="$PROJECT_DIR$/simulation_ui/GUIdosD.java" />
         <option value="$PROJECT_DIR$/source/Defs.java" />
-        <option value="$PROJECT_DIR$/source/simulation_ui/GUIdosD.java" />
         <option value="$PROJECT_DIR$/lib/MOs/Tactica1.class" />
-        <option value="$PROJECT_DIR$/Contest_01/MOs/Movx.java" />
-        <option value="$PROJECT_DIR$/Contest_01/MOs/RandomColony.java" />
         <option value="$PROJECT_DIR$/Contest_01/MOs/Tactica1.java" />
         <option value="$PROJECT_DIR$/Contest_01/MOs/Tactica2.java" />
         <option value="$PROJECT_DIR$/source/lib/MOs/Movx.class" />
-        <option value="$PROJECT_DIR$/source/lib/contest/Contest.java" />
+        <option value="$PROJECT_DIR$/util/AllFilter.java" />
+        <option value="$PROJECT_DIR$/Contest_01/MOs/Movx.java" />
+        <option value="$PROJECT_DIR$/Contest_01/MOs/RandomColony.java" />
+        <option value="$PROJECT_DIR$/source/lib/Defs.java" />
         <option value="$PROJECT_DIR$/source/lib/Environment.java" />
         <option value="$PROJECT_DIR$/source/lib/CppColony.java" />
+        <option value="$PROJECT_DIR$/source/lib/Movement.java" />
+        <option value="$PROJECT_DIR$/source/lib/battles/Battle.java" />
+        <option value="$PROJECT_DIR$/source/lib/battles/BattleManager.java" />
+        <option value="$PROJECT_DIR$/source/lib/battles/BattleUI.java" />
+        <option value="$PROJECT_DIR$/source/lib/contest/CodeGenerator.java" />
+        <option value="$PROJECT_DIR$/source/lib/contest/Contest.java" />
+        <option value="$PROJECT_DIR$/source/lib/contest/ContestUI.java" />
+        <option value="$PROJECT_DIR$/source/lib/contest/LogPrintter.java" />
+        <option value="$PROJECT_DIR$/source/lib/nutrients/InclinedPlane.java" />
+        <option value="$PROJECT_DIR$/source/lib/oponentInfo/OponentInfoManager.java" />
+        <option value="$PROJECT_DIR$/source/lib/oponentInfo/OponentInfo.java" />
+        <option value="$PROJECT_DIR$/source/lib/oponentInfo/OpponentInfoManager.java" />
+        <option value="$PROJECT_DIR$/source/lib/oponentInfo/OpponentInfo.java" />
+        <option value="$PROJECT_DIR$/source/lib/tournament/Tournament.java" />
+        <option value="$PROJECT_DIR$/source/lib/tournament/TournamentManager.java" />
+        <option value="$PROJECT_DIR$/source/lib/AttackRule.java" />
+        <option value="$PROJECT_DIR$/source/lib/JavaColony.java" />
+        <option value="$PROJECT_DIR$/source/lib/Microorganism.java" />
+        <option value="$PROJECT_DIR$/source/lib/MoveRule.java" />
+        <option value="$PROJECT_DIR$/source/simulation_ui/GUIdosD.java" />
+        <option value="$PROJECT_DIR$/source/lib/Petri.java" />
+        <option value="$PROJECT_DIR$/Contest_01/MOs/YeyoMO.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1280" />
     <option name="y" value="28" />
     <option name="width" value="1680" />
     <option name="height" value="1022" />
@@ -206,7 +155,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -244,6 +192,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="META-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alifecontest-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="to do" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -261,6 +227,60 @@
               <option name="myItemId" value="source" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="simulation_ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alifecontest-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="source" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alifecontest-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="source" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="exceptions" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alifecontest-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="out" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -276,18 +296,94 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alifecontest-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Contest_01" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alifecontest-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Contest_01" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="motemp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alifecontest-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Contest_01" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MOs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alifecontest-java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Contest_01" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MOs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Contest_01/MOs" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../Programming/mutual/project/pom.xml" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Contest_01/MOs" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/cpp" />
       <recent name="$PROJECT_DIR$/Contest_01/lib" />
@@ -546,106 +642,103 @@
       <option name="presentableId" value="Default" />
       <updated>1497069310511</updated>
     </task>
+    <task id="LOCAL-00001" summary="Separando los CPP de los JAVA">
+      <created>1498016170692</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1498016170692</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1280" y="28" width="1680" height="1022" extended-state="6" />
+    <frame x="0" y="28" width="1680" height="1022" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295964" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969433" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31278026" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4293263" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295964" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997763" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3762255" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295964" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3302696" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39910313" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29596412" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295964" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295964" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Separando los CPP de los JAVA" />
+    <option name="LAST_COMMIT_MESSAGE" value="Separando los CPP de los JAVA" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/source/lib/Environment.java</url>
-          <line>64</line>
-          <properties />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/source/lib/contest/Contest.java</url>
-          <line>113</line>
-          <properties />
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/source/lib/contest/Contest.java</url>
-          <line>323</line>
-          <properties />
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/source/lib/contest/Contest.java</url>
-          <line>260</line>
-          <properties />
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/source/lib/contest/Contest.java</url>
-          <line>360</line>
+          <line>361</line>
           <properties />
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/source/lib/contest/Contest.java</url>
-          <line>264</line>
+          <url>file://$PROJECT_DIR$/source/lib/Environment.java</url>
+          <line>188</line>
           <properties />
-          <option name="timeStamp" value="9" />
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/source/lib/Environment.java</url>
-          <line>78</line>
+          <line>187</line>
           <properties />
-          <option name="timeStamp" value="10" />
+          <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/source/lib/CppColony.java</url>
-          <line>14</line>
+          <url>file://$PROJECT_DIR$/Contest_01/MOs/YeyoMO.java</url>
+          <line>138</line>
           <properties />
-          <option name="timeStamp" value="11" />
+          <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/source/lib/CppColony.java</url>
-          <line>18</line>
+          <url>file://$PROJECT_DIR$/Contest_01/MOs/YeyoMO.java</url>
+          <line>162</line>
           <properties />
-          <option name="timeStamp" value="12" />
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Contest_01/MOs/YeyoMO.java</url>
+          <line>142</line>
+          <properties />
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Contest_01/MOs/YeyoMO.java</url>
+          <line>268</line>
+          <properties />
+          <option name="timeStamp" value="41" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="13" />
+      <option name="time" value="42" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -654,392 +747,221 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/testing/lib/LifeRuleTest.java">
+    <entry file="file://$PROJECT_DIR$/source/lib/tournament/TournamentUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testing/lib/LoveRuleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testing/lib/MicroorganismTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-19">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testing/lib/MovementTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testing/lib/MoveRuleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testing/lib/PetriTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-145">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Fast2DThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="22" column="23" lean-forward="false" selection-start-line="22" selection-start-column="23" selection-end-line="22" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Fast2DUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="17" column="18" lean-forward="true" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/simulation_ui/MiThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="22" column="13" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/contest/ContestUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="655">
-          <caret line="403" column="32" lean-forward="false" selection-start-line="403" selection-start-column="32" selection-end-line="403" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/battles/MiComboboxModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="35">
-          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/battles/BattleUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="142" column="15" lean-forward="false" selection-start-line="142" selection-start-column="15" selection-end-line="142" selection-end-column="15" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/simulation_ui/GUIdosD.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#539#547#0" expanded="false" />
-            <element signature="e#667#675#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="-648">
+          <caret line="129" column="47" lean-forward="true" selection-start-line="129" selection-start-column="47" selection-end-line="129" selection-end-column="47" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/lib/Colony.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1003">
-          <caret line="11" column="22" lean-forward="false" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+        <state relative-caret-position="-949">
+          <caret line="14" column="25" lean-forward="false" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/ColonyRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/EatRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/LifeRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/LoveRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/Microorganism.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="774">
+          <caret line="43" column="6" lean-forward="true" selection-start-line="43" selection-start-column="6" selection-end-line="43" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/MoveRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="30" lean-forward="false" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/simulation_ui/GUIdosD.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/Movx.java" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/RandomColony.java" />
     <entry file="file://$PROJECT_DIR$/source/lib/Defs.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        <state relative-caret-position="300">
+          <caret line="48" column="30" lean-forward="false" selection-start-line="48" selection-start-column="30" selection-end-line="48" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170703-025314" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/Tactica1.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="363">
+          <caret line="62" column="1" lean-forward="false" selection-start-line="62" selection-start-column="1" selection-end-line="62" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/awt/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="105" column="45" lean-forward="true" selection-start-line="105" selection-start-column="45" selection-end-line="105" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170706-232716" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170706-232920" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170706-235322" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170706-235342" />
+    <entry file="file://$PROJECT_DIR$/source/simulation_ui/MiThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-Tactica2-20170620-210544">
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170707-012530" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170707-012602" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170707-012639" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-104137" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-104221" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-104313" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/Tactica2.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/MOs/Tactica1.class">
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-120459" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-120345" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-120435" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-123401" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-115607" />
+    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/lang/Comparable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="159">
+          <caret line="53" column="78" lean-forward="false" selection-start-line="53" selection-start-column="70" selection-end-line="53" selection-end-column="78" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/contest/CodeGenerator.java">
+    <entry file="file://$PROJECT_DIR$/source/lib/Movement.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="21" column="33" lean-forward="false" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
-          <folding />
+        <state relative-caret-position="452">
+          <caret line="27" column="25" lean-forward="false" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/JavaColony.java">
+    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/lang/Float.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        <state relative-caret-position="232">
+          <caret line="911" column="71" lean-forward="true" selection-start-line="911" selection-start-column="66" selection-end-line="911" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/util/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-146">
+          <caret line="110" column="17" lean-forward="false" selection-start-line="110" selection-start-column="17" selection-end-line="110" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-130331" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-130403" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170708-130441" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170709-142204" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-YeyoMO-20170709-143817" />
+    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/YeyoMO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4806">
+          <caret line="271" column="5" lean-forward="false" selection-start-line="271" selection-start-column="5" selection-end-line="272" selection-end-column="0" />
           <folding>
-            <element signature="e#541#556#0" expanded="true" />
+            <element signature="e#0#9001#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/Agar.java">
+    <entry file="file://$PROJECT_DIR$/source/lib/Petri.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        <state relative-caret-position="797">
+          <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+          <folding>
+            <element signature="e#3183#3184#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/oponentInfo/OpponentInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-841">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/oponentInfo/OpponentInfoManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9">
+          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/lib/contest/Contest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3939">
+          <caret line="324" column="0" lean-forward="false" selection-start-line="324" selection-start-column="0" selection-end-line="324" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/Microorganism.java">
+    <entry file="file://$PROJECT_DIR$/source/lib/JavaColony.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="22" lean-forward="false" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/MOs/Movx.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="20" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/Tactica2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="22" column="32" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#1921#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/Movx.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/RandomColony.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#1208#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/lang/Runtime.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="620">
-          <caret line="860" column="69" lean-forward="false" selection-start-line="860" selection-start-column="62" selection-end-line="860" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/Tactica1.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="5" column="8" lean-forward="false" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/io/Serializable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="716">
-          <caret line="168" column="17" lean-forward="false" selection-start-line="168" selection-start-column="17" selection-end-line="168" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/awt/geom/Point2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1944">
-          <caret line="137" column="75" lean-forward="false" selection-start-line="137" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/awt/Point.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="37" column="32" lean-forward="false" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/lang/String.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="110" column="19" lean-forward="false" selection-start-line="110" selection-start-column="19" selection-end-line="110" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/AllFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="23" column="31" lean-forward="true" selection-start-line="23" selection-start-column="31" selection-end-line="23" selection-end-column="31" />
-          <folding>
-            <element signature="e#3424#3432#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/lib_CppColony.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/Petri.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-395">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/Defs.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="23" column="51" lean-forward="false" selection-start-line="23" selection-start-column="51" selection-end-line="23" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/Data.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="14" lean-forward="true" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/Microorganism.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/lib_CppColony.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/lib/MOs/includemos.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/includemos.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/log/log-Movx-20170620-213336">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/movx.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Contest_01/MOs/lib/MOs/Environment.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/util/Properties.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="164" column="31" lean-forward="false" selection-start-line="164" selection-start-column="31" selection-end-line="164" selection-end-column="31" />
-          <folding>
-            <element signature="e#5711#5712#0" expanded="true" />
-            <element signature="e#5749#5750#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/lang/System.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="795" column="36" lean-forward="false" selection-start-line="795" selection-start-column="36" selection-end-line="795" selection-end-column="36" />
+        <state relative-caret-position="270">
+          <caret line="20" column="4" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/lib/CppColony.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1746">
-          <caret line="10" column="4" lean-forward="false" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+        <state relative-caret-position="-612">
+          <caret line="32" column="9" lean-forward="true" selection-start-line="24" selection-start-column="9" selection-end-line="32" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1048,46 +970,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/lib/Environment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="78" column="55" lean-forward="false" selection-start-line="78" selection-start-column="55" selection-end-line="78" selection-end-column="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/lib/contest/Contest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="323" column="0" lean-forward="false" selection-start-line="323" selection-start-column="0" selection-end-line="323" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#22729#22730#0" expanded="true" />
-            <element signature="e#22815#22816#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/Environment.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-305">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="558">
+          <caret line="78" column="28" lean-forward="false" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/Environment.cpp">
+    <entry file="file://$PROJECT_DIR$/source/lib/battles/Battle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="180">
+          <caret line="13" column="13" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cpp/CppColony.h">
+    <entry file="file://$PROJECT_DIR$/source/lib/AttackRule.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="18" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="18" />
+        <state relative-caret-position="90">
+          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
           <folding />
         </state>
       </provider>

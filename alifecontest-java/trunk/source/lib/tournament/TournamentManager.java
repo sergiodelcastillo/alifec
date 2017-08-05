@@ -52,16 +52,6 @@ public class TournamentManager {
         //creating a  new Tournament!.
         Collections.sort(tournaments);
 
-        /*String newT = getNextName();
-
-          if(mode == Contest.COMPETITION_MODE){
-          if(!new File(PATH+File.separator+newT).mkdir())
-              throw new CreateTournamentException("Can't create a new folder...");
-        }
-
-          Tournament t = new Tournament(newT, PATH, mode);
-
-          tournaments.addElement(t);*/
         selected = tournaments.size() - 1;
 //		selected = -1;
 
@@ -85,7 +75,8 @@ public class TournamentManager {
 
     /**
      * This method suppose  that the maximum of tournament of the
-     * current contest in not longer than 100.    
+     * current contest in not longer than 100.
+     *
      * @return String a: the name of next tournament.
      */
     private String getNextName() {
@@ -134,23 +125,26 @@ public class TournamentManager {
         Tournament t = getSelected();
         String url = PATH + File.separator + t.NAME;
 
-        if (t != null) {
-
-            File file = new File(t.getBattleManager().getBattlesFileName());
-            if (file.exists() && !file.delete())
-                if (mode == Contest.COMPETITION_MODE) return false;
-
-            file = new File(url);
-            if (file.exists() && !file.delete())
-                if (mode == Contest.COMPETITION_MODE) return false;
+        //if the tournament is null
+        if (t == null) {
+            return false;
         }
+
+        File file = new File(t.getBattleManager().getBattlesFileName());
+        if (file.exists() && !file.delete())
+            if (mode == Contest.COMPETITION_MODE) return false;
+
+        file = new File(url);
+        if (file.exists() && !file.delete())
+            if (mode == Contest.COMPETITION_MODE) return false;
+
 
         tournaments.remove(selected);
 
         if (selected >= tournaments.size())
             selected = tournaments.size() - 1;
 
-        return true || mode == Contest.PROGRAMMER_MODE;
+        return true;
     }
 
     /**
@@ -197,6 +191,7 @@ public class TournamentManager {
     /**
      * Return the next tournament
      * if the selected tournament is the last this function return the last tournament
+     *
      * @return next the next Tournament
      */
     public Tournament next() {

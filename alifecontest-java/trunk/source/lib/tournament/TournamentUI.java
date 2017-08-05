@@ -132,7 +132,7 @@ public class TournamentUI extends JPanel implements ActionListener {
                 try {
 /*						String name = fc.getSelectedFile().getName();
 						String path = fc.getSelectedFile().getPath();
-						String colony = father.getContest().getEnvironment().getOponents().lastElement().getName();
+						String colony = father.getContest().getEnvironment().getOpponents().lastElement().getName();
 						System.out.println("ver");
 						father.getContest().getEnvironment().addColony(name,"", path);
 						tm.lastElement().addColony(colony);

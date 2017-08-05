@@ -213,7 +213,7 @@ public class ContestUI extends JFrame implements ActionListener {
         }
     }
 
-    public JMenuBar createMenu() {
+    private JMenuBar createMenu() {
         JMenuBar menu = new JMenuBar();
         JMenu menuFile = new JMenu("File");
         JMenu menuTools = new JMenu("Tools");
@@ -237,37 +237,21 @@ public class ContestUI extends JFrame implements ActionListener {
     public void createMenuFile(JMenu menu) {
         newContest = new JMenuItem("New Contest");
         openContest = new JMenuItem("Open Contest");
-//		  newTournament = new JMenuItem("New Tournament");
-//		  closeTournament = new JMenuItem("Close Tournament");
-//		  saveAll = new JMenuItem("Save all");
         quit = new JMenuItem("Quit");
 
         newContest.addActionListener(this);
         openContest.addActionListener(this);
-        //      newTournament.addActionListener(this);
-        //      closeTournament.addActionListener(this);
-        //      saveAll.addActionListener(this);
         quit.addActionListener(this);
 
-//        saveAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
+
         newContest.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
         openContest.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
-//        newTournament.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK));
-//        closeTournament.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
         quit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
 
-//		  newTournament.setEnabled(false);
-        //	  closeTournament.setEnabled(false);
-//		  saveAll.setEnabled(false);
 
         menu.add(newContest);
         menu.add(openContest);
         menu.addSeparator();
-        //	  menu.add(newTournament);
-//		  menu.add(closeTournament);
-        //	  menu.addSeparator();
-        //	  menu.add(saveAll);
-        //	  menu.addSeparator();
         menu.add(quit);
     }
 

@@ -1,6 +1,6 @@
 /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @author Sergio Del castillo
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 
 package lib.contest;
@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
+/*@Todo: create an examples in a folder and just copy the files to an specific contest
+ *@Todo  instead of creating them with java code
+*/
 public class CodeGenerator {
 
     private CodeGenerator() {

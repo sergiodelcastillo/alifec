@@ -7,8 +7,6 @@ package lib.contest;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class LogPrintter {
