@@ -1,4 +1,4 @@
-package lib.contest;
+package lib.contestUI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

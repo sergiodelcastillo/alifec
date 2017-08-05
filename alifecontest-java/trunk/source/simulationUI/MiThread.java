@@ -2,15 +2,15 @@
  * @author Yeyo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
-package simulation_ui;
+package simulationUI;
 
 import exceptions.MoveMicroorganismException;
 import lib.Colony;
 import lib.Defs;
 import lib.Environment;
 import lib.battles.BattleRun;
-import lib.contest.ContestUI;
-import lib.contest.Message;
+import lib.contestUI.ContestUI;
+import lib.contestUI.Message;
 import lib.tournament.Tournament;
 
 import javax.swing.*;

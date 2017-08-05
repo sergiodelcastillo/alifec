@@ -2,7 +2,7 @@
  * @author Yeyo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
-package lib.contest;
+package lib.contestUI;
 
 import javax.swing.*;
 import java.awt.*;

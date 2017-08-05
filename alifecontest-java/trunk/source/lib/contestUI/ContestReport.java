@@ -3,10 +3,11 @@
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-package lib.contest;
+package lib.contestUI;
 
 import exceptions.CreateRankingException;
 import lib.Defs;
+import lib.contest.Contest;
 
 import javax.swing.*;
 import java.awt.*;

@@ -3,10 +3,10 @@
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-package simulation_ui;
+package simulationUI;
 
 import lib.Defs;
-import lib.contest.ContestUI;
+import lib.contestUI.ContestUI;
 
 import javax.swing.*;
 import java.awt.*;

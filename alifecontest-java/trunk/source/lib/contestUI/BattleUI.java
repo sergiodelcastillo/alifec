@@ -3,15 +3,15 @@
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-package lib.battles;
+package lib.contestUI;
 
 import exceptions.CreateBattleException;
 import lib.Environment;
+import lib.battles.BattleManager;
+import lib.battles.BattleRun;
 import lib.contest.Contest;
-import lib.contest.ContestUI;
-import lib.contest.Message;
 import lib.tournament.Tournament;
-import simulation_ui.GUIdosD;
+import simulationUI.GUIdosD;
 
 import javax.swing.*;
 import java.awt.*;

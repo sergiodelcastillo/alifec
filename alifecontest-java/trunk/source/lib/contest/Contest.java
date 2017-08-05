@@ -12,6 +12,8 @@ import exceptions.CreateTournamentException;
 import lib.Agar;
 import lib.AllFilter;
 import lib.Environment;
+import lib.contestUI.Message;
+import lib.contestUI.SolveConflictUI;
 import lib.nutrients.Nutrient;
 import lib.oponentInfo.OpponentInfo;
 import lib.oponentInfo.OpponentInfoManager;
@@ -154,7 +156,7 @@ public class Contest {
         }
     }
 
-    void delete_backup() {
+    public void delete_backup() {
         String p = tournaments.lastElement().getBattleManager().getPath();
 
         if (new File(p + File.separator + "battles_backup.csv").delete()) {
@@ -523,7 +525,7 @@ public class Contest {
         return validate_config();
     }
 
-    boolean reloadConfig() throws IOException {
+    public boolean reloadConfig() throws IOException {
         return loadConfig(PATH);
     }
 

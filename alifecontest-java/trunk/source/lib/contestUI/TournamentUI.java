@@ -3,12 +3,16 @@
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-package lib.tournament;
+package lib.contestUI;
 
 import exceptions.CreateTournamentException;
-import lib.contest.ContestReport;
-import lib.contest.ContestUI;
-import lib.contest.Message;
+import lib.contestUI.ContestReport;
+import lib.contestUI.ContestUI;
+import lib.contestUI.Message;
+import lib.contestUI.TournamentPanel;
+import lib.tournament.JavaFile;
+import lib.tournament.Tournament;
+import lib.tournament.TournamentManager;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

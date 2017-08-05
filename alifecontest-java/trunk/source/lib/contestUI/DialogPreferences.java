@@ -2,9 +2,10 @@
  * @author Yeyo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
-package lib.contest;
+package lib.contestUI;
 
 import lib.Agar;
+import lib.contest.Contest;
 import lib.nutrients.Nutrient;
 
 import javax.swing.*;

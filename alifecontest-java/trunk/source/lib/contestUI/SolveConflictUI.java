@@ -1,4 +1,7 @@
-package lib.contest;
+package lib.contestUI;
+
+import lib.contest.Contest;
+import lib.contestUI.SelectColoniesUI;
 
 import javax.swing.*;
 import java.awt.*;

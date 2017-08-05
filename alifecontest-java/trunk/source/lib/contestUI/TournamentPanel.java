@@ -3,9 +3,10 @@
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-package lib.tournament;
+package lib.contestUI;
 
-import lib.contest.ContestUI;
+import lib.tournament.Tournament;
+import lib.tournament.TournamentManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
