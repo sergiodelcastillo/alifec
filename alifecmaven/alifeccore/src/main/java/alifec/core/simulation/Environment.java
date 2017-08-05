@@ -3,8 +3,8 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
-import exceptions.MoveMicroorganismException;
-import lib.battles.BattleRun;
+import alifec.core.exception.MoveMicroorganismException;
+import alifec.core.contest.tournament.battles.BattleRun;
 
 import java.awt.*;
 import java.io.File;

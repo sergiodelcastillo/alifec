@@ -5,7 +5,7 @@
 
 package alifec.core.simulation.nutrients;
 
-import lib.Defs;
+import alifec.core.simulation.Defs;
 
 import java.awt.*;
 

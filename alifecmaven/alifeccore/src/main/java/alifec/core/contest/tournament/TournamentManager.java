@@ -4,9 +4,9 @@
  */
 package alifec.core.contest.tournament;
 
-import exceptions.CreateRankingException;
-import exceptions.CreateTournamentException;
-import lib.contest.Contest;
+import alifec.core.contest.Contest;
+import alifec.core.exception.CreateRankingException;
+import alifec.core.exception.CreateTournamentException;
 
 import java.io.File;
 import java.io.IOException;

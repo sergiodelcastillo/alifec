@@ -5,7 +5,7 @@
 
 package alifec.core.contest.tournament.battles;
 
-import exceptions.CreateBattleException;
+import alifec.core.exception.CreateBattleException;
 
 public class BattleRun {
 

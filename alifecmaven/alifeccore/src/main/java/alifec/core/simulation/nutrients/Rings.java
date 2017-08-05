@@ -4,7 +4,7 @@
  */
 package alifec.core.simulation.nutrients;
 
-import lib.Defs;
+import alifec.core.simulation.Defs;
 
 import java.awt.*;
 
@@ -20,7 +20,8 @@ public class Rings extends Nutrient {
 
     @Override
     public float getNutrient(Point p) {
-        int R = Defs.RADIUS;
+        int R =
+Defs.RADIUS;
         boolean b = ((p.x - R) * (p.x - R) + (p.y - R) * (p.y - R) > 40) &&
                 ((p.x - R) * (p.x - R) + (p.y - R) * (p.y - R) < 115);
 

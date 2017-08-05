@@ -5,8 +5,8 @@
 
 package alifec.core.contest.tournament;
 
-import exceptions.CreateRankingException;
-import lib.battles.BattleManager;
+import alifec.core.contest.tournament.battles.BattleManager;
+import alifec.core.exception.CreateRankingException;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -5,7 +5,7 @@
 
 package alifec.core.contest.tournament.battles;
 
-import lib.contest.Contest;
+import alifec.core.contest.Contest;
 
 import java.io.*;
 import java.util.Hashtable;

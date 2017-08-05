@@ -4,8 +4,8 @@
  */
 package alifec.core.exception;
 
-import lib.Microorganism;
 
+import alifec.core.simulation.Microorganism;
 
 public class DeadMicroorganismException extends Exception {
     private static final long serialVersionUID = 0L;

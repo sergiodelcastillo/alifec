@@ -3,7 +3,7 @@ package alifec.core.simulation; /**
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-import lib.nutrients.*;
+import alifec.core.simulation.nutrients.*;
 
 import java.awt.*;
 import java.util.Random;

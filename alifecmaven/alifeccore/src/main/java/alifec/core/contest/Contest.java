@@ -5,20 +5,18 @@
 
 package alifec.core.contest;
 
-import exceptions.CompilerException;
-import exceptions.CreateContestException;
-import exceptions.CreateRankingException;
-import exceptions.CreateTournamentException;
-import lib.Agar;
-import lib.AllFilter;
-import lib.Environment;
-import lib.contestUI.Message;
-import lib.contestUI.SolveConflictUI;
-import lib.nutrients.Nutrient;
-import lib.oponentInfo.OpponentInfo;
-import lib.oponentInfo.OpponentInfoManager;
-import lib.tournament.Tournament;
-import lib.tournament.TournamentManager;
+import alifec.core.contest.oponentInfo.OpponentInfo;
+import alifec.core.contest.oponentInfo.OpponentInfoManager;
+import alifec.core.contest.tournament.Tournament;
+import alifec.core.contest.tournament.TournamentManager;
+import alifec.core.exception.CompilerException;
+import alifec.core.exception.CreateContestException;
+import alifec.core.exception.CreateRankingException;
+import alifec.core.exception.CreateTournamentException;
+import alifec.core.simulation.Agar;
+import alifec.core.simulation.AllFilter;
+import alifec.core.simulation.Environment;
+import alifec.core.simulation.nutrients.Nutrient;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -283,7 +281,7 @@ public class Contest {
      * @param path absolute path of C/C++ microorganism
      * @param name of destination library
      * @return true if the compilation is successfully
-     * @throws exceptions.CompilerException if can not find the C/C++ compiler
+     * @throws CompilerException if can not find the C/C++ compiler
      */
     boolean compileMOsJava(String path, String name) throws CompilerException {
         try {
@@ -742,7 +740,7 @@ public class Contest {
      * name,author,affilation, acumulatedPoints, lastEnergy
      *
      * @return information
-     * @throws exceptions.CreateRankingException if can not create the ranking
+     * @throws CreateRankingException if can not create the ranking
      */
     public Vector<Vector<Object>> getInfo() throws CreateRankingException {
         Hashtable<String, Integer> ranking = tournaments.getRanking();
