@@ -74,7 +74,7 @@ public class OpponentInfo {
     }
 
     public Vector<Object> toVector() {
-        Vector<Object> v = new Vector<Object>();
+        Vector<Object> v = new Vector<>();
         v.addElement(name);
         v.addElement(author);
         v.addElement(affiliation);

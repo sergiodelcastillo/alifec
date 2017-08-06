@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static alifec.core.contest.ContestConfig.REPORT_FOLDER;
 
 public class Contest {
 
@@ -67,9 +66,9 @@ public class Contest {
         if (tournaments.lastElement() != null &&
                 tournaments.lastElement().hasBackUpFile() &&
                 config.getMode() == ContestConfig.COMPETITION_MODE) {
-            Vector<String> conflict = new Vector<String>();
+            Vector<String> conflict = new Vector<>();
 
-            if (!get_conflict(conflict)) {
+            if (!getConflict(conflict)) {
                 System.out.println("Fail loading conflict. Cant continue");
                 System.exit(0);
             }
@@ -92,7 +91,7 @@ public class Contest {
         }
     }
 
-    public void delete_backup() {
+    public void deleteBackup() {
         String p = tournaments.lastElement().getBattleManager().getPath();
 
         if (new File(p + File.separator + "battles_backup.csv").delete()) {
@@ -108,16 +107,28 @@ public class Contest {
         }
     }
 
-    private boolean get_conflict(Vector<String> c) {
-        Vector<String[]> battles = new Vector<String[]>();
-        Vector<String[]> backup = new Vector<String[]>();
+    public boolean tournamentFinishedUnsuccessfully() {
+        //TODO: ver que esto sea absoluto .. antes de crear el contest
+        //TODO: se le debe pasar el path
+        if (config.getMode() == ContestConfig.PROGRAMMER_MODE) {
+            return false;
+        }
+
+        return tournaments.lastElement() != null &&
+                tournaments.lastElement().hasBackUpFile();
+
+    }
+
+    private boolean getConflict(Vector<String> c) {
+        Vector<String[]> battles = new Vector<>();
+        Vector<String[]> backup = new Vector<>();
         String t = config.getContestPath() + File.separator + tournaments.lastElement().NAME;
 
-        load_file(t + File.separator + "battles.csv", battles);
-        load_file(t + File.separator + "battles_backup.csv", backup);
+        loadFile(t + File.separator + "battles.csv", battles);
+        loadFile(t + File.separator + "battles_backup.csv", backup);
 
         for (String[] l : battles) {
-            if (!compare_line(l, backup.firstElement()))
+            if (!compareLine(l, backup.firstElement()))
                 return false;
             backup.remove(0);
         }
@@ -128,7 +139,7 @@ public class Contest {
         return true;
     }
 
-    private boolean compare_line(String[] a, String b[]) {
+    private boolean compareLine(String[] a, String b[]) {
         if (a.length != b.length) return false;
 
         for (int i = 0; i < a.length; i++) {
@@ -138,7 +149,7 @@ public class Contest {
         return true;
     }
 
-    private void load_file(String n, Vector<String[]> b) {
+    private void loadFile(String n, Vector<String[]> b) {
         BufferedReader f = null;
         String line;
 
@@ -365,6 +376,7 @@ public class Contest {
     }
 
     public static boolean existContest(String path, String name) {
+        //TODO: pasar la logica al contest config..
         if (path == null || path.equals("")) {
             System.out.println("contest.existContest: null path");
             return false;
@@ -376,7 +388,7 @@ public class Contest {
 
         String contestName = path + File.separator + name;
         String MOsFolder = contestName + File.separator + ContestConfig.MOS_FOLDER;
-        String ReportFolder = contestName + File.separator + REPORT_FOLDER;
+        String ReportFolder = contestName + File.separator + ContestConfig.REPORT_FOLDER;
         String NutrientFile = contestName + File.separator + ContestConfig.NUTRIENTS_FILE;
 
         return new File(contestName).exists() &&
@@ -393,9 +405,11 @@ public class Contest {
 
         String[] list = new File(path).list();
 
-        for (String names : list) {
-            if (names.equals(ContestConfig.CONFIG_FILE)) {
-                return true;
+        if (list != null) {
+            for (String names : list) {
+                if (names.equals(ContestConfig.CONFIG_FILE)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -403,7 +417,7 @@ public class Contest {
 
     public Hashtable<String, Integer> getNutrients() {
 
-        Hashtable<String, Integer> nutri = new Hashtable<String, Integer>();
+        Hashtable<String, Integer> nutri = new Hashtable<>();
         String url = config.getContestPath() + File.separator + ContestConfig.NUTRIENTS_FILE;
 
         try {
@@ -438,6 +452,7 @@ public class Contest {
      * @return
      * @throws IOException
      */
+
     public boolean reloadConfig() throws IOException {
         ContestConfig configTmp = ContestConfig.build(config.getPath());
 
@@ -468,11 +483,14 @@ public class Contest {
 
     public static Vector<String> listContest(String path) {
         String list[] = new File(path).list(new ContestFilter());
-        Vector<String> results = new Vector<String>();
-        for (String name : list) {
-            if (existContest(path, name))
-                results.addElement(name);
+        Vector<String> results = new Vector<>();
 
+        if (list != null) {
+            for (String name : list) {
+                if (existContest(path, name))
+                    results.addElement(name);
+
+            }
         }
         return results;
     }
@@ -482,7 +500,7 @@ public class Contest {
         try {
             String contestName = path + File.separator + name;
             String MOsFolder = contestName + File.separator + ContestConfig.MOS_FOLDER;
-            String ReportFolder = contestName + File.separator + REPORT_FOLDER;
+            String ReportFolder = contestName + File.separator + ContestConfig.REPORT_FOLDER;
             new File(contestName).mkdir();
             new File(MOsFolder).mkdir();
             new File(ReportFolder).mkdir();
@@ -605,7 +623,7 @@ public class Contest {
      */
     public Vector<Vector<Object>> getInfo() throws CreateRankingException {
         Hashtable<String, Integer> ranking = tournaments.getRanking();
-        Vector<Vector<Object>> info = new Vector<Vector<Object>>();
+        Vector<Vector<Object>> info = new Vector<>();
 
         Tournament t = tournaments.lastElement();
         Hashtable<String, Float> acumulated = t.getAccumulatedEnergy();
@@ -646,8 +664,8 @@ public class Contest {
      */
     public boolean createBackUp() {
         File f = new File(config.getBackupPath());
-        ArrayList<String[]> files = new ArrayList<String[]>();
-        Stack<File> stack = new Stack<File>();
+        ArrayList<String[]> files = new ArrayList<>();
+        Stack<File> stack = new Stack<>();
         String zipname;
 
         if (!f.exists())
@@ -685,6 +703,10 @@ public class Contest {
 
     public boolean needRestore() {
         return tournaments.size() != 0 && tournaments.lastElement().hasBackUpFile();
+    }
+
+    public String getPath() {
+        return config.getPath();
     }
 }
 

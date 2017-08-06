@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class JavaColony extends Colony {
     private Constructor<Microorganism> constructor;
-    private Vector<Microorganism> instances = new Vector<Microorganism>();
+    private Vector<Microorganism> instances = new Vector<>();
 
     @SuppressWarnings("unchecked")
     JavaColony(int index, String path) throws ClassNotFoundException {

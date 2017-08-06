@@ -102,10 +102,10 @@ public class TournamentPanel extends JList {
         }
     }
 
-    private synchronized DefaultListModel addComponents() {
+    private synchronized DefaultListModel<ListOponent> addComponents() {
         synchronized (Tournament.class) {
 
-            DefaultListModel model = new DefaultListModel();
+            DefaultListModel<ListOponent> model = new DefaultListModel<ListOponent>();
             Hashtable<String, Float> h = current.getAccumulatedEnergy();
             int index = 0;
 

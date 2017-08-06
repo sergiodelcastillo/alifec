@@ -5,7 +5,6 @@
 
 package alifec.core.contest.tournament.battles;
 
-import alifec.core.contest.Contest;
 import alifec.core.contest.ContestConfig;
 
 import java.io.*;
@@ -22,7 +21,7 @@ public class BattleManager {
     public static final String BATTLES_FILE = "battles.csv";
     public static final String BACKUP_FILE = "battles_backup.csv";
 
-    private Vector<Battle> battles = new Vector<Battle>();
+    private Vector<Battle> battles = new Vector<>();
 
     /**
      * This Class is the manager of the class battle.
@@ -73,7 +72,7 @@ public class BattleManager {
      * @param name of colony to delete
      */
     public void delete(String name) {
-        Vector<Battle> tmp = new Vector<Battle>();
+        Vector<Battle> tmp = new Vector<>();
 
         for (Battle b : battles) {
             if (b.contain(name)) {
@@ -93,7 +92,7 @@ public class BattleManager {
         boolean ret = true;
 
         try {
-            Vector<Battle> tmp = new Vector<Battle>();
+            Vector<Battle> tmp = new Vector<>();
 
             for (Battle b : battles) {
                 if (b.contain(name)) {
@@ -119,7 +118,7 @@ public class BattleManager {
      * @return results hash(name, energy)
      */
     public Hashtable<String, Float> getResults() {
-        Hashtable<String, Float> results = new Hashtable<String, Float>();
+        Hashtable<String, Float> results = new Hashtable<>();
 
         for (Battle b : battles) {
             if (results.containsKey(b.getWinnerName())) {
@@ -184,7 +183,7 @@ public class BattleManager {
     }
 
     public Vector<String> getNames() {
-        Vector<String> names = new Vector<String>();
+        Vector<String> names = new Vector<>();
 
         for (Battle b : battles) {
             if (!names.contains(b.getName_1()))

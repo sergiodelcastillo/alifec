@@ -4,7 +4,6 @@
  */
 package alifec.core.contest.tournament;
 
-import alifec.core.contest.Contest;
 import alifec.core.contest.ContestConfig;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.CreateTournamentException;
@@ -20,7 +19,7 @@ public class TournamentManager {
     /**
      * Vector de tournaments.
      */
-    private Vector<Tournament> tournaments = new Vector<Tournament>();
+    private Vector<Tournament> tournaments = new Vector<>();
     /**
      * absolute path of tournaments.
      */
@@ -59,7 +58,7 @@ public class TournamentManager {
     }
 
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
-        Hashtable<String, Integer> ranking = new Hashtable<String, Integer>();
+        Hashtable<String, Integer> ranking = new Hashtable<>();
 
         for (Tournament t : tournaments) {
             Hashtable<String, Integer> tRanking = t.getRanking();
@@ -125,11 +124,6 @@ public class TournamentManager {
     public boolean removeSelected() {
         Tournament t = getSelected();
         String url = PATH + File.separator + t.NAME;
-
-        //if the tournament is null
-        if (t == null) {
-            return false;
-        }
 
         File file = new File(t.getBattleManager().getBattlesFileName());
         if (file.exists() && !file.delete())

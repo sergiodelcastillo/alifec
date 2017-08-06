@@ -14,7 +14,7 @@ public class SolveConflictUI extends JDialog {
     Contest contest;
     String c1, c2;
     String[] options = new String[]{"Restore with back up file", "Delete back Up File"};
-    JComboBox combobox;
+    JComboBox<String> combobox;
     SelectColoniesUI table;
     JDialog thisFrame;
 
@@ -44,10 +44,10 @@ public class SolveConflictUI extends JDialog {
           System.out.println("sigue");
        }
     */
-    public JComboBox createNorth() {
+    public JComboBox<String> createNorth() {
         String txt = "The last run failed, select an option";
 
-        combobox = new JComboBox(options);
+        combobox = new JComboBox<>(options);
         combobox.setBorder(BorderFactory.createTitledBorder(txt));
         combobox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -100,7 +100,7 @@ public class SolveConflictUI extends JDialog {
                         contest.getTournamentManager().lastElement().addColony(c);
                     }
                 } else {
-                    contest.delete_backup();
+                    contest.deleteBackup();
                 }
                 thisFrame.dispose();
             }

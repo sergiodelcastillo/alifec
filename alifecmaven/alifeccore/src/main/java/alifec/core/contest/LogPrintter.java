@@ -26,7 +26,6 @@ public class LogPrintter {
         url += "log-" + name.replace(".java", "") + "-";
         url += new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
 
-        File res = new File(url);
-        return res;
+        return new File(url);
     }
 }

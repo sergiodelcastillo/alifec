@@ -1,12 +1,11 @@
 package alifec.core.contest;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Created by Sergio Del Castillo on 05/08/17.
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 public class CompilationResult {
     private List<String> javaMessages;
@@ -15,8 +14,8 @@ public class CompilationResult {
     private boolean javaErrors;
 
     public CompilationResult() {
-        javaMessages = new ArrayList<String>();
-        cppMessages = new ArrayList<String>();
+        javaMessages = new ArrayList<>();
+        cppMessages = new ArrayList<>();
         cppErrors = false;
         javaErrors = false;
     }

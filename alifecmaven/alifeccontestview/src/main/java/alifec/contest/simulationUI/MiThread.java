@@ -182,7 +182,7 @@ public class MiThread extends Thread {
 
         cui.getTournamentUI().penalice(colonyName);
 
-        Vector<BattleRun> indexs = new Vector<BattleRun>();
+        Vector<BattleRun> indexs = new Vector<>();
 
         for (int i = 0; i < battles.size(); i++) {
             BattleRun b = (BattleRun) battles.elementAt(i);

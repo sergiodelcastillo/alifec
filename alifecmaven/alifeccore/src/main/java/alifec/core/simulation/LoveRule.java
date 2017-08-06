@@ -17,7 +17,7 @@ public class LoveRule extends ColonyRule {
         if (!mitosis)
             return false;
 
-        Vector<Point> posRel = new Vector<Point>();
+        Vector<Point> posRel = new Vector<>();
 
         for (int i = mo.pos.x - 1; i <= mo.pos.x + 1; i++) {
             for (int j = mo.pos.y - 1; j <= mo.pos.y + 1; j++) {

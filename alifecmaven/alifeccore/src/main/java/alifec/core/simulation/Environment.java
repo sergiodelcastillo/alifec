@@ -57,7 +57,7 @@ public class Environment {
      */
     public Environment(String path) {
         agar = new Agar();
-        colonies = new Vector<Colony>();
+        colonies = new Vector<>();
 
         System.out.println("\nLoading Colonies");
         System.out.println("Loading Java Colonies");
@@ -150,7 +150,7 @@ public class Environment {
 
     public boolean moveColonies() throws MoveMicroorganismException {
 
-        Vector<Cell> allOps = new Vector<Cell>();
+        Vector<Cell> allOps = new Vector<>();
 
         for (int i = 0; i < c1.size(); i++)
             allOps.addElement(c1.getMO(i));
@@ -301,7 +301,7 @@ public class Environment {
     }
 
     public Vector<String> getNames() {
-        Vector<String> tmp = new Vector<String>();
+        Vector<String> tmp = new Vector<>();
 
         for (Colony c : colonies)
             tmp.addElement(c.getName());
@@ -310,7 +310,7 @@ public class Environment {
     }
 
     public Hashtable<String, Integer> getOps() {
-        Hashtable<String, Integer> r = new Hashtable<String, Integer>();
+        Hashtable<String, Integer> r = new Hashtable<>();
         for (Colony c : colonies) {
             r.put(c.getName(), c.id);
         }

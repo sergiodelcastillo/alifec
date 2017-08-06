@@ -136,11 +136,7 @@ public class DialogAbout extends JDialog {
                         .addGap(22, 22, 22))
         );
 
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                dispose();
-            }
-        });
+        closeButton.addActionListener(evt -> dispose());
         pack();
     }
 

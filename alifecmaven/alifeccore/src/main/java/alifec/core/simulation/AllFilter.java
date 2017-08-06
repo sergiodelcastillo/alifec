@@ -15,13 +15,13 @@ public class AllFilter implements FilenameFilter {
     private String begin = "";
 
 
-    Vector<String> names;
+    private Vector<String> names;
 
 
     public AllFilter(String end) {
         this.end = end;
         this.begin = "";
-        names = new Vector<String>();
+        names = new Vector<>();
     }
 
     public boolean accept(File dir, String name) {
@@ -40,10 +40,10 @@ public class AllFilter implements FilenameFilter {
      * Retorna un vector de String con todos los nombres
      * de los archivos .c o .cpp o .h del directorio path.
      */
-    public static final Vector<String> list_file_cpp(String path) {
+    public static Vector<String> list_file_cpp(String path) {
 
         String[] cpp_files = new String[]{".h", ".c", ".cpp"};
-        Vector<String> names = new Vector<String>();
+        Vector<String> names = new Vector<>();
 
         for (String ext : cpp_files) {
             File[] cpp_colonies = new File(path).listFiles(new AllFilter(ext));
@@ -63,7 +63,7 @@ public class AllFilter implements FilenameFilter {
      */
     public static Vector<String> listNamesCpp(String path) {
         String[] cpp_files = new String[]{".h", ".c", ".cpp"};
-        Vector<String> names = new Vector<String>();
+        Vector<String> names = new Vector<>();
         try {
             find:
             for (String ext : cpp_files) {
@@ -100,7 +100,7 @@ public class AllFilter implements FilenameFilter {
      * List all file that end with .java it the folder path without the extension .java
      */
     public static Vector<String> listNamesJava(String path) {
-        Vector<String> names = new Vector<String>();
+        Vector<String> names = new Vector<>();
         File[] cpp_colonies = new File(path).listFiles(new AllFilter(".java"));
 
         if (cpp_colonies != null) {
@@ -117,7 +117,7 @@ public class AllFilter implements FilenameFilter {
      * @return list of files that end with java
      */
     public static Vector<File> getFilesJava(String path) {
-        Vector<File> names = new Vector<File>();
+        Vector<File> names = new Vector<>();
         File[] cpp_colonies = new File(path).listFiles(new AllFilter(".java"));
 
         if (cpp_colonies != null) {

@@ -81,7 +81,7 @@ public class ContestUI extends JFrame implements ActionListener {
             initComponents();
             pack();
             setMinimumSize(new Dimension(getWidth(), getHeight()));
-            setDefaultCloseOperation(EXIT_ON_CLOSE);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             openContest.setEnabled(false);
             setVisible(true);
         } else {
@@ -106,7 +106,7 @@ public class ContestUI extends JFrame implements ActionListener {
                 String name;
 
                 if (list.isEmpty()) {
-                    Vector<Object> results = new Vector<Object>();
+                    Vector<Object> results = new Vector<>();
                     new DialogNewContest(null, results);
 
                     if (results.isEmpty())
@@ -328,7 +328,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(newContest)) {
-            Vector<Object> result = new Vector<Object>();
+            Vector<Object> result = new Vector<>();
             new DialogNewContest(this, result);
 
             if (result.size() == 4) {

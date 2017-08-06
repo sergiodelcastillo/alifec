@@ -1,7 +1,4 @@
-package alifec.core.simulation; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
+package alifec.core.simulation;
 
 import alifec.core.simulation.nutrients.*;
 
@@ -160,7 +157,7 @@ public class Agar {
      * @return a list of all nutrients.
      */
     public Vector<String> getNutrients() {
-        Vector<String> res = new Vector<String>();
+        Vector<String> res = new Vector<>();
         for (Nutrient n : nutrient) {
             res.addElement(n.toString());
         }

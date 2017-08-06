@@ -27,8 +27,8 @@ public class DialogPreferences extends JDialog implements ActionListener {
     private ContestUI father;
     private JTextField nameOfContest;
     private JTextField defaultPath;
-    private JComboBox defaultPause;
-    private JComboBox modeOfContest;
+    private JComboBox<String> defaultPause;
+    private JComboBox<String> modeOfContest;
     private JCheckBox[] nutrients = new JCheckBox[Agar.nutrient.length];
 
     private final String[] time = new String[]{"200", "400", "600", "800",
@@ -111,14 +111,14 @@ public class DialogPreferences extends JDialog implements ActionListener {
         defaultPath.setMaximumSize(max);
 
         JLabel labelDefaultPause = new JLabel("Pause Between Battles ");
-        defaultPause = new JComboBox(time);
+        defaultPause = new JComboBox<>(time);
         defaultPause.setSelectedItem(father.getContest().getTimeWait() + "");
         defaultPause.setMaximumSize(max);
         defaultPause.setSelectedItem(father.getContest().getTimeWait() + "");
 
 
         JLabel labelDefaultMode = new JLabel("Default Mode");
-        modeOfContest = new JComboBox(new String[]{"Programmer", "Competition"});
+        modeOfContest = new JComboBox<>(new String[]{"Programmer", "Competition"});
         modeOfContest.setMaximumSize(max);
         modeOfContest.setSelectedIndex(father.getContest().getMode());
 
@@ -277,6 +277,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
     }
     
     public boolean validateNameOfContest(String s) {
+        //TODO: armar un validador del contest
         Pattern p = Pattern.compile("[^A-Za-z0-9\\_\\-]+");
         Matcher m = p.matcher(s);
 

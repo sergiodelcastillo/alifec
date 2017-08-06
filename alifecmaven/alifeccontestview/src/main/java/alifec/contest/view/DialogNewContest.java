@@ -149,7 +149,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
 
     public void keyPressed(KeyEvent e) {
         if (e.getSource().equals(this.textName)) {
-            StringBuffer name = new StringBuffer(textName.getText());
+            StringBuilder name = new StringBuilder(textName.getText());
 
             for (int i = name.length() - 1; i >= 0; i--) {
                 if (!Character.isLetterOrDigit(name.charAt(i)) && name.charAt(i) != '(' && name.charAt(i) != ')') {

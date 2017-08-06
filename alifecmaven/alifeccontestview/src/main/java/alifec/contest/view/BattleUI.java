@@ -8,7 +8,6 @@ package alifec.contest.view;
 
 
 import alifec.contest.simulationUI.GUIdosD;
-import alifec.core.contest.Contest;
 import alifec.core.contest.ContestConfig;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.battles.BattleManager;
@@ -31,8 +30,8 @@ public class BattleUI extends JPanel implements ActionListener {
     private final ContestUI father;
 
     private final Environment environment;
-    private final DefaultListModel model = new DefaultListModel();
-    private final JList battlesList = new JList(model);
+    private final DefaultListModel<BattleRun> model = new DefaultListModel<>();
+    private final JList<BattleRun> battlesList = new JList<>(model);
     private JScrollPane battlesSP;
     private JComboBox oponent1;
     private JComboBox oponent2;
@@ -99,7 +98,7 @@ public class BattleUI extends JPanel implements ActionListener {
 
     private void validate(Vector<String[]> battles, Vector<String[]> backup) {
         // Eliminar las batallas que ya se corrieron
-        Vector<String[]> todelete = new Vector<String[]>();
+        Vector<String[]> todelete = new Vector<>();
         for (String[] line : battles) {
             for (String[] line_backup : backup) {
                 if ((line[0].toLowerCase().equals(line_backup[0].toLowerCase()) &&
@@ -147,7 +146,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     private Vector<String[]> readBattles(String name) {
-        Vector<String[]> res = new Vector<String[]>();
+        Vector<String[]> res = new Vector<>();
         Tournament t = father.getContest().getTournamentManager().lastElement();
         String url = t.getBattleManager().getPath() + File.separator + name;
 
@@ -159,7 +158,7 @@ public class BattleUI extends JPanel implements ActionListener {
             while ((line = br.readLine()) != null) {
                 String[] s = line.split(",");
 
-                if (null != s && 3 <= s.length) {
+                if (3 <= s.length) {
                     res.addElement(new String[]{s[0], s[1], s[2]});
                 }
             }
@@ -252,7 +251,7 @@ public class BattleUI extends JPanel implements ActionListener {
             } else if (battlesList.isSelectionEmpty()) {
                 Message.printErr(father, "You must select a battle.");
             } else {
-                remove((BattleRun) battlesList.getSelectedValue());
+                remove(battlesList.getSelectedValue());
 
                 if (battlesList.getSelectedIndex() >= model.size())
                     battlesList.setSelectedIndex(model.size() - 1);
@@ -272,7 +271,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 Message.printErr(father, "You must select a battle.");
             } else {
                 father.setMessage("Running Selected Battle");
-                final DefaultListModel model_tmp = new DefaultListModel();
+                final DefaultListModel<BattleRun> model_tmp = new DefaultListModel<>();
                 model_tmp.addElement(battlesList.getSelectedValue());
 
                 createBattlesFileSelected();
@@ -280,7 +279,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 new GUIdosD(father, model_tmp);
                 
                 deleteBattlesFile();
-                remove((BattleRun) battlesList.getSelectedValue());
+                remove(battlesList.getSelectedValue());
 
                 if (battlesList.getSelectedIndex() >= model.size())
                     battlesList.setSelectedIndex(model.size() - 1);
@@ -406,7 +405,7 @@ public class BattleUI extends JPanel implements ActionListener {
             Message.printErr(this, "There are existing battles.");
     }
 
-    public DefaultListModel getBattles() {
+    public DefaultListModel<BattleRun> getBattles() {
         return model;
     }
 
@@ -429,10 +428,10 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public boolean delete(String colonyName) {
-        Vector<BattleRun> indexes = new Vector<BattleRun>();
+        Vector<BattleRun> indexes = new Vector<>();
 
         for (int i = 0; i < getBattles().size(); i++) {
-            BattleRun b = (BattleRun) getBattles().elementAt(i);
+            BattleRun b = getBattles().elementAt(i);
 
             if (b.name1.equals(colonyName) || b.name2.equals(colonyName))
                 indexes.addElement(b);

@@ -5,6 +5,7 @@ import java.util.Properties;
 
 /**
  * Created by Sergio Del Castillo on 05/08/17.
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ContestConfig {
 

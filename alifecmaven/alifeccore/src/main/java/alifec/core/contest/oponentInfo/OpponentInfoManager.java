@@ -10,7 +10,7 @@ import java.util.Vector;
 
 
 public class OpponentInfoManager {
-    Vector<OpponentInfo> opponents = new Vector<OpponentInfo>();
+    Vector<OpponentInfo> opponents = new Vector<>();
     private static final String OPPONENTS_FILE = "competitors";
     private String path = "";
 

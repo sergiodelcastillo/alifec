@@ -54,8 +54,8 @@ public class TournamentUI extends JPanel implements ActionListener {
         setBorder(border);
         this.father = cui;
         this.tm = cui.getContest().getTournamentManager();
-        this.tPanel = new Vector<TournamentPanel>(tm.size());
-        this.tScroll = new Vector<JScrollPane>(tm.size());
+        this.tPanel = new Vector<>(tm.size());
+        this.tScroll = new Vector<>(tm.size());
 
         border.setTitle(tm.getSelected().NAME);
         this.setLayout(new BorderLayout());

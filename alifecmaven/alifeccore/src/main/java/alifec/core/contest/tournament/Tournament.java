@@ -44,7 +44,7 @@ public class Tournament implements Comparable<Tournament> {
     public Tournament(String n, String path, int mode) throws IOException {
         NAME = n;
         battleManager = new BattleManager(path + File.separator + NAME, mode);
-        colonies = new Vector<String>();
+        colonies = new Vector<>();
     }
 
     /**
@@ -95,7 +95,7 @@ public class Tournament implements Comparable<Tournament> {
     }
 
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
-        Hashtable<String, Integer> h = new Hashtable<String, Integer>();
+        Hashtable<String, Integer> h = new Hashtable<>();
         Hashtable<String, Float> acumulated = getAccumulatedEnergy();
         int MAX = 3;
         int size = MAX > acumulated.size() ? acumulated.size() : MAX;
@@ -103,7 +103,7 @@ public class Tournament implements Comparable<Tournament> {
         // agregar los que tienen puntos
         for (int index = 0; index < size; index++) {
             Float max = Collections.max(acumulated.values());
-            Vector<String> winTemp = new Vector<String>();
+            Vector<String> winTemp = new Vector<>();
 
             for (String s : acumulated.keySet()) {
                 if (acumulated.get(s).equals(max))

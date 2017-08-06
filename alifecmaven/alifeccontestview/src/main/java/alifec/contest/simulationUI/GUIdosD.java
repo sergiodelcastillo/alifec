@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class GUIdosD extends JDialog {
     static int K = 8;
     static Point rel = new Point(2, 2);
-    AtomicReference<JPanel> centerPanel = new AtomicReference<JPanel>();
-    AtomicReference<JPanel> southPanel = new AtomicReference<JPanel>();
+    AtomicReference<JPanel> centerPanel = new AtomicReference<>();
+    AtomicReference<JPanel> southPanel = new AtomicReference<>();
 
     final MiThread thread;
 

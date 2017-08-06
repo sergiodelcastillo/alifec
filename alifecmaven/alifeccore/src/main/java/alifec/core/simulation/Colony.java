@@ -12,7 +12,7 @@ import java.util.Vector;
 public abstract class Colony {
 
     final int id;
-    private final Vector<Cell> moList = new Vector<Cell>();
+    private final Vector<Cell> moList = new Vector<>();
     final String path;
 
     String name = "";
