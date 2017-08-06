@@ -5,13 +5,16 @@
 
 package alifec.contest.view;
 
-import exceptions.CreateBattleException;
-import lib.Environment;
-import lib.battles.BattleManager;
-import lib.battles.BattleRun;
-import lib.contest.Contest;
-import lib.tournament.Tournament;
-import simulationUI.GUIdosD;
+
+
+import alifec.contest.simulationUI.GUIdosD;
+import alifec.core.contest.Contest;
+import alifec.core.contest.ContestConfig;
+import alifec.core.contest.tournament.Tournament;
+import alifec.core.contest.tournament.battles.BattleManager;
+import alifec.core.contest.tournament.battles.BattleRun;
+import alifec.core.exception.CreateBattleException;
+import alifec.core.simulation.Environment;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +86,7 @@ public class BattleUI extends JPanel implements ActionListener {
 
                 BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);
 
-                addBattle(battle, father.getContest().getMode() == Contest.PROGRAMMER_MODE);
+                addBattle(battle, father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE);
             } catch (CreateBattleException ex) {
                 Message.printErr(father, ex.getMessage());
             }
@@ -312,7 +315,7 @@ public class BattleUI extends JPanel implements ActionListener {
 
                 BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);
 
-                if (!addBattle(battle, father.getContest().getMode() == Contest.PROGRAMMER_MODE))
+                if (!addBattle(battle, father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE))
                     Message.printErr(this, "Existing battle: " + battle.toString());
             } catch (CreateBattleException ex) {
                 Message.printErr(father, ex.getMessage());
@@ -388,7 +391,7 @@ public class BattleUI extends JPanel implements ActionListener {
                     Integer i_n = nutrients.get(n_n);    // index_nutrient
 
                     try {
-                        boolean option = father.getContest().getMode() == Contest.PROGRAMMER_MODE;
+                        boolean option = father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE;
 
                         if (!addBattle(new BattleRun(i_a, i_b, i_n, n_a, n_b, n_n), option)) {
                             existingBattle = true;
@@ -459,7 +462,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     void createBattlesFileSelected() {
-        if (father.getContest().getMode() == Contest.PROGRAMMER_MODE)
+        if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
             return;
 
         String path = father.getContest().getTournamentManager().lastElement().getBattleManager().getPath();
@@ -487,7 +490,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     boolean deleteBattlesFile() {
-        if (father.getContest().getMode() == Contest.PROGRAMMER_MODE)
+        if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
             return true;
 
         System.out.print("Removing back up ");
@@ -507,7 +510,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     void createBattlesFileAll() {
-        if (father.getContest().getMode() == Contest.PROGRAMMER_MODE)
+        if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
             return;
 
         String path = father.getContest().getTournamentManager().lastElement().getBattleManager().getPath();

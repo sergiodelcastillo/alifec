@@ -4,9 +4,9 @@
  */
 package alifec.contest.view;
 
-import lib.Agar;
-import lib.contest.Contest;
-import lib.nutrients.Nutrient;
+import alifec.core.contest.Contest;
+import alifec.core.simulation.Agar;
+import alifec.core.simulation.nutrients.Nutrient;
 
 import javax.swing.*;
 import java.awt.*;

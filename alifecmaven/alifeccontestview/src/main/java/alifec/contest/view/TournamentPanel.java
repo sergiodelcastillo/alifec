@@ -5,8 +5,9 @@
 
 package alifec.contest.view;
 
-import lib.tournament.Tournament;
-import lib.tournament.TournamentManager;
+
+import alifec.core.contest.tournament.Tournament;
+import alifec.core.contest.tournament.TournamentManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

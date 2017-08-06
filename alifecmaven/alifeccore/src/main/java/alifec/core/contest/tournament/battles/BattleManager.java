@@ -6,6 +6,7 @@
 package alifec.core.contest.tournament.battles;
 
 import alifec.core.contest.Contest;
+import alifec.core.contest.ContestConfig;
 
 import java.io.*;
 import java.util.Hashtable;
@@ -33,7 +34,7 @@ public class BattleManager {
     public BattleManager(String path, int mode) throws IOException {
         this.PATH = path;
         this.mode = mode;
-        if (mode == Contest.COMPETITION_MODE) {
+        if (mode == ContestConfig.COMPETITION_MODE) {
             File f = new File(path + File.separator + BATTLES_FILE);
             if (!f.exists()) f.createNewFile();
         }
@@ -53,7 +54,7 @@ public class BattleManager {
             throws IOException {
         Battle b = new Battle(n1, n2, nut, ene1, ene2);
 
-        if (mode == Contest.COMPETITION_MODE){
+        if (mode == ContestConfig.COMPETITION_MODE){
             b.save(getBattlesFileName());
         }
 

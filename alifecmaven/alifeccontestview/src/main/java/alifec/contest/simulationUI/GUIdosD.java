@@ -5,8 +5,9 @@
 
 package alifec.contest.simulationUI;
 
-import lib.Defs;
-import lib.contestUI.ContestUI;
+
+import alifec.contest.view.ContestUI;
+import alifec.core.simulation.Defs;
 
 import javax.swing.*;
 import java.awt.*;

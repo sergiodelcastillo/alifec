@@ -5,9 +5,11 @@
 
 package alifec.contest.view;
 
-import exceptions.CreateContestException;
-import exceptions.CreateTournamentException;
-import lib.contest.Contest;
+import alifec.core.contest.CompilationResult;
+import alifec.core.contest.Contest;
+import alifec.core.contest.ContestConfig;
+import alifec.core.exception.CreateContestException;
+import alifec.core.exception.CreateTournamentException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -112,7 +114,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
                     name = (String) results.elementAt(0);
 
-                    Contest.createContest((String) results.elementAt(1), name, ((Boolean) results.elementAt(3)));
+                    Contest.createContestFolder((String) results.elementAt(1), name, ((Boolean) results.elementAt(3)));
 
                     if (!results.lastElement().equals(Boolean.TRUE))
                         return false;
@@ -128,7 +130,7 @@ public class ContestUI extends JFrame implements ActionListener {
                 }
             }
 
-            contest = new Contest(path);
+            createContest(path);
         } catch (IOException ex) {
             Message.printErr(null, "Error de lectura...");
             return false;
@@ -142,6 +144,28 @@ public class ContestUI extends JFrame implements ActionListener {
         return true;
     }
 
+    public void createContest(String path) throws CreateTournamentException, IOException, CreateContestException {
+        ContestConfig config = ContestConfig.build(path);
+        if(!config.isValid())
+            throw new CreateContestException("Bad config file. You could delete the following file:\n"
+                    + path + File.separator + ContestConfig.CONFIG_FILE);
+
+        CompilationResult result = contest.compileMOs(contest.getMOsPath());
+
+                //todo: improve it .. it will show as dialogs windows as errors it have but it should show one dialog with all errors.
+        if (result.haveErrors()) {
+            for (String error : result.getJavaMessages()) {
+                Message.printErr(null, error);
+            }
+            for (String error : result.getCppMessages()) {
+                Message.printErr(null, error);
+            }
+        }
+
+        //load everything
+        contest = new Contest(config);
+
+    }
 
     private boolean reloadContest(String path, String name) {
         try {
@@ -153,9 +177,11 @@ public class ContestUI extends JFrame implements ActionListener {
             } else {
                 contest.updateConfig(path, name, contest.getMode(), contest.getTimeWait());
             }
-            contest = new Contest(path);
+
+            createContest(path);
+
         } catch (IOException ex) {
-            Message.printErr(null, "Error de lectura...");
+            Message.printErr(null, "IO Exception: " + ex.getMessage());
             return false;
         } catch (CreateTournamentException ex) {
             Message.printErr(null, ex.getMessage());
@@ -174,7 +200,7 @@ public class ContestUI extends JFrame implements ActionListener {
             this.setJMenuBar(createMenu());
             this.addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent e) {
-                    if (contest.getMode() == Contest.COMPETITION_MODE)
+                    if (contest.getMode() == ContestConfig.COMPETITION_MODE)
                         if (!contest.createBackUp())
                             System.out.println("Error: cannot create the backup file");
                 }
@@ -263,7 +289,7 @@ public class ContestUI extends JFrame implements ActionListener {
         group.add(programmerMode);
         group.add(competitionMode);
 
-        if (contest.getMode() == Contest.PROGRAMMER_MODE) {
+        if (contest.getMode() == ContestConfig.PROGRAMMER_MODE) {
             programmerMode.setSelected(true);
         } else {
             competitionMode.setSelected(true);
@@ -311,7 +337,7 @@ public class ContestUI extends JFrame implements ActionListener {
                 Boolean load = (Boolean) result.elementAt(2);
                 Boolean examples = (Boolean) result.elementAt(3);
 
-                if (Contest.createContest(path, name, examples)) {
+                if (Contest.createContestFolder(path, name, examples)) {
                     if (load) {
                         this.reloadContest(path, name);
                         this.reloadComponents();
@@ -331,15 +357,15 @@ public class ContestUI extends JFrame implements ActionListener {
                 this.reloadComponents();
             }
         } else if (e.getSource().equals(quit)) {
-            if (contest.getMode() == Contest.COMPETITION_MODE)
+            if (contest.getMode() == ContestConfig.COMPETITION_MODE)
                 if (!contest.createBackUp())
                     System.out.println("Error: cannot create the backup file");
 
             System.exit(EXIT_ON_CLOSE);
         } else if (e.getSource().equals(programmerMode)) {
-            contest.setMode(Contest.PROGRAMMER_MODE);
+            contest.setMode(ContestConfig.PROGRAMMER_MODE);
         } else if (e.getSource().equals(competitionMode)) {
-            contest.setMode(Contest.COMPETITION_MODE);
+            contest.setMode(ContestConfig.COMPETITION_MODE);
         } else if (e.getSource().equals(report)) {
             new ContestReport(this);
         } else if (e.getSource().equals(preferences)) {

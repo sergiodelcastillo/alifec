@@ -5,6 +5,7 @@
 package alifec.core.contest.tournament;
 
 import alifec.core.contest.Contest;
+import alifec.core.contest.ContestConfig;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.CreateTournamentException;
 
@@ -93,7 +94,7 @@ public class TournamentManager {
     public void newTournament(Vector<String> colonies) throws CreateTournamentException {
         String newT = getNextName();
 
-        if (Contest.COMPETITION_MODE == mode) {
+        if (ContestConfig.COMPETITION_MODE == mode) {
             if (!new File(PATH + File.separator + newT).mkdir())
                 throw new CreateTournamentException("Can not create a new folder...");
         }
@@ -132,11 +133,11 @@ public class TournamentManager {
 
         File file = new File(t.getBattleManager().getBattlesFileName());
         if (file.exists() && !file.delete())
-            if (mode == Contest.COMPETITION_MODE) return false;
+            if (mode == ContestConfig.COMPETITION_MODE) return false;
 
         file = new File(url);
         if (file.exists() && !file.delete())
-            if (mode == Contest.COMPETITION_MODE) return false;
+            if (mode == ContestConfig.COMPETITION_MODE) return false;
 
 
         tournaments.remove(selected);
@@ -209,8 +210,8 @@ public class TournamentManager {
     }
 
     public void setMode(int mode) {
-        if (this.mode == Contest.PROGRAMMER_MODE &&
-                mode == Contest.COMPETITION_MODE) {
+        if (this.mode == ContestConfig.PROGRAMMER_MODE &&
+                mode == ContestConfig.COMPETITION_MODE) {
             lastElement().getBattleManager().setMode(mode);
             lastElement().save(PATH);
         }

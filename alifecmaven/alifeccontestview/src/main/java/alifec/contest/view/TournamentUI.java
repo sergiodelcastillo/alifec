@@ -5,10 +5,12 @@
 
 package alifec.contest.view;
 
-import exceptions.CreateTournamentException;
-import lib.tournament.JavaFile;
-import lib.tournament.Tournament;
-import lib.tournament.TournamentManager;
+
+
+import alifec.core.contest.tournament.JavaFile;
+import alifec.core.contest.tournament.Tournament;
+import alifec.core.contest.tournament.TournamentManager;
+import alifec.core.exception.CreateTournamentException;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

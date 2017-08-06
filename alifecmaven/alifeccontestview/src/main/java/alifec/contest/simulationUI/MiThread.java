@@ -1,17 +1,19 @@
 /**
- * @author Yeyo
+ * @author Sergio Del Castillo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 package alifec.contest.simulationUI;
 
-import exceptions.MoveMicroorganismException;
-import lib.Colony;
-import lib.Defs;
-import lib.Environment;
-import lib.battles.BattleRun;
-import lib.contestUI.ContestUI;
-import lib.contestUI.Message;
-import lib.tournament.Tournament;
+
+
+import alifec.contest.view.ContestUI;
+import alifec.contest.view.Message;
+import alifec.core.contest.tournament.Tournament;
+import alifec.core.contest.tournament.battles.BattleRun;
+import alifec.core.exception.MoveMicroorganismException;
+import alifec.core.simulation.Colony;
+import alifec.core.simulation.Defs;
+import alifec.core.simulation.Environment;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +22,7 @@ import java.util.Vector;
 
 import static java.lang.Math.max;
 import static java.lang.Math.pow;
+import static java.lang.Math.round;
 
 public class MiThread extends Thread {
     enum Status{STATUS_PLAY,STATUS_PAUSE, STATUS_STOPPED }

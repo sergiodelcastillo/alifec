@@ -1,5 +1,5 @@
 /**
- * @author Yeyo
+ * @author Sergio
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
@@ -26,43 +26,9 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static alifec.core.contest.ContestConfig.REPORT_FOLDER;
+
 public class Contest {
-
-    /**
-     * List of nutrients that are used in contest.
-     * generic form: "nutrient_id"
-     * name : is the nutrient name used in each tournament
-     */
-    public static final String NUTRIENTS_FILE = "nutrients";
-
-    /**
-     * Folder of source colonies.
-     */
-    public static String MOS_FOLDER = "MOs";
-
-    /**
-     * Folder of reports.
-     */
-    public static String REPORT_FOLDER = "Report";
-
-    /**
-     * Log Folder.
-     */
-    public static final String LOG_FOLDER = "Log";
-
-    /**
-     * Configuration file.
-     */
-    public static final String CONFIG_FILE = "config";
-
-    /**
-     * back up file
-     */
-    public static final String BACKUP_FOLDER = "Backup";
-
-    public static final int PROGRAMMER_MODE = 0;
-    public static final int COMPETITION_MODE = 1;
-
 
     /**
      * Environment ...
@@ -74,61 +40,33 @@ public class Contest {
     private TournamentManager tournaments;
 
     /**
-     * info of all oponents
+     * info of all opponents
      */
-    private OpponentInfoManager oponentsInfo;
+    private OpponentInfoManager opponentsInfo;
 
-    /**
-     * Absolute path of Contest.
-     */
-    private String PATH = "";
-    /**
-     * name of contest
-     */
-    private String NAME = "";
+    private ContestConfig config;
 
-    /**
-     * mode of contest:
-     * programmer (mode = 0): the competitor should use this mode.
-     * competition(mode = 1): reserved to compite.
-     */
-    private int mode = 0;
-
-    /**
-     * time (in Milliseconds) between battles.
-     */
-    private int pauseBetweenBattles = 5;
-
-    public Contest(String path) throws IOException, CreateTournamentException, CreateContestException {
-        init(path);
-    }
-
-    private void init(String path) throws IOException, CreateTournamentException, CreateContestException {
-        if (!loadConfig(path))
-            throw new CreateContestException("Bad config file. You could delete the following file:\n"
-                    + path + File.separator + CONFIG_FILE);
-
-        System.out.println("Name: " + NAME);
-
-        // compile all MOs
-        compile();
-        oponentsInfo = new OpponentInfoManager(path + File.separator + NAME);
+    public Contest(ContestConfig config) throws IOException, CreateTournamentException, CreateContestException {
+        this.config = config;
+        opponentsInfo = new OpponentInfoManager(config.getContestPath());
         environment = new Environment(getMOsPath());
-        tournaments = new TournamentManager(PATH + File.separator + NAME, mode);
+        tournaments = new TournamentManager(config.getContestPath(), config.getMode());
 
         initTournament();
 
-        oponentsInfo.read();
+        opponentsInfo.read();
         Enumeration<Integer> ids = environment.getOps().elements();
 
         while (ids.hasMoreElements()) {
             Integer i = ids.nextElement();
-            oponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
+            opponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
         }
     }
 
     private void initTournament() {
-        if (tournaments.lastElement() != null && tournaments.lastElement().hasBackUpFile() && mode == COMPETITION_MODE) {
+        if (tournaments.lastElement() != null &&
+                tournaments.lastElement().hasBackUpFile() &&
+                config.getMode() == ContestConfig.COMPETITION_MODE) {
             Vector<String> conflict = new Vector<String>();
 
             if (!get_conflict(conflict)) {
@@ -173,7 +111,7 @@ public class Contest {
     private boolean get_conflict(Vector<String> c) {
         Vector<String[]> battles = new Vector<String[]>();
         Vector<String[]> backup = new Vector<String[]>();
-        String t = PATH + File.separator + NAME + File.separator + tournaments.lastElement().NAME;
+        String t = config.getContestPath() + File.separator + tournaments.lastElement().NAME;
 
         load_file(t + File.separator + "battles.csv", battles);
         load_file(t + File.separator + "battles_backup.csv", backup);
@@ -237,28 +175,32 @@ public class Contest {
      * Compile .java and .cpp files
      * java files: are compiled and saved in the lib/MOs folder
      * C/Cpp files: are build a unique library(cppcolonies.so/.dll) and saved in the lib/MOs folder.
+     *
      * @return true if successfully
      */
-    private boolean compile() {
+    public CompilationResult compileMOs(String MOsPath) {
         System.out.println("\nCompile JAVA Files");
+        CompilationResult result = new CompilationResult();
         try {
-            for (File f : AllFilter.get_files_java(getMOsPath())) {
+            for (File f : AllFilter.getFilesJava(MOsPath)) {
 
                 if (compileMOsJava(f.getParent(), f.getName())) {
                     System.out.println(f.getAbsolutePath() + " [OK]");
                 } else {
                     System.err.println(f.getAbsolutePath() + " [FAIL]");
-                    Message.printErr(null, "Could not compile " + f.getName() + ". For more details use make");
+                    result.logJavaError("Could not compileMOs " + f.getName() + ". For more details use make");
+                    //Message.printErr(null, "Could not compileMOs " + f.getName() + ". For more details use make");
                 }
             }
-        } catch (exceptions.CompilerException ex) {
-            Message.printErr(null, ex.getMessage());
+        } catch (CompilerException ex) {
+            result.logJavaError(ex.getMessage());
+            //Message.printErr(null, ex.getMessage());
         }
 
         System.out.println("\nCompile C++ Files");
         System.out.print("Update C++ Files: ");
 
-        if (updateTournamentCpp() && updateIncludes()) {
+        if (updateTournamentCpp(MOsPath) && updateIncludes(MOsPath)) {
             System.out.println("[OK]");
             System.out.print("Create libcppcolonies ");
 
@@ -266,18 +208,20 @@ public class Contest {
                 System.out.println("[OK]");
             } else {
                 System.out.println("[FAIL]");
-                Message.printErr(null, "Could not compile one o more microorganisms of C++. For more details use make");
+                result.logCppError("Could not compileMOs one o more microorganisms of C++. For more details use make");
+                //Message.printErr(null, "Could not compileMOs one o more microorganisms of C++. For more details use make");
             }
 
         } else
             System.out.println("[FAIL]");
 
-        return true;
+        return result;
     }
 
     /**
-     * this method use the native compiler(Javac) to compile the java codes.
+     * this method use the native compiler(Javac) to compileMOs the java codes.
      * The compiled codes are saved in the lib/MOs folder
+     *
      * @param path absolute path of C/C++ microorganism
      * @param name of destination library
      * @return true if the compilation is successfully
@@ -301,7 +245,7 @@ public class Contest {
 
             return s == 0;
         } catch (FileNotFoundException ex) {
-            System.out.println("Fail to compile: " + path + File.separator + name + ". File not found.");
+            System.out.println("Fail to compileMOs: " + path + File.separator + name + ". File not found.");
             return false;
         }
 
@@ -311,6 +255,7 @@ public class Contest {
      * Compila todos los MOs C++ y genera una libreria dinamica
      * llamada libcppcolonies.dll o libcppcolonies.so de acuerdo al
      * sistema operativo. La librería se almacena en lib/MOs
+     *
      * @param mospath URL of Microorganism sources
      * @return true if is successfully
      */
@@ -322,12 +267,12 @@ public class Contest {
             String[] console = {""};
 
             if (os.contains("linux")) {
-                String com = "g++ -o "+getMOsPath()+"/lib/MOs/libcppcolonies.so -fPIC -Wall -shared -lm -Icpp -I\"" +
+                String com = "g++ -o " + getMOsPath() + "/lib/MOs/libcppcolonies.so -fPIC -Wall -shared -lm -Icpp -I\"" +
                         mospath + "\"  cpp/lib_CppColony.cpp";
 
                 console = new String[]{"/bin/bash", "-c", com};
             } else if (os.contains("windows")) {
-                String com = "g++ -o "+getMOsPath()+"/lib/MOs/libcppcolonies.dll -Wl,--add-stdcall-alias -Wall -shared -lm -Icpp -I\"" +
+                String com = "g++ -o " + getMOsPath() + "/lib/MOs/libcppcolonies.dll -Wl,--add-stdcall-alias -Wall -shared -lm -Icpp -I\"" +
                         mospath + "\"  cpp/lib_CppColony.cpp";
 
                 console = new String[]{"cmd.exe", "/C", com};
@@ -352,13 +297,14 @@ public class Contest {
     /**
      * Crea el archivo Tournament.cpp con los nombres que se
      * pasan como argumento.
+     *
      * @return true if is successfully
      */
-    private boolean updateTournamentCpp() {
-        Vector<String> names = AllFilter.list_names_cpp(getMOsPath());
-        File env = new File(getMOsPath()+"/lib/MOs/"+ File.separator + "Environment.cpp");
+    private boolean updateTournamentCpp(String MOsPath) {
+        Vector<String> names = AllFilter.listNamesCpp(MOsPath);
+        File env = new File(MOsPath + "/lib/MOs/" + File.separator + "Environment.cpp");
         try {
-            if(!env.exists())
+            if (!env.exists())
                 env.createNewFile();
 
             PrintWriter pw = new PrintWriter(env);
@@ -392,15 +338,16 @@ public class Contest {
     /**
      * Crea el archivo includemmos.h con los nombres que se
      * pasan como argumento:
+     *
      * @return true if  is successfully
      */
-    private boolean updateIncludes() {
-        Vector<String> files = AllFilter.list_file_cpp(getMOsPath());
+    private boolean updateIncludes(String MOsPath) {
+        Vector<String> files = AllFilter.list_file_cpp(MOsPath);
 
-        File includes = new File(getMOsPath()+"/lib/MOs/"+ File.separator + "includemos.h");
+        File includes = new File(MOsPath + "/lib/MOs/" + File.separator + "includemos.h");
         try {
 
-            if(!includes.exists())
+            if (!includes.exists())
                 includes.createNewFile();
 
             PrintWriter pw = new PrintWriter(includes);
@@ -428,9 +375,9 @@ public class Contest {
         }
 
         String contestName = path + File.separator + name;
-        String MOsFolder = contestName + File.separator + MOS_FOLDER;
+        String MOsFolder = contestName + File.separator + ContestConfig.MOS_FOLDER;
         String ReportFolder = contestName + File.separator + REPORT_FOLDER;
-        String NutrientFile = contestName + File.separator + NUTRIENTS_FILE;
+        String NutrientFile = contestName + File.separator + ContestConfig.NUTRIENTS_FILE;
 
         return new File(contestName).exists() &&
                 new File(MOsFolder).exists() &&
@@ -447,7 +394,7 @@ public class Contest {
         String[] list = new File(path).list();
 
         for (String names : list) {
-            if (names.equals(CONFIG_FILE)) {
+            if (names.equals(ContestConfig.CONFIG_FILE)) {
                 return true;
             }
         }
@@ -457,7 +404,7 @@ public class Contest {
     public Hashtable<String, Integer> getNutrients() {
 
         Hashtable<String, Integer> nutri = new Hashtable<String, Integer>();
-        String url = PATH + File.separator + NAME + File.separator + NUTRIENTS_FILE;
+        String url = config.getContestPath() + File.separator + ContestConfig.NUTRIENTS_FILE;
 
         try {
             FileReader fr = new FileReader(url);
@@ -484,74 +431,24 @@ public class Contest {
         return nutri;
     }
 
-    /* private boolean loadConfig(String path) throws IOException {
-        // read the config File!
-        FileReader fr = new FileReader(path + File.separator + CONFIG_FILE);
-        BufferedReader br = new BufferedReader(fr);
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            if (!line.equalsIgnoreCase("")) {
-                String[] lineSplit = line.split("=");
-                if (lineSplit.length == 2) {
-                    if (lineSplit[1].equalsIgnoreCase("."))
-                        set(lineSplit[0], path);
-                    else
-                        set(lineSplit[0], lineSplit[1]);
-                }
-            }
-        }
-        return validate_config();
-    }*/
 
     /**
-     * Read the config File in the project.
+     * Reload the configuration. If the config is not valid then it is discarded.
      *
-     * @param path path to read the config
-     * @return true if is successfully
-     * @throws IOException if can not find the config file
+     * @return
+     * @throws IOException
      */
-    private boolean loadConfig(String path) throws IOException {
-        Properties property = new Properties();
-        InputStream is = new FileInputStream(path + File.separator + CONFIG_FILE);
-
-        property.load(is);
-
-        for (Object object : property.keySet()) {
-            this.set(object.toString(), property.getProperty(object.toString()));
-        }
-        return validate_config();
-    }
-
     public boolean reloadConfig() throws IOException {
-        return loadConfig(PATH);
+        ContestConfig configTmp = ContestConfig.build(config.getPath());
+
+        if (configTmp.isValid()) {
+            config = configTmp;
+            return true;
+        }
+
+        return false;
     }
 
-    private boolean validate_config() {
-        if (pauseBetweenBattles < 0) {
-            return false;
-        }
-
-        if (mode < 0 || mode > 1) {
-            return false;
-        }
-
-        if (NAME.equalsIgnoreCase("")) {
-            return false;
-        }
-
-        if (PATH.equalsIgnoreCase("")) {
-            return false;
-        }
-
-        File f = new File(PATH);
-        if (!f.exists())
-            return false;
-
-        f = new File(PATH + File.separator + NAME);
-
-        return f.exists();
-    }
 
     public static boolean createConfig(String path, String contestName) {
         Properties property = new Properties();
@@ -561,7 +458,7 @@ public class Contest {
         property.setProperty("pause between battles", "100");
 
         try {
-            property.store(new FileWriter(path + File.separator + CONFIG_FILE),
+            property.store(new FileWriter(path + File.separator + ContestConfig.CONFIG_FILE),
                     "Configuration File\n Warning: do not modify this file");
         } catch (IOException e) {
             return false;
@@ -580,16 +477,16 @@ public class Contest {
         return results;
     }
 
-    public static boolean createContest(String path, String name, boolean examples) {
+    public static boolean createContestFolder(String path, String name, boolean examples) {
         PrintWriter pw;
         try {
             String contestName = path + File.separator + name;
-            String MOsFolder = contestName + File.separator + MOS_FOLDER;
+            String MOsFolder = contestName + File.separator + ContestConfig.MOS_FOLDER;
             String ReportFolder = contestName + File.separator + REPORT_FOLDER;
             new File(contestName).mkdir();
             new File(MOsFolder).mkdir();
             new File(ReportFolder).mkdir();
-            File contestFile = new File(contestName + File.separator + NUTRIENTS_FILE);
+            File contestFile = new File(contestName + File.separator + ContestConfig.NUTRIENTS_FILE);
             pw = new PrintWriter(contestFile);
 
             for (Nutrient n : Agar.nutrient)
@@ -608,13 +505,13 @@ public class Contest {
         return true;
     }
 
-    public static String createContest(String path, boolean examples) throws FileNotFoundException {
+ /*   public static String createContestFolder(String path, boolean examples) throws FileNotFoundException {
         Calendar c = new GregorianCalendar();
         String name = "Contest" + Integer.toString(c.get(Calendar.YEAR));
 
-        createContest(path, name, examples);
+        createContestFolder(path, name, examples);
         return name;
-    }
+    }*/
 
     /**
      * update the config file into the proyect.
@@ -633,7 +530,7 @@ public class Contest {
         property.setProperty("pause between battles", "" + pause);
 
         try {
-            property.store(new FileWriter(this.PATH + File.separator + CONFIG_FILE),
+            property.store(new FileWriter(config.getConfigFilePath()),
                     "Configuration File\n Warning: do not modify this file");
         } catch (IOException e) {
             return false;
@@ -643,7 +540,7 @@ public class Contest {
     }
 
     public void updateNutrient(int[] nutrients) throws IOException {
-        String url = PATH + File.separator + NAME + File.separator + NUTRIENTS_FILE;
+        String url = config.getNutrientsFilePath();
 
         new File(url).renameTo(new File(url + "_backup"));
 
@@ -659,44 +556,11 @@ public class Contest {
     }
 
     public void setMode(int mode) {
-        this.mode = mode;
+        this.config.setMode(mode);
         this.tournaments.setMode(mode);
 
     }
 
-    boolean set(String type, String option) {
-        type = type.trim().toLowerCase();
-        option = option.trim();
-
-        if (type.equals("") || option.equals(""))
-            return false;
-
-        if (type.equals("url")) {
-            try {
-                PATH = new File(option).getCanonicalPath();
-            } catch (IOException ex) {
-                return false;
-            }
-        } else if (type.equals("mos")) {
-//			MOS_FOLDER = option;
-            return false;
-        } else if (type.equals("name")) {
-            NAME = option;
-        } else if (type.equals("mode")) {
-            try {
-                mode = Integer.parseInt(option);
-            } catch (NumberFormatException ex) {
-                return false;
-            }
-        } else if (type.equals("pause between battles")) {
-            try {
-                pauseBetweenBattles = Integer.parseInt(option);
-            } catch (NumberFormatException ex) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /*
       *************************************************************************
@@ -712,28 +576,25 @@ public class Contest {
         return environment;
     }
 
-    String getMOsPath() {
-        return this.PATH + File.separator + NAME + File.separator + MOS_FOLDER;
+    public String getMOsPath() {
+        return config.getMOsPath();
     }
 
     public String getReportPath() {
-        return this.PATH + File.separator + NAME + File.separator + REPORT_FOLDER;
+
+        return config.getReportPath();
     }
 
     public int getMode() {
-        return mode;
-    }
-
-    public String getPath() {
-        return PATH;
+        return config.getMode();
     }
 
     public String getName() {
-        return NAME;
+        return config.getContestName();
     }
 
     public int getTimeWait() {
-        return pauseBetweenBattles;
+        return config.getPauseBetweenBattles();
     }
 
     /**
@@ -749,7 +610,7 @@ public class Contest {
         Tournament t = tournaments.lastElement();
         Hashtable<String, Float> acumulated = t.getAccumulatedEnergy();
 
-        for (OpponentInfo oi : oponentsInfo.getOpponents()) {
+        for (OpponentInfo oi : opponentsInfo.getOpponents()) {
             boolean hayRanking = ranking.containsKey(oi.getName());
             boolean hayAcumulated = acumulated.containsKey(oi.getName());
 
@@ -780,10 +641,11 @@ public class Contest {
      * It generates a zip file of the source code of the participants.
      * The destination file is "Contest-name" / Backup / backup-MMaahhmmss.zip
      * where MM: Month, yy: year, hh: hour, mm: minutes and ss: seconds today.
+     *
      * @return true if is successfully
      */
     public boolean createBackUp() {
-        File f = new File(NAME + File.separator + BACKUP_FOLDER);
+        File f = new File(config.getBackupPath());
         ArrayList<String[]> files = new ArrayList<String[]>();
         Stack<File> stack = new Stack<File>();
         String zipname;

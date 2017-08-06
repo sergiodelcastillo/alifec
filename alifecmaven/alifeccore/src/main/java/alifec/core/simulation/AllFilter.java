@@ -61,7 +61,7 @@ public class AllFilter implements FilenameFilter {
      * @param path the folder to list the names of files
      * @return list of files without extension
      */
-    public static Vector<String> list_names_cpp(String path) {
+    public static Vector<String> listNamesCpp(String path) {
         String[] cpp_files = new String[]{".h", ".c", ".cpp"};
         Vector<String> names = new Vector<String>();
         try {
@@ -99,7 +99,7 @@ public class AllFilter implements FilenameFilter {
     /**
      * List all file that end with .java it the folder path without the extension .java
      */
-    public static Vector<String> list_names_java(String path) {
+    public static Vector<String> listNamesJava(String path) {
         Vector<String> names = new Vector<String>();
         File[] cpp_colonies = new File(path).listFiles(new AllFilter(".java"));
 
@@ -116,7 +116,7 @@ public class AllFilter implements FilenameFilter {
      * @param path URL of files.java
      * @return list of files that end with java
      */
-    public static Vector<File> get_files_java(String path) {
+    public static Vector<File> getFilesJava(String path) {
         Vector<File> names = new Vector<File>();
         File[] cpp_colonies = new File(path).listFiles(new AllFilter(".java"));
 

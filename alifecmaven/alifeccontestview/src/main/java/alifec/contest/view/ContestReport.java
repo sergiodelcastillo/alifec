@@ -5,9 +5,10 @@
 
 package alifec.contest.view;
 
-import exceptions.CreateRankingException;
-import lib.Defs;
-import lib.contest.Contest;
+
+import alifec.core.contest.Contest;
+import alifec.core.exception.CreateRankingException;
+import alifec.core.simulation.Defs;
 
 import javax.swing.*;
 import java.awt.*;

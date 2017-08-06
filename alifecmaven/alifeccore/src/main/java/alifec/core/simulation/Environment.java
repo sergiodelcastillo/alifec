@@ -62,7 +62,7 @@ public class Environment {
         System.out.println("\nLoading Colonies");
         System.out.println("Loading Java Colonies");
 
-        for (String name : AllFilter.list_names_java(path)) {
+        for (String name : AllFilter.listNamesJava(path)) {
             try {
                 System.out.print(name);
                 colonies.addElement(new JavaColony(colonies.size(), "lib.MOs." + name));
@@ -79,7 +79,7 @@ public class Environment {
         if (CppColony.loadLibrary(path + File.separator + "lib" + File.separator + "MOs" + File.separator)) {
             System.out.println("[OK]");
 
-            for (String name : AllFilter.list_names_cpp(path)) {
+            for (String name : AllFilter.listNamesCpp(path)) {
                 try {
                     // to initialise the name of colony
                     System.out.print(name);

@@ -1,6 +1,8 @@
 package alifec.contest.view;
 
-import lib.contest.Contest;
+
+
+import alifec.core.contest.Contest;
 
 import javax.swing.*;
 import java.awt.*;
