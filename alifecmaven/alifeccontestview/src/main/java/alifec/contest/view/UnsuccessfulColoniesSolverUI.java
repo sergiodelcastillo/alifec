@@ -10,16 +10,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-public class SolveConflictUI extends JDialog {
-    Contest contest;
+public class UnsuccessfulColoniesSolverUI extends JDialog {
+    ContestUI contestUI;
     String c1, c2;
-    String[] options = new String[]{"Restore with back up file", "Delete back Up File"};
+    String[] options = new String[]{"Take action with backup file", "Ignore and delete backup file"};
     JComboBox<String> combobox;
     SelectColoniesUI table;
     JDialog thisFrame;
 
-    public SolveConflictUI(Contest c, String c1, String c2) {
-        super((JDialog) null, "Solve conflict", true);
+    public UnsuccessfulColoniesSolverUI(ContestUI father, String c1, String c2) {
+        super((JDialog) null, "The last battle didn't finish successfully", true);
         this.c1 = c1;
         this.c2 = c2;
         this.getContentPane().add(createNorth(), BorderLayout.NORTH);
@@ -35,17 +35,17 @@ public class SolveConflictUI extends JDialog {
 
 
         this.thisFrame = this;
-        this.contest = c;
+        this.contestUI = father;
     }
 
-    /*
+
        public static void main(String [] args){
-          new SolveConflictUI(null, "aa", "bb").setVisible(true);
+          new UnsuccessfulColoniesSolverUI(null, "aa", "bb").setVisible(true);
           System.out.println("sigue");
        }
-    */
+
     public JComboBox<String> createNorth() {
-        String txt = "The last run failed, select an option";
+        String txt = "The last run didn't finish successfully, please select an option";
 
         combobox = new JComboBox<>(options);
         combobox.setBorder(BorderFactory.createTitledBorder(txt));
@@ -81,26 +81,11 @@ public class SolveConflictUI extends JDialog {
         accept.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 if (options[0].equals(combobox.getSelectedItem())) {
-                    if (table.isSelected(0)) {
-                        if (contest.getEnvironment().delete(c1)) {
-                            System.out.println("Deleting " + c1 + "  [OK]");
-                        } else {
-                            System.out.println("Deleting " + c1 + "  [FAIL]");
-                        }
+                    if (table.isSelected(0))
+                        contestUI.excludeColony(c1);
 
-                    }
-                    if (table.isSelected(1)) {
-                        if (contest.getEnvironment().delete(c2)) {
-                            System.out.println("Deleting " + c2 + "  [OK]");
-                        } else {
-                            System.out.println("Deleting " + c2 + "  [FAIL]");
-                        }
-                    }
-                    for (String c : contest.getEnvironment().getNames()) {
-                        contest.getTournamentManager().lastElement().addColony(c);
-                    }
-                } else {
-                    contest.deleteBackup();
+                    if(table.isSelected(1))
+                        contestUI.excludeColony(c2);
                 }
                 thisFrame.dispose();
             }

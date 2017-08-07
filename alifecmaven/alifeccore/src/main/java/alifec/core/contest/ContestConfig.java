@@ -5,6 +5,7 @@ import java.util.Properties;
 
 /**
  * Created by Sergio Del Castillo on 05/08/17.
+ *
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ContestConfig {
@@ -16,6 +17,8 @@ public class ContestConfig {
      */
     public static final String NUTRIENTS_FILE = "nutrients";
 
+    public static final String BATTLES_BACKUP_FILENAME = "battles_backup.csv";
+    public static final String BATTLES_FILENAME = "battles.csv";
     /**
      * Folder of source colonies.
      */
@@ -84,7 +87,10 @@ public class ContestConfig {
         ContestConfig config = new ContestConfig();
         config.setPath(path);
         for (Object object : property.keySet()) {
-            config.setProperty(object.toString(), property.getProperty(object.toString()));
+
+            if (!config.setProperty(object.toString(), property.getProperty(object.toString()))) {
+                System.out.println("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
+            }
         }
 
         config.isValid();
@@ -161,7 +167,23 @@ public class ContestConfig {
     }
 
     public String getContestPath() {
-        return path + File.separator + name;
+        return getContestPath(this.path, this.name);
+    }
+
+    public static String getContestPath(String absolutePath, String contestName) {
+        return absolutePath + File.separator + contestName;
+    }
+
+    public String getTournamentPath(String tournamentName) {
+        return getContestPath() + File.separator + tournamentName;
+    }
+
+    public String getBattlesBackupFile(String tournamentName) {
+        return getTournamentPath(tournamentName) + File.separator + BATTLES_BACKUP_FILENAME;
+    }
+
+    public String getBattlesFile(String tournamentName) {
+        return getTournamentPath(tournamentName) + File.separator + BATTLES_FILENAME;
     }
 
     public int getMode() {
@@ -173,7 +195,11 @@ public class ContestConfig {
     }
 
     public String getNutrientsFilePath() {
-        return this.getContestPath() + File.separator + NUTRIENTS_FILE;
+        return getNutrientsFilePath(path, name);
+    }
+
+    public static String getNutrientsFilePath(String absolutePath, String contestName) {
+        return getContestPath(absolutePath, contestName) + File.separator + NUTRIENTS_FILE;
     }
 
     public void setMode(int mode) {
@@ -181,11 +207,19 @@ public class ContestConfig {
     }
 
     public String getMOsPath() {
-        return this.getContestPath() + File.separator + MOS_FOLDER;
+        return getMOsPath(path, name);
+    }
+
+    public static String getMOsPath(String absolutePath, String contestName) {
+        return getContestPath(absolutePath, contestName) + File.separator + MOS_FOLDER;
     }
 
     public String getReportPath() {
-        return this.getContestPath() + File.separator + REPORT_FOLDER;
+        return getReportPath(path, name);
+    }
+
+    public static String getReportPath(String absolutePath, String contestName) {
+        return getContestPath(absolutePath, contestName) + File.separator + REPORT_FOLDER;
     }
 
     public String getContestName() {
@@ -203,4 +237,6 @@ public class ContestConfig {
     public String getPath() {
         return path;
     }
+
+
 }

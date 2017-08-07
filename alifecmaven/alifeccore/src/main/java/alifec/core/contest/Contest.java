@@ -48,10 +48,11 @@ public class Contest {
     public Contest(ContestConfig config) throws IOException, CreateTournamentException, CreateContestException {
         this.config = config;
         opponentsInfo = new OpponentInfoManager(config.getContestPath());
-        environment = new Environment(getMOsPath());
+        environment = new Environment(config.getMOsPath());
         tournaments = new TournamentManager(config.getContestPath(), config.getMode());
 
-        initTournament();
+        //create new and empty tournament
+        tournaments.newTournament(environment.getNames());
 
         opponentsInfo.read();
         Enumeration<Integer> ids = environment.getOps().elements();
@@ -59,126 +60,6 @@ public class Contest {
         while (ids.hasMoreElements()) {
             Integer i = ids.nextElement();
             opponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
-        }
-    }
-
-    private void initTournament() {
-        if (tournaments.lastElement() != null &&
-                tournaments.lastElement().hasBackUpFile() &&
-                config.getMode() == ContestConfig.COMPETITION_MODE) {
-            Vector<String> conflict = new Vector<>();
-
-            if (!getConflict(conflict)) {
-                System.out.println("Fail loading conflict. Cant continue");
-                System.exit(0);
-            }
-            if (conflict.size() == 0) {
-                for (String c : environment.getNames()) {
-                    tournaments.lastElement().addColony(c);
-                }
-            } else {
-                String c1 = conflict.elementAt(0);
-                String c2 = conflict.elementAt(1);
-                SolveConflictUI solver = new SolveConflictUI(this, c1, c2);
-                solver.setVisible(true);
-            }
-        } else {
-            try {
-                tournaments.newTournament(environment.getNames());
-            } catch (CreateTournamentException ex) {
-                System.out.println("Cant create a new tournament");
-            }
-        }
-    }
-
-    public void deleteBackup() {
-        String p = tournaments.lastElement().getBattleManager().getPath();
-
-        if (new File(p + File.separator + "battles_backup.csv").delete()) {
-            System.out.println("Delete back up file [OK]");
-        } else {
-            System.out.println("Delete back up file [FAIL]");
-        }
-        try {
-            tournaments.newTournament(environment.getNames());
-            System.out.println("Creating new Tournament [OK]");
-        } catch (CreateTournamentException ex) {
-            System.out.println("Creating new Tournament [FAIL]");
-        }
-    }
-
-    public boolean tournamentFinishedUnsuccessfully() {
-        //TODO: ver que esto sea absoluto .. antes de crear el contest
-        //TODO: se le debe pasar el path
-        if (config.getMode() == ContestConfig.PROGRAMMER_MODE) {
-            return false;
-        }
-
-        return tournaments.lastElement() != null &&
-                tournaments.lastElement().hasBackUpFile();
-
-    }
-
-    private boolean getConflict(Vector<String> c) {
-        Vector<String[]> battles = new Vector<>();
-        Vector<String[]> backup = new Vector<>();
-        String t = config.getContestPath() + File.separator + tournaments.lastElement().NAME;
-
-        loadFile(t + File.separator + "battles.csv", battles);
-        loadFile(t + File.separator + "battles_backup.csv", backup);
-
-        for (String[] l : battles) {
-            if (!compareLine(l, backup.firstElement()))
-                return false;
-            backup.remove(0);
-        }
-        if (backup.size() > 0) {
-            c.addElement(backup.elementAt(0)[0]);
-            c.addElement(backup.elementAt(0)[1]);
-        }
-        return true;
-    }
-
-    private boolean compareLine(String[] a, String b[]) {
-        if (a.length != b.length) return false;
-
-        for (int i = 0; i < a.length; i++) {
-            if (!a[i].toLowerCase().equalsIgnoreCase(b[i].toLowerCase()))
-                return false;
-        }
-        return true;
-    }
-
-    private void loadFile(String n, Vector<String[]> b) {
-        BufferedReader f = null;
-        String line;
-
-        try {
-            f = new BufferedReader(new FileReader(n));
-
-            while ((line = f.readLine()) != null) {
-                String[] tmp = line.split(",");
-                if (tmp.length == 3) {
-                    String tmp2[] = new String[3];
-
-                    tmp2[0] = tmp[0];
-                    tmp2[1] = tmp[1];
-                    tmp2[2] = tmp[2];
-
-                    b.addElement(tmp2);
-                }
-            }
-
-        } catch (IOException ex) {
-            System.out.println("Cant find battles.csv and battles_backup.csv");
-            System.out.println("path: " + n);
-        } finally {
-            try {
-                if (f != null) {
-                    f.close();
-                }
-            } catch (IOException ignored) {
-            }
         }
     }
 
@@ -375,45 +256,8 @@ public class Contest {
         return true;
     }
 
-    public static boolean existContest(String path, String name) {
-        //TODO: pasar la logica al contest config..
-        if (path == null || path.equals("")) {
-            System.out.println("contest.existContest: null path");
-            return false;
-        }
-        if (name == null || name.equals("")) {
-            System.out.println("contest.existContest: null name");
-            return false;
-        }
 
-        String contestName = path + File.separator + name;
-        String MOsFolder = contestName + File.separator + ContestConfig.MOS_FOLDER;
-        String ReportFolder = contestName + File.separator + ContestConfig.REPORT_FOLDER;
-        String NutrientFile = contestName + File.separator + ContestConfig.NUTRIENTS_FILE;
 
-        return new File(contestName).exists() &&
-                new File(MOsFolder).exists() &&
-                new File(ReportFolder).exists() &&
-                new File(NutrientFile).exists();
-    }
-
-    public static boolean existConfig(String path) {
-        if (path == null || path.equals("")) {
-            System.out.println("contest.existConfig: null path");
-            return false;
-        }
-
-        String[] list = new File(path).list();
-
-        if (list != null) {
-            for (String names : list) {
-                if (names.equals(ContestConfig.CONFIG_FILE)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     public Hashtable<String, Integer> getNutrients() {
 
@@ -481,19 +325,6 @@ public class Contest {
         return true;
     }
 
-    public static Vector<String> listContest(String path) {
-        String list[] = new File(path).list(new ContestFilter());
-        Vector<String> results = new Vector<>();
-
-        if (list != null) {
-            for (String name : list) {
-                if (existContest(path, name))
-                    results.addElement(name);
-
-            }
-        }
-        return results;
-    }
 
     public static boolean createContestFolder(String path, String name, boolean examples) {
         PrintWriter pw;

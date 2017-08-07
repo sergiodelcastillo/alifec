@@ -5,6 +5,7 @@
 package alifec.contest.view;
 
 import alifec.core.contest.Contest;
+import alifec.core.contest.ContestHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrients.Nutrient;
 
@@ -273,7 +274,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
     public boolean validateDefaultPath(String p) {
         File f = new File(p);
 
-        return !(!f.exists() || !f.isDirectory()) && Contest.existConfig(p);
+        return !(!f.exists() || !f.isDirectory()) && ContestHelper.existConfigFile(p);
     }
     
     public boolean validateNameOfContest(String s) {

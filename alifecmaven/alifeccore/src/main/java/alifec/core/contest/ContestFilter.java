@@ -10,11 +10,11 @@ import java.io.FilenameFilter;
 
 
 public class ContestFilter extends FileFilter implements FilenameFilter {
-
+    public static final String CONTEST_PREFIX = "contest-";
 
     public boolean accept(File dir, String name) {
         try {
-            return name.toLowerCase().indexOf("contest-") == 0 &&
+            return name.toLowerCase().indexOf(CONTEST_PREFIX) == 0 &&
                     new File(dir.getAbsolutePath() + File.separator + name).isDirectory();
 
         } catch (Exception ex) {
@@ -28,7 +28,7 @@ public class ContestFilter extends FileFilter implements FilenameFilter {
             String[] names = dir.getAbsolutePath().split("/");
             String name = names[names.length - 1];
 
-            if (name.toLowerCase().indexOf("contest-") != 0) return false;
+            if (name.toLowerCase().indexOf(CONTEST_PREFIX) != 0) return false;
         } catch (Exception ex) { 
             ex.printStackTrace();
             return false;

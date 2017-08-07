@@ -5,17 +5,17 @@
 
 package alifec.contest.view;
 
-import alifec.core.contest.CompilationResult;
-import alifec.core.contest.Contest;
-import alifec.core.contest.ContestConfig;
+import alifec.core.contest.*;
 import alifec.core.exception.CreateContestException;
 import alifec.core.exception.CreateTournamentException;
+import alifec.core.exception.TournamentCorruptedException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -57,6 +57,7 @@ public class ContestUI extends JFrame implements ActionListener {
     private JMenuItem about;
     private JRadioButtonMenuItem programmerMode;
     private JRadioButtonMenuItem competitionMode;
+    private java.util.List<String> excluded = new ArrayList<>();
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -100,9 +101,10 @@ public class ContestUI extends JFrame implements ActionListener {
         }
 
         try {
-            // poner la direccion absoluta de donde se debe cargar el contest!
-            if (!Contest.existConfig(path)) {
-                Vector<String> list = Contest.listContest(path);
+
+            //Find the absolute path to load the contest
+            if (!ContestHelper.existConfigFile(path)) {
+                java.util.List<String> list = ContestHelper.listContest(path);
                 String name;
 
                 if (list.isEmpty()) {
@@ -146,13 +148,13 @@ public class ContestUI extends JFrame implements ActionListener {
 
     public void createContest(String path) throws CreateTournamentException, IOException, CreateContestException {
         ContestConfig config = ContestConfig.build(path);
-        if(!config.isValid())
+        if (!config.isValid())
             throw new CreateContestException("Bad config file. You could delete the following file:\n"
                     + path + File.separator + ContestConfig.CONFIG_FILE);
 
         CompilationResult result = contest.compileMOs(contest.getMOsPath());
 
-                //todo: improve it .. it will show as dialogs windows as errors it have but it should show one dialog with all errors.
+        //todo: improve it .. it will show as dialogs windows as errors it have but it should show one dialog with all errors.
         if (result.haveErrors()) {
             for (String error : result.getJavaMessages()) {
                 Message.printErr(null, error);
@@ -162,14 +164,42 @@ public class ContestUI extends JFrame implements ActionListener {
             }
         }
 
-        //load everything
-        contest = new Contest(config);
+        try {
+            //load everything
+            UnsuccessfulColonies uColonies = ContestHelper.findFinishedUnsuccessful(config);
+
+            if (uColonies.isUnsuccessful()) {
+                UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, uColonies.getColonyA(), uColonies.getColonyB());
+                solver.setVisible(true);
+
+                for (String c : contest.getEnvironment().getNames()) {
+                    contest.getTournamentManager().lastElement().addColony(c);
+                }
+            }
+            //create an instance of the contest
+            contest = new Contest(config);
+
+            //remove the colony which was excluded from the Dialog "UnsuccessfulColoniesSolverUI".
+            for (String excludedColony : excluded) {
+                contest.getEnvironment().delete(excludedColony);
+            }
+
+            //delete backup file
+            ContestHelper.deleteBattleBackupFile(config, uColonies);
+
+        } catch (TournamentCorruptedException e) {
+            //TODO: ver que mostrar acá.
+            System.out.println(e.getMessage());
+            Message.printErr(null, e.getMessage());
+            System.exit(0);
+        }
+
 
     }
 
     private boolean reloadContest(String path, String name) {
         try {
-            if (!Contest.existConfig(path)) {
+            if (!ContestHelper.existConfigFile(path)) {
                 if (!Contest.createConfig(path, name)) {
                     Message.printErr(null, "Can't create the config file... Can't continue");
                     return false;
@@ -380,11 +410,7 @@ public class ContestUI extends JFrame implements ActionListener {
             new DialogAbout(this);
         }
     }
-    /*
-         *********************************************************************
-         * Metodos get y set!!
-         * *********************************************************************
-         */
+
 
     public synchronized Contest getContest() {
         return contest;
@@ -417,7 +443,7 @@ public class ContestUI extends JFrame implements ActionListener {
             JFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
 
-            //setear idiomas!!!
+            //set languages
             JFileChooser.setDefaultLocale(Locale.ENGLISH);
             JOptionPane.setDefaultLocale(Locale.ENGLISH);
         } catch (ClassNotFoundException ex) {
@@ -429,5 +455,9 @@ public class ContestUI extends JFrame implements ActionListener {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(ContestUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void excludeColony(String colonyName) {
+        excluded.add(colonyName);
     }
 }

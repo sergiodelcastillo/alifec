@@ -23,7 +23,7 @@ public class TournamentManager {
     /**
      * absolute path of tournaments.
      */
-    private String PATH = "";
+    private String path = "";
 
     /**
      * current tournament.
@@ -36,15 +36,15 @@ public class TournamentManager {
     private int mode;
 
     public TournamentManager(String p, int m) throws IOException, CreateTournamentException {
-        PATH = p;
+        this.path = p;
         mode = m;
 
-        String[] tournamentName = new File(PATH).list(new TournamentFilter());
+        String[] tournamentName = new File(this.path).list(new TournamentFilter());
 
         if (tournamentName != null) {
 
             for (String name : tournamentName) {
-                Tournament t = new Tournament(name, PATH, mode);
+                Tournament t = new Tournament(name, this.path, mode);
                 if (t.read())
                     tournaments.addElement(t);
             }
@@ -94,12 +94,12 @@ public class TournamentManager {
         String newT = getNextName();
 
         if (ContestConfig.COMPETITION_MODE == mode) {
-            if (!new File(PATH + File.separator + newT).mkdir())
+            if (!new File(path + File.separator + newT).mkdir())
                 throw new CreateTournamentException("Can not create a new folder...");
         }
 
         try {
-            Tournament t = new Tournament(newT, PATH, mode);
+            Tournament t = new Tournament(newT, path, mode);
             t.setEnabled(true);
 
             for (String c : colonies) {
@@ -123,7 +123,7 @@ public class TournamentManager {
      */
     public boolean removeSelected() {
         Tournament t = getSelected();
-        String url = PATH + File.separator + t.NAME;
+        String url = path + File.separator + t.NAME;
 
         File file = new File(t.getBattleManager().getBattlesFileName());
         if (file.exists() && !file.delete())
@@ -207,7 +207,7 @@ public class TournamentManager {
         if (this.mode == ContestConfig.PROGRAMMER_MODE &&
                 mode == ContestConfig.COMPETITION_MODE) {
             lastElement().getBattleManager().setMode(mode);
-            lastElement().save(PATH);
+            lastElement().save(path);
         }
         this.mode = mode;
     }
