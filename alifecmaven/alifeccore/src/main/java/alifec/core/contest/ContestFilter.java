@@ -12,9 +12,13 @@ import java.io.FilenameFilter;
 public class ContestFilter extends FileFilter implements FilenameFilter {
     public static final String CONTEST_PREFIX = "contest-";
 
+
     public boolean accept(File dir, String name) {
+        //TODO: poner alguna expresion reguar entonces queda mejor y más fexible.
+        //TODO: hoy se puden poner caracteres que no van, así que debería validarse mejor.
         try {
             return name.toLowerCase().indexOf(CONTEST_PREFIX) == 0 &&
+                    CONTEST_PREFIX.length() < name.length() &&
                     new File(dir.getAbsolutePath() + File.separator + name).isDirectory();
 
         } catch (Exception ex) {
