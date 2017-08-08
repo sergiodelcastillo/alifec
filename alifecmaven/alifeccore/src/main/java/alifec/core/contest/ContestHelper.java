@@ -113,7 +113,7 @@ public class ContestHelper {
     }
 
     public static List<String> listContest(String path) {
-        String list[] = new File(path).list(new ContestFilter());
+        String list[] = new File(path).list(new ContestFolderFilter());
         List<String> results = new ArrayList<>();
 
         if (list != null) {
