@@ -2,3 +2,5 @@
 *.iml
 alifeccore/target/
 alifeccontestview/target/
+Contest_01/
+config
