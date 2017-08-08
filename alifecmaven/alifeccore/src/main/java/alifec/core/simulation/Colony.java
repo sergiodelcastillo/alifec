@@ -4,6 +4,13 @@ package alifec.core.simulation; /**
  */
 
 import java.awt.*;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Vector;
 
 /**
@@ -22,6 +29,16 @@ public abstract class Colony {
     Colony(int id, String path) {
         this.id = id;
         this.path = path;
+    }
+
+    public static void addClassPath(String s) throws Exception {
+        File f = new File(s);
+        URI u = f.toURI();
+        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        Class<URLClassLoader> urlClass = URLClassLoader.class;
+        Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+        method.setAccessible(true);
+        method.invoke(urlClassLoader, new Object[]{u.toURL()});
     }
 
     @Override
@@ -114,4 +131,45 @@ public abstract class Colony {
 
     protected abstract void clearAll();
 
+    /**
+     * Adds the specified path to the java library path
+     *
+     * @param pathToAdd the path to add
+     * @throws Exception
+     */
+    protected static void addLibraryPath(String pathToAdd)
+            throws NoSuchFieldException, IllegalAccessException {
+        final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
+        usrPathsField.setAccessible(true);
+
+        //get array of paths
+        final String[] paths = (String[]) usrPathsField.get(null);
+
+        //check if the path to add is already present
+        for (String path : paths) {
+            if (path.equals(pathToAdd)) {
+                return;
+            }
+        }
+
+        //add the new path
+        final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
+        newPaths[newPaths.length - 1] = pathToAdd;
+        usrPathsField.set(null, newPaths);
+    }
+
+    /**
+     * Sets the java library path to the specified path
+     *
+     * @param path the new library path
+     * @throws Exception
+     */
+    protected static void setLibraryPath(String path) throws Exception {
+        System.setProperty("java.library.path", path);
+
+        //set sys_paths to null
+        final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
+        sysPathsField.setAccessible(true);
+        sysPathsField.set(null, null);
+    }
 }

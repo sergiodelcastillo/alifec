@@ -206,7 +206,7 @@ public class BattleUI extends JPanel implements ActionListener {
         save = new JButton(new ImageIcon("icons/save.png"));
         delete = new JButton(new ImageIcon("icons/delSelectedBattle.png"));
         deleteAll = new JButton(new ImageIcon("icons/delAllBattle.png"));
-        run = new JButton(new ImageIcon("icons/run.png"));
+        run = new JButton(new ImageIcon("/icons/run.png"));
         runAll = new JButton(new ImageIcon("icons/runAll.png"));
         addSelected = new JButton(new ImageIcon("icons/addSelectedBattle.png"));
         addAll = new JButton(new ImageIcon("icons/addAllBattle.png"));

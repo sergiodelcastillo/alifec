@@ -65,17 +65,23 @@ public class Environment {
         for (String name : AllFilter.listNamesJava(path)) {
             try {
                 System.out.print(name);
-                colonies.addElement(new JavaColony(colonies.size(), "lib.MOs." + name));
+                JavaColony.addClassPath(path );
+                colonies.addElement(new JavaColony(colonies.size(), "alifec.core.simulation.MOs." + name));
                 System.out.println("[OK]");
             } catch (ClassNotFoundException ex) {
                 System.out.println("[FAIL]");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
         // loading library
         System.out.println("\nLoading C++ Colonies ");
         System.out.print("Loading C++ Library ");
-///"/home/yeyo/work/alifec_new/alifec/alifecontest-java/trunk/Contest_01/MOs/lib/MOs/"
+
         if (CppColony.loadLibrary(path + File.separator + "lib" + File.separator + "MOs" + File.separator)) {
             System.out.println("[OK]");
 

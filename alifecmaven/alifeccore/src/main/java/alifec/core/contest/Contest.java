@@ -134,6 +134,7 @@ public class Contest {
     public static boolean createContestFolder(String path, String name, boolean examples) {
         PrintWriter pw;
         try {
+            //todo: use ContestConfig
             String contestName = path + File.separator + name;
             String MOsFolder = contestName + File.separator + ContestConfig.MOS_FOLDER;
             String ReportFolder = contestName + File.separator + ContestConfig.REPORT_FOLDER;
