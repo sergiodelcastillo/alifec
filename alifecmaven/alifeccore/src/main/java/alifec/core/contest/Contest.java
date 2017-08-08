@@ -49,7 +49,7 @@ public class Contest {
         this.config = config;
         opponentsInfo = new OpponentInfoManager(config.getContestPath());
         environment = new Environment(config.getMOsPath());
-        tournaments = new TournamentManager(config.getContestPath(), config.getMode());
+        tournaments = new TournamentManager(config);
 
         //create new and empty tournament
         tournaments.newTournament(environment.getNames());
@@ -80,7 +80,7 @@ public class Contest {
                     System.out.println(f.getAbsolutePath() + " [OK]");
                 } else {
                     System.err.println(f.getAbsolutePath() + " [FAIL]");
-                    result.logJavaError("Could not compileMOs " + f.getName() + ". For more details use make");
+                    result.logJavaError("Could not compileMOs " + f.getName() + ". For more details see the logs.");
                     //Message.printErr(null, "Could not compileMOs " + f.getName() + ". For more details use make");
                 }
             }

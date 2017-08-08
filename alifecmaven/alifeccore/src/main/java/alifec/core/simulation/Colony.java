@@ -45,13 +45,13 @@ public abstract class Colony {
 
     protected abstract boolean createMO(Point pos, float ene);
 
-    protected final boolean kill() {
+    /*protected final boolean kill() {
         for (int i = 0; i < moList.size(); i++)
             kill(i);
 
         moList.clear();
         return true;
-    }
+    }*/
 
     public final boolean kill(Cell mo) {
 

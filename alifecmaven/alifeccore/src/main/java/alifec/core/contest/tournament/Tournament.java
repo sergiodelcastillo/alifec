@@ -5,6 +5,7 @@
 
 package alifec.core.contest.tournament;
 
+import alifec.core.contest.ContestConfig;
 import alifec.core.contest.tournament.battles.BattleManager;
 import alifec.core.exception.CreateRankingException;
 
@@ -32,21 +33,19 @@ public class Tournament implements Comparable<Tournament> {
     /**
      * Nombre del tournament
      */
-    public final String NAME;
+    private final String tournamentName;
+
     public boolean isEnabled = false;
 
-    /**
-     * @param n name of tournament
-     * @param path absolute URL o tournament
-     * @param mode of contest
-     * @throws IOException is thrown if can not find or create the battles file
-     */
-    public Tournament(String n, String path, int mode) throws IOException {
-        NAME = n;
-        battleManager = new BattleManager(path + File.separator + NAME, mode);
+    private ContestConfig config;
+
+    public Tournament(ContestConfig config, String name) throws IOException {
+        this.config = config;
+        this.tournamentName = name;
+
+        battleManager = new BattleManager(config, tournamentName);
         colonies = new Vector<>();
     }
-
     /**
      * Busca la maxima energia acumulada hasta el momento y la retorna
      *
@@ -91,7 +90,7 @@ public class Tournament implements Comparable<Tournament> {
 
     @Override
     public int compareTo(Tournament o) {
-        return NAME.compareTo(o.NAME);
+        return tournamentName.compareTo(o.tournamentName);
     }
 
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
@@ -117,7 +116,7 @@ public class Tournament implements Comparable<Tournament> {
                 if (maxBattlesWin != 0 && maxBattlesWin == battleswin) {
                     String s = "Ranking can't be created because there are two " +
                             "opponents with the same energy and the same number" +
-                            " of battles won in the " + NAME;
+                            " of battles won in the " + tournamentName;
                     throw new CreateRankingException(s);
                 }
                 if (battleswin > maxBattlesWin) {
@@ -176,9 +175,8 @@ public class Tournament implements Comparable<Tournament> {
         return true;
     }
 
-    public void save(String path) {
-        String battlePath = path + File.separator + this.NAME;
-        File f = new File(battlePath);
+    public void save() {
+        File f = new File(config.getTournamentPath(tournamentName));
 
         if (!f.exists()) {
             f.mkdir();
@@ -187,7 +185,7 @@ public class Tournament implements Comparable<Tournament> {
     }
 
     public boolean hasBackUpFile() {
-        return new File(battleManager.getPath() + File.separator + "battles_backup.csv").exists();
+        return new File(battleManager.getBattlesBackupFile()).exists();
     }
 
     public void setEnabled(boolean b) {
@@ -196,5 +194,13 @@ public class Tournament implements Comparable<Tournament> {
 
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public String getPath() {
+        return config.getTournamentPath(tournamentName);
+    }
+
+    public String getName(){
+        return tournamentName;
     }
 }

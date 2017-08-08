@@ -124,8 +124,8 @@ public class Environment {
 
 
         Petri.getInstance().agar = agar;
-        Petri.getInstance().firstOponent = c1;
-        Petri.getInstance().secondOponent = c2;
+        Petri.getInstance().firstOpponent = c1;
+        Petri.getInstance().secondOpponent = c2;
 
         microorganism = new Cell[Defs.DIAMETER][Defs.DIAMETER];
         init(c1);

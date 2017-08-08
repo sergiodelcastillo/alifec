@@ -57,7 +57,7 @@ public class TournamentUI extends JPanel implements ActionListener {
         this.tPanel = new Vector<>(tm.size());
         this.tScroll = new Vector<>(tm.size());
 
-        border.setTitle(tm.getSelected().NAME);
+        border.setTitle(tm.getSelected().getName());
         this.setLayout(new BorderLayout());
         this.add(createMenuBar(), BorderLayout.SOUTH);
         //      JScrollPane sp = new JScrollPane();
@@ -150,13 +150,13 @@ public class TournamentUI extends JPanel implements ActionListener {
             remove(tScroll.elementAt(tm.getSelectedID()));
             tm.prev();
             add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
-            border.setTitle(tm.getSelected().NAME);
+            border.setTitle(tm.getSelected().getName());
             updateUI();
         } else if (e.getSource().equals(nextTournament)) {
             remove(tScroll.elementAt(tm.getSelectedID()));
             tm.next();
             add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
-            border.setTitle(tm.getSelected().NAME);
+            border.setTitle(tm.getSelected().getName());
             updateUI();
         } else if (e.getSource().equals(ranking)) {
             new ContestReport(father);
@@ -171,7 +171,7 @@ public class TournamentUI extends JPanel implements ActionListener {
 
                     addTournament(tm.getSelected());
                     father.getBattleUI().clear();
-                    border.setTitle(tm.getSelected().NAME);
+                    border.setTitle(tm.getSelected().getName());
                     add(tScroll.elementAt(tm.getSelectedID()));
                     updateUI();
                 } catch (CreateTournamentException ex) {
@@ -181,7 +181,7 @@ public class TournamentUI extends JPanel implements ActionListener {
 
         } else if (e.getSource().equals(delTournament)) {
             int selected = tm.getSelectedID();
-            String txt = "Are you sure you want to delete " + tm.getSelected().NAME + "?";
+            String txt = "Are you sure you want to delete " + tm.getSelected().getName() + "?";
 
             if (Message.printYesNoCancel(father, txt)) {
                 if (tm.size() == 0) {
@@ -205,7 +205,7 @@ public class TournamentUI extends JPanel implements ActionListener {
                     tPanel.remove(selected);
                     tScroll.remove(selected);
                     add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
-                    border.setTitle(tm.getSelected().NAME);
+                    border.setTitle(tm.getSelected().getName());
                     updateUI();
                 }
             }
@@ -222,9 +222,9 @@ public class TournamentUI extends JPanel implements ActionListener {
     /**
      * Delete all instance of the colony colonyName in the last tournament and print log in /log
      *
-     * @param colonyName is the name of colony to penalice
+     * @param colonyName is the name of colony to penalize
      */
-    public void penalice(String colonyName) {
+    public void penalize(String colonyName) {
         father.getContest().getEnvironment().delete(colonyName);
         tm.lastElement().penalice(colonyName);
         tPanel.lastElement().update();

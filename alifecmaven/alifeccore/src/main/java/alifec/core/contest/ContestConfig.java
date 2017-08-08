@@ -22,12 +22,12 @@ public class ContestConfig {
     /**
      * Folder of source colonies.
      */
-    public static String MOS_FOLDER = "MOs";
+    public static final String MOS_FOLDER = "MOs";
 
     /**
      * Folder of reports.
      */
-    public static String REPORT_FOLDER = "Report";
+    public static final String REPORT_FOLDER = "Report";
 
     /**
      * Log Folder.
@@ -186,8 +186,17 @@ public class ContestConfig {
         return getTournamentPath(tournamentName) + File.separator + BATTLES_FILENAME;
     }
 
+    //public static String getBattlesFile()
     public int getMode() {
         return mode;
+    }
+
+    public boolean isCompetitionMode() {
+        return mode == ContestConfig.COMPETITION_MODE;
+    }
+
+    public boolean isProgrammerMode() {
+        return mode == ContestConfig.PROGRAMMER_MODE;
     }
 
     public String getConfigFilePath() {

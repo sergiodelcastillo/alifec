@@ -109,7 +109,7 @@ public class ContestReport extends JDialog implements ActionListener {
             FileWriter fw = new FileWriter(url, false);
             PrintWriter pw = new PrintWriter(fw);
             pw.println("Contest name:," + c.getName());
-            pw.println("Tournament name:," + c.getTournamentManager().lastElement().NAME);
+            pw.println("Tournament name:," + c.getTournamentManager().lastElement().getName());
             pw.println("NAME,AUTHOR,AFFILIATION,POINTS,ENERGY");
 
             for (Vector<Object> line : c.getInfo()) {
@@ -135,7 +135,7 @@ public class ContestReport extends JDialog implements ActionListener {
             String text = "";
 
             text += "NAME OF CONTEST: " + c.getName() + "\n";
-            text += "NAME OF TOURNAMENT: " + c.getTournamentManager().lastElement().NAME + "\n\n";
+            text += "NAME OF TOURNAMENT: " + c.getTournamentManager().lastElement().getName() + "\n\n";
             String[] table = new String[]{"NAME", "AUTHOR", "AFFILIATION", "POINTS"};
 
             for (String line : table)

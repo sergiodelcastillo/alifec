@@ -20,10 +20,6 @@ public class TournamentManager {
      * Vector de tournaments.
      */
     private Vector<Tournament> tournaments = new Vector<>();
-    /**
-     * absolute path of tournaments.
-     */
-    private String path = "";
 
     /**
      * current tournament.
@@ -31,20 +27,20 @@ public class TournamentManager {
     private int selected = -1;
 
     /**
-     * Contest mode.
+     * Configuration loaded from file "config".
      */
-    private int mode;
+    private ContestConfig config;
 
-    public TournamentManager(String p, int m) throws IOException, CreateTournamentException {
-        this.path = p;
-        mode = m;
+    public TournamentManager(ContestConfig config) throws IOException, CreateTournamentException {
+        this.config = config;
 
-        String[] tournamentName = new File(this.path).list(new TournamentFilter());
+        String[] tournamentName = new File(config.getContestPath()).list(new TournamentFilter());
 
         if (tournamentName != null) {
 
             for (String name : tournamentName) {
-                Tournament t = new Tournament(name, this.path, mode);
+                Tournament t = new Tournament(config, name);
+
                 if (t.read())
                     tournaments.addElement(t);
             }
@@ -81,7 +77,7 @@ public class TournamentManager {
      */
     private String getNextName() {
         if (tournaments.size() > 0) {
-            String NAME = tournaments.lastElement().NAME;
+            String NAME = tournaments.lastElement().getName();
 
             Integer i = (new Integer(NAME.split("-")[1]) + 1);
 
@@ -93,13 +89,13 @@ public class TournamentManager {
     public void newTournament(Vector<String> colonies) throws CreateTournamentException {
         String newT = getNextName();
 
-        if (ContestConfig.COMPETITION_MODE == mode) {
-            if (!new File(path + File.separator + newT).mkdir())
+        if (ContestConfig.COMPETITION_MODE == config.getMode()) {
+            if (!new File(config.getContestPath() + File.separator + newT).mkdir())
                 throw new CreateTournamentException("Can not create a new folder...");
         }
 
         try {
-            Tournament t = new Tournament(newT, path, mode);
+            Tournament t = new Tournament(config, newT);
             t.setEnabled(true);
 
             for (String c : colonies) {
@@ -123,15 +119,14 @@ public class TournamentManager {
      */
     public boolean removeSelected() {
         Tournament t = getSelected();
-        String url = path + File.separator + t.NAME;
 
         File file = new File(t.getBattleManager().getBattlesFileName());
         if (file.exists() && !file.delete())
-            if (mode == ContestConfig.COMPETITION_MODE) return false;
+            if ( ContestConfig.COMPETITION_MODE == config.getMode()) return false;
 
-        file = new File(url);
+        file = new File(config.getTournamentPath(t.getName()));
         if (file.exists() && !file.delete())
-            if (mode == ContestConfig.COMPETITION_MODE) return false;
+            if (ContestConfig.COMPETITION_MODE == config.getMode()) return false;
 
 
         tournaments.remove(selected);
@@ -204,11 +199,11 @@ public class TournamentManager {
     }
 
     public void setMode(int mode) {
-        if (this.mode == ContestConfig.PROGRAMMER_MODE &&
+        if (this.config.getMode() == ContestConfig.PROGRAMMER_MODE &&
                 mode == ContestConfig.COMPETITION_MODE) {
             lastElement().getBattleManager().setMode(mode);
-            lastElement().save(path);
+            lastElement().save();
         }
-        this.mode = mode;
+        this.config.setMode(mode);
     }
 }

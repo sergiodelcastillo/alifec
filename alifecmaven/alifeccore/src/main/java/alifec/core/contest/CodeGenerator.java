@@ -148,7 +148,7 @@ public class CodeGenerator {
         source.append("         for(int j = -1; j <= 1; j++){\n");
         source.append("            Point p = new Point(pos.x+i, pos.y+j);\n\n");
         source.append("            if(petri.inDish(p) &&\n");
-        source.append("               petri.canCompite(pos, p) &&\n");
+        source.append("               petri.canCompete(pos, p) &&\n");
         source.append("               ene > petri.getEnergy(p.x, p.y)){\n");
         source.append("               mov.dx = i;\n");
         source.append("               mov.dy = j;\n");
@@ -208,7 +208,7 @@ public class CodeGenerator {
         source.append("                  p.x = pos.x+i;\n");
         source.append("                  p.y = pos.y+j;\n");
         source.append("                 if(Petri.getInstance().inDish(p) &&\n");
-        source.append("                    Petri.getInstance().canCompite(pos, p)){\n");
+        source.append("                    Petri.getInstance().canCompete(pos, p)){\n");
         source.append("                     if(Petri.getInstance().getEnergy(p.x, p.y) < ene-Defs.LESS_MOVE){\n");
         source.append("                        mov.dx = i;\n");
         source.append("                        mov.dy = j;\n");

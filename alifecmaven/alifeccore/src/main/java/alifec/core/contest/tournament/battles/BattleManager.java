@@ -16,25 +16,25 @@ import java.util.logging.Logger;
 import static java.util.Collections.max;
 
 public class BattleManager {
-    private int mode;
-    private String PATH = "";
-    public static final String BATTLES_FILE = "battles.csv";
-    public static final String BACKUP_FILE = "battles_backup.csv";
 
     private Vector<Battle> battles = new Vector<>();
+
+    private String tournamentName;
+    private ContestConfig config;
 
     /**
      * This Class is the manager of the class battle.
      *
-     * @param path: absolute path of battles
-     * @param mode is the mode of contest. It can be COMPETITION of PROGRAMMER mode
+     * @param config: configuration of the contest
+     * @param tournamentName The name of the tournament which contains these battles.
      * @throws IOException if can not create the file to manage the battles.
      */
-    public BattleManager(String path, int mode) throws IOException {
-        this.PATH = path;
-        this.mode = mode;
-        if (mode == ContestConfig.COMPETITION_MODE) {
-            File f = new File(path + File.separator + BATTLES_FILE);
+    public BattleManager(ContestConfig config, String tournamentName) throws IOException {
+        this.config = config;
+        this.tournamentName = tournamentName;
+
+        if (config.getMode() == ContestConfig.COMPETITION_MODE) {
+            File f = new File(config.getBattlesFile(tournamentName));
             if (!f.exists()) f.createNewFile();
         }
     }
@@ -53,7 +53,7 @@ public class BattleManager {
             throws IOException {
         Battle b = new Battle(n1, n2, nut, ene1, ene2);
 
-        if (mode == ContestConfig.COMPETITION_MODE){
+        if (config.getMode() == ContestConfig.COMPETITION_MODE) {
             b.save(getBattlesFileName());
         }
 
@@ -61,9 +61,8 @@ public class BattleManager {
     }
 
     public void setMode(int mode) {
-        this.mode = mode;
+        this.config.setMode(mode);
     }
-
 
 
     /**
@@ -136,8 +135,13 @@ public class BattleManager {
      *
      * @return absolute path of File
      */
+
     public String getBattlesFileName() {
-        return this.PATH + File.separator + BattleManager.BATTLES_FILE;
+        return config.getBattlesFile(tournamentName);
+    }
+
+    public String getBattlesBackupFile() {
+        return config.getBattlesBackupFile(tournamentName);
     }
 
     /**
@@ -216,7 +220,5 @@ public class BattleManager {
         return false;
     }
 
-    public String getPath() {
-        return PATH;
-    }
+
 }

@@ -61,8 +61,8 @@ public class BattleUI extends JPanel implements ActionListener {
         add(BorderLayout.SOUTH, createSouthPanel());
 
         if (restore) {
-            Vector<String[]> battles = readBattles(BattleManager.BATTLES_FILE);
-            Vector<String[]> backup = readBattles(BattleManager.BACKUP_FILE);
+            Vector<String[]> battles = readBattles(ContestConfig.BATTLES_FILENAME);
+            Vector<String[]> backup = readBattles(ContestConfig.BATTLES_BACKUP_FILENAME);
 
             validate(battles, backup);
             restoreBattles(backup);
@@ -72,7 +72,7 @@ public class BattleUI extends JPanel implements ActionListener {
     private void restoreBattles(Vector<String[]> backup) {
         if (backup.size() == 0) {
             Tournament t = father.getContest().getTournamentManager().lastElement();
-            String url = t.getBattleManager().getPath() + File.separator + BattleManager.BACKUP_FILE;
+            String url = t.getPath() + File.separator + ContestConfig.BATTLES_BACKUP_FILENAME;
             new File(url).delete();
             return;
         }
@@ -148,7 +148,7 @@ public class BattleUI extends JPanel implements ActionListener {
     private Vector<String[]> readBattles(String name) {
         Vector<String[]> res = new Vector<>();
         Tournament t = father.getContest().getTournamentManager().lastElement();
-        String url = t.getBattleManager().getPath() + File.separator + name;
+        String url = t.getPath() + File.separator + name;
 
         try {
             FileReader fr = new FileReader(url);
@@ -464,7 +464,7 @@ public class BattleUI extends JPanel implements ActionListener {
         if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
             return;
 
-        String path = father.getContest().getTournamentManager().lastElement().getBattleManager().getPath();
+        String path = father.getContest().getTournamentManager().lastElement().getPath();
         backupFile = path + File.separator + "battles_backup.csv";
 
         System.out.print("Creating back up ");
@@ -512,7 +512,8 @@ public class BattleUI extends JPanel implements ActionListener {
         if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
             return;
 
-        String path = father.getContest().getTournamentManager().lastElement().getBattleManager().getPath();
+        //TODO: verificar esto:
+        String path = father.getContest().getTournamentManager().lastElement().getPath();
         backupFile = path + File.separator + "battles_backup.csv";
 
         System.out.print("Creating back up ");

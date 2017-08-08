@@ -17,13 +17,13 @@ public class Petri {
     private Environment env;
 
     /**
-     * First oponent into the current battle..
+     * First opponent into the current battle..
      */
-    Colony firstOponent;
+    Colony firstOpponent;
     /**
-     * Second oponent into the current battle
+     * Second opponent into the current battle
      */
-    Colony secondOponent;
+    Colony secondOpponent;
     /**
      * this class contains the nutrients in the battle.
      */
@@ -92,7 +92,7 @@ public class Petri {
      * @param y2
      * @return true if both the microorganism in the position x1,y1 and x2,y2, have different identifiers:
      */
-    public boolean canCompite(int x1, int y1, int x2, int y2) {
+    public boolean canCompete(int x1, int y1, int x2, int y2) {
 
         return env.microorganism[x1][y1] != null &&
                 env.microorganism[x2][y2] != null &&
@@ -106,8 +106,8 @@ public class Petri {
      * @param b
      * @return true if both the microorganism in the position <b>a</b> and <b>b</b>, have different identifiers:
      */
-    public boolean canCompite(Point a, Point b) {
-        return canCompite(a.x, a.y, b.x, b.y);
+    public boolean canCompete(Point a, Point b) {
+        return canCompete(a.x, a.y, b.x, b.y);
     }
 
     /**

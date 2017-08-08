@@ -12,9 +12,9 @@ import java.util.Date;
 public class LogPrintter {
     private static final String LOG_FOLDER = "log";
 
-    private static String getName(String packageName) {
+    /*private static String getName(String packageName) {
         return packageName.replace(".java", "").replace(".h", "").replace(".c", "");
-    }
+    }*/
 
     public static File getErrorFile(String path, String name) {
         File tmp = new File(path + File.separator + LOG_FOLDER);

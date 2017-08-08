@@ -180,7 +180,7 @@ public class MiThread extends Thread {
 
         DefaultListModel battles = cui.getBattleUI().getBattles();
 
-        cui.getTournamentUI().penalice(colonyName);
+        cui.getTournamentUI().penalize(colonyName);
 
         Vector<BattleRun> indexs = new Vector<>();
 
