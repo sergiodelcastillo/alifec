@@ -79,8 +79,8 @@ public class Tournament implements Comparable<Tournament> {
         return true;
     }
 
-    public boolean penalice(String name) {
-        return battleManager.penalice(name) && colonies.remove(name);
+    public boolean penalize(String name) {
+        return battleManager.penalize(name) && colonies.remove(name);
     }
 
     public boolean delete(String name) {

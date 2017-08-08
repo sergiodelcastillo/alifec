@@ -85,8 +85,8 @@ public class Battle {
     }
 
     /**
-     * Delete the battle file
-     * @param path URL of battle to delete
+     * Delete this battle from battles.csv file
+     * @param path of battle to delete
      * @return true if is successfully
      * @throws IOException
      */

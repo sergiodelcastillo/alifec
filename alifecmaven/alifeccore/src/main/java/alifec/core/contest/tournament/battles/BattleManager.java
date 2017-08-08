@@ -87,7 +87,7 @@ public class BattleManager {
         battles.removeAll(tmp);
     }
 
-    public boolean penalice(String name) {
+    public boolean penalize(String name) {
         boolean ret = true;
 
         try {
@@ -103,10 +103,10 @@ public class BattleManager {
 
             battles.removeAll(tmp);
         } catch (FileNotFoundException ex) {
-            System.err.println("BattleManager.penalice()--> FIleNotFoundException");
+            System.err.println("BattleManager.penalize()--> FIleNotFoundException");
             return false;
         } catch (IOException ex) {
-            System.err.println("BattleManager.penalice()--> IOException");
+            System.err.println("BattleManager.penalize()--> IOException");
             return false;
         }
 

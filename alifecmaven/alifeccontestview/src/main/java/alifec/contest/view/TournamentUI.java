@@ -226,7 +226,7 @@ public class TournamentUI extends JPanel implements ActionListener {
      */
     public void penalize(String colonyName) {
         father.getContest().getEnvironment().delete(colonyName);
-        tm.lastElement().penalice(colonyName);
+        tm.lastElement().penalize(colonyName);
         tPanel.lastElement().update();
     }
 }
