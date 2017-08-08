@@ -11,6 +11,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+/**
+ * <n>ContestFolderFilter class was designated to filter only valid contest' names which
+ * follows the below rule:
+ * <ol>
+ * <li> Starts with the prefix <b>"contest-"</b> (case insensitive).</li>
+ * <li> Continues with up to 25 letters or digits.</li>
+ * </ol>
+ *
+ * <n> For example, a valid name is "contest-01" but "contesto" is not valid. </n>
+ */
 public class ContestFolderFilter extends FileFilter implements FilenameFilter {
     public static final String CONTEST_PREFIX = "contest-";
     private static String STRING_PATTERN = "^(" + CONTEST_PREFIX + ")([a-zA-Z_0-9]{1,25})$";
@@ -25,7 +35,6 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
     }
 
     /**
-     *
      * @param checkExistence if the parameter is set to <b>true</b> then the existence of the folder will be checked.
      *                       This parameter was designated to use within test purposes.
      */
@@ -66,7 +75,7 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
     }
 
     public boolean checkPattern(String name) {
-        if(name == null) return false;
+        if (name == null) return false;
 
         Matcher matcher = pattern.matcher(name);
 
