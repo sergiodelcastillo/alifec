@@ -22,38 +22,6 @@ import java.util.Comparator;
  */
 public class ContestFolderFilterTest extends ParentTest {
 
-    @Before
-    public void init() {
-        File rootDir = new File(TEST_ROOT_PATH);
-
-        //ensure that the root dir exists
-        if (!rootDir.exists()) {
-            rootDir.mkdir();
-        }
-    }
-
-    @After
-    public void cleanup() throws IOException {
-        File rootDir = new File(TEST_ROOT_PATH);
-
-        if (rootDir.exists()) {
-            Path dirPath = Paths.get(TEST_ROOT_PATH);
-
-            Files.walk(dirPath, FileVisitOption.FOLLOW_LINKS)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .peek(System.out::println)
-                    .forEach(File::delete);
-
-
-            //Files.walk - return all files/directories below rootPath including
-            //.sorted - sort the list in reverse order, so the directory itself comes
-            //          after the including subdirectories and files
-            //.map - map the Path to File
-            //.peek - is there only to show which entry is processed
-            //.forEach - calls the .delete() method on every File object
-        }
-    }
 
     @Test
     public void testListEmpty() {
@@ -111,6 +79,7 @@ public class ContestFolderFilterTest extends ParentTest {
         Assert.assertTrue(filter.checkPattern("contest-1111122222111112222211111"));
         Assert.assertTrue(filter.checkPattern("contest-abc1234DEF"));
     }
+
     @Test
     public void testListOneContest() throws IOException {
         String contestName = ContestFolderFilter.CONTEST_PREFIX + "01";
