@@ -31,15 +31,7 @@ public abstract class Colony {
         this.path = path;
     }
 
-    public static void addClassPath(String s) throws Exception {
-        File f = new File(s);
-        URI u = f.toURI();
-        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class<URLClassLoader> urlClass = URLClassLoader.class;
-        Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
-        method.setAccessible(true);
-        method.invoke(urlClassLoader, new Object[]{u.toURL()});
-    }
+
 
     @Override
     public final void finalize() throws Throwable {
@@ -164,12 +156,22 @@ public abstract class Colony {
      * @param path the new library path
      * @throws Exception
      */
-    protected static void setLibraryPath(String path) throws Exception {
+   /* protected static void setLibraryPath(String path) throws Exception {
         System.setProperty("java.library.path", path);
 
         //set sys_paths to null
         final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
         sysPathsField.setAccessible(true);
         sysPathsField.set(null, null);
+    }*/
+
+    public static void addClassPath(String s) throws Exception {
+        File f = new File(s);
+        URI u = f.toURI();
+        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        Class<URLClassLoader> urlClass = URLClassLoader.class;
+        Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+        method.setAccessible(true);
+        method.invoke(urlClassLoader, new Object[]{u.toURL()});
     }
 }
