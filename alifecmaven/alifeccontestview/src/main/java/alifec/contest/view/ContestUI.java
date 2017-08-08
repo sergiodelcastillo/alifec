@@ -152,7 +152,7 @@ public class ContestUI extends JFrame implements ActionListener {
             throw new CreateContestException("Bad config file. You could delete the following file:\n"
                     + path + File.separator + ContestConfig.CONFIG_FILE);
 
-        CompilationResult result = contest.compileMOs(contest.getMOsPath());
+        CompilationResult result = CompileHelper.compileMOs(config.getMOsPath());
 
         //todo: improve it .. it will show as dialogs windows as errors it have but it should show one dialog with all errors.
         if (result.haveErrors()) {
