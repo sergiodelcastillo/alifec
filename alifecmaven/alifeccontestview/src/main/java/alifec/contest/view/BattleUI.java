@@ -203,13 +203,13 @@ public class BattleUI extends JPanel implements ActionListener {
     private JMenuBar createSouthPanel() {
         JMenuBar menuBar = new JMenuBar();
 
-        save = new JButton(new ImageIcon("icons/save.png"));
-        delete = new JButton(new ImageIcon("icons/delSelectedBattle.png"));
-        deleteAll = new JButton(new ImageIcon("icons/delAllBattle.png"));
-        run = new JButton(new ImageIcon("/icons/run.png"));
-        runAll = new JButton(new ImageIcon("icons/runAll.png"));
-        addSelected = new JButton(new ImageIcon("icons/addSelectedBattle.png"));
-        addAll = new JButton(new ImageIcon("icons/addAllBattle.png"));
+        save = new JButton(new ImageIcon(getClass().getResource("/icons/save.png")));
+        delete = new JButton(new ImageIcon(getClass().getResource("/icons/delSelectedBattle.png")));
+        deleteAll = new JButton(new ImageIcon(getClass().getResource("/icons/delAllBattle.png")));
+        run = new JButton(new ImageIcon(getClass().getResource("/icons/run.png")));
+        runAll = new JButton(new ImageIcon(getClass().getResource("/icons/runAll.png")));
+        addSelected = new JButton(new ImageIcon(getClass().getResource("/icons/addSelectedBattle.png")));
+        addAll = new JButton(new ImageIcon(getClass().getResource("/icons/addAllBattle.png")));
 
         // set tool tip text !!
         save.setToolTipText("Save list of battles");

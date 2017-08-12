@@ -96,6 +96,7 @@ public class ContestHelper {
     }
 
     public static boolean existConfigFile(String path) {
+        // TODO: simplificar file.exists (config file)
         if (path == null || path.equals("")) {
             return false;
         }

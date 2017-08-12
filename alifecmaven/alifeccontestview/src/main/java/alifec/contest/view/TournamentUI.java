@@ -74,14 +74,14 @@ public class TournamentUI extends JPanel implements ActionListener {
     public JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        addColony = new JButton(new ImageIcon("icons/openColony.png"));
-        //	delColony = new JButton(new ImageIcon("icons/deleteColony.png"));
+        addColony = new JButton(new ImageIcon(getClass().getResource("/icons/openColony.png")));
+        //	delColony = new JButton(new ImageIcon(getClass().getResource("icons/deleteColony.png"));
         //JButton firstTourn = new JButton("First");
-        prevTournament = new JButton(new ImageIcon("icons/prevTournament.png"));
-        nextTournament = new JButton(new ImageIcon("icons/nextTournament.png"));
-        ranking = new JButton(new ImageIcon("icons/ranking.png"));
-        addTournament = new JButton(new ImageIcon("icons/addTournament.png"));
-        delTournament = new JButton(new ImageIcon("icons/delTournament.png"));
+        prevTournament = new JButton(new ImageIcon(getClass().getResource("/icons/prevTournament.png")));
+        nextTournament = new JButton(new ImageIcon(getClass().getResource("/icons/nextTournament.png")));
+        ranking = new JButton(new ImageIcon(getClass().getResource("/icons/ranking.png")));
+        addTournament = new JButton(new ImageIcon(getClass().getResource("/icons/addTournament.png")));
+        delTournament = new JButton(new ImageIcon(getClass().getResource("/icons/delTournament.png")));
 
         // setTool Tip!
         addColony.setToolTipText("Add colony");
