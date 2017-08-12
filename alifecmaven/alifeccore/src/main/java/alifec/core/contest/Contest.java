@@ -9,7 +9,6 @@ import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.contest.oponentInfo.OpponentInfoManager;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
-import alifec.core.exception.CompilerException;
 import alifec.core.exception.CreateContestException;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.CreateTournamentException;
@@ -18,9 +17,9 @@ import alifec.core.simulation.AllFilter;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrients.Nutrient;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -151,7 +150,7 @@ public class Contest {
 
             // create examples ...!!
             if (examples)
-                CodeGenerator.generateExamples(MOsFolder);
+                createExamples(MOsFolder);
 
         } catch (IOException ex) {
             Logger.getLogger(Contest.class.getName()).log(Level.SEVERE, null, ex);
@@ -160,13 +159,28 @@ public class Contest {
         return true;
     }
 
- /*   public static String createContestFolder(String path, boolean examples) throws FileNotFoundException {
-        Calendar c = new GregorianCalendar();
-        String name = "Contest" + Integer.toString(c.get(Calendar.YEAR));
+    private static void createExamples(String MOsFolder) {
+        try {
+            File source = new File(Contest.class.getClass().getResource("/examples/").toURI());
 
-        createContestFolder(path, name, examples);
-        return name;
-    }*/
+            Files.walk(source.toPath()).forEach(path -> {
+                try {
+                    File target = new File(MOsFolder + File.separator + path.getFileName());
+
+                    if (new File(path.toUri()).isFile())
+                        Files.copy(path, target.toPath());
+
+                } catch (IOException e) {
+                    //TODO: poner un logger más copado!
+                    e.printStackTrace();
+                }
+            });
+        } catch (URISyntaxException | IOException ex) {
+            //TODO... poner un logger mas copado
+            ex.printStackTrace();
+        }
+    }
+
 
     /**
      * update the config file into the proyect.

@@ -5,6 +5,9 @@
 
 package alifec.contest.view;
 
+import alifec.core.contest.ContestConfig;
+import alifec.core.contest.ContestFolderFilter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +25,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     private JLabel labelName = new JLabel("Name of Contest");
     private JLabel labelPath = new JLabel("Path");
     private JLabel labelAccepted = new JLabel("             ");
-    private JTextField textContest = new JTextField("Contest_");
+    private JTextField textContest = new JTextField(ContestFolderFilter.CONTEST_PREFIX);
     private JTextField textName = new JTextField("" + Calendar.getInstance().get(Calendar.YEAR));
     private JTextField textPath = new JTextField(System.getProperty("user.dir"));
     private JButton buttonBrowse = new JButton("Browse");
@@ -32,7 +35,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     private JCheckBox examples = new JCheckBox("Generate examples", true);
 
     private Vector<Object> result;
-    
+
     public DialogNewContest(JFrame father, final Vector<Object> url) {
         super(father, "New Contest ", true);
         this.result = url;
@@ -48,7 +51,8 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     }
 
     public boolean exists(String name) {
-        return new File(textPath.getText() + File.separator + "Contest_" + name).exists();
+        //TODO: Usar el path del ContestConfig!!
+        return new File(textPath.getText() + File.separator + ContestFolderFilter.CONTEST_PREFIX + name).exists();
     }
 
     private void initComponents() {
@@ -59,6 +63,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
         addEscapeKey();
 
         textContest.setEditable(false);
+        textContest.setEnabled(false);
         textPath.setEditable(false);
 
         GroupLayout centerLayout = new GroupLayout(centerPanel);
@@ -84,12 +89,12 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
                                 addComponent(labelPath).
                                 addComponent(checkLoad)).
                         addGroup(centerLayout.createParallelGroup().
-                        addGroup(centerLayout.createSequentialGroup().
-                                addComponent(textContest).addComponent(textName).addComponent(labelAccepted)).
-                        addGroup(centerLayout.createSequentialGroup().
-                                addComponent(textPath).addComponent(buttonBrowse)).
-                        addGroup(centerLayout.createSequentialGroup().
-                        addComponent(examples)))
+                                addGroup(centerLayout.createSequentialGroup().
+                                        addComponent(textContest).addComponent(textName).addComponent(labelAccepted)).
+                                addGroup(centerLayout.createSequentialGroup().
+                                        addComponent(textPath).addComponent(buttonBrowse)).
+                                addGroup(centerLayout.createSequentialGroup().
+                                        addComponent(examples)))
 
         );
 
@@ -105,7 +110,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
                                 addComponent(textPath).
                                 addComponent(buttonBrowse)).
                         addGroup(centerLayout.createParallelGroup().
-                        addComponent(checkLoad).addComponent(examples)));
+                                addComponent(checkLoad).addComponent(examples)));
 
         textContest.setMaximumSize(new Dimension(70, 26));
         textName.setMaximumSize(new Dimension(255, 26));
@@ -118,7 +123,8 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
 
             if (!exists(textName.getText())) {
                 if (validate(textName.getText())) {
-                    result.addElement("Contest_" + textName.getText());
+                    //TODO: usar contestconfig
+                    result.addElement(ContestFolderFilter.CONTEST_PREFIX + textName.getText());
                     result.addElement(textPath.getText());
                     result.addElement(checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE);
                     result.addElement(examples.isSelected() ? Boolean.TRUE : Boolean.FALSE);
@@ -127,7 +133,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
                     Message.printErr(this, "The name of contest must be only letter or digit");
                 }
             } else {
-                Message.printErr(this, "Contest_" + textName.getText() + " folder already exists");
+                Message.printErr(this, ContestFolderFilter.CONTEST_PREFIX + textName.getText() + " folder already exists");
             }
 
         } else if (ev.getSource().equals(this.buttonBrowse)) {
