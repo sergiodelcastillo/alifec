@@ -9,6 +9,7 @@ import alifec.core.contest.*;
 import alifec.core.exception.CreateContestException;
 import alifec.core.exception.CreateTournamentException;
 import alifec.core.exception.TournamentCorruptedException;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,11 +19,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class ContestUI extends JFrame implements ActionListener {
+
+    Logger logger = Logger.getLogger(getClass());
+
     private static final long serialVersionUID = 0L;
     /**
      * Interface grafica que representa los encuentros realizados y
@@ -69,6 +71,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
     public ContestUI() {
         super("Alifecontest-java 0.02");
+        logger.info("Starting App");
         setLookAndLanguage();
 
         if (loadContest()) {
@@ -447,13 +450,13 @@ public class ContestUI extends JFrame implements ActionListener {
             JFileChooser.setDefaultLocale(Locale.ENGLISH);
             JOptionPane.setDefaultLocale(Locale.ENGLISH);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ContestUI.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
         } catch (InstantiationException ex) {
-            Logger.getLogger(ContestUI.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(ContestUI.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(ContestUI.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 

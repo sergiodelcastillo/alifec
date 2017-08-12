@@ -5,7 +5,6 @@
 
 package alifec.contest.view;
 
-import alifec.core.contest.ContestConfig;
 import alifec.core.contest.ContestFolderFilter;
 
 import javax.swing.*;

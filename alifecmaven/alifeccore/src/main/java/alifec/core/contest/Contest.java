@@ -161,6 +161,7 @@ public class Contest {
 
     private static void createExamples(String MOsFolder) {
         try {
+            //TODO: poner una constante...
             File source = new File(Contest.class.getClass().getResource("/examples/").toURI());
 
             Files.walk(source.toPath()).forEach(path -> {
