@@ -2,6 +2,7 @@ package alifec.core.contest;
 
 import alifec.core.exception.CompilerException;
 import alifec.core.simulation.AllFilter;
+import org.apache.log4j.Logger;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -15,6 +16,7 @@ import java.util.Vector;
  */
 public class CompileHelper {
 
+    static Logger logger = org.apache.log4j.Logger.getLogger(CompileHelper.class);
 
     /**
      * Compile .java and .cpp files
@@ -24,15 +26,15 @@ public class CompileHelper {
      * @return true if successfully
      */
     public static CompilationResult compileMOs(String MOsPath) {
-        System.out.println("\nCompile JAVA Files");
+        logger.info("Compile JAVA Files");
         CompilationResult result = new CompilationResult();
         try {
             for (File f : AllFilter.getFilesJava(MOsPath)) {
 
                 if (compileMOsJava(MOsPath, f.getParent(), f.getName())) {
-                    System.out.println(f.getAbsolutePath() + " [OK]");
+                    logger.info(f.getAbsolutePath() + " [OK]");
                 } else {
-                    System.err.println(f.getAbsolutePath() + " [FAIL]");
+                    logger.error(f.getAbsolutePath() + " [FAIL]");
                     result.logJavaError("Could not compileMOs " + f.getName() + ". For more details see the logs.");
                     //Message.printErr(null, "Could not compileMOs " + f.getName() + ". For more details use make");
                 }
@@ -42,23 +44,22 @@ public class CompileHelper {
             //Message.printErr(null, ex.getMessage());
         }
 
-        System.out.println("\nCompile C++ Files");
-        System.out.print("Update C++ Files: ");
+        logger.info("Compile C++ Files");
 
         if (updateTournamentCpp(MOsPath) && updateIncludes(MOsPath)) {
-            System.out.println("[OK]");
-            System.out.print("Create libcppcolonies ");
+            logger.info("Update C++ Files: [OK]");
 
             if (compileAllMOsCpp(MOsPath)) {
-                System.out.println("[OK]");
+                logger.info("Create libcppcolonies: [OK]");
             } else {
-                System.out.println("[FAIL]");
-                result.logCppError("Could not compileMOs one o more microorganisms of C++. For more details use make");
-                //Message.printErr(null, "Could not compileMOs one o more microorganisms of C++. For more details use make");
+                logger.info("Create libcppcolonies: [FAIL]");
+                result.logCppError("Could not compileMOs one o more microorganisms of C++. For more details see log file.");
             }
 
-        } else
-            System.out.println("[FAIL]");
+        } else {
+            logger.info("Update C++ Files: [FAIL]");
+            result.logCppError("Could not update cpp files. For more details see log file.");
+        }
 
         return result;
     }
@@ -89,7 +90,7 @@ public class CompileHelper {
 
             return s == 0;
         } catch (FileNotFoundException ex) {
-            System.out.println("Fail to compileMOs: " + path + File.separator + name + ". File not found.");
+            logger.info("Fail to compileMOs: " + path + File.separator + name + ". File not found.");
             return false;
         }
 
@@ -171,10 +172,9 @@ public class CompileHelper {
             pw.println("}");
             pw.println("");
             pw.close();
-        } catch (FileNotFoundException ex) {
-            return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return false;
         }
         return true;
     }
@@ -202,10 +202,9 @@ public class CompileHelper {
                 pw.println("#include \"" + n + "\"");
             }
             pw.close();
-        } catch (FileNotFoundException ex) {
-            return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            return false;
         }
         return true;
     }

@@ -16,17 +16,18 @@ import alifec.core.simulation.Agar;
 import alifec.core.simulation.AllFilter;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrients.Nutrient;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Contest {
+
+    static Logger logger = org.apache.log4j.Logger.getLogger(Contest.class);
 
     /**
      * Environment ...
@@ -66,7 +67,7 @@ public class Contest {
     public Hashtable<String, Integer> getNutrients() {
 
         Hashtable<String, Integer> nutri = new Hashtable<>();
-        String url = config.getContestPath() + File.separator + ContestConfig.NUTRIENTS_FILE;
+        String url = config.getNutrientsFilePath();
 
         try {
             FileReader fr = new FileReader(url);
@@ -87,7 +88,7 @@ public class Contest {
             }
             fr.close();
         } catch (IOException e) {
-            System.out.println("File not Found: " + url);
+            logger.warn("File not Found: " + url, e);
         }
 
         return nutri;
@@ -153,7 +154,7 @@ public class Contest {
                 createExamples(MOsFolder);
 
         } catch (IOException ex) {
-            Logger.getLogger(Contest.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
             return false;
         }
         return true;
@@ -172,13 +173,11 @@ public class Contest {
                         Files.copy(path, target.toPath());
 
                 } catch (IOException e) {
-                    //TODO: poner un logger más copado!
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             });
         } catch (URISyntaxException | IOException ex) {
-            //TODO... poner un logger mas copado
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
         }
     }
 

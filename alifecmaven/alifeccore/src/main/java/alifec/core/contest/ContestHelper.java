@@ -2,6 +2,7 @@ package alifec.core.contest;
 
 import alifec.core.contest.tournament.TournamentFilter;
 import alifec.core.exception.TournamentCorruptedException;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,6 +20,8 @@ import java.util.Vector;
  */
 public class ContestHelper {
 
+    static Logger logger = org.apache.log4j.Logger.getLogger(ContestHelper.class);
+    
     /**
      * Find the mode is competition and the Alifec software was closed unsuccessful then
      * it could be inconsistency in saved battles. This method helps to find unsaved run and
@@ -81,17 +84,17 @@ public class ContestHelper {
 
         if (backupFile.exists()) {
             if (backupFile.delete()) {
-                System.out.println("Delete back up file [OK]");
+                logger.info("Delete back up file [OK]");
             } else {
-                System.out.println("Delete back up file [FAIL]");
+                logger.info("Delete back up file [FAIL]");
             }
         }
         /*TODO: ver porque esto estaba acá, mepa que está al dope
         try {
             tournaments.newTournament(environment.getNames());
-            System.out.println("Creating new Tournament [OK]");
+            logger.info("Creating new Tournament [OK]");
         } catch (CreateTournamentException ex) {
-            System.out.println("Creating new Tournament [FAIL]");
+            logger.info("Creating new Tournament [FAIL]");
         }*/
     }
 
@@ -178,8 +181,8 @@ public class ContestHelper {
             }
 
         } catch (IOException ex) {
-            System.out.println("Cant find battles.csv or battles_backup.csv");
-            System.out.println("path: " + n);
+            logger.info("Cant find battles.csv or battles_backup.csv");
+            logger.info("path: " + n);
         } finally {
             try {
                 if (f != null) {

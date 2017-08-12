@@ -6,16 +6,17 @@
 package alifec.core.contest.tournament.battles;
 
 import alifec.core.contest.ContestConfig;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.util.Collections.max;
 
 public class BattleManager {
+
+    static Logger logger = Logger.getLogger(BattleManager.class);
 
     private Vector<Battle> battles = new Vector<>();
 
@@ -79,7 +80,7 @@ public class BattleManager {
                     tmp.addElement(b); // delete instance
                     b.delete(getBattlesFileName()); // delete battle of file
                 } catch (IOException ex) {
-                    System.err.println("BattleManager.delete()--> IOException");
+                    logger.warn(ex.getMessage(), ex);
                 }
             }
         }
@@ -102,11 +103,8 @@ public class BattleManager {
             }
 
             battles.removeAll(tmp);
-        } catch (FileNotFoundException ex) {
-            System.err.println("BattleManager.penalize()--> FIleNotFoundException");
-            return false;
         } catch (IOException ex) {
-            System.err.println("BattleManager.penalize()--> IOException");
+            logger.error(ex.getMessage(), ex);
             return false;
         }
 
@@ -180,7 +178,7 @@ public class BattleManager {
                 b.save(getBattlesFileName());
             }
         } catch (IOException ex) {
-            Logger.getLogger(BattleManager.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
             return false;
         }
         return true;

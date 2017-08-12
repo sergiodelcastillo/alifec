@@ -7,6 +7,7 @@ package alifec.core.contest.tournament;
 import alifec.core.contest.ContestConfig;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.CreateTournamentException;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,9 @@ import java.util.Vector;
 
 
 public class TournamentManager {
+
+    static Logger logger = org.apache.log4j.Logger.getLogger(TournamentManager.class);
+
     /**
      * Vector de tournaments.
      */
@@ -144,7 +148,7 @@ public class TournamentManager {
         try {
             return tournaments.elementAt(selected);
         } catch (Exception ex) {
-            System.out.println("error:tournamentManager.getSelected()");
+            logger.error(ex.getMessage(), ex);
         }
         return null;
     }

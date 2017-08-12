@@ -6,8 +6,10 @@
 package alifec.core.contest.tournament;
 
 import alifec.core.contest.ContestConfig;
+import alifec.core.contest.ContestHelper;
 import alifec.core.contest.tournament.battles.BattleManager;
 import alifec.core.exception.CreateRankingException;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,11 +17,12 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Tournament implements Comparable<Tournament> {
+
+    static Logger logger = org.apache.log4j.Logger.getLogger(Tournament.class);
+    
     /**
      * manager of battles. This battles are permanent
      */
@@ -67,13 +70,8 @@ public class Tournament implements Comparable<Tournament> {
     public boolean add(String n1, String n2, String nut, float ene1, float ene2) {
         try {
             battleManager.add(n1, n2, nut, ene1, ene2);
-        } catch (FileNotFoundException ex) {
-            System.out.println("FileNotFoundException ---> Tournament.add()");
-            //Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         } catch (IOException ex) {
-            System.out.println("IOException ---> Tournament.add()");
-//            Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
             return false;
         }
         return true;
@@ -168,8 +166,7 @@ public class Tournament implements Comparable<Tournament> {
         try {
             battleManager.read();
         } catch (IOException ex) {
-            System.out.println("Tournamenent.read()");
-            Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
             return false;
         }
         return true;

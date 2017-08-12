@@ -4,6 +4,8 @@
  */
 package alifec.core.contest;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -22,6 +24,9 @@ import java.util.regex.Pattern;
  * <n> For example, a valid name is "contest-01" but "contesto" is not valid. </n>
  */
 public class ContestFolderFilter extends FileFilter implements FilenameFilter {
+
+    static Logger logger = org.apache.log4j.Logger.getLogger(ContestFolderFilter.class);
+
     public static final String CONTEST_PREFIX = "contest-";
     private static String STRING_PATTERN = "^(" + CONTEST_PREFIX + ")([a-zA-Z_0-9]{1,25})$";
 
@@ -52,7 +57,7 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
             return new File(dir.getAbsolutePath() + File.separator + name).isDirectory();
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
             return false;
         }
     }
@@ -64,7 +69,7 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
 
             return accept(dir.getParentFile(), name);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
             return false;
         }
     }

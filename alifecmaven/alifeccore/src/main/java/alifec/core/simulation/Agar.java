@@ -1,6 +1,8 @@
 package alifec.core.simulation;
 
+import alifec.core.contest.Contest;
 import alifec.core.simulation.nutrients.*;
+import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.util.Random;
@@ -11,6 +13,9 @@ import java.util.Vector;
  * Don't modify this class
  */
 public class Agar {
+
+    static Logger logger = org.apache.log4j.Logger.getLogger(Agar.class);
+
     private int nutri_id = -1;
     private float[][] nutrients;
 
@@ -133,7 +138,7 @@ public class Agar {
         try {
             return nutrients[xx][yy];
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return 0;
         }
     }

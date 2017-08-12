@@ -1,5 +1,7 @@
 package alifec.core.contest;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -9,6 +11,8 @@ import java.util.Properties;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ContestConfig {
+
+    static Logger logger = org.apache.log4j.Logger.getLogger(CompileHelper.class);
 
     /**
      * List of nutrients that are used in contest.
@@ -89,7 +93,7 @@ public class ContestConfig {
         for (Object object : property.keySet()) {
 
             if (!config.setProperty(object.toString(), property.getProperty(object.toString()))) {
-                System.out.println("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
+                logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
             }
         }
 

@@ -5,6 +5,7 @@ package alifec.core.simulation; /**
 
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.contest.tournament.battles.BattleRun;
+import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.io.File;
@@ -14,6 +15,8 @@ import java.util.Random;
 import java.util.Vector;
 
 public class Environment {
+
+    static Logger logger = org.apache.log4j.Logger.getLogger(Environment.class);
     /**
      * Agar of environment.
      */
@@ -59,44 +62,36 @@ public class Environment {
         agar = new Agar();
         colonies = new Vector<>();
 
-        System.out.println("\nLoading Colonies");
-        System.out.println("Loading Java Colonies");
+        logger.info("Loading Colonies");
+        logger.info("Loading Java Colonies");
 
         for (String name : AllFilter.listNamesJava(path)) {
             try {
-                System.out.print(name);
                 JavaColony.addClassPath(path );
                 colonies.addElement(new JavaColony(colonies.size(), "alifec.core.simulation.MOs." + name));
-                System.out.println("[OK]");
-            } catch (ClassNotFoundException ex) {
-                System.out.println("[FAIL]");
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                logger.info(name + " [OK]");
+            } catch (Exception ex) {
+                logger.warn(name + " [FAIL]");
             }
         }
 
         // loading library
-        System.out.println("\nLoading C++ Colonies ");
-        System.out.print("Loading C++ Library ");
+        logger.info("Loading C++ Colonies ");
 
         if (CppColony.loadLibrary(path + File.separator + "lib" + File.separator + "MOs" + File.separator)) {
-            System.out.println("[OK]");
+            logger.info("Loading C++ Library [OK]");
 
             for (String name : AllFilter.listNamesCpp(path)) {
                 try {
                     // to initialise the name of colony
-                    System.out.print(name);
                     colonies.addElement(new CppColony(colonies.size(), name));
-                    System.out.println("[OK]");
+                    logger.info(name + " [OK]");
                 } catch (ClassNotFoundException ex) {
-                    System.out.println("[FAIL]");
+                    logger.warn(name + " [FAIL]");
                 }
             }
         } else {
-            System.out.println("[FAIL]");
+            logger.warn("Loading C++ Library [FAIL]");
         }
 
         // set the environment !!

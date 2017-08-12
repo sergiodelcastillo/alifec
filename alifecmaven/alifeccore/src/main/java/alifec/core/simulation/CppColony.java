@@ -3,12 +3,15 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
+import org.apache.log4j.Logger;
+
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public class CppColony extends Colony {
 
+    static Logger logger = org.apache.log4j.Logger.getLogger(CppColony.class);
 
     public static boolean loadLibrary(String path) {
         try {
@@ -18,7 +21,7 @@ public class CppColony extends Colony {
             try {
                 addLibraryPath(path);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.warn(ex.getMessage(), ex);
             }
 
             //load the library according to the os

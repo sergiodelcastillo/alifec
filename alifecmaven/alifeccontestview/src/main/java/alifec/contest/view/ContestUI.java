@@ -137,7 +137,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
             createContest(path);
         } catch (IOException ex) {
-            Message.printErr(null, "Error de lectura...");
+            Message.printErr (null, "Error de lectura...");
             return false;
         } catch (CreateTournamentException ex) {
             Message.printErr(null, ex.getMessage());
