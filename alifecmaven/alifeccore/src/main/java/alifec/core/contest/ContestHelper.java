@@ -1,13 +1,13 @@
 package alifec.core.contest;
 
 import alifec.core.contest.tournament.TournamentFilter;
+import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.TournamentCorruptedException;
+import alifec.core.simulation.Agar;
+import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -98,24 +98,6 @@ public class ContestHelper {
         }*/
     }
 
-    public static boolean existConfigFile(String path) {
-        // TODO: simplificar file.exists (config file)
-        if (path == null || path.equals("")) {
-            return false;
-        }
-
-        String[] list = new File(path).list();
-
-        if (list != null) {
-            for (String names : list) {
-                if (names.equals(ContestConfig.CONFIG_FILE)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public static List<String> listContest(String path) {
         String list[] = new File(path).list(new ContestFolderFilter());
         List<String> results = new ArrayList<>();
@@ -191,5 +173,50 @@ public class ContestHelper {
             } catch (IOException ignored) {
             }
         }
+    }
+
+    /**
+     * Create a new Contest configuration using a new path and contest name.
+     *
+     * @param path        current directory.
+     * @param contestName the name of the new contest
+     * @return a new configuration which is not persisted yet.
+     */
+    public static ContestConfig buildNewContestFolder(String path, String contestName) throws CreateContestFolderException {
+        if (path == null || path.isEmpty())
+            throw new CreateContestFolderException("The path is empty: " + path);
+
+        if (contestName == null || contestName.isEmpty())
+            throw new CreateContestFolderException("the Contest Name is empty: " + contestName);
+
+        ContestConfig config = ContestConfig.buildNewConfigFile(path, contestName);
+
+        if (!new File(config.getContestPath()).mkdir()) {
+            throw new CreateContestFolderException("Can not create the folder: " + config.getContestPath());
+        }
+        if (!new File(config.getMOsPath()).mkdir()) {
+            throw new CreateContestFolderException("Can not create the folder: " + config.getContestPath());
+        }
+
+        if (!new File(config.getReportPath()).mkdir()) {
+            throw new CreateContestFolderException("Can not create the folder: " + config.getContestPath());
+        }
+
+        File contestFile = new File(config.getNutrientsFilePath());
+        PrintWriter writter;
+
+        try {
+            writter = new PrintWriter(contestFile);
+
+            for (Nutrient n : Agar.nutrient)
+                writter.println(n.getID());
+
+        } catch (FileNotFoundException ex) {
+            throw new CreateContestFolderException("Cant not create the file: " + config.getNutrientsFilePath());
+        }
+
+        writter.close();
+
+        return config;
     }
 }

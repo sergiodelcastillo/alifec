@@ -9,9 +9,7 @@ import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.contest.oponentInfo.OpponentInfoManager;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
-import alifec.core.exception.CreateContestException;
-import alifec.core.exception.CreateRankingException;
-import alifec.core.exception.CreateTournamentException;
+import alifec.core.exception.*;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.AllFilter;
 import alifec.core.simulation.Environment;
@@ -67,10 +65,10 @@ public class Contest {
     public Hashtable<String, Integer> getNutrients() {
 
         Hashtable<String, Integer> nutri = new Hashtable<>();
-        String url = config.getNutrientsFilePath();
+        String nutrientsPath = config.getNutrientsFilePath();
 
         try {
-            FileReader fr = new FileReader(url);
+            FileReader fr = new FileReader(nutrientsPath);
             BufferedReader in = new BufferedReader(fr);
             String line;
 
@@ -88,7 +86,7 @@ public class Contest {
             }
             fr.close();
         } catch (IOException e) {
-            logger.warn("File not Found: " + url, e);
+            logger.warn("File not Found: " + nutrientsPath, e);
         }
 
         return nutri;
@@ -103,7 +101,7 @@ public class Contest {
      */
 
     public boolean reloadConfig() throws IOException {
-        ContestConfig configTmp = ContestConfig.build(config.getPath());
+        ContestConfig configTmp = ContestConfig.buildFromFile(config.getPath());
 
         if (configTmp.isValid()) {
             config = configTmp;
@@ -114,48 +112,27 @@ public class Contest {
     }
 
 
-    public static boolean createConfig(String path, String contestName) {
-        Properties property = new Properties();
-        property.setProperty("url", ".");
-        property.setProperty("name", "" + contestName);
-        property.setProperty("mode", "" + "0");
-        property.setProperty("pause between battles", "100");
+    public static ContestConfig createConfigFile(String path, String contestName) throws SaveContestConfigException {
+        ContestConfig config = ContestConfig.buildNewConfigFile(path, contestName);
 
-        try {
-            property.store(new FileWriter(path + File.separator + ContestConfig.CONFIG_FILE),
-                    "Configuration File\n Warning: do not modify this file");
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
+        config.save();
+
+        return config;
     }
 
 
     public static boolean createContestFolder(String path, String name, boolean examples) {
-        PrintWriter pw;
+
         try {
-            //todo: use ContestConfig
-            String contestName = path + File.separator + name;
-            String MOsFolder = contestName + File.separator + ContestConfig.MOS_FOLDER;
-            String ReportFolder = contestName + File.separator + ContestConfig.REPORT_FOLDER;
-            new File(contestName).mkdir();
-            new File(MOsFolder).mkdir();
-            new File(ReportFolder).mkdir();
-            File contestFile = new File(contestName + File.separator + ContestConfig.NUTRIENTS_FILE);
-            pw = new PrintWriter(contestFile);
-
-            for (Nutrient n : Agar.nutrient)
-                pw.println(n.getID());
-
-            pw.close();
+            ContestConfig config = ContestHelper.buildNewContestFolder(path, name);
 
             // create examples ...!!
             if (examples)
-                createExamples(MOsFolder);
+                createExamples(config.getMOsPath());
 
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-            return false;
+        } catch (CreateContestFolderException e) {
+            logger.error("Cant not create the ConfigFile");
+            logger.error(e.getMessage(), e);
         }
         return true;
     }
@@ -191,21 +168,18 @@ public class Contest {
      * @param pause default pause between battles
      * @return true if is successfully
      */
-    public boolean updateConfig(String path, String name, int mode, int pause) {
-        Properties property = new Properties();
-        property.setProperty("url", path);
-        property.setProperty("name", name);
-        property.setProperty("mode", "" + mode);
-        property.setProperty("pause between battles", "" + pause);
+    public boolean updateConfigFile(String path, String name, int mode, int pause) {
+        config.setPath(path);
+        config.setContestName(name);
+        config.setMode(mode);
+        config.setPauseBetweenBattles(pause);
 
         try {
-            property.store(new FileWriter(config.getConfigFilePath()),
-                    "Configuration File\n Warning: do not modify this file");
-        } catch (IOException e) {
-            return false;
+            return config.save();
+        } catch (SaveContestConfigException e) {
+            logger.error("Error updating config file: " + e.getConfig(), e);
         }
-
-        return true;
+        return false;
     }
 
     public void updateNutrient(int[] nutrients) throws IOException {

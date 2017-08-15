@@ -24,32 +24,31 @@ public class CompileHelper {
      * C/Cpp files: are build a unique library(cppcolonies.so/.dll) and saved in the lib/MOs folder.
      *
      * @return true if successfully
+     * @param config
      */
-    public static CompilationResult compileMOs(String MOsPath) {
+    public static CompilationResult compileMOs(ContestConfig config) {
         logger.info("Compile JAVA Files");
         CompilationResult result = new CompilationResult();
         try {
-            for (File f : AllFilter.getFilesJava(MOsPath)) {
+            for (File f : AllFilter.getFilesJava(config.getMOsPath())) {
 
-                if (compileMOsJava(MOsPath, f.getParent(), f.getName())) {
+                if (compileMOsJava(config, f.getParent(), f.getName())) {
                     logger.info(f.getAbsolutePath() + " [OK]");
                 } else {
                     logger.error(f.getAbsolutePath() + " [FAIL]");
                     result.logJavaError("Could not compileMOs " + f.getName() + ". For more details see the logs.");
-                    //Message.printErr(null, "Could not compileMOs " + f.getName() + ". For more details use make");
                 }
             }
         } catch (CompilerException ex) {
             result.logJavaError(ex.getMessage());
-            //Message.printErr(null, ex.getMessage());
         }
 
         logger.info("Compile C++ Files");
 
-        if (updateTournamentCpp(MOsPath) && updateIncludes(MOsPath)) {
+        if (updateTournamentCpp(config.getMOsPath()) && updateIncludes(config.getMOsPath())) {
             logger.info("Update C++ Files: [OK]");
 
-            if (compileAllMOsCpp(MOsPath)) {
+            if (compileAllMOsCpp(config.getMOsPath())) {
                 logger.info("Create libcppcolonies: [OK]");
             } else {
                 logger.info("Create libcppcolonies: [FAIL]");
@@ -67,30 +66,30 @@ public class CompileHelper {
      * this method use the native compiler(Javac) to compileMOs the java codes.
      * The compiled codes are saved in the lib/MOs folder
      *
-     * @param path absolute path of C/C++ microorganism
-     * @param name of destination library
+     * @param config the config file
+     * @param javaFileName the source code .java
      * @return true if the compilation is successfully
      * @throws CompilerException if can not find the C/C++ compiler
      */
-    static boolean compileMOsJava(String MOsPath, String path, String name) throws CompilerException {
+    static boolean compileMOsJava(ContestConfig config, String javaFileFolder, String javaFileName) throws CompilerException {
         try {
             JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 
             if (javac == null)
                 throw new CompilerException();
 
-            File out = LogPrintter.getErrorFile(path, name);
+            File out = config.getCompilationFilePath(javaFileName);
             DataOutputStream err = new DataOutputStream(
                     new BufferedOutputStream(
                             new FileOutputStream(out)));
-            int s = javac.run(null, null, err, "-d", MOsPath, path + File.separator + name);
+            int s = javac.run(null, null, err, "-d", config.getMOsPath(), javaFileFolder + File.separator + javaFileName);
 
             if (s == 0)
                 out.deleteOnExit();
 
             return s == 0;
         } catch (FileNotFoundException ex) {
-            logger.info("Fail to compileMOs: " + path + File.separator + name + ". File not found.");
+            logger.info("Fail to compileMOs: " + javaFileFolder + File.separator + javaFileName + ". File not found.");
             return false;
         }
 
@@ -132,6 +131,7 @@ public class CompileHelper {
 
             return p.exitValue() == 0;
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

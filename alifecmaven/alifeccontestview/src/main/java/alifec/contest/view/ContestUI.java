@@ -8,6 +8,7 @@ package alifec.contest.view;
 import alifec.core.contest.*;
 import alifec.core.exception.CreateContestException;
 import alifec.core.exception.CreateTournamentException;
+import alifec.core.exception.SaveContestConfigException;
 import alifec.core.exception.TournamentCorruptedException;
 import org.apache.log4j.Logger;
 
@@ -95,10 +96,10 @@ public class ContestUI extends JFrame implements ActionListener {
 
     private boolean loadContest() {
         String path;
-
+        ContestConfig config = null;
         try {
             path = new File(System.getProperty("user.dir")).getCanonicalPath();
-            System.out.println("\nLoading contest\nPath: " + path);
+            logger.info("Loading contest: " + path);
         } catch (IOException ex) {
             return false;
         }
@@ -106,7 +107,9 @@ public class ContestUI extends JFrame implements ActionListener {
         try {
 
             //Find the absolute path to load the contest
-            if (!ContestHelper.existConfigFile(path)) {
+            if (ContestConfig.existsConfigFile(path)) {
+                config = ContestConfig.buildFromFile(path);
+            } else {
                 java.util.List<String> list = ContestHelper.listContest(path);
                 String name;
 
@@ -126,18 +129,24 @@ public class ContestUI extends JFrame implements ActionListener {
 
                 } else {
                     name = Message.printChoose(list.toArray());
-                    if (name.equalsIgnoreCase(""))
+                    if (name.isEmpty())
                         return false;
                 }
-                if (!Contest.createConfig(path, name)) {
-                    Message.printErr(null, "Can't create the config file... Can't continue");
+
+                try {
+                    config = Contest.createConfigFile(path, name);
+
+
+                } catch (SaveContestConfigException e) {
+                    logger.error("Can not create the contest file: " + e.getConfig(), e);
+                    Message.printErr(null, "Can not create the contest file: " + e.getConfig());
                     return false;
                 }
-            }
 
-            createContest(path);
+            }
+            createContest(config);
         } catch (IOException ex) {
-            Message.printErr (null, "Error de lectura...");
+            Message.printErr(null, "Error de lectura...");
             return false;
         } catch (CreateTournamentException ex) {
             Message.printErr(null, ex.getMessage());
@@ -149,13 +158,14 @@ public class ContestUI extends JFrame implements ActionListener {
         return true;
     }
 
-    public void createContest(String path) throws CreateTournamentException, IOException, CreateContestException {
-        ContestConfig config = ContestConfig.build(path);
-        if (!config.isValid())
-            throw new CreateContestException("Bad config file. You could delete the following file:\n"
-                    + path + File.separator + ContestConfig.CONFIG_FILE);
+    public void createContest(ContestConfig config) throws CreateTournamentException, IOException, CreateContestException {
+        if (config == null)
+            throw new CreateContestException("The config file is null");
 
-        CompilationResult result = CompileHelper.compileMOs(config.getMOsPath());
+        if (!config.isValid())
+            throw new CreateContestException("Bad config file: " + config.getConfigFilePath());
+
+        CompilationResult result = CompileHelper.compileMOs(config);
 
         //todo: improve it .. it will show as dialogs windows as errors it have but it should show one dialog with all errors.
         if (result.haveErrors()) {
@@ -202,25 +212,26 @@ public class ContestUI extends JFrame implements ActionListener {
 
     private boolean reloadContest(String path, String name) {
         try {
-            if (!ContestHelper.existConfigFile(path)) {
-                if (!Contest.createConfig(path, name)) {
-                    Message.printErr(null, "Can't create the config file... Can't continue");
-                    return false;
-                }
+            if (ContestConfig.existsConfigFile(path)) {
+                contest.updateConfigFile(path, name, contest.getMode(), contest.getTimeWait());
             } else {
-                contest.updateConfig(path, name, contest.getMode(), contest.getTimeWait());
+                ContestConfig config = Contest.createConfigFile(path, name);
+
+                createContest(config);
             }
 
-            createContest(path);
 
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             Message.printErr(null, "IO Exception: " + ex.getMessage());
             return false;
-        } catch (CreateTournamentException ex) {
+        } catch (CreateTournamentException | CreateContestException ex) {
+            logger.error(ex.getMessage(), ex);
             Message.printErr(null, ex.getMessage());
             return false;
-        } catch (CreateContestException ex) {
-            Message.printErr(null, ex.getMessage());
+        } catch (SaveContestConfigException ex) {
+            logger.error("Can not create the contest file: " + ex.getConfig().toString(), ex);
+            Message.printErr(null, "Can not create the contest file: " + ex.getConfig().toString());
             return false;
         }
         return true;

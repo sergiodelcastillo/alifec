@@ -1,8 +1,11 @@
 package alifec.core.contest;
 
+import alifec.core.exception.SaveContestConfigException;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -52,6 +55,8 @@ public class ContestConfig {
 
     public static final int COMPETITION_MODE = 1;
 
+    public static final int DEFAULT_PAUSE_BETWEEN_BATTLES = 100;
+
     /**
      * Absolute path of Contest.
      */
@@ -83,9 +88,9 @@ public class ContestConfig {
      * @return true if is successfully
      * @throws IOException if can not find the config file
      */
-    public static ContestConfig build(String path) throws IOException {
+    public static ContestConfig buildFromFile(String path) throws IOException {
         Properties property = new Properties();
-        InputStream is = new FileInputStream(path + File.separator + CONFIG_FILE);
+        InputStream is = new FileInputStream(getConfigFilePath(path));
 
         property.load(is);
         ContestConfig config = new ContestConfig();
@@ -102,6 +107,33 @@ public class ContestConfig {
         return config;
     }
 
+
+    public static ContestConfig buildNewConfigFile(String path, String contestName) {
+        ContestConfig config = new ContestConfig();
+        config.setMode(ContestConfig.PROGRAMMER_MODE);
+        config.setPath(path);
+        config.setContestName(contestName);
+        config.setPauseBetweenBattles(ContestConfig.DEFAULT_PAUSE_BETWEEN_BATTLES);
+
+        return config;
+    }
+
+    public boolean save() throws SaveContestConfigException {
+        Properties property = new Properties();
+        property.setProperty("url", path);
+        property.setProperty("name", name);
+        property.setProperty("mode", "" + mode);
+        property.setProperty("pause between battles", "" + pauseBetweenBattles);
+
+        try {
+            property.store(new FileWriter(this.getConfigFilePath()),
+                    "Configuration File\n Warning: do not modify this file");
+        } catch (IOException e) {
+            throw new SaveContestConfigException("Can not update the config file: " + getConfigFilePath(), this);
+        }
+
+        return true;
+    }
 
     public boolean isValid() {
         if (pauseBetweenBattles < 0) {
@@ -170,6 +202,18 @@ public class ContestConfig {
         this.path = path;
     }
 
+    public void setContestName(String name) {
+        this.name = name;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    public void setPauseBetweenBattles(int pauseBetweenBattles) {
+        this.pauseBetweenBattles = pauseBetweenBattles;
+    }
+
     public String getContestPath() {
         return getContestPath(this.path, this.name);
     }
@@ -204,7 +248,17 @@ public class ContestConfig {
     }
 
     public String getConfigFilePath() {
-        return this.path + File.separator + CONFIG_FILE;
+        return getConfigFilePath(this.path);
+    }
+
+    public static String getConfigFilePath(String path) {
+        if (path == null || path.isEmpty()) path = ".";
+
+        return path + File.separator + CONFIG_FILE;
+    }
+
+    public static boolean existsConfigFile(String path) {
+        return new File(getConfigFilePath(path)).exists();
     }
 
     public String getNutrientsFilePath() {
@@ -213,10 +267,6 @@ public class ContestConfig {
 
     public static String getNutrientsFilePath(String absolutePath, String contestName) {
         return getContestPath(absolutePath, contestName) + File.separator + NUTRIENTS_FILE;
-    }
-
-    public void setMode(int mode) {
-        this.mode = mode;
     }
 
     public String getMOsPath() {
@@ -252,4 +302,35 @@ public class ContestConfig {
     }
 
 
+
+    public File getCompilationFilePath(String javaFile) {
+        String logFolderPath = getLogFolder();
+        File logFolder = new File(logFolderPath);
+        if (!logFolder.exists()) {
+            logFolder.mkdir();
+        }
+
+        String compilationFile = logFolderPath + File.separator;
+        compilationFile += "log-" + javaFile.replace(".java", "") + "-";
+        compilationFile += new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+
+        return new File(compilationFile);
+    }
+
+
+    public  String getLogFolder(){
+        return getLogFolder(this.path, this.name);
+    }
+    public static String getLogFolder(String path, String contestName){
+        return getContestPath(path, contestName) + File.separator + ContestConfig.LOG_FOLDER;
+    }
+    @Override
+    public String toString() {
+        return "ContestConfig{" +
+                "path='" + path + '\'' +
+                ", name='" + name + '\'' +
+                ", mode=" + mode +
+                ", pauseBetweenBattles=" + pauseBetweenBattles +
+                '}';
+    }
 }
