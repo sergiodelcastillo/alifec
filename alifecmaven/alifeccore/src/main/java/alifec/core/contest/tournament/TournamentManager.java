@@ -16,7 +16,7 @@ import java.util.*;
 
 public class TournamentManager {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(TournamentManager.class);
+    Logger logger = Logger.getLogger(getClass());
 
     /**
      * Vector de tournaments.

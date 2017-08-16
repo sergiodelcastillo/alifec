@@ -19,8 +19,7 @@ import java.util.List;
 import static java.util.Collections.max;
 
 public class BattleManager {
-
-    static Logger logger = Logger.getLogger(BattleManager.class);
+    Logger logger = Logger.getLogger(getClass());
 
     private List<Battle> battles = new ArrayList<>();
 

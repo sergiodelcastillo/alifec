@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Environment {
-
-    static Logger logger = org.apache.log4j.Logger.getLogger(Environment.class);
+    Logger logger = Logger.getLogger(getClass());
     /**
      * Agar of environment.
      */
@@ -47,7 +46,7 @@ public class Environment {
     /**
      * Information of current battle .. temporal reference !!
      */
-    private BattleRun oponents;
+    private BattleRun opponents;
 
     private ColonyRule[] rules = {
             new LifeRule(),
@@ -112,7 +111,7 @@ public class Environment {
     }
 
     public void generateOpponents(BattleRun b) {
-        oponents = b;
+        opponents = b;
 
         agar.setNutrient(b.nutrientID);
 
@@ -216,14 +215,14 @@ public class Environment {
         }
 
         if (c1.isDied()) {
-            oponents.winnerID = oponents.ID2;
-            oponents.winner_energy = c2.getEnergy();
+            opponents.winnerID = opponents.ID2;
+            opponents.winner_energy = c2.getEnergy();
             return true;
         }
 
         if (c2.isDied()) {
-            oponents.winnerID = oponents.ID1;
-            oponents.winner_energy = c1.getEnergy();
+            opponents.winnerID = opponents.ID1;
+            opponents.winner_energy = c1.getEnergy();
             return true;
         }
 
@@ -300,7 +299,7 @@ public class Environment {
     }
 
     public BattleRun getResults() {
-        return oponents;
+        return opponents;
     }
 
     public List<String> getNames() {

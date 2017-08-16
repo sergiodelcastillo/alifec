@@ -19,7 +19,7 @@ import java.util.*;
 
 public class Tournament implements Comparable<Tournament> {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(Tournament.class);
+    Logger logger = Logger.getLogger(getClass());
     
     /**
      * manager of battles. This battles are permanent

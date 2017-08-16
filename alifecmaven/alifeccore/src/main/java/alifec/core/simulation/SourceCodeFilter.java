@@ -20,7 +20,8 @@ import java.util.List;
  * Selecciona solo los que empiezan con begin y finalizan con end.
  */
 public class SourceCodeFilter extends AllFilesFilter {
-    static Logger logger = Logger.getLogger(SourceCodeFilter.class);
+    Logger logger = Logger.getLogger(getClass());
+
     private final String[] suffixes;
 
     public SourceCodeFilter(String[] array) {
