@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +19,7 @@ import java.util.List;
  * Selecciona solo los que empiezan con begin y finalizan con end.
  */
 public class SourceCodeFilter extends AllFilesFilter {
-    Logger logger = Logger.getLogger(getClass());
+    static Logger logger = Logger.getLogger(SourceCodeFilter.class);
 
     private final String[] suffixes;
 
