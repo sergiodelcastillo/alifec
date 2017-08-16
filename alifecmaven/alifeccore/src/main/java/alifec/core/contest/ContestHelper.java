@@ -21,7 +21,7 @@ import java.util.Vector;
 public class ContestHelper {
 
     static Logger logger = org.apache.log4j.Logger.getLogger(ContestHelper.class);
-    
+
     /**
      * Find the mode is competition and the Alifec software was closed unsuccessful then
      * it could be inconsistency in saved battles. This method helps to find unsaved run and
@@ -99,7 +99,7 @@ public class ContestHelper {
     }
 
     public static List<String> listContest(String path) {
-        String list[] = new File(path).list(new ContestFolderFilter());
+        String list[] = new File(path).list(new ContestFolderValidator());
         List<String> results = new ArrayList<>();
 
         if (list != null) {
@@ -191,6 +191,11 @@ public class ContestHelper {
 
         ContestConfig config = ContestConfig.buildNewConfigFile(path, contestName);
 
+        return buildNewContestFolder(config);
+    }
+
+    public static ContestConfig buildNewContestFolder(ContestConfig config) throws CreateContestFolderException {
+
         if (!new File(config.getContestPath()).mkdir()) {
             throw new CreateContestFolderException("Can not create the folder: " + config.getContestPath());
         }
@@ -219,4 +224,5 @@ public class ContestHelper {
 
         return config;
     }
+
 }

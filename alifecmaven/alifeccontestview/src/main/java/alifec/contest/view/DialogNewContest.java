@@ -5,7 +5,9 @@
 
 package alifec.contest.view;
 
-import alifec.core.contest.ContestFolderFilter;
+import alifec.core.contest.ContestConfig;
+import alifec.core.contest.ContestFolderValidator;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,12 +21,14 @@ import java.util.Vector;
 
 public class DialogNewContest extends JDialog implements ActionListener, KeyListener {
     private static final long serialVersionUID = 0L;
+    Logger logger = Logger.getLogger(getClass());
+
     private JPanel centerPanel = new JPanel();
     private JPanel southPanel = new JPanel();
     private JLabel labelName = new JLabel("Name of Contest");
     private JLabel labelPath = new JLabel("Path");
     private JLabel labelAccepted = new JLabel("             ");
-    private JTextField textContest = new JTextField(ContestFolderFilter.CONTEST_PREFIX);
+    private JTextField textContest = new JTextField(ContestFolderValidator.CONTEST_PREFIX);
     private JTextField textName = new JTextField("" + Calendar.getInstance().get(Calendar.YEAR));
     private JTextField textPath = new JTextField(System.getProperty("user.dir"));
     private JButton buttonBrowse = new JButton("Browse");
@@ -32,12 +36,17 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     private JButton buttonCancel = new JButton("Cancel");
     private JCheckBox checkLoad = new JCheckBox("Load new Contest", true);
     private JCheckBox examples = new JCheckBox("Generate examples", true);
+    private ContestConfig config;
+    private ContestFolderValidator validator;
 
-    private Vector<Object> result;
+    private boolean createExamples;
+    private boolean makeDefault;
 
-    public DialogNewContest(JFrame father, final Vector<Object> url) {
+    public DialogNewContest(JFrame father) {
         super(father, "New Contest ", true);
-        this.result = url;
+
+        validator = new ContestFolderValidator();
+        cleanResult();
 
         initComponents();
 
@@ -46,12 +55,25 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
             this.setLocation(father.getX() + (father.getWidth() - getWidth()) / 2,
                     father.getY() + (father.getHeight() - getHeight()) / 2);
         this.setResizable(false);
-        this.setVisible(true);
+
     }
 
-    public boolean exists(String name) {
-        //TODO: Usar el path del ContestConfig!!
-        return new File(textPath.getText() + File.separator + ContestFolderFilter.CONTEST_PREFIX + name).exists();
+    /**
+     * Enable the Dialog and create the ContestConfig to return it so it can be created.
+     *
+     * @return a new configuration which points to the contest that the user wants to set as the default one.
+     */
+    public ContestConfig doTheJob() {
+        cleanResult();
+        setVisible(true);
+
+        return config;
+    }
+
+    private void cleanResult() {
+        config = null;
+        makeDefault = false;
+        createExamples = false;
     }
 
     private void initComponents() {
@@ -119,20 +141,19 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
 
     public void actionPerformed(ActionEvent ev) {
         if (ev.getSource().equals(this.buttonOK)) {
+            String contestFolderName = ContestFolderValidator.CONTEST_PREFIX + textName.getText();
+            String contestFolderRoot = textPath.getText();
+            String contestPath = ContestConfig.getContestPath(contestFolderRoot, contestFolderName);
 
-            if (!exists(textName.getText())) {
-                if (validate(textName.getText())) {
-                    //TODO: usar contestconfig
-                    result.addElement(ContestFolderFilter.CONTEST_PREFIX + textName.getText());
-                    result.addElement(textPath.getText());
-                    result.addElement(checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE);
-                    result.addElement(examples.isSelected() ? Boolean.TRUE : Boolean.FALSE);
-                    dispose();
-                } else {
-                    Message.printErr(this, "The name of contest must be only letter or digit");
-                }
+            if (validator.validate(contestPath)) {
+                config = ContestConfig.buildNewConfigFile(contestFolderRoot, contestFolderName);
+                createExamples = examples.isSelected() ? Boolean.TRUE : Boolean.FALSE;
+                makeDefault = checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE;
+
+                dispose();
             } else {
-                Message.printErr(this, ContestFolderFilter.CONTEST_PREFIX + textName.getText() + " folder already exists");
+                logger.warn("The contest [" + contestPath + "] already exists or is not valid. Please select another one.");
+                Message.printErr(this, "The contest [" + contestPath + "] already exists or is not valid. Please select another one.");
             }
 
         } else if (ev.getSource().equals(this.buttonBrowse)) {
@@ -143,7 +164,9 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
                 textPath.setText(fc.getSelectedFile().getAbsolutePath());
 
-        } else if (ev.getSource().equals(this.buttonCancel)) {
+        } else if (ev.getSource().equals(this.buttonCancel)){
+            logger.info("Canceled by user.");
+            cleanResult();
             this.dispose();
         }
     }
@@ -183,15 +206,16 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
         getRootPane().getActionMap().put("ESCAPE", escapeAction);
     }
 
-    private boolean validate(String name) {
-        if (name == null || name.equalsIgnoreCase(""))
-            return false;
+    public ContestConfig getContestConfig() {
+        return config;
+    }
 
-        for (Character c : name.toCharArray()) {
-            if (!Character.isLetter(c) && !Character.isDigit(c) && c != '_')
-                return false;
-        }
-        return true;
+    public boolean isCreateExamples() {
+        return createExamples;
+    }
+
+    public boolean isMakeDefault() {
+        return makeDefault;
     }
 }
 

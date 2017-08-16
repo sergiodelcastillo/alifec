@@ -78,7 +78,10 @@ public class ContestConfig {
      */
     private int pauseBetweenBattles = 5;
 
+    private boolean needRestart;
+
     private ContestConfig() {
+        needRestart = false;
     }
 
     /**
@@ -131,7 +134,8 @@ public class ContestConfig {
         } catch (IOException e) {
             throw new SaveContestConfigException("Can not update the config file: " + getConfigFilePath(), this);
         }
-
+        //the property was saved so the system should be restarted.
+        needRestart = true;
         return true;
     }
 
@@ -330,7 +334,12 @@ public class ContestConfig {
                 "path='" + path + '\'' +
                 ", name='" + name + '\'' +
                 ", mode=" + mode +
+                ", needRestart=" + needRestart+
                 ", pauseBetweenBattles=" + pauseBetweenBattles +
                 '}';
+    }
+
+    public boolean isNeedRestart() {
+        return needRestart;
     }
 }

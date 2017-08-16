@@ -172,13 +172,13 @@ public class ContestReport extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
         if (ev.getSource().equals(ReportTxt)) {
             if (createReportTxt()) {
-                Message.printOK(father, NAMETXT + " created sucessfully");
+                Message.printInfo(father, NAMETXT + " created sucessfully");
             } else {
                 Message.printErr(father, "can't create the report.");
             }
         } else if (ev.getSource().equals(ReportCsv)) {
             if (createReportCsv()) {
-                Message.printOK(father, NAMECSV + " created sucessfully");
+                Message.printInfo(father, NAMECSV + " created sucessfully");
             } else {
                 Message.printErr(father, "can't create the report.");
             }

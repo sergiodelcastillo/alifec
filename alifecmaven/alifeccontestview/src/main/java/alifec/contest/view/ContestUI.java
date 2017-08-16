@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Vector;
 
 
 public class ContestUI extends JFrame implements ActionListener {
@@ -51,7 +50,7 @@ public class ContestUI extends JFrame implements ActionListener {
     private MessagePanel messagePanel = new MessagePanel();
 
     private JMenuItem newContest;
-    private JMenuItem openContest;
+    private JMenuItem setDefaultContest;
 
     private JMenuItem quit;
     private JMenuItem report;
@@ -87,7 +86,7 @@ public class ContestUI extends JFrame implements ActionListener {
             pack();
             setMinimumSize(new Dimension(getWidth(), getHeight()));
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            openContest.setEnabled(false);
+            //setDefaultContest.setEnabled(false);
             setVisible(true);
         } else {
             System.exit(0);
@@ -96,56 +95,55 @@ public class ContestUI extends JFrame implements ActionListener {
 
     private boolean loadContest() {
         String path;
-        ContestConfig config = null;
+        ContestConfig config;
+
         try {
             path = new File(System.getProperty("user.dir")).getCanonicalPath();
             logger.info("Loading contest: " + path);
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             return false;
         }
 
         try {
 
-            //Find the absolute path to load the contest
+            //Perform the best effort to load a contest.
             if (ContestConfig.existsConfigFile(path)) {
                 config = ContestConfig.buildFromFile(path);
             } else {
                 java.util.List<String> list = ContestHelper.listContest(path);
-                String name;
 
                 if (list.isEmpty()) {
-                    Vector<Object> results = new Vector<>();
-                    new DialogNewContest(null, results);
+                    config = createNewContest(null);
 
-                    if (results.isEmpty())
-                        return false;
-
-                    name = (String) results.elementAt(0);
-
-                    Contest.createContestFolder((String) results.elementAt(1), name, ((Boolean) results.elementAt(3)));
-
-                    if (!results.lastElement().equals(Boolean.TRUE))
-                        return false;
+                    if (config == null || config.isNeedRestart()) return false;
 
                 } else {
-                    name = Message.printChoose(list.toArray());
-                    if (name.isEmpty())
+                    String name = list.get(0);
+
+                    if (list.size() > 1) {
+                        name = Message.printChoose(list.toArray());
+
+                        if (name.isEmpty()) {
+                            logger.warn("Canceled by user. The system will stop.");
+                            return false;
+                        }
+                    }
+
+                    try {
+                        config = ContestConfig.buildNewConfigFile(path, name);
+                        config.save();
+                    } catch (SaveContestConfigException e) {
+                        logger.error("Can not create the contest file: " + e.getConfig(), e);
+                        Message.printErr(null, "Can not create the contest file: " + e.getConfig());
                         return false;
+                    }
                 }
-
-                try {
-                    config = Contest.createConfigFile(path, name);
-
-
-                } catch (SaveContestConfigException e) {
-                    logger.error("Can not create the contest file: " + e.getConfig(), e);
-                    Message.printErr(null, "Can not create the contest file: " + e.getConfig());
-                    return false;
-                }
-
             }
+
             createContest(config);
         } catch (IOException ex) {
+            //Todo: improve it
             Message.printErr(null, "Error de lectura...");
             return false;
         } catch (CreateTournamentException ex) {
@@ -156,6 +154,31 @@ public class ContestUI extends JFrame implements ActionListener {
             return false;
         }
         return true;
+    }
+
+    private ContestConfig createNewContest(ContestUI contestUI) {
+        DialogNewContest dialogNewContest = new DialogNewContest(contestUI);
+        ContestConfig config = dialogNewContest.doTheJob();
+        boolean makeDefault;
+
+        if (config == null) {
+            return null;
+        }
+
+        makeDefault = dialogNewContest.isMakeDefault();
+
+        if (Contest.createContestFolder(config, dialogNewContest.isCreateExamples())) {
+            if (makeDefault) {
+                boolean status = setDefaultContest(config);
+
+                if (!status) return null;
+            }
+        } else {
+            Message.printErr(this, "Failed to create the contest " + config.toString());
+            return null;
+        }
+
+        return config;
     }
 
     public void createContest(ContestConfig config) throws CreateTournamentException, IOException, CreateContestException {
@@ -210,25 +233,38 @@ public class ContestUI extends JFrame implements ActionListener {
 
     }
 
-    private boolean reloadContest(String path, String name) {
+    private boolean setDefaultContest(String path, String name) {
+
+        // The new contest file will be saved but it will be loaded after the restart of the application.
+        // Now the application will continue without any changes at runtime.
+        ContestConfig config = ContestConfig.buildNewConfigFile(path, name);
+
+
+        if (!config.isValid()) {
+            logger.error("The contest config is not valid " + config.toString());
+            Message.printErr(this, "The contest config is not valid " + config.toString());
+            return false;
+        }
+        return setDefaultContest(config);
+    }
+
+    /**
+     *
+     * @param config
+     * @return
+     */
+    private boolean setDefaultContest(ContestConfig config) {
         try {
-            if (ContestConfig.existsConfigFile(path)) {
-                contest.updateConfigFile(path, name, contest.getMode(), contest.getTimeWait());
-            } else {
-                ContestConfig config = Contest.createConfigFile(path, name);
+            // The new contest file will be saved but it will be loaded after the restart of the application.
+            // Now the application will continue without any changes at runtime.
+            //ContestConfig config = ContestConfig.buildNewConfigFile(path, name);
 
-                createContest(config);
-            }
+            config.save();
 
+            logger.info("The contest file was updated as follows: " + config.toString());
+            logger.warn("Please restart the application in order to load the new changes.");
+            Message.printInfo(this, "Please restart the application in order to load the new changes.");
 
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-            Message.printErr(null, "IO Exception: " + ex.getMessage());
-            return false;
-        } catch (CreateTournamentException | CreateContestException ex) {
-            logger.error(ex.getMessage(), ex);
-            Message.printErr(null, ex.getMessage());
-            return false;
         } catch (SaveContestConfigException ex) {
             logger.error("Can not create the contest file: " + ex.getConfig().toString(), ex);
             Message.printErr(null, "Can not create the contest file: " + ex.getConfig().toString());
@@ -266,6 +302,7 @@ public class ContestUI extends JFrame implements ActionListener {
     }
 
     public void reloadComponents() {
+        //TODO: check if this is required
         try {
 
             this.tUI = new TournamentUI(this);
@@ -305,21 +342,21 @@ public class ContestUI extends JFrame implements ActionListener {
 
     public void createMenuFile(JMenu menu) {
         newContest = new JMenuItem("New Contest");
-        openContest = new JMenuItem("Open Contest");
+        setDefaultContest = new JMenuItem("Set Default Contest");
         quit = new JMenuItem("Quit");
 
         newContest.addActionListener(this);
-        openContest.addActionListener(this);
+        setDefaultContest.addActionListener(this);
         quit.addActionListener(this);
 
 
         newContest.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
-        openContest.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+        setDefaultContest.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
         quit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
 
 
         menu.add(newContest);
-        menu.add(openContest);
+        menu.add(setDefaultContest);
         menu.addSeparator();
         menu.add(quit);
     }
@@ -355,6 +392,7 @@ public class ContestUI extends JFrame implements ActionListener {
         menu.add(preferences);
     }
 
+
     public void createMenuHelp(JMenu menu) {
         help = new JMenuItem("Help");
         about = new JMenuItem("About");
@@ -369,36 +407,18 @@ public class ContestUI extends JFrame implements ActionListener {
         menu.add(about);
     }
 
-
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(newContest)) {
-            Vector<Object> result = new Vector<>();
-            new DialogNewContest(this, result);
-
-            if (result.size() == 4) {
-                String name = (String) result.elementAt(0);
-                String path = (String) result.elementAt(1);
-                Boolean load = (Boolean) result.elementAt(2);
-                Boolean examples = (Boolean) result.elementAt(3);
-
-                if (Contest.createContestFolder(path, name, examples)) {
-                    if (load) {
-                        this.reloadContest(path, name);
-                        this.reloadComponents();
-                    }
-                } else {
-                    Message.printErr(this, "Can' t create the contest: " + name);
-                }
-            }
-        } else if (e.getSource().equals(openContest)) {
+            createNewContest(this);
+        } else if (e.getSource().equals(setDefaultContest)) {
             JFileChooser fc = new JFileChooser();
-            fc.setApproveButtonText("Open Contest");
+            fc.setApproveButtonText("Set default contest");
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                this.reloadContest(fc.getCurrentDirectory().getAbsolutePath(),
+                this.setDefaultContest(fc.getCurrentDirectory().getAbsolutePath(),
                         fc.getSelectedFile().getName());
-                this.reloadComponents();
+                //TODO: not necessary --> this.reloadComponents();
             }
         } else if (e.getSource().equals(quit)) {
             if (contest.getMode() == ContestConfig.COMPETITION_MODE)

@@ -1,31 +1,24 @@
 package alifec.core.contest;
 
 import alifec.ParentTest;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestFolderFilterTest extends ParentTest {
+public class ContestFolderValidatorTest extends ParentTest {
 
 
     @Test
     public void testListEmpty() {
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
+        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
 
         Assert.assertArrayEquals(f, new String[0]);
     }
@@ -36,27 +29,27 @@ public class ContestFolderFilterTest extends ParentTest {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("contest-");
 
-        ContestFolderFilter contestFolderFilter = new ContestFolderFilter(false);
-        Assert.assertFalse(contestFolderFilter.accept(folder, stringBuilder.toString()));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|"));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|"));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-1|"));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|1"));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-11111111111111111111111111"));
+        ContestFolderValidator contestFolderValidator = new ContestFolderValidator(false);
+        Assert.assertFalse(contestFolderValidator.accept(folder, stringBuilder.toString()));
+        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-|"));
+        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-|"));
+        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-1|"));
+        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-|1"));
+        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-11111111111111111111111111"));
 
         for (int i = 0; i < 25; i++) {
             stringBuilder.append("c");
-            Assert.assertTrue(contestFolderFilter.accept(folder, stringBuilder.toString()));
+            Assert.assertTrue(contestFolderValidator.accept(folder, stringBuilder.toString()));
         }
 
         stringBuilder.append("c");
-        Assert.assertFalse(contestFolderFilter.accept(folder, stringBuilder.toString()));
+        Assert.assertFalse(contestFolderValidator.accept(folder, stringBuilder.toString()));
 
     }
 
     @Test
     public void testCheckPatter() {
-        ContestFolderFilter filter = new ContestFolderFilter();
+        ContestFolderValidator filter = new ContestFolderValidator();
 
         //false contest names.
         Assert.assertFalse(filter.checkPattern(null));
@@ -82,10 +75,10 @@ public class ContestFolderFilterTest extends ParentTest {
 
     @Test
     public void testListOneContest() throws IOException {
-        String contestName = ContestFolderFilter.CONTEST_PREFIX + "01";
+        String contestName = ContestFolderValidator.CONTEST_PREFIX + "01";
         createContest(contestName);
 
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
+        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
 
         Assert.assertTrue(1 == f.length);
         Assert.assertEquals(f[0], contestName);
@@ -95,16 +88,16 @@ public class ContestFolderFilterTest extends ParentTest {
     public void testListManyContests() throws IOException {
         //Create 100  contests
         for (int i = 0; i < 100; i++) {
-            createContest(ContestFolderFilter.CONTEST_PREFIX + Integer.toString(i));
+            createContest(ContestFolderValidator.CONTEST_PREFIX + Integer.toString(i));
         }
 
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
+        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
 
         Assert.assertTrue(100 == f.length);
 
         String[] target = new String[100];
         for (int i = 99; i >= 0; i--) {
-            target[i] = ContestFolderFilter.CONTEST_PREFIX + Integer.toString(i);
+            target[i] = ContestFolderValidator.CONTEST_PREFIX + Integer.toString(i);
         }
 
         //sort to compare
@@ -140,7 +133,7 @@ public class ContestFolderFilterTest extends ParentTest {
             createContest(contestName);
         }
 
-        String[] list = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
+        String[] list = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
 
         Assert.assertTrue(contestListTarget.length == list.length);
 

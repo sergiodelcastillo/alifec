@@ -242,7 +242,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
             dispose();
         }
         if (ev.getSource().equals(accept)) {
-            if (!nameOfContest.getText().toLowerCase().startsWith("lib/contest")) {
+            if (!nameOfContest.getText().toLowerCase().startsWith("contest")) {
                 Message.printErr(this, "The Contest's name must be begin with Contest");
                 return;
             }

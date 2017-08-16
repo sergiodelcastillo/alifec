@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * <n>ContestFolderFilter class was designated to filter only valid contest' names which
+ * <n>ContestFolderValidator class was designated to filter only valid contest' names which
  * follows the below rule:
  * <ol>
  * <li> Starts with the prefix <b>"contest-"</b> (case insensitive).</li>
@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
  *
  * <n> For example, a valid name is "contest-01" but "contesto" is not valid. </n>
  */
-public class ContestFolderFilter extends FileFilter implements FilenameFilter {
+public class ContestFolderValidator extends FileFilter implements FilenameFilter, Validator<String> {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(ContestFolderFilter.class);
+    private Logger logger = Logger.getLogger(getClass());
 
     public static final String CONTEST_PREFIX = "contest-";
     private static String STRING_PATTERN = "^(" + CONTEST_PREFIX + ")([a-zA-Z_0-9]{1,25})$";
@@ -35,7 +35,7 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
     private final boolean checkExistence;
 
 
-    public ContestFolderFilter() {
+    public ContestFolderValidator() {
         this(true);
     }
 
@@ -43,7 +43,7 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
      * @param checkExistence if the parameter is set to <b>true</b> then the existence of the folder will be checked.
      *                       This parameter was designated to use within test purposes.
      */
-    public ContestFolderFilter(boolean checkExistence) {
+    public ContestFolderValidator(boolean checkExistence) {
         this.checkExistence = checkExistence;
         pattern = Pattern.compile(STRING_PATTERN, Pattern.CASE_INSENSITIVE);
     }
@@ -54,7 +54,9 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
 
             if (!checkExistence) return true;
 
-            return new File(dir.getAbsolutePath() + File.separator + name).isDirectory();
+            File contest = new File(dir.getAbsolutePath() + File.separator + name);
+
+            return contest.exists() && contest.isDirectory();
 
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -85,5 +87,10 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
         Matcher matcher = pattern.matcher(name);
 
         return matcher.matches();
+    }
+
+    @Override
+    public boolean validate(String contestFolder) {
+        return accept(new File(contestFolder));
     }
 }

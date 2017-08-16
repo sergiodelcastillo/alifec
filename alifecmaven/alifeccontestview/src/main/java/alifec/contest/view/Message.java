@@ -14,7 +14,7 @@ public class Message {
         JOptionPane.showMessageDialog(f, err, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void printOK(Component f, String ok) {
+    public static void printInfo(Component f, String ok) {
         JOptionPane.showMessageDialog(f, ok, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 

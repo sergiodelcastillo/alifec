@@ -111,28 +111,19 @@ public class Contest {
         return false;
     }
 
-
-    public static ContestConfig createConfigFile(String path, String contestName) throws SaveContestConfigException {
-        ContestConfig config = ContestConfig.buildNewConfigFile(path, contestName);
-
-        config.save();
-
-        return config;
-    }
-
-
-    public static boolean createContestFolder(String path, String name, boolean examples) {
+    public static boolean createContestFolder(ContestConfig config, boolean examples) {
 
         try {
-            ContestConfig config = ContestHelper.buildNewContestFolder(path, name);
+            ContestHelper.buildNewContestFolder(config);
 
             // create examples ...!!
             if (examples)
                 createExamples(config.getMOsPath());
 
         } catch (CreateContestFolderException e) {
-            logger.error("Cant not create the ConfigFile");
+            logger.error("Cant not create the ContestFolder");
             logger.error(e.getMessage(), e);
+            return false;
         }
         return true;
     }
