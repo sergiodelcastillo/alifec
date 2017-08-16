@@ -6,7 +6,8 @@
 package alifec.core.contest.oponentInfo;
 
 import java.io.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OpponentInfo {
     private String name = "";
@@ -73,11 +74,11 @@ public class OpponentInfo {
         return name + "," + author + "," + affiliation.toUpperCase() + ",";
     }
 
-    public Vector<Object> toVector() {
-        Vector<Object> v = new Vector<>();
-        v.addElement(name);
-        v.addElement(author);
-        v.addElement(affiliation);
+    public List<Object> toList() {
+        List<Object> v = new ArrayList<>();
+        v.add(name);
+        v.add(author);
+        v.add(affiliation);
         return v;
     }
 

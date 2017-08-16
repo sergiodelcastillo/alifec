@@ -3,7 +3,7 @@
 //   @author Sergio Del Castillo
 //   @e-mail:sergiodelcastillo@ymail.com
 // =======================================================
-package alifec.core.simulation.MOs;
+package MOs;
 
 import alifec.core.simulation.Microorganism;
 import alifec.core.simulation.Movement;

@@ -14,9 +14,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 
 public class Tournament implements Comparable<Tournament> {
@@ -31,7 +29,7 @@ public class Tournament implements Comparable<Tournament> {
     /**
      * Colonies that have not competed!
      */
-    private Vector<String> colonies;
+    private List<String> colonies;
 
     /**
      * Nombre del tournament
@@ -64,7 +62,7 @@ public class Tournament implements Comparable<Tournament> {
 
     public void addColony(String c) {
         if (!colonies.contains(c))
-            colonies.addElement(c);
+            colonies.add(c);
     }
 
     public boolean add(String n1, String n2, String nut, float ene1, float ene2) {
@@ -100,11 +98,11 @@ public class Tournament implements Comparable<Tournament> {
         // agregar los que tienen puntos
         for (int index = 0; index < size; index++) {
             Float max = Collections.max(acumulated.values());
-            Vector<String> winTemp = new Vector<>();
+            List<String> winTemp = new ArrayList<>();
 
             for (String s : acumulated.keySet()) {
                 if (acumulated.get(s).equals(max))
-                    winTemp.addElement(s);
+                    winTemp.add(s);
             }
             String keyWin = "";
             int maxBattlesWin = 0; // no puede ser !!
@@ -152,12 +150,12 @@ public class Tournament implements Comparable<Tournament> {
         return battleManager;
     }
 
-    public Vector<String> getNames() {
-        Vector<String> names = battleManager.getNames();
+    public List<String> getNames() {
+        List<String> names = battleManager.getNames();
 
         for (String c : colonies)
             if (!names.contains(c))
-                names.addElement(c);
+                names.add(c);
 
         return names;
     }

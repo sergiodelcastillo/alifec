@@ -4,7 +4,7 @@
 //   @e-mail:sergiodelcastillo@ymail.com
 // =======================================================
 
-package alifec.core.simulation.MOs;
+package MOs;
 
 import java.awt.Point;
 

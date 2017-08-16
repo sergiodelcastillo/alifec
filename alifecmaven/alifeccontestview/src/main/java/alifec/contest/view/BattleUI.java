@@ -16,12 +16,14 @@ import alifec.core.exception.CreateBattleException;
 import alifec.core.simulation.Environment;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 public class BattleUI extends JPanel implements ActionListener {
@@ -112,7 +114,7 @@ public class BattleUI extends JPanel implements ActionListener {
             }
         }
         // Eliminar las batallas con distribuciones de nutrientes que no están disponibles.
-        Vector<String> nutrients = environment.getAgar().getNutrients();
+        List<String> nutrients = environment.getAgar().getNutrients();
 
         for (String[] l : backup) {
             boolean b = false;
@@ -127,7 +129,7 @@ public class BattleUI extends JPanel implements ActionListener {
         }
 
         // eliminar las batallas con Colonias que no estan disponibles.
-        Vector<String> colonies = environment.getNames();
+        List<String> colonies = environment.getNames();
 
         for (String[] l : backup) {
             int b = 0;

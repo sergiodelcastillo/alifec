@@ -11,16 +11,22 @@ import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
 import alifec.core.exception.*;
 import alifec.core.simulation.Agar;
-import alifec.core.simulation.AllFilter;
+import alifec.core.simulation.AllFilesFilter;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.log4j.Logger;
-
-import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Stack;
 
 
 public class Contest {
@@ -46,7 +52,7 @@ public class Contest {
     public Contest(ContestConfig config) throws IOException, CreateTournamentException, CreateContestException {
         this.config = config;
         opponentsInfo = new OpponentInfoManager(config.getContestPath());
-        environment = new Environment(config.getMOsPath());
+        environment = new Environment(config);
         tournaments = new TournamentManager(config);
 
         //create new and empty tournament
@@ -118,7 +124,7 @@ public class Contest {
 
             // create examples ...!!
             if (examples)
-                createExamples(config.getMOsPath());
+                ContestHelper.createExamples(config.getMOsPath());
 
         } catch (CreateContestFolderException e) {
             logger.error("Cant not create the ContestFolder");
@@ -126,27 +132,6 @@ public class Contest {
             return false;
         }
         return true;
-    }
-
-    private static void createExamples(String MOsFolder) {
-        try {
-            //TODO: poner una constante...
-            File source = new File(Contest.class.getClass().getResource("/examples/").toURI());
-
-            Files.walk(source.toPath()).forEach(path -> {
-                try {
-                    File target = new File(MOsFolder + File.separator + path.getFileName());
-
-                    if (new File(path.toUri()).isFile())
-                        Files.copy(path, target.toPath());
-
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            });
-        } catch (URISyntaxException | IOException ex) {
-            logger.error(ex.getMessage(), ex);
-        }
     }
 
 
@@ -237,9 +222,9 @@ public class Contest {
      * @return information
      * @throws CreateRankingException if can not create the ranking
      */
-    public Vector<Vector<Object>> getInfo() throws CreateRankingException {
+    public List<List<Object>> getInfo() throws CreateRankingException {
         Hashtable<String, Integer> ranking = tournaments.getRanking();
-        Vector<Vector<Object>> info = new Vector<>();
+        List<List<Object>> info = new ArrayList<>();
 
         Tournament t = tournaments.lastElement();
         Hashtable<String, Float> acumulated = t.getAccumulatedEnergy();
@@ -248,21 +233,21 @@ public class Contest {
             boolean hayRanking = ranking.containsKey(oi.getName());
             boolean hayAcumulated = acumulated.containsKey(oi.getName());
 
-            Vector<Object> tmp = oi.toVector();
-            tmp.addElement(hayRanking ? ranking.get(oi.getName()) : Integer.valueOf(0));
-            tmp.addElement(hayAcumulated ? acumulated.get(oi.getName()) : new Float(0));
+            List<Object> tmp = oi.toList();
+            tmp.add(hayRanking ? ranking.get(oi.getName()) : Integer.valueOf(0));
+            tmp.add(hayAcumulated ? acumulated.get(oi.getName()) : new Float(0));
 
-            info.addElement(tmp);
+            info.add(tmp);
         }
 
         // ordenar por el indice 3 (puntos acumulados)!!
         for (int i = 0; i < info.size() - 1; i++) {
             for (int j = i + 1; j < info.size(); j++) {
-                Integer a = ((Integer) info.elementAt(i).elementAt(3));
-                Integer b = (Integer) info.elementAt(j).elementAt(3);
+                Integer a = ((Integer) info.get(i).get(3));
+                Integer b = (Integer) info.get(j).get(3);
                 if (a < b) {
-                    Vector<Object> tmp = info.elementAt(j);
-                    info.set(j, info.elementAt(i));
+                    List<Object> tmp = info.get(j);
+                    info.set(j, info.get(i));
                     info.set(i, tmp);
                 }
             }
@@ -296,13 +281,18 @@ public class Contest {
 
         while (!stack.isEmpty()) {
             File file = stack.pop();
-            for (File tmp : file.listFiles(new AllFilter(""))) {
-                if (tmp.isFile()) {
-                    String path = tmp.getAbsolutePath();
-                    String name = path.replace(getMOsPath(), "");
-                    files.add(new String[]{path, name});
-                } else {
-                    stack.push(tmp);
+
+            File[] allFiles = file.listFiles(new AllFilesFilter());
+
+            if (allFiles != null) {
+                for (File tmp : allFiles) {
+                    if (tmp.isFile()) {
+                        String path = tmp.getAbsolutePath();
+                        String name = path.replace(getMOsPath(), "");
+                        files.add(new String[]{path, name});
+                    } else {
+                        stack.push(tmp);
+                    }
                 }
             }
         }

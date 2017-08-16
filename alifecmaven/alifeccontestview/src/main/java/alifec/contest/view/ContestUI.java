@@ -86,7 +86,6 @@ public class ContestUI extends JFrame implements ActionListener {
             pack();
             setMinimumSize(new Dimension(getWidth(), getHeight()));
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            //setDefaultContest.setEnabled(false);
             setVisible(true);
         } else {
             System.exit(0);
@@ -418,7 +417,6 @@ public class ContestUI extends JFrame implements ActionListener {
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 this.setDefaultContest(fc.getCurrentDirectory().getAbsolutePath(),
                         fc.getSelectedFile().getName());
-                //TODO: not necessary --> this.reloadComponents();
             }
         } else if (e.getSource().equals(quit)) {
             if (contest.getMode() == ContestConfig.COMPETITION_MODE)

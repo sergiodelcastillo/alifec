@@ -4,8 +4,9 @@ package alifec.core.simulation; /**
  */
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 
 
 public class LoveRule extends ColonyRule {
@@ -17,13 +18,13 @@ public class LoveRule extends ColonyRule {
         if (!mitosis)
             return false;
 
-        Vector<Point> posRel = new Vector<>();
+        List<Point> posRel = new ArrayList<>();
 
         for (int i = mo.pos.x - 1; i <= mo.pos.x + 1; i++) {
             for (int j = mo.pos.y - 1; j <= mo.pos.y + 1; j++) {
                 if (env.inDish(i, j) &&
                         env.microorganism[i][j] == null) {
-                    posRel.addElement(new Point(i, j));
+                    posRel.add(new Point(i, j));
                 }
             }
         }
@@ -33,7 +34,7 @@ public class LoveRule extends ColonyRule {
         mo.ene = (0.99f * mo.ene) / 2;
 
         // crear un Nuevo MO!!
-        Point pAleatoria = posRel.elementAt(new Random().nextInt(posRel.size()));
+        Point pAleatoria = posRel.get(new Random().nextInt(posRel.size()));
         env.createInstance(pAleatoria, mo.ene, mo.id);
         return false;
     }

@@ -1,12 +1,18 @@
 package alifec.core.simulation;
 
-import alifec.core.contest.Contest;
-import alifec.core.simulation.nutrients.*;
+import alifec.core.simulation.nutrients.Famine;
+import alifec.core.simulation.nutrients.InclinedPlane;
+import alifec.core.simulation.nutrients.Lattice;
+import alifec.core.simulation.nutrients.Nutrient;
+import alifec.core.simulation.nutrients.Rings;
+import alifec.core.simulation.nutrients.TwoGaussians;
+import alifec.core.simulation.nutrients.VerticalBar;
 import org.apache.log4j.Logger;
 
-import java.awt.*;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 
 /**
  * The Agar class contain all nutrient that each Microorganism can eat.
@@ -14,7 +20,7 @@ import java.util.Vector;
  */
 public class Agar {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(Agar.class);
+    Logger logger = Logger.getLogger(getClass());
 
     private int nutri_id = -1;
     private float[][] nutrients;
@@ -34,8 +40,6 @@ public class Agar {
      * Default constructor: can´t instance this class out of this package!
      */
     public Agar() {
-        
-
         nutrients = new float[50][50];
     }
 
@@ -75,12 +79,12 @@ public class Agar {
      * use this method to set the distribution of nutrients
      *
      * @param id: Distribution ID:
-     *           1 : Inclined Plane
-     *           2 : Vertical Var
-     *           3 : Rings
-     *           4 : Lattice
-     *           5 : Two Gaussians
-     *           100: Famine
+     *            1 : Inclined Plane
+     *            2 : Vertical Var
+     *            3 : Rings
+     *            4 : Lattice
+     *            5 : Two Gaussians
+     *            100: Famine
      */
     public void setNutrient(int id) {
         Nutrient nutri;
@@ -117,14 +121,15 @@ public class Agar {
 
     /**
      * Get distribution of Nutrient
-     * @return an integer representing Nutrient distribution identifier. 
+     *
+     * @return an integer representing Nutrient distribution identifier.
      */
     public int getDistNutri() {
         return nutri_id;
     }
 
     /**
-     * @return the among of nutrient in the position x,y. 
+     * @return the among of nutrient in the position x,y.
      */
     public float getNutrient(int x, int y) {
         if (nutri_id == -1 ||
@@ -144,9 +149,8 @@ public class Agar {
     }
 
     /**
-     * 
      * @param nut the name of nutrient
-     * @return  the nutrient identifier
+     * @return the nutrient identifier
      */
     public int getNutrientID(String nut) {
         for (Nutrient n : nutrient) {
@@ -158,13 +162,12 @@ public class Agar {
     }
 
     /**
-     *
      * @return a list of all nutrients.
      */
-    public Vector<String> getNutrients() {
-        Vector<String> res = new Vector<>();
+    public List<String> getNutrients() {
+        List<String> res = new ArrayList<>();
         for (Nutrient n : nutrient) {
-            res.addElement(n.toString());
+            res.add(n.toString());
         }
         return res;
     }

@@ -10,8 +10,18 @@ import alifec.core.contest.Contest;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.simulation.Defs;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -21,7 +31,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 
 
 public class ContestReport extends JDialog implements ActionListener {
@@ -112,12 +122,12 @@ public class ContestReport extends JDialog implements ActionListener {
             pw.println("Tournament name:," + c.getTournamentManager().lastElement().getName());
             pw.println("NAME,AUTHOR,AFFILIATION,POINTS,ENERGY");
 
-            for (Vector<Object> line : c.getInfo()) {
-                pw.println(line.elementAt(0) + "," +
-                        line.elementAt(1) + "," +
-                        line.elementAt(2) + "," +
-                        line.elementAt(3) + "," +
-                        line.elementAt(4));
+            for (List<Object> line : c.getInfo()) {
+                pw.println(line.get(0) + "," +
+                        line.get(1) + "," +
+                        line.get(2) + "," +
+                        line.get(3) + "," +
+                        line.get(4));
             }
 
             pw.close();
@@ -143,14 +153,14 @@ public class ContestReport extends JDialog implements ActionListener {
 
             text += "\n";
 
-            for (Vector<Object> line : c.getInfo()) {
+            for (List<Object> line : c.getInfo()) {
 
-                text += addSpace(line.firstElement().toString());
+                text += addSpace(line.get(0).toString());
 
                 for (int i = 1; i < line.size(); i++) {
                     // saltar la info del ultimo tournament!!
-                    if (line.elementAt(i) instanceof Float) continue;
-                    text += "\t" + addSpace(line.elementAt(i).toString().trim());
+                    if (line.get(i) instanceof Float) continue;
+                    text += "\t" + addSpace(line.get(i).toString().trim());
                 }
                 text += "\n";
             }

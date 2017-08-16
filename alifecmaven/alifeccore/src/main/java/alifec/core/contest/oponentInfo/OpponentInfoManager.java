@@ -5,13 +5,17 @@
 
 package alifec.core.contest.oponentInfo;
 
+import alifec.core.contest.ContestConfig;
+
 import java.io.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 public class OpponentInfoManager {
-    Vector<OpponentInfo> opponents = new Vector<>();
-    private static final String OPPONENTS_FILE = "competitors";
+    List<OpponentInfo> opponents = new ArrayList<>();
+
     private String path = "";
 
     public OpponentInfoManager(String path) {
@@ -26,15 +30,17 @@ public class OpponentInfoManager {
 
     void add(OpponentInfo op, boolean write) throws IOException {
         if (!opponents.contains(op)) {
-            if (write) op.write(path + File.separator + OPPONENTS_FILE);
-            opponents.addElement(op);
+            //todo: use ContestConfig
+            if (write) op.write(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE);
+            opponents.add(op);
         }
     }
 
     public void del(String name) throws IOException {
         for (OpponentInfo op : opponents) {
             if (op.contain(name)) {
-                op.del(path + File.separator + OPPONENTS_FILE);
+                //todo: use ContestConfig
+                op.del(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE);
                 opponents.remove(op);
 
             }
@@ -43,7 +49,8 @@ public class OpponentInfoManager {
 
     public void read() throws IOException {
         try {
-            BufferedReader in = new BufferedReader(new FileReader(path + File.separator + OPPONENTS_FILE));
+            //todo: use ContestConfig
+            BufferedReader in = new BufferedReader(new FileReader(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE));
             String line = "";
 
             do {
@@ -57,13 +64,14 @@ public class OpponentInfoManager {
 
             in.close();
         } catch (FileNotFoundException ex) {
-            FileWriter f = new FileWriter(path + File.separator + OPPONENTS_FILE);
+            //todo: use ContestConfig
+            FileWriter f = new FileWriter(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE);
             f.close();
             read();
         }
     }
 
-    public Vector<OpponentInfo> getOpponents() {
+    public List<OpponentInfo> getOpponents() {
         return this.opponents;
     }
 }

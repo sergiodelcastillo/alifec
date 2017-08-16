@@ -45,7 +45,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     public DialogNewContest(JFrame father) {
         super(father, "New Contest ", true);
 
-        validator = new ContestFolderValidator();
+        validator = new ContestFolderValidator(false);
         cleanResult();
 
         initComponents();

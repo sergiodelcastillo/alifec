@@ -3,16 +3,18 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
+import alifec.core.contest.ContestConfig;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.contest.tournament.battles.BattleRun;
 import org.apache.log4j.Logger;
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 
 public class Environment {
 
@@ -25,7 +27,7 @@ public class Environment {
     /**
      * All colonies!!
      */
-    private Vector<Colony> colonies;
+    private List<Colony> colonies;
 
     /**
      * Reference to position of MOs.
@@ -56,19 +58,20 @@ public class Environment {
     };
 
     /**
-     * @param path is the absolute path of the Microorganism
+     * @param config is the Contest configuration
      */
-    public Environment(String path) {
+    public Environment(ContestConfig config) {
         agar = new Agar();
-        colonies = new Vector<>();
+        colonies = new ArrayList<>();
 
         logger.info("Loading Colonies");
         logger.info("Loading Java Colonies");
 
-        for (String name : AllFilter.listNamesJava(path)) {
+        //todo: decide if list java files should use the .java or .class
+        for (String name : SourceCodeFilter.listNamesJava(config.getMOsPath())) {
             try {
-                JavaColony.addClassPath(path );
-                colonies.addElement(new JavaColony(colonies.size(), "alifec.core.simulation.MOs." + name));
+                JavaColony.addClassPath(config.getCompilationTarget());
+                colonies.add(new JavaColony(colonies.size(), "MOs." + name));
                 logger.info(name + " [OK]");
             } catch (Exception ex) {
                 logger.warn(name + " [FAIL]");
@@ -78,13 +81,13 @@ public class Environment {
         // loading library
         logger.info("Loading C++ Colonies ");
 
-        if (CppColony.loadLibrary(path + File.separator + "lib" + File.separator + "MOs" + File.separator)) {
+        if (CppColony.loadLibrary(config.getMOsPath() + File.separator + "lib" + File.separator + "MOs" + File.separator)) {
             logger.info("Loading C++ Library [OK]");
 
-            for (String name : AllFilter.listNamesCpp(path)) {
+            for (String name : SourceCodeFilter.listNamesCpp(config.getMOsPath())) {
                 try {
                     // to initialise the name of colony
-                    colonies.addElement(new CppColony(colonies.size(), name));
+                    colonies.add(new CppColony(colonies.size(), name));
                     logger.info(name + " [OK]");
                 } catch (ClassNotFoundException ex) {
                     logger.warn(name + " [FAIL]");
@@ -108,19 +111,19 @@ public class Environment {
         return false;
     }
 
-    public void generateOponents(BattleRun b) {
+    public void generateOpponents(BattleRun b) {
         oponents = b;
 
         agar.setNutrient(b.nutrientID);
 
         for (int i = 0; i < colonies.size(); i++) {
-            if (colonies.elementAt(i).id == b.ID1)
-                c1 = colonies.elementAt(i);
+            if (colonies.get(i).id == b.ID1)
+                c1 = colonies.get(i);
         }
 
         for (int i = 0; i < colonies.size(); i++) {
-            if (colonies.elementAt(i).id == b.ID2)
-                c2 = colonies.elementAt(i);
+            if (colonies.get(i).id == b.ID2)
+                c2 = colonies.get(i);
         }
 
 
@@ -150,14 +153,13 @@ public class Environment {
     }
 
     public boolean moveColonies() throws MoveMicroorganismException {
-
-        Vector<Cell> allOps = new Vector<>();
+        List<Cell> allOps = new ArrayList<>();
 
         for (int i = 0; i < c1.size(); i++)
-            allOps.addElement(c1.getMO(i));
+            allOps.add(c1.getMO(i));
 
         for (int i = 0; i < c2.size(); i++)
-            allOps.addElement(c2.getMO(i));
+            allOps.add(c2.getMO(i));
 
         // randomize list!
         Collections.shuffle(allOps);
@@ -301,11 +303,11 @@ public class Environment {
         return oponents;
     }
 
-    public Vector<String> getNames() {
-        Vector<String> tmp = new Vector<>();
+    public List<String> getNames() {
+        List<String> tmp = new ArrayList<>();
 
         for (Colony c : colonies)
-            tmp.addElement(c.getName());
+            tmp.add(c.getName());
 
         return tmp;
     }

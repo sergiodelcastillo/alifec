@@ -15,7 +15,7 @@ import java.util.Properties;
  */
 public class ContestConfig {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(CompileHelper.class);
+    static Logger logger = org.apache.log4j.Logger.getLogger(ContestConfig.class);
 
     /**
      * List of nutrients that are used in contest.
@@ -31,11 +31,12 @@ public class ContestConfig {
      */
     public static final String MOS_FOLDER = "MOs";
 
+    public static final String CPP_API_FOLDER = "cpp";
     /**
      * Folder of reports.
      */
     public static final String REPORT_FOLDER = "Report";
-
+    public static final String REPORT_OPPONENTS_FILE = "competitors";
     /**
      * Log Folder.
      */
@@ -45,6 +46,8 @@ public class ContestConfig {
      * Configuration file.
      */
     public static final String CONFIG_FILE = "config";
+
+    public static final String COMPILATION_TARGET = "compiled";
 
     /**
      * back up file
@@ -57,6 +60,11 @@ public class ContestConfig {
 
     public static final int DEFAULT_PAUSE_BETWEEN_BATTLES = 100;
 
+    private static final String PROPERTY_PATH_KEY = "contest_path";
+    private static final String PROPERTY_CONTEST_NAME_KEY = "contest_name";
+    private static final String PROPERTY_PAUSE_BETWEEN_BATTLES_KEY = "pause_between_battles";
+    private static final String PROPERTY_MODE_KEY = "contest_mode";
+
     /**
      * Absolute path of Contest.
      */
@@ -64,7 +72,7 @@ public class ContestConfig {
     /**
      * name of contest
      */
-    private String name = "";
+    private String contestName = "";
 
     /**
      * mode of contest:
@@ -78,10 +86,9 @@ public class ContestConfig {
      */
     private int pauseBetweenBattles = 5;
 
-    private boolean needRestart;
+    private boolean needRestart = false;
 
     private ContestConfig() {
-        needRestart = false;
     }
 
     /**
@@ -123,10 +130,11 @@ public class ContestConfig {
 
     public boolean save() throws SaveContestConfigException {
         Properties property = new Properties();
-        property.setProperty("url", path);
-        property.setProperty("name", name);
-        property.setProperty("mode", "" + mode);
-        property.setProperty("pause between battles", "" + pauseBetweenBattles);
+
+        property.setProperty(PROPERTY_PATH_KEY, path);
+        property.setProperty(PROPERTY_CONTEST_NAME_KEY, contestName);
+        property.setProperty(PROPERTY_MODE_KEY, Integer.toString(mode));
+        property.setProperty(PROPERTY_PAUSE_BETWEEN_BATTLES_KEY, Integer.toString(pauseBetweenBattles));
 
         try {
             property.store(new FileWriter(this.getConfigFilePath()),
@@ -140,6 +148,7 @@ public class ContestConfig {
     }
 
     public boolean isValid() {
+        //todo: verify this method. there are some validator..maybe it is not neccesary anymore.
         if (pauseBetweenBattles < 0) {
             return false;
         }
@@ -148,11 +157,11 @@ public class ContestConfig {
             return false;
         }
 
-        if (name.equalsIgnoreCase("")) {
+        if (contestName.isEmpty()) {
             return false;
         }
 
-        if (path.equalsIgnoreCase("")) {
+        if (path.isEmpty()) {
             return false;
         }
 
@@ -160,7 +169,7 @@ public class ContestConfig {
         if (!f.exists())
             return false;
 
-        f = new File(path + File.separator + name);
+        f = new File(path + File.separator + contestName);
 
         return f.exists();
     }
@@ -171,32 +180,34 @@ public class ContestConfig {
         type = type.trim().toLowerCase();
         option = option.trim();
 
-        if (type.equals("") || option.equals(""))
+        if (type.isEmpty() || option.isEmpty())
             return false;
 
-        if (type.equals("url")) {
-            try {
-                path = new File(option).getCanonicalPath();
-            } catch (IOException ex) {
-                return false;
-            }
-        } else if (type.equals("mos")) {
-//			MOS_FOLDER = option;
-            return false;
-        } else if (type.equals("name")) {
-            name = option;
-        } else if (type.equals("mode")) {
-            try {
-                mode = Integer.parseInt(option);
-            } catch (NumberFormatException ex) {
-                return false;
-            }
-        } else if (type.equals("pause between battles")) {
-            try {
-                pauseBetweenBattles = Integer.parseInt(option);
-            } catch (NumberFormatException ex) {
-                return false;
-            }
+        switch (type) {
+            case PROPERTY_PATH_KEY:
+                try {
+                    path = new File(option).getCanonicalPath();
+                } catch (IOException ex) {
+                    return false;
+                }
+                break;
+            case PROPERTY_CONTEST_NAME_KEY:
+                contestName = option;
+                break;
+            case PROPERTY_MODE_KEY:
+                try {
+                    mode = Integer.parseInt(option);
+                } catch (NumberFormatException ex) {
+                    return false;
+                }
+                break;
+            case PROPERTY_PAUSE_BETWEEN_BATTLES_KEY:
+                try {
+                    pauseBetweenBattles = Integer.parseInt(option);
+                } catch (NumberFormatException ex) {
+                    return false;
+                }
+                break;
         }
         return true;
     }
@@ -207,7 +218,7 @@ public class ContestConfig {
     }
 
     public void setContestName(String name) {
-        this.name = name;
+        this.contestName = name;
     }
 
     public void setMode(int mode) {
@@ -219,7 +230,7 @@ public class ContestConfig {
     }
 
     public String getContestPath() {
-        return getContestPath(this.path, this.name);
+        return getContestPath(this.path, this.contestName);
     }
 
     public static String getContestPath(String absolutePath, String contestName) {
@@ -238,7 +249,6 @@ public class ContestConfig {
         return getTournamentPath(tournamentName) + File.separator + BATTLES_FILENAME;
     }
 
-    //public static String getBattlesFile()
     public int getMode() {
         return mode;
     }
@@ -266,7 +276,7 @@ public class ContestConfig {
     }
 
     public String getNutrientsFilePath() {
-        return getNutrientsFilePath(path, name);
+        return getNutrientsFilePath(path, contestName);
     }
 
     public static String getNutrientsFilePath(String absolutePath, String contestName) {
@@ -274,7 +284,7 @@ public class ContestConfig {
     }
 
     public String getMOsPath() {
-        return getMOsPath(path, name);
+        return getMOsPath(path, contestName);
     }
 
     public static String getMOsPath(String absolutePath, String contestName) {
@@ -282,7 +292,7 @@ public class ContestConfig {
     }
 
     public String getReportPath() {
-        return getReportPath(path, name);
+        return getReportPath(path, contestName);
     }
 
     public static String getReportPath(String absolutePath, String contestName) {
@@ -290,7 +300,7 @@ public class ContestConfig {
     }
 
     public String getContestName() {
-        return this.name;
+        return this.contestName;
     }
 
     public int getPauseBetweenBattles() {
@@ -298,13 +308,12 @@ public class ContestConfig {
     }
 
     public String getBackupPath() {
-        return this.name + File.separator + BACKUP_FOLDER;
+        return this.contestName + File.separator + BACKUP_FOLDER;
     }
 
     public String getPath() {
         return path;
     }
-
 
 
     public File getCompilationFilePath(String javaFile) {
@@ -321,20 +330,37 @@ public class ContestConfig {
         return new File(compilationFile);
     }
 
-
-    public  String getLogFolder(){
-        return getLogFolder(this.path, this.name);
+    public String getLogFolder() {
+        return getLogFolder(this.path, this.contestName);
     }
-    public static String getLogFolder(String path, String contestName){
+
+    public static String getLogFolder(String path, String contestName) {
         return getContestPath(path, contestName) + File.separator + ContestConfig.LOG_FOLDER;
     }
+
+    public String getCompilationTarget() {
+        return getCompilationTarget(path, contestName);
+    }
+
+    public static String getCompilationTarget(String path, String contestName) {
+        return getContestPath(path, contestName) + File.separator + ContestConfig.COMPILATION_TARGET;
+    }
+
+    public String getCppApiFolder() {
+        return getCppApiFolder(path, contestName);
+    }
+
+    public static String getCppApiFolder(String path, String contestName) {
+        return getContestPath(path, contestName) + File.separator + CPP_API_FOLDER;
+    }
+
     @Override
     public String toString() {
         return "ContestConfig{" +
                 "path='" + path + '\'' +
-                ", name='" + name + '\'' +
+                ", contestName='" + contestName + '\'' +
                 ", mode=" + mode +
-                ", needRestart=" + needRestart+
+                ", needRestart=" + needRestart +
                 ", pauseBetweenBattles=" + pauseBetweenBattles +
                 '}';
     }

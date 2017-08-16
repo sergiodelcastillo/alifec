@@ -1,13 +1,24 @@
 package alifec.core.contest;
 
 import alifec.core.exception.CompilerException;
-import alifec.core.simulation.AllFilter;
+import alifec.core.simulation.SourceCodeFilter;
 import org.apache.log4j.Logger;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import java.io.*;
-import java.util.Vector;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
+import java.util.List;
+
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
@@ -23,14 +34,25 @@ public class CompileHelper {
      * java files: are compiled and saved in the lib/MOs folder
      * C/Cpp files: are build a unique library(cppcolonies.so/.dll) and saved in the lib/MOs folder.
      *
-     * @return true if successfully
      * @param config
+     * @return true if successfully
      */
     public static CompilationResult compileMOs(ContestConfig config) {
+        logger.info("Cleaning up files in directory: " + config.getCompilationTarget());
+
+        try {
+            cleanupCompilationTarget(config.getCompilationTarget());
+            logger.error("Cleanup of compiled files [OK] ");
+        } catch (IOException e) {
+            logger.error("Cleanup of compiled files [FAIL] ");
+            logger.error(e.getMessage(), e);
+        }
+
+
         logger.info("Compile JAVA Files");
         CompilationResult result = new CompilationResult();
         try {
-            for (File f : AllFilter.getFilesJava(config.getMOsPath())) {
+            for (File f : SourceCodeFilter.getFilesJava(config.getMOsPath())) {
 
                 if (compileMOsJava(config, f.getParent(), f.getName())) {
                     logger.info(f.getAbsolutePath() + " [OK]");
@@ -62,11 +84,36 @@ public class CompileHelper {
 
         return result;
     }
+
+    /**
+     * Remove the folder of compiled *.java or *.cpp
+     *
+     * @param targetFolder
+     * @throws IOException
+     */
+    private static void cleanupCompilationTarget(String targetFolder) throws IOException {
+        File rootDir = new File(targetFolder);
+
+        if (rootDir.exists()) {
+            Path dirPath = Paths.get(targetFolder);
+
+            Files.walk(dirPath)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .peek(file -> logger.info("Deleting: " + file))
+                    .forEach(File::delete);
+        }
+
+        if (!rootDir.mkdir())
+            throw new IOException("Can not create the compilation target: " + rootDir.getAbsolutePath());
+
+    }
+
     /**
      * this method use the native compiler(Javac) to compileMOs the java codes.
      * The compiled codes are saved in the lib/MOs folder
      *
-     * @param config the config file
+     * @param config       the config file
      * @param javaFileName the source code .java
      * @return true if the compilation is successfully
      * @throws CompilerException if can not find the C/C++ compiler
@@ -82,14 +129,14 @@ public class CompileHelper {
             DataOutputStream err = new DataOutputStream(
                     new BufferedOutputStream(
                             new FileOutputStream(out)));
-            int s = javac.run(null, null, err, "-d", config.getMOsPath(), javaFileFolder + File.separator + javaFileName);
+            int s = javac.run(null, null, err, "-d", config.getCompilationTarget(), javaFileFolder + File.separator + javaFileName);
 
             if (s == 0)
                 out.deleteOnExit();
 
             return s == 0;
         } catch (FileNotFoundException ex) {
-            logger.info("Fail to compileMOs: " + javaFileFolder + File.separator + javaFileName + ". File not found.");
+            logger.info("Failed to compileMOs: " + javaFileFolder + File.separator + javaFileName + ". File not found.");
             return false;
         }
 
@@ -146,7 +193,7 @@ public class CompileHelper {
      * @return true if is successfully
      */
     static boolean updateTournamentCpp(String MOsPath) {
-        Vector<String> names = AllFilter.listNamesCpp(MOsPath);
+        List<String> names = SourceCodeFilter.listNamesCpp(MOsPath);
         File env = new File(MOsPath + "/lib/MOs/" + File.separator + "Environment.cpp");
         try {
             if (!env.exists())
@@ -180,7 +227,6 @@ public class CompileHelper {
     }
 
 
-
     /**
      * Crea el archivo includemmos.h con los nombres que se
      * pasan como argumento:
@@ -188,7 +234,7 @@ public class CompileHelper {
      * @return true if  is successfully
      */
     static boolean updateIncludes(String MOsPath) {
-        Vector<String> files = AllFilter.list_file_cpp(MOsPath);
+        List<String> files = SourceCodeFilter.listFileCpp(MOsPath);
 
         File includes = new File(MOsPath + "/lib/MOs/" + File.separator + "includemos.h");
         try {

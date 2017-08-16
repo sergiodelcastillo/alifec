@@ -8,10 +8,11 @@ import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by Sergio Del Castillo on 06/08/17.
@@ -55,8 +56,8 @@ public class ContestHelper {
         }
 
         //find unsaved battles.
-        Vector<String[]> battles = new Vector<>();
-        Vector<String[]> backup = new Vector<>();
+        List<String[]> battles = new ArrayList<>();
+        List<String[]> backup = new ArrayList<>();
 
         loadBattleFile(battlesFilePath, battles);
         loadBattleFile(backupFilePath, backup);
@@ -124,11 +125,13 @@ public class ContestHelper {
         String contestName = ContestConfig.getContestPath(path, name);
         String MOsFolder = ContestConfig.getMOsPath(path, name);
         String ReportFolder = ContestConfig.getReportPath(path, name);
+        String CppFolder = ContestConfig.getCppApiFolder(path, name);
         String NutrientFile = ContestConfig.getNutrientsFilePath(path, name);
 
         return new File(contestName).exists() &&
                 new File(MOsFolder).exists() &&
                 new File(ReportFolder).exists() &&
+                new File(CppFolder).exists() &&
                 new File(NutrientFile).exists();
     }
 
@@ -142,7 +145,7 @@ public class ContestHelper {
         return true;
     }
 
-    private static void loadBattleFile(String n, Vector<String[]> b) {
+    private static void loadBattleFile(String n, List<String[]> b) {
         BufferedReader f = null;
         String line;
 
@@ -158,7 +161,7 @@ public class ContestHelper {
                     tmp2[1] = tmp[1];
                     tmp2[2] = tmp[2];
 
-                    b.addElement(tmp2);
+                    b.add(tmp2);
                 }
             }
 
@@ -175,54 +178,96 @@ public class ContestHelper {
         }
     }
 
-    /**
-     * Create a new Contest configuration using a new path and contest name.
-     *
-     * @param path        current directory.
-     * @param contestName the name of the new contest
-     * @return a new configuration which is not persisted yet.
-     */
-    public static ContestConfig buildNewContestFolder(String path, String contestName) throws CreateContestFolderException {
-        if (path == null || path.isEmpty())
-            throw new CreateContestFolderException("The path is empty: " + path);
-
-        if (contestName == null || contestName.isEmpty())
-            throw new CreateContestFolderException("the Contest Name is empty: " + contestName);
-
-        ContestConfig config = ContestConfig.buildNewConfigFile(path, contestName);
-
-        return buildNewContestFolder(config);
-    }
-
     public static ContestConfig buildNewContestFolder(ContestConfig config) throws CreateContestFolderException {
 
-        if (!new File(config.getContestPath()).mkdir()) {
-            throw new CreateContestFolderException("Can not create the folder: " + config.getContestPath());
-        }
-        if (!new File(config.getMOsPath()).mkdir()) {
-            throw new CreateContestFolderException("Can not create the folder: " + config.getContestPath());
-        }
+        createFolder(config.getContestPath());
+        createFolder(config.getMOsPath());
+        createFolder(config.getReportPath());
+        createFolder(config.getCppApiFolder());
+        createFolder(config.getLogFolder());
 
-        if (!new File(config.getReportPath()).mkdir()) {
-            throw new CreateContestFolderException("Can not create the folder: " + config.getContestPath());
-        }
-
-        File contestFile = new File(config.getNutrientsFilePath());
+        File nutrientsFile = new File(config.getNutrientsFilePath());
         PrintWriter writter;
 
         try {
-            writter = new PrintWriter(contestFile);
+            writter = new PrintWriter(nutrientsFile);
 
             for (Nutrient n : Agar.nutrient)
                 writter.println(n.getID());
-
         } catch (FileNotFoundException ex) {
+            logger.error("Creating file: " + nutrientsFile + " [FAIL]");
             throw new CreateContestFolderException("Cant not create the file: " + config.getNutrientsFilePath());
         }
 
         writter.close();
+        logger.error("Creating file: " + nutrientsFile + " [OK]");
+
+        //copy the cpp api
+        if (!createCppApi(config.getCppApiFolder())) {
+            logger.error("Creating cpp api to: " + config.getCppApiFolder() + " [FAIL]");
+            throw new CreateContestFolderException("Cant not create the cpp api files in dir: " + config.getCppApiFolder());
+        }
+        logger.error("Creating cpp api to: " + config.getCppApiFolder() + " [OK]");
 
         return config;
     }
 
+    private static void createFolder(String folder) throws CreateContestFolderException {
+        if (!new File(folder).mkdir()) {
+            logger.error("Creating folder: " + folder + " [FAIL]");
+            throw new CreateContestFolderException("Can not create the folder: " + folder);
+        }
+
+        logger.error("Creating folder: " + folder + " [OK]");
+    }
+
+    public static void createExamples(String MOsFolder) {
+        try {
+            //TODO: poner una constante...
+            File source = new File(Contest.class.getClass().getResource("/examples/").toURI());
+
+            Files.walk(source.toPath()).forEach(path -> {
+                try {
+                    //todo: check this path
+                    File target = new File(MOsFolder + File.separator + path.getFileName());
+
+                    if (new File(path.toUri()).isFile())
+                        Files.copy(path, target.toPath());
+
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            });
+        } catch (URISyntaxException | IOException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+    }
+
+    private static boolean createCppApi(String targetFolder) {
+        try {
+            //TODO: poner una constante...
+            File source = new File(Contest.class.getClass().getResource("/cpp/").toURI());
+            final boolean[] isOK = {true};
+
+            Files.walk(source.toPath()).forEach(path -> {
+                try {
+                    //todo: check this path
+                    File target = new File(targetFolder + File.separator + path.getFileName());
+
+                    if (new File(path.toUri()).isFile()) {
+                        Files.copy(path, target.toPath());
+                        logger.info("Copying file: " + target.getAbsolutePath());
+                    }
+                } catch (IOException e) {
+                    isOK[0] = false;
+                    logger.error(e.getMessage(), e);
+
+                }
+            });
+            return isOK[0];
+        } catch (URISyntaxException | IOException ex) {
+            logger.error(ex.getMessage(), ex);
+            return false;
+        }
+    }
 }

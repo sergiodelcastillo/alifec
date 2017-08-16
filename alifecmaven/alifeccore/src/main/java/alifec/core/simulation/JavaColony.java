@@ -3,24 +3,25 @@ package alifec.core.simulation; /**
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-import java.awt.*;
-import java.io.File;
+
+import org.apache.log4j.Logger;
+
+import java.awt.Point;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  * Es la encargada de administrar cada colonia de Microorganismos codificados en en el lenguaje java.
  */
 public class JavaColony extends Colony {
+    org.apache.log4j.Logger logger = Logger.getLogger(getClass());
+
     private Constructor<Microorganism> constructor;
-    private Vector<Microorganism> instances = new Vector<>();
+    private List<Microorganism> instances = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     JavaColony(int index, String path) throws ClassNotFoundException {
@@ -45,13 +46,13 @@ public class JavaColony extends Colony {
     @Override
     protected Movement move(int indexMO) {
         Movement mov = new Movement(0, 0);
-        instances.elementAt(indexMO).move(mov);
+        instances.get(indexMO).move(mov);
         return mov;
     }
 
     @Override
     protected boolean mitosis(int indexMO) {
-        return instances.elementAt(indexMO).mitosis();
+        return instances.get(indexMO).mitosis();
     }
 
     @Override
@@ -84,12 +85,12 @@ public class JavaColony extends Colony {
                 this.author = newMO.getAuthor();
                 this.affiliation = newMO.getAffiliation();
             }
-            instances.addElement(newMO);
+            instances.add(newMO);
         } catch (InstantiationException |
                 InvocationTargetException |
                 IllegalArgumentException |
                 IllegalAccessException ex) {
-            Logger.getLogger(JavaColony.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(), ex);
             return false;
         }
         return true;
@@ -97,9 +98,9 @@ public class JavaColony extends Colony {
 
     @Override
     public void update(int indexMO, float ene, int x, int y) {
-        instances.elementAt(indexMO).ene = ene;
-        instances.elementAt(indexMO).pos.x = x;
-        instances.elementAt(indexMO).pos.y = y;
+        instances.get(indexMO).ene = ene;
+        instances.get(indexMO).pos.x = x;
+        instances.get(indexMO).pos.y = y;
     }
 
     @Override

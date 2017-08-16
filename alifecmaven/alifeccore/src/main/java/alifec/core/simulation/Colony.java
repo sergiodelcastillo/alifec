@@ -3,15 +3,17 @@ package alifec.core.simulation; /**
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-import java.awt.*;
+
+import java.awt.Point;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Es la encargada de administrar cada colonia de Microorganismos.
@@ -19,7 +21,7 @@ import java.util.Vector;
 public abstract class Colony {
 
     final int id;
-    private final Vector<Cell> moList = new Vector<>();
+    private final List<Cell> moList = new ArrayList<>();
     final String path;
 
     String name = "";
@@ -48,19 +50,11 @@ public abstract class Colony {
 
     public boolean createInstance(Cell mo) {
         if (!createMO(mo.pos, mo.ene)) return false;
-        moList.addElement(mo);
+        moList.add(mo);
         return true;
     }
 
     protected abstract boolean createMO(Point pos, float ene);
-
-    /*protected final boolean kill() {
-        for (int i = 0; i < moList.size(); i++)
-            kill(i);
-
-        moList.clear();
-        return true;
-    }*/
 
     public final boolean kill(Cell mo) {
 
@@ -92,7 +86,7 @@ public abstract class Colony {
     }
 
     public final Cell getMO(int index) {
-        return moList.elementAt(index);
+        return moList.get(index);
     }
 
     public abstract String getAuthor();
@@ -106,7 +100,7 @@ public abstract class Colony {
         return getName();
     }
 
-    public Vector<Cell> getMOs() {
+    public List<Cell> getMOs() {
         return moList;
     }
 

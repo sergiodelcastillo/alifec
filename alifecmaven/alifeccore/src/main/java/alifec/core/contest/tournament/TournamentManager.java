@@ -11,9 +11,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 
 public class TournamentManager {
@@ -23,7 +21,7 @@ public class TournamentManager {
     /**
      * Vector de tournaments.
      */
-    private Vector<Tournament> tournaments = new Vector<>();
+    private List<Tournament> tournaments = new ArrayList<>();
 
     /**
      * current tournament.
@@ -46,7 +44,7 @@ public class TournamentManager {
                 Tournament t = new Tournament(config, name);
 
                 if (t.read())
-                    tournaments.addElement(t);
+                    tournaments.add(t);
             }
         }
         //creating a  new Tournament!.
@@ -81,7 +79,7 @@ public class TournamentManager {
      */
     private String getNextName() {
         if (tournaments.size() > 0) {
-            String NAME = tournaments.lastElement().getName();
+            String NAME = tournaments.get(tournaments.size()-1).getName();
 
             Integer i = (new Integer(NAME.split("-")[1]) + 1);
 
@@ -90,10 +88,11 @@ public class TournamentManager {
             return "Tournament-01";
     }
 
-    public void newTournament(Vector<String> colonies) throws CreateTournamentException {
+    public void newTournament(List<String> colonies) throws CreateTournamentException {
         String newT = getNextName();
 
         if (ContestConfig.COMPETITION_MODE == config.getMode()) {
+            //todo: use config file
             if (!new File(config.getContestPath() + File.separator + newT).mkdir())
                 throw new CreateTournamentException("Can not create a new folder...");
         }
@@ -107,9 +106,9 @@ public class TournamentManager {
             }
 
             if (selected >= 0)
-                tournaments.elementAt(selected).setEnabled(false);
+                tournaments.get(selected).setEnabled(false);
 
-            tournaments.addElement(t);
+            tournaments.add(t);
             selected = tournaments.indexOf(t);
         } catch (IOException ex) {
             throw new CreateTournamentException("Cannot load the tournament...");
@@ -146,7 +145,7 @@ public class TournamentManager {
      */
     public Tournament getSelected() {
         try {
-            return tournaments.elementAt(selected);
+            return tournaments.get(selected);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }
@@ -164,7 +163,7 @@ public class TournamentManager {
         if (tournaments.size() == 0)
             return null;
 
-        return tournaments.lastElement();
+        return tournaments.get(tournaments.size()-1);
     }
 
     /**
@@ -172,7 +171,7 @@ public class TournamentManager {
      * @return tournament i.
      */
     public Tournament getTournament(int i) {
-        return tournaments.elementAt(i);
+        return tournaments.get(i);
     }
 
     /**
@@ -192,14 +191,14 @@ public class TournamentManager {
         if (selected < tournaments.size() - 1)
             selected++;
 
-        return tournaments.elementAt(selected);
+        return tournaments.get(selected);
     }
 
     public Tournament prev() {
         if (selected > 0)
             selected--;
 
-        return tournaments.elementAt(selected);
+        return tournaments.get(selected);
     }
 
     public void setMode(int mode) {

@@ -8,9 +8,13 @@ package alifec.core.contest.tournament.battles;
 import alifec.core.contest.ContestConfig;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 import static java.util.Collections.max;
 
@@ -18,7 +22,7 @@ public class BattleManager {
 
     static Logger logger = Logger.getLogger(BattleManager.class);
 
-    private Vector<Battle> battles = new Vector<>();
+    private List<Battle> battles = new ArrayList<>();
 
     private String tournamentName;
     private ContestConfig config;
@@ -58,7 +62,7 @@ public class BattleManager {
             b.save(getBattlesFileName());
         }
 
-        battles.addElement(b);
+        battles.add(b);
     }
 
     public void setMode(int mode) {
@@ -72,12 +76,12 @@ public class BattleManager {
      * @param name of colony to delete
      */
     public void delete(String name) {
-        Vector<Battle> tmp = new Vector<>();
+        List<Battle> tmp = new ArrayList<>();
 
         for (Battle b : battles) {
             if (b.contain(name)) {
                 try {
-                    tmp.addElement(b); // delete instance
+                    tmp.add(b); // delete instance
                     b.delete(getBattlesFileName()); // delete battle of file
                 } catch (IOException ex) {
                     logger.warn(ex.getMessage(), ex);
@@ -92,13 +96,13 @@ public class BattleManager {
         boolean ret = true;
 
         try {
-            Vector<Battle> tmp = new Vector<>();
+            List<Battle> tmp = new ArrayList<>();
 
             for (Battle b : battles) {
                 if (b.contain(name)) {
                     if (!b.delete(getBattlesFileName()))
                         ret = false;
-                    tmp.addElement(b);
+                    tmp.add(b);
                 }
             }
 
@@ -166,7 +170,7 @@ public class BattleManager {
             try {
                 line = br.readLine();
 
-                battles.addElement(new Battle(line));
+                battles.add(new Battle(line));
             } catch (IllegalArgumentException ignored) {
             }
         }
@@ -184,14 +188,14 @@ public class BattleManager {
         return true;
     }
 
-    public Vector<String> getNames() {
-        Vector<String> names = new Vector<>();
+    public List<String> getNames() {
+        List<String> names = new ArrayList<>();
 
         for (Battle b : battles) {
             if (!names.contains(b.getName_1()))
-                names.addElement(b.getName_1());
+                names.add(b.getName_1());
             if (!names.contains(b.getName_2()))
-                names.addElement(b.getName_2());
+                names.add(b.getName_2());
         }
         return names;
     }
