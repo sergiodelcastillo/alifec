@@ -4,14 +4,11 @@ package alifec.core.simulation; /**
  */
 
 import org.apache.log4j.Logger;
-
-import java.awt.*;
-import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.awt.Point;
 
 public class CppColony extends Colony {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(CppColony.class);
+    static Logger logger = Logger.getLogger(CppColony.class);
 
     public static boolean loadLibrary(String path) {
         try {
@@ -32,11 +29,10 @@ public class CppColony extends Colony {
 
             return true;
         } catch (UnsatisfiedLinkError ex) {
+            logger.error(ex.getMessage(), ex);
             return false;
         }
     }
-
-
 
     private String author = "";
     private String name = "";
@@ -88,40 +84,42 @@ public class CppColony extends Colony {
 
     private native Movement move(Petri p, int id, int indexMO);
 
-    // @Override
+    @Override
     public String getAuthor() {
         return author;
     }
 
     private native String getAuthor(int id);
 
-    // @Override
+    @Override
     public String getName() {
         return name;
     }
 
     private native String getName(int id);
 
-    // @Override
+    @Override
     public String getAffiliation() {
         return affiliation;
     }
 
     private native String getAffiliation(int id);
 
+    @Override
     public boolean mitosis(int indexMO) {
         return mitosis(id, indexMO);
     }
 
     private native boolean mitosis(int id, int indexMO);
 
+    @Override
     public void update(int indexMO, float ene, int x, int y) {
         update(id, indexMO, ene, x, y);
     }
 
     private native void update(int id, int indexMO, float ene, int x, int y);
 
-    //@Override
+    @Override
     public void clearAll() {
         clearAll(id);
     }
