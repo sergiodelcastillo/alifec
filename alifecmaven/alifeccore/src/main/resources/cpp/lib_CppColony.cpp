@@ -5,7 +5,7 @@
 
 #include "lib_CppColony.h"
 
-JNIEXPORT jboolean JNICALL Java_lib_CppColony_createColony 
+JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_createColony
 (JNIEnv *env, jobject ob, jint id, jstring name){
 	const char *c_name = env->GetStringUTFChars(name, NULL);
 	
@@ -18,7 +18,7 @@ JNIEXPORT jboolean JNICALL Java_lib_CppColony_createColony
 	return JNI_FALSE;
 }
  
-JNIEXPORT jboolean JNICALL Java_lib_CppColony_createMO
+JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_createMO
   (JNIEnv *env, jobject ob, jint id, jint x, jint y, jfloat ene){
 	CppColony<Microorganism> *col = environment.getColony(id);
 
@@ -29,7 +29,7 @@ JNIEXPORT jboolean JNICALL Java_lib_CppColony_createMO
 	return JNI_TRUE; 
 }
 
-JNIEXPORT jboolean JNICALL Java_lib_CppColony_kill
+JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_kill
   (JNIEnv *env, jobject ob, jint id, jint index){
     CppColony<Microorganism> *col = environment.getColony(id);
 
@@ -38,12 +38,12 @@ JNIEXPORT jboolean JNICALL Java_lib_CppColony_kill
 	 return JNI_FALSE;
   }
 
-JNIEXPORT void JNICALL Java_lib_CppColony_end
+JNIEXPORT void JNICALL Java_alifec_core_simulation_CppColony_end
   (JNIEnv *env, jobject ob, jint id){
 	environment.delColony(id);
 }
  
-JNIEXPORT jobject JNICALL Java_lib_CppColony_move
+JNIEXPORT jobject JNICALL Java_alifec_core_simulation_CppColony_move
   (JNIEnv *env, jobject ob,jobject _petri, jint id, jint index){
 	CppColony<Microorganism> *col = environment.getColony(id);
 	Movement mov= {0,0};	
@@ -55,8 +55,8 @@ JNIEXPORT jobject JNICALL Java_lib_CppColony_move
 	if(!col->move(index, mov)){
 		JNU_ThrowByName(env, "java/lang/Exception", "Error de un MO (move)");
 	}
-	
-	jclass clazz = env->FindClass("lib/Movement");
+
+	jclass clazz = env->FindClass("alifec/core/simulation/Movement");
 	jmethodID methodID = env->GetMethodID(clazz,"<init>", "(II)V");
 	jobject obj = env->NewObject( clazz, methodID, mov.dx, mov.dy);
 	
@@ -73,7 +73,7 @@ void JNU_ThrowByName(JNIEnv *env, const char *name, const char *msg){
     env->DeleteLocalRef(cls);
 }
 
-JNIEXPORT jstring JNICALL Java_lib_CppColony_getAuthor
+JNIEXPORT jstring JNICALL Java_alifec_core_simulation_CppColony_getAuthor
   (JNIEnv *env, jobject ob, jint id){
 	CppColony<Microorganism> *col = environment.getColony(id);
 	string s;
@@ -87,7 +87,7 @@ JNIEXPORT jstring JNICALL Java_lib_CppColony_getAuthor
 	return jst;
   }
 
-JNIEXPORT jstring JNICALL Java_lib_CppColony_getName
+JNIEXPORT jstring JNICALL Java_alifec_core_simulation_CppColony_getName
   (JNIEnv *env, jobject ob, jint id){
 	CppColony<Microorganism> *col = environment.getColony(id);
 	string s;
@@ -101,7 +101,7 @@ JNIEXPORT jstring JNICALL Java_lib_CppColony_getName
 	return jst;
   }
 
-JNIEXPORT jstring JNICALL Java_lib_CppColony_getAffiliation
+JNIEXPORT jstring JNICALL Java_alifec_core_simulation_CppColony_getAffiliation
   (JNIEnv *env, jobject ob, jint id){
 	CppColony<Microorganism> *col = environment.getColony(id);
 	string s;
@@ -115,7 +115,7 @@ JNIEXPORT jstring JNICALL Java_lib_CppColony_getAffiliation
 	return jst;
   }
 
-JNIEXPORT jboolean JNICALL Java_lib_CppColony_mitosis
+JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_mitosis
   (JNIEnv *env, jobject ob, jint id, jint indexMO){
 	CppColony<Microorganism> *col = environment.getColony(id);
 	
@@ -131,7 +131,7 @@ JNIEXPORT jboolean JNICALL Java_lib_CppColony_mitosis
 	return mit ? JNI_TRUE : JNI_FALSE;
   }
 
-JNIEXPORT void JNICALL Java_lib_CppColony_update
+JNIEXPORT void JNICALL Java_alifec_core_simulation_CppColony_update
   (JNIEnv *env, jobject ob, jint id, jint indexMO, jfloat ene, jint x, jint y){
 	CppColony<Microorganism> *col = environment.getColony(id);
 	
@@ -142,7 +142,7 @@ JNIEXPORT void JNICALL Java_lib_CppColony_update
   }
 
 
-JNIEXPORT void JNICALL Java_lib_CppColony_clearAll
+JNIEXPORT void JNICALL Java_alifec_core_simulation_CppColony_clearAll
   (JNIEnv *env, jobject ob, jint id){
 	CppColony<Microorganism> *col = environment.getColony(id);
 	

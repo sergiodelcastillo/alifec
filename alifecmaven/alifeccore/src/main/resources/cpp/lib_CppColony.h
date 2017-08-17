@@ -12,8 +12,8 @@
 Environment environment;
 Petri petri;
 
-#ifndef _Included_lib_CppColony
-#define _Included_lib_CppColony
+#ifndef _Included_alifec_core_simulation_CppColony
+#define _Included_alifec_core_simulation_CppColony
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,90 +22,91 @@ extern "C" {
 //Funcion de utilidad para lanzar excepciones.
 void JNU_ThrowByName(JNIEnv *env, const char *name, const char *msg);
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    createMO
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_lib_CppColony_createColony
+ 
+JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_createColony
   (JNIEnv *, jobject, jint, jstring );
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    createMO
  * Signature: (IIIF)Z
  */
-JNIEXPORT jboolean JNICALL Java_lib_CppColony_createMO
+JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_createMO
   (JNIEnv *, jobject, jint, jint, jint, jfloat);
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    kill
  * Signature: (II)Z
  */
-JNIEXPORT jboolean JNICALL Java_lib_CppColony_kill
+JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_kill
   (JNIEnv *, jobject, jint, jint);
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    end
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_lib_CppColony_end
+JNIEXPORT void JNICALL Java_alifec_core_simulation_CppColony_end
   (JNIEnv *, jobject, jint);
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    move
  * Signature: (II)Llib/Movement;
  */
-JNIEXPORT jobject JNICALL Java_lib_CppColony_move
+JNIEXPORT jobject JNICALL Java_alifec_core_simulation_CppColony_move
   (JNIEnv *, jobject,jobject, jint, jint);
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    getAuthor
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_lib_CppColony_getAuthor
+JNIEXPORT jstring JNICALL Java_alifec_core_simulation_CppColony_getAuthor
   (JNIEnv *, jobject, jint);
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    getName
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_lib_CppColony_getName
+JNIEXPORT jstring JNICALL Java_alifec_core_simulation_CppColony_getName
   (JNIEnv *, jobject, jint);
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    getAffiliation
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_lib_CppColony_getAffiliation
+JNIEXPORT jstring JNICALL Java_alifec_core_simulation_CppColony_getAffiliation
   (JNIEnv *, jobject, jint);
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    mitosis
  * Signature: (II)Z
  */
-JNIEXPORT jboolean JNICALL Java_lib_CppColony_mitosis
+JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_mitosis
   (JNIEnv *, jobject, jint, jint);
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    update
  * Signature: (IIFII)V
  */
-JNIEXPORT void JNICALL Java_lib_CppColony_update
+JNIEXPORT void JNICALL Java_alifec_core_simulation_CppColony_update
   (JNIEnv *, jobject, jint, jint, jfloat, jint, jint);
 
 /*
- * Class:     lib_CppColony
+ * Class:     alifec_core_simulation_CppColony
  * Method:    clearAll
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_lib_CppColony_clearAll
+JNIEXPORT void JNICALL Java_alifec_core_simulation_CppColony_clearAll
   (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus

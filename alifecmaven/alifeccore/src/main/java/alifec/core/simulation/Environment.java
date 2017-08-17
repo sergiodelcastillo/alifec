@@ -80,7 +80,7 @@ public class Environment {
         // loading library
         logger.info("Loading C++ Colonies ");
 
-        if (CppColony.loadLibrary(config.getMOsPath() + File.separator + "lib" + File.separator + "MOs" + File.separator)) {
+        if (CppColony.loadLibrary(config.getCompilationTarget())) {
             logger.info("Loading C++ Library [OK]");
 
             for (String name : SourceCodeFilter.listNamesCpp(config.getMOsPath())) {

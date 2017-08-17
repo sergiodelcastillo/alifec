@@ -6,13 +6,7 @@ import org.apache.log4j.Logger;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +22,9 @@ import java.util.List;
 public class CompileHelper {
 
     static Logger logger = org.apache.log4j.Logger.getLogger(CompileHelper.class);
+
+    private static String LINUX_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
+    private static String WINDOWS_COMPILATION_LINE = "g++ -o \"%s\\libcppcolonies.dll\" -Wl,--add-stdcall-alias -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s\\lib_CppColony.cpp\"";
 
     /**
      * Compile .java and .cpp files
@@ -63,15 +60,16 @@ public class CompileHelper {
                 }
             }
         } catch (CompilerException ex) {
+            logger.error(ex.getMessage(), ex);
             result.logJavaError(ex.getMessage());
         }
 
         logger.info("Compile C++ Files");
 
-        if (updateTournamentCpp(config.getMOsPath()) && updateIncludes(config.getMOsPath())) {
+        if (updateTournamentCpp(config) && updateIncludes(config)) {
             logger.info("Update C++ Files: [OK]");
 
-            if (compileAllMOsCpp(config.getMOsPath())) {
+            if (compileAllMOsCpp(config)) {
                 logger.info("Create libcppcolonies: [OK]");
             } else {
                 logger.info("Create libcppcolonies: [FAIL]");
@@ -148,10 +146,10 @@ public class CompileHelper {
      * llamada libcppcolonies.dll o libcppcolonies.so de acuerdo al
      * sistema operativo. La librería se almacena en lib/MOs
      *
-     * @param MOsPath URL of Microorganism sources
+     * @param config Configuration of the Contest
      * @return true if is successfully
      */
-    static private boolean compileAllMOsCpp(String MOsPath) {
+    static private boolean compileAllMOsCpp(ContestConfig config) {
         //@Todo Use a file with the pattern instead of hiring it in the source code
         try {
 
@@ -159,19 +157,39 @@ public class CompileHelper {
             String[] console = {""};
 
             if (os.contains("linux")) {
-                String com = "g++ -o " + MOsPath + "/lib/MOs/libcppcolonies.so -fPIC -Wall -shared -lm -Icpp -I\"" +
-                        MOsPath + "\"  cpp/lib_CppColony.cpp";
-
+                String com = String.format(LINUX_COMPILATION_LINE,
+                        config.getCompilationTarget(),
+                        config.getCppApiFolder(),
+                        config.getMOsPath(),
+                        config.getCppApiFolder());
                 console = new String[]{"/bin/bash", "-c", com};
+                logger.trace("Using compile line: " + com);
             } else if (os.contains("windows")) {
-                String com = "g++ -o " + MOsPath + "/lib/MOs/libcppcolonies.dll -Wl,--add-stdcall-alias -Wall -shared -lm -Icpp -I\"" +
-                        MOsPath + "\"  cpp/lib_CppColony.cpp";
-
+                String com = String.format(WINDOWS_COMPILATION_LINE,
+                        config.getCompilationTarget(),
+                        config.getCppApiFolder(),
+                        config.getMOsPath(),
+                        config.getCppApiFolder());
                 console = new String[]{"cmd.exe", "/C", com};
             }
 
             Process p = Runtime.getRuntime().exec(console);
             p.waitFor();
+
+            String buffer = "";
+            BufferedReader readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+            while ((buffer = readerInputStream.readLine()) != null) {
+                logger.trace(buffer);
+            }
+            readerInputStream.close();
+            while ((buffer = readerErrorStream.readLine()) != null) {
+                logger.trace(buffer);
+            }
+            readerErrorStream.close();
+            p.waitFor();
+
 
             p.getErrorStream().close();
             p.getInputStream().close();
@@ -193,9 +211,9 @@ public class CompileHelper {
      *
      * @return true if is successfully
      */
-    static boolean updateTournamentCpp(String MOsPath) {
-        List<String> names = SourceCodeFilter.listNamesCpp(MOsPath);
-        File env = new File(MOsPath + "/lib/MOs/" + File.separator + "Environment.cpp");
+    static boolean updateTournamentCpp(ContestConfig config) {
+        List<String> names = SourceCodeFilter.listNamesCpp(config.getMOsPath());
+        File env = new File(config.getCppApiFolder() + File.separator + "Environment.cpp");
         try {
             if (!env.exists())
                 env.createNewFile();
@@ -234,10 +252,10 @@ public class CompileHelper {
      *
      * @return true if  is successfully
      */
-    static boolean updateIncludes(String MOsPath) {
-        List<String> files = SourceCodeFilter.listFileCpp(MOsPath);
+    static boolean updateIncludes(ContestConfig config) {
+        List<String> files = SourceCodeFilter.listFileCpp(config.getMOsPath());
 
-        File includes = new File(MOsPath + "/lib/MOs/" + File.separator + "includemos.h");
+        File includes = new File(config.getCppApiFolder() + File.separator + "includemos.h");
         try {
 
             if (!includes.exists())
