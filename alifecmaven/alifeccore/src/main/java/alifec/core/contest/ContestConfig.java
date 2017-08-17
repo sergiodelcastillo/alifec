@@ -143,7 +143,7 @@ public class ContestConfig {
             throw new SaveContestConfigException("Can not update the config file: " + getConfigFilePath(), this);
         }
         //the property was saved so the system should be restarted.
-        needRestart = true;
+//        needRestart = true;
     }
 
     public boolean isValid() {

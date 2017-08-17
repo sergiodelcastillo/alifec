@@ -115,7 +115,7 @@ public class ContestUI extends JFrame implements ActionListener {
                 if (list.isEmpty()) {
                     config = createNewContest(null);
 
-                    if (config == null || config.isNeedRestart()) return false;
+                    if (config == null) return false;
 
                 } else {
                     String name = list.get(0);
@@ -261,8 +261,6 @@ public class ContestUI extends JFrame implements ActionListener {
             config.save();
 
             logger.info("The contest file was updated as follows: " + config.toString());
-            logger.warn("Please restart the application in order to load the new changes.");
-            Message.printInfo(this, "Please restart the application in order to load the new changes.");
 
         } catch (SaveContestConfigException ex) {
             logger.error("Can not create the contest file: " + ex.getConfig().toString(), ex);
@@ -409,14 +407,18 @@ public class ContestUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(newContest)) {
             createNewContest(this);
+            requestRestart();
         } else if (e.getSource().equals(setDefaultContest)) {
             JFileChooser fc = new JFileChooser();
             fc.setApproveButtonText("Set default contest");
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                this.setDefaultContest(fc.getCurrentDirectory().getAbsolutePath(),
-                        fc.getSelectedFile().getName());
+                String contestPath = fc.getCurrentDirectory().getAbsolutePath();
+                String fileName = fc.getSelectedFile().getName();
+                if (this.setDefaultContest(contestPath, fileName)) {
+                    requestRestart();
+                }
             }
         } else if (e.getSource().equals(quit)) {
             if (contest.getMode() == ContestConfig.COMPETITION_MODE)
@@ -441,6 +443,11 @@ public class ContestUI extends JFrame implements ActionListener {
         } else if (e.getSource().equals(about)) {
             new DialogAbout(this);
         }
+    }
+
+    private void requestRestart() {
+        logger.warn("Please restart the application in order to load the new changes.");
+        Message.printInfo(this, "Please restart the application in order to load the new changes.");
     }
 
 
