@@ -224,7 +224,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
         } catch (TournamentCorruptedException e) {
             //TODO: ver que mostrar acá.
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage(), e);
             Message.printErr(null, e.getMessage());
             System.exit(0);
         }
@@ -279,7 +279,7 @@ public class ContestUI extends JFrame implements ActionListener {
                 public void windowClosing(WindowEvent e) {
                     if (contest.getMode() == ContestConfig.COMPETITION_MODE)
                         if (!contest.createBackUp())
-                            System.out.println("Error: cannot create the backup file");
+                            logger.error("Cannot create the backup file");
                 }
             });
 
@@ -288,7 +288,7 @@ public class ContestUI extends JFrame implements ActionListener {
             getContentPane().add(tUI, BorderLayout.CENTER);
             setTitle(contest.getName());
         } catch (IOException ex) {
-            System.out.println("Error: init components");
+            logger.error("Init components", ex);
         }
     }
 
@@ -312,7 +312,7 @@ public class ContestUI extends JFrame implements ActionListener {
             setTitle(contest.getName());
             this.repaint();
         } catch (IOException ex) {
-            System.out.println("Error: reload components");
+            logger.error("Reload components", ex);
         }
     }
 
@@ -423,7 +423,7 @@ public class ContestUI extends JFrame implements ActionListener {
         } else if (e.getSource().equals(quit)) {
             if (contest.getMode() == ContestConfig.COMPETITION_MODE)
                 if (!contest.createBackUp())
-                    System.out.println("Error: cannot create the backup file");
+                    logger.error("Cannot create the backup file");
 
             System.exit(EXIT_ON_CLOSE);
         } else if (e.getSource().equals(programmerMode)) {

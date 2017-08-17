@@ -6,19 +6,24 @@
 package alifec.contest.view;
 
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class MiComboboxModel extends AbstractListModel implements ComboBoxModel {
     private static final long serialVersionUID = 0L;
+
+    Logger logger = Logger.getLogger(getClass());
+
     Hashtable<String, Integer> model;
 
     String selected = "";
 
     public MiComboboxModel(Hashtable<String, Integer> m) {
         if (m == null || m.size() == 0)
-            System.out.println("There are not elements");
+            logger.debug("There are not elements");
 
         model = m;
 
@@ -36,7 +41,7 @@ public class MiComboboxModel extends AbstractListModel implements ComboBoxModel 
     @Override
     public Object getElementAt(int index) {
         if (model.size() < index) {
-            System.out.println("error:MiComboboxModel.getElementAt(" + index + ")");
+            logger.warn("error: MiComboboxModel.getElementAt(" + index + ")");
             return null;
         }
 

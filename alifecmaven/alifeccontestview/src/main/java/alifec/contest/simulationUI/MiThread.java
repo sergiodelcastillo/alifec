@@ -14,6 +14,7 @@ import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Defs;
 import alifec.core.simulation.Environment;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.BasicStroke;
@@ -32,6 +33,9 @@ import static java.lang.Math.pow;
 import static java.lang.Math.round;
 
 public class MiThread extends Thread {
+
+    Logger logger = Logger.getLogger(getClass());
+
     enum Status{STATUS_PLAY,STATUS_PAUSE, STATUS_STOPPED }
 
     /**
@@ -177,8 +181,7 @@ public class MiThread extends Thread {
             }
             father.dispose();
         } catch (InterruptedException ignored) {
-            System.out.println("Interrupted");
-
+            logger.warn(ignored.getMessage(), ignored);
         }
 
     }
@@ -327,7 +330,7 @@ public class MiThread extends Thread {
                                     GUIdosD.K * (GUIdosD.rel.y + pos.y),
                                     GUIdosD.K, GUIdosD.K);
                         } catch (Exception ex) {
-                            System.out.println("error");
+                            logger.error(ex.getMessage(), ex);
                         }
                     }
                 }

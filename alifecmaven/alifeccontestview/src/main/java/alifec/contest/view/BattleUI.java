@@ -14,6 +14,7 @@ import alifec.core.contest.tournament.battles.BattleManager;
 import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.simulation.Environment;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +28,8 @@ import java.util.List;
 
 public class BattleUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
+
+    Logger logger = Logger.getLogger(getClass());
 
     private final ContestUI father;
 
@@ -397,7 +400,7 @@ public class BattleUI extends JPanel implements ActionListener {
                             existingBattle = true;
                         }
                     } catch (CreateBattleException ex) {
-                        System.out.println("cant create battle .. :(");
+                        logger.info("cant create battle .. :(");
                     }
                 }
             }
@@ -468,8 +471,6 @@ public class BattleUI extends JPanel implements ActionListener {
         String path = father.getContest().getTournamentManager().lastElement().getPath();
         backupFile = path + File.separator + "battles_backup.csv";
 
-        System.out.print("Creating back up ");
-
         try {
             FileWriter fr = new FileWriter(backupFile);
             PrintWriter pw = new PrintWriter(fr);
@@ -479,12 +480,10 @@ public class BattleUI extends JPanel implements ActionListener {
             pw.println(line);
             pw.close();
 
-            System.out.println("[OK]");
+            logger.info("Creating back up [OK]");
 
-        } catch (FileNotFoundException ex) {
-            System.out.println("[FAIL]");
         } catch (IOException ex) {
-            System.out.println("[FAIL]");
+            logger.error("Creating back up [FAIL]", ex);
         }
 
     }
@@ -493,18 +492,16 @@ public class BattleUI extends JPanel implements ActionListener {
         if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
             return true;
 
-        System.out.print("Removing back up ");
-
         if (backupFile.equals("")) {
-            System.out.println("[FAIL]");
+            logger.warn("Removing back up [FAIL]");
             return false;
         }
 
         if (new File(backupFile).delete()) {
-            System.out.println("[OK]");
+            logger.info("Removing back up [OK]");
             return true;
         } else {
-            System.out.println("[FAIL]");
+            logger.warn("Removing back up [FAIL]");
             return false;
         }
     }
@@ -516,8 +513,6 @@ public class BattleUI extends JPanel implements ActionListener {
         //TODO: verificar esto:
         String path = father.getContest().getTournamentManager().lastElement().getPath();
         backupFile = path + File.separator + "battles_backup.csv";
-
-        System.out.print("Creating back up ");
 
         try {
             String line;
@@ -532,12 +527,10 @@ public class BattleUI extends JPanel implements ActionListener {
             }
 
             pw.close();
-            System.out.println("[OK]");
+            logger.info("Creating back up [OK]");
 
-        } catch (FileNotFoundException ex) {
-            System.out.println("[FAIL]");
         } catch (IOException ex) {
-            System.out.println("[FAIL]");
+            logger.error("Creating back up [FAIL]", ex);
         }
     }
 

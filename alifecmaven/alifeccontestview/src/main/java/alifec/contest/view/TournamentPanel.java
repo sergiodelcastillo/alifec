@@ -8,6 +8,7 @@ package alifec.contest.view;
 
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,6 +22,8 @@ import java.util.Iterator;
 
 public class TournamentPanel extends JList {
     private static final long serialVersionUID = 0L;
+
+    Logger logger = Logger.getLogger(getClass());
 
     JPopupMenu pm = new JPopupMenu("PopUp");
     JMenuItem deleteOfContest = new JMenuItem("Delete Colony of Contest");
@@ -97,8 +100,7 @@ public class TournamentPanel extends JList {
         try {
             setModel(addComponents());
         } catch (NullPointerException ex) {
-            System.out.println("tournamentpanel.update().. error");
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
         }
     }
 
