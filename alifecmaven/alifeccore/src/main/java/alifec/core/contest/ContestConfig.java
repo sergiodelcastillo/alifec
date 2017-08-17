@@ -24,8 +24,8 @@ public class ContestConfig {
      */
     public static final String NUTRIENTS_FILE = "nutrients";
 
-    public static final String BATTLES_BACKUP_FILENAME = "battles_backup.csv";
-    public static final String BATTLES_FILENAME = "battles.csv";
+    public static final String BATTLES_BACKUP_FILE = "battles_backup.csv";
+    public static final String BATTLES_FILE = "battles.csv";
     /**
      * Folder of source colonies.
      */
@@ -47,7 +47,7 @@ public class ContestConfig {
      */
     public static final String CONFIG_FILE = "config";
 
-    public static final String COMPILATION_TARGET = "compiled";
+    public static final String COMPILATION_TARGET_FOLDER = "compiled";
 
     /**
      * back up file
@@ -128,7 +128,7 @@ public class ContestConfig {
         return config;
     }
 
-    public boolean save() throws SaveContestConfigException {
+    public void save() throws SaveContestConfigException {
         Properties property = new Properties();
 
         property.setProperty(PROPERTY_PATH_KEY, path);
@@ -144,7 +144,6 @@ public class ContestConfig {
         }
         //the property was saved so the system should be restarted.
         needRestart = true;
-        return true;
     }
 
     public boolean isValid() {
@@ -242,11 +241,11 @@ public class ContestConfig {
     }
 
     public String getBattlesBackupFile(String tournamentName) {
-        return getTournamentPath(tournamentName) + File.separator + BATTLES_BACKUP_FILENAME;
+        return getTournamentPath(tournamentName) + File.separator + BATTLES_BACKUP_FILE;
     }
 
     public String getBattlesFile(String tournamentName) {
-        return getTournamentPath(tournamentName) + File.separator + BATTLES_FILENAME;
+        return getTournamentPath(tournamentName) + File.separator + BATTLES_FILE;
     }
 
     public int getMode() {
@@ -343,7 +342,7 @@ public class ContestConfig {
     }
 
     public static String getCompilationTarget(String path, String contestName) {
-        return getContestPath(path, contestName) + File.separator + ContestConfig.COMPILATION_TARGET;
+        return getContestPath(path, contestName) + File.separator + ContestConfig.COMPILATION_TARGET_FOLDER;
     }
 
     public String getCppApiFolder() {

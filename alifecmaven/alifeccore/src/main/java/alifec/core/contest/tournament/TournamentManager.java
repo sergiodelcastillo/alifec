@@ -1,7 +1,3 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 package alifec.core.contest.tournament;
 
 import alifec.core.contest.ContestConfig;
@@ -13,13 +9,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-
+/**
+ * Created by Sergio Del Castillo on 05/08/17.
+ *
+ * @email: sergio.jose.delcastillo@gmail.com
+ */
 public class TournamentManager {
 
     Logger logger = Logger.getLogger(getClass());
 
     /**
-     * Vector de tournaments.
+     * List of tournaments.
      */
     private List<Tournament> tournaments = new ArrayList<>();
 
@@ -51,8 +51,6 @@ public class TournamentManager {
         Collections.sort(tournaments);
 
         selected = tournaments.size() - 1;
-//		selected = -1;
-
     }
 
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
@@ -79,7 +77,7 @@ public class TournamentManager {
      */
     private String getNextName() {
         if (tournaments.size() > 0) {
-            String NAME = tournaments.get(tournaments.size()-1).getName();
+            String NAME = tournaments.get(tournaments.size() - 1).getName();
 
             Integer i = (new Integer(NAME.split("-")[1]) + 1);
 
@@ -125,7 +123,7 @@ public class TournamentManager {
 
         File file = new File(t.getBattleManager().getBattlesFileName());
         if (file.exists() && !file.delete())
-            if ( ContestConfig.COMPETITION_MODE == config.getMode()) return false;
+            if (ContestConfig.COMPETITION_MODE == config.getMode()) return false;
 
         file = new File(config.getTournamentPath(t.getName()));
         if (file.exists() && !file.delete())
@@ -163,7 +161,7 @@ public class TournamentManager {
         if (tournaments.size() == 0)
             return null;
 
-        return tournaments.get(tournaments.size()-1);
+        return tournaments.get(tournaments.size() - 1);
     }
 
     /**

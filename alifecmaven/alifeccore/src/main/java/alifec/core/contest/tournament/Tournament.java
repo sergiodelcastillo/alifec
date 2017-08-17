@@ -6,15 +6,15 @@
 package alifec.core.contest.tournament;
 
 import alifec.core.contest.ContestConfig;
-import alifec.core.contest.ContestHelper;
 import alifec.core.contest.tournament.battles.BattleManager;
 import alifec.core.exception.CreateRankingException;
 import org.apache.log4j.Logger;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
 
 
 public class Tournament implements Comparable<Tournament> {
@@ -45,7 +45,7 @@ public class Tournament implements Comparable<Tournament> {
         this.tournamentName = name;
 
         battleManager = new BattleManager(config, tournamentName);
-        colonies = new Vector<>();
+        colonies = new ArrayList<>();
     }
     /**
      * Busca la maxima energia acumulada hasta el momento y la retorna

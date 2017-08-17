@@ -16,15 +16,14 @@ import alifec.core.exception.CreateBattleException;
 import alifec.core.simulation.Environment;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 public class BattleUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
@@ -63,18 +62,18 @@ public class BattleUI extends JPanel implements ActionListener {
         add(BorderLayout.SOUTH, createSouthPanel());
 
         if (restore) {
-            Vector<String[]> battles = readBattles(ContestConfig.BATTLES_FILENAME);
-            Vector<String[]> backup = readBattles(ContestConfig.BATTLES_BACKUP_FILENAME);
+            List<String[]> battles = readBattles(ContestConfig.BATTLES_FILE);
+            List<String[]> backup = readBattles(ContestConfig.BATTLES_BACKUP_FILE);
 
             validate(battles, backup);
             restoreBattles(backup);
         }
     }
 
-    private void restoreBattles(Vector<String[]> backup) {
+    private void restoreBattles(List<String[]> backup) {
         if (backup.size() == 0) {
             Tournament t = father.getContest().getTournamentManager().lastElement();
-            String url = t.getPath() + File.separator + ContestConfig.BATTLES_BACKUP_FILENAME;
+            String url = t.getPath() + File.separator + ContestConfig.BATTLES_BACKUP_FILE;
             new File(url).delete();
             return;
         }
@@ -98,9 +97,9 @@ public class BattleUI extends JPanel implements ActionListener {
     //	1: oponente 2;
     // 2: distribucion de nutrientes
 
-    private void validate(Vector<String[]> battles, Vector<String[]> backup) {
+    private void validate(List<String[]> battles, List<String[]> backup) {
         // Eliminar las batallas que ya se corrieron
-        Vector<String[]> todelete = new Vector<>();
+        List<String[]> todelete = new ArrayList<>();
         for (String[] line : battles) {
             for (String[] line_backup : backup) {
                 if ((line[0].toLowerCase().equals(line_backup[0].toLowerCase()) &&
@@ -109,7 +108,7 @@ public class BattleUI extends JPanel implements ActionListener {
                         (line[0].toLowerCase().equals(line_backup[1].toLowerCase()) &&
                                 line[1].toLowerCase().equals(line_backup[0].toLowerCase()) &&
                                 line[2].toLowerCase().equals(line_backup[2].toLowerCase()))) {
-                    todelete.addElement(line_backup);
+                    todelete.add(line_backup);
                 }
             }
         }
@@ -124,7 +123,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 }
             }
             if (!b) {
-                todelete.addElement(l);
+                todelete.add(l);
             }
         }
 
@@ -140,15 +139,15 @@ public class BattleUI extends JPanel implements ActionListener {
                     b++;
             }
             if (b != 2) {
-                todelete.addElement(l);
+                todelete.add(l);
             }
         }
 
         backup.removeAll(todelete);
     }
 
-    private Vector<String[]> readBattles(String name) {
-        Vector<String[]> res = new Vector<>();
+    private List<String[]> readBattles(String name) {
+        List<String[]> res = new ArrayList<>();
         Tournament t = father.getContest().getTournamentManager().lastElement();
         String url = t.getPath() + File.separator + name;
 
@@ -161,7 +160,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 String[] s = line.split(",");
 
                 if (3 <= s.length) {
-                    res.addElement(new String[]{s[0], s[1], s[2]});
+                    res.add(new String[]{s[0], s[1], s[2]});
                 }
             }
 
@@ -430,13 +429,13 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public boolean delete(String colonyName) {
-        Vector<BattleRun> indexes = new Vector<>();
+        List<BattleRun> indexes = new ArrayList<>();
 
         for (int i = 0; i < getBattles().size(); i++) {
             BattleRun b = getBattles().elementAt(i);
 
             if (b.name1.equals(colonyName) || b.name2.equals(colonyName))
-                indexes.addElement(b);
+                indexes.add(b);
         }
 
         for (BattleRun b : indexes)

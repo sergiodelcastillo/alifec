@@ -151,11 +151,12 @@ public class Contest {
         config.setPauseBetweenBattles(pause);
 
         try {
-            return config.save();
+            config.save();
         } catch (SaveContestConfigException e) {
             logger.error("Error updating config file: " + e.getConfig(), e);
+            return false;
         }
-        return false;
+        return true;
     }
 
     public void updateNutrient(int[] nutrients) throws IOException {

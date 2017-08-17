@@ -16,9 +16,16 @@ import alifec.core.simulation.Defs;
 import alifec.core.simulation.Environment;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Math.max;
 import static java.lang.Math.pow;
@@ -182,13 +189,13 @@ public class MiThread extends Thread {
 
         cui.getTournamentUI().penalize(colonyName);
 
-        Vector<BattleRun> indexs = new Vector<>();
+        List<BattleRun> indexs = new ArrayList<>();
 
         for (int i = 0; i < battles.size(); i++) {
             BattleRun b = (BattleRun) battles.elementAt(i);
 
             if (b.name1.equals(colonyName) || b.name2.equals(colonyName))
-                indexs.addElement(b);
+                indexs.add(b);
         }
 
         for (BattleRun b : indexs) {

@@ -14,10 +14,11 @@ import alifec.core.exception.CreateTournamentException;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TournamentUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
@@ -36,9 +37,9 @@ public class TournamentUI extends JPanel implements ActionListener {
      * Cada TournamentPanel es un panel
      * con cada turno ejecutado o que se esta ejecutando.
      */
-    private Vector<TournamentPanel> tPanel;
+    private List<TournamentPanel> tPanel;
 
-    private Vector<JScrollPane> tScroll;
+    private List<JScrollPane> tScroll;
     private TitledBorder border = BorderFactory.createTitledBorder("Nothing to show");
 
     private JButton addColony;
@@ -54,8 +55,8 @@ public class TournamentUI extends JPanel implements ActionListener {
         setBorder(border);
         this.father = cui;
         this.tm = cui.getContest().getTournamentManager();
-        this.tPanel = new Vector<>(tm.size());
-        this.tScroll = new Vector<>(tm.size());
+        this.tPanel = new ArrayList<>(tm.size());
+        this.tScroll = new ArrayList<>(tm.size());
 
         border.setTitle(tm.getSelected().getName());
         this.setLayout(new BorderLayout());
@@ -67,7 +68,7 @@ public class TournamentUI extends JPanel implements ActionListener {
             addTournament(t);
         }
 
-        add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
+        add(tScroll.get(tm.getSelectedID()), BorderLayout.CENTER);
         addColony.setEnabled(false);
     }
 
@@ -115,7 +116,7 @@ public class TournamentUI extends JPanel implements ActionListener {
     }
 
     public void updateLast() {
-        tPanel.lastElement().update();
+        tPanel.get(tPanel.size()-1).update();
     }
 
     public void updateAll() {
@@ -144,18 +145,16 @@ public class TournamentUI extends JPanel implements ActionListener {
                     Message.printErr(father, "Invalid File");
                 }
             }
-//      } else if(e.getSource().equals(delColony)) {
-//         new DeleteColony(father).setVisible(true);		 
         } else if (e.getSource().equals(prevTournament)) {
-            remove(tScroll.elementAt(tm.getSelectedID()));
+            remove(tScroll.get(tm.getSelectedID()));
             tm.prev();
-            add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
+            add(tScroll.get(tm.getSelectedID()), BorderLayout.CENTER);
             border.setTitle(tm.getSelected().getName());
             updateUI();
         } else if (e.getSource().equals(nextTournament)) {
-            remove(tScroll.elementAt(tm.getSelectedID()));
+            remove(tScroll.get(tm.getSelectedID()));
             tm.next();
-            add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
+            add(tScroll.get(tm.getSelectedID()), BorderLayout.CENTER);
             border.setTitle(tm.getSelected().getName());
             updateUI();
         } else if (e.getSource().equals(ranking)) {
@@ -166,13 +165,13 @@ public class TournamentUI extends JPanel implements ActionListener {
             if (Message.printYesNoCancel(father, txt)) {
                 try {
                     father.getBattleUI().setEnabled(true);
-                    remove(tScroll.elementAt(tm.getSelectedID()));
+                    remove(tScroll.get(tm.getSelectedID()));
                     tm.newTournament(father.getContest().getEnvironment().getNames());
 
                     addTournament(tm.getSelected());
                     father.getBattleUI().clear();
                     border.setTitle(tm.getSelected().getName());
-                    add(tScroll.elementAt(tm.getSelectedID()));
+                    add(tScroll.get(tm.getSelectedID()));
                     updateUI();
                 } catch (CreateTournamentException ex) {
                     Message.printErr(father, "Can't create a new Tournament");
@@ -201,10 +200,10 @@ public class TournamentUI extends JPanel implements ActionListener {
                         father.getBattleUI().setEnabled(false);
 //						father.getBattleUI().setHastTournament(false);
                     }
-                    remove(tScroll.elementAt(selected));
+                    remove(tScroll.get(selected));
                     tPanel.remove(selected);
                     tScroll.remove(selected);
-                    add(tScroll.elementAt(tm.getSelectedID()), BorderLayout.CENTER);
+                    add(tScroll.get(tm.getSelectedID()), BorderLayout.CENTER);
                     border.setTitle(tm.getSelected().getName());
                     updateUI();
                 }
@@ -215,8 +214,8 @@ public class TournamentUI extends JPanel implements ActionListener {
     private void addTournament(Tournament t) {
         t.setEnabled(true);
         TournamentPanel tp = new TournamentPanel(father, t, getBackground());
-        tPanel.addElement(tp);
-        tScroll.addElement(new JScrollPane(tp));
+        tPanel.add(tp);
+        tScroll.add(new JScrollPane(tp));
     }
 
     /**
@@ -227,6 +226,6 @@ public class TournamentUI extends JPanel implements ActionListener {
     public void penalize(String colonyName) {
         father.getContest().getEnvironment().delete(colonyName);
         tm.lastElement().penalize(colonyName);
-        tPanel.lastElement().update();
+        tPanel.get(tPanel.size()-1).update();
     }
 }

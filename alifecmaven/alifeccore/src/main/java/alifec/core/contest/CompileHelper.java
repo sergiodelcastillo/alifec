@@ -42,8 +42,9 @@ public class CompileHelper {
 
         try {
             cleanupCompilationTarget(config.getCompilationTarget());
-            logger.error("Cleanup of compiled files [OK] ");
+            logger.info("Cleanup of compiled files [OK] ");
         } catch (IOException e) {
+            //TODO: mostrar el log del error con un popup o algo similar.
             logger.error("Cleanup of compiled files [FAIL] ");
             logger.error(e.getMessage(), e);
         }
