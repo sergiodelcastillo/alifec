@@ -23,13 +23,14 @@ public class CompileHelper {
 
     static Logger logger = org.apache.log4j.Logger.getLogger(CompileHelper.class);
 
-    private static String LINUX_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
-    private static String WINDOWS_COMPILATION_LINE = "g++ -o \"%s\\libcppcolonies.dll\" -Wl,--add-stdcall-alias -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s\\lib_CppColony.cpp\"";
+    private static String LINUX_ORACLE_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
+    private static String LINUX_OPENJDK_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
+    private static String WINDOWS_ORACLE_COMPILATION_LINE = "g++ -o \"%s\\libcppcolonies.dll\" -Wl,--add-stdcall-alias -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s\\lib_CppColony.cpp\"";
 
     /**
      * Compile .java and .cpp files
-     * java files: are compiled and saved in the lib/MOs folder
-     * C/Cpp files: are build a unique library(cppcolonies.so/.dll) and saved in the lib/MOs folder.
+     * java files: are compiled and saved in folder "contest-name"/compiled
+     * C/Cpp files: are built in an unique library(libcppcolonies.so/.dll) and saved in folder "contest-name"/compiled.
      *
      * @param config
      * @return true if successfully
@@ -85,7 +86,7 @@ public class CompileHelper {
     }
 
     /**
-     * Remove the folder of compiled *.java or *.cpp
+     * Remove the "compiled" folder of compiled files corresponding to *.java or *.cpp.
      *
      * @param targetFolder
      * @throws IOException
@@ -109,8 +110,8 @@ public class CompileHelper {
     }
 
     /**
-     * this method use the native compiler(Javac) to compileMOs the java codes.
-     * The compiled codes are saved in the lib/MOs folder
+     * This method use the native compiler(Javac) to compile the java source codes.
+     * The compiled codes are stored in folder <b>"contest name"/compiled/</b>
      *
      * @param config       the config file
      * @param javaFileName the source code .java
@@ -135,16 +136,16 @@ public class CompileHelper {
 
             return s == 0;
         } catch (FileNotFoundException ex) {
-            logger.info("Failed to compileMOs: " + javaFileFolder + File.separator + javaFileName + ". File not found.");
+            logger.info("File not found when compiling MOs JAVA: " + javaFileFolder + File.separator + javaFileName + ".");
             return false;
         }
 
     }
 
     /**
-     * Compila todos los MOs C++ y genera una libreria dinamica
-     * llamada libcppcolonies.dll o libcppcolonies.so de acuerdo al
-     * sistema operativo. La librería se almacena en lib/MOs
+     * It compiles the MOs C++ and generates a dynamic library which is called
+     * "libcppcolonies.dll/libcppcolonies.so according on which Operating System is running.
+     * The library is stored in folder <b>"contest name"/compiled</b>.
      *
      * @param config Configuration of the Contest
      * @return true if is successfully
@@ -152,27 +153,59 @@ public class CompileHelper {
     static private boolean compileAllMOsCpp(ContestConfig config) {
         //@Todo Use a file with the pattern instead of hiring it in the source code
         try {
-
             String os = System.getProperty("os.name").toLowerCase();
+            String jvm = System.getProperty("java.runtime.name");
+            String javaHome = System.getProperty("java.home") + File.separator + "../";
+
             String[] console = {""};
+            String compileCommand = null;
 
             if (os.contains("linux")) {
-                String com = String.format(LINUX_COMPILATION_LINE,
-                        config.getCompilationTarget(),
-                        config.getCppApiFolder(),
-                        config.getMOsPath(),
-                        config.getCppApiFolder());
-                console = new String[]{"/bin/bash", "-c", com};
-                logger.trace("Using compile line: " + com);
+                if(jvm.equals("OpenJDK Runtime Environment")){
+                    //OpenJDK
+                    compileCommand = String.format(LINUX_OPENJDK_COMPILATION_LINE,
+                            config.getCompilationTarget(),
+                            config.getCppApiFolder(),
+                            config.getMOsPath(),
+                            javaHome + "include/",
+                            javaHome + "include/linux/",
+                            config.getCppApiFolder());
+                } else if(jvm.equals("Java(TM) SE Runtime Environment")){
+                    // ORACLE
+                    compileCommand = String.format(LINUX_ORACLE_COMPILATION_LINE,
+                            config.getCompilationTarget(),
+                            config.getCppApiFolder(),
+                            config.getMOsPath(),
+                            config.getCppApiFolder());
+                }
+                if(null == compileCommand){
+                    //throw new UnsupportedJVMException("");
+                    logger.error("Unsupported JVM on linux: " + jvm);
+                    return false;
+                }
+                console = new String[]{"/bin/bash", "-c", compileCommand};
+
             } else if (os.contains("windows")) {
-                String com = String.format(WINDOWS_COMPILATION_LINE,
-                        config.getCompilationTarget(),
-                        config.getCppApiFolder(),
-                        config.getMOsPath(),
-                        config.getCppApiFolder());
-                console = new String[]{"cmd.exe", "/C", com};
+                if(jvm.equals("OpenJDK Runtime Environment")) {
+                    //todo: add support to OpenJDK on windows
+                }else if(jvm.equals("Java(TM) SE Runtime Environment")){
+                    // ORACLE
+                    compileCommand = String.format(WINDOWS_ORACLE_COMPILATION_LINE,
+                            config.getCompilationTarget(),
+                            config.getCppApiFolder(),
+                            config.getMOsPath(),
+                            config.getCppApiFolder());
+                }
+                if(null == compileCommand){
+                    //throw new UnsupportedJVMException("");
+                    logger.error("Unsupported JVM on linux: " + jvm);
+                    return false;
+                }
+                console = new String[]{"cmd.exe", "/C", compileCommand};
             }
 
+            logger.trace("Using SHELL: " + compileCommand);
+            logger.trace("Using compile line: " + compileCommand);
             Process p = Runtime.getRuntime().exec(console);
             p.waitFor();
 
@@ -206,8 +239,7 @@ public class CompileHelper {
     }
 
     /**
-     * Crea el archivo Tournament.cpp con los nombres que se
-     * pasan como argumento.
+     * Updates the Tournament.cpp file according the name of MOs implemented in C++.
      *
      * @return true if is successfully
      */
@@ -247,8 +279,8 @@ public class CompileHelper {
 
 
     /**
-     * Crea el archivo includemmos.h con los nombres que se
-     * pasan como argumento:
+     * Creates the file includemos.h with the necessary specific "includes"
+     * so all MOs C++ are included in the dynamic library.
      *
      * @return true if  is successfully
      */
