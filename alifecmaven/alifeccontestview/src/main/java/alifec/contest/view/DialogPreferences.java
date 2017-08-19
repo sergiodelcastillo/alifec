@@ -265,7 +265,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
                 try {
                     father.reloadConfig();
                 } catch (Exception ex) {
-                    logger.error("Cant reload contest", ex);
+                    logger.error("Cant reload contest: " + ex.getMessage(), ex);
                 }
             }
             if (updateNutrient()) {
@@ -319,6 +319,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
 
             contest.updateNutrient(nutrients_list);
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             return false;
         }
         return true;

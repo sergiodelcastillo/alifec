@@ -204,7 +204,6 @@ public class CompileHelper {
                 console = new String[]{"cmd.exe", "/C", compileCommand};
             }
 
-            logger.trace("Using SHELL: " + compileCommand);
             logger.trace("Using compile line: " + compileCommand);
             Process p = Runtime.getRuntime().exec(console);
             p.waitFor();
@@ -261,6 +260,7 @@ public class CompileHelper {
                 pw.println("	if(name == \"" + name + "\"){");
                 pw.println("	   mo = (CppColony < Microorganism > *) new CppColony< " + name + " >(id);");
                 pw.println("   }");
+                logger.trace("Updating Tournament CPP for MO: " + name);
             }
 
             pw.println("");
@@ -297,6 +297,7 @@ public class CompileHelper {
 
             for (String n : files) {
                 pw.println("#include \"" + n + "\"");
+                logger.trace("Updating include for MO: " + n);
             }
             pw.close();
         } catch (IOException e) {

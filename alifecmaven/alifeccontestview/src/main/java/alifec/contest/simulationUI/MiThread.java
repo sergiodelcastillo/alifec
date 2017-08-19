@@ -175,6 +175,7 @@ public class MiThread extends Thread {
                     panel.repaint();
 
                 } catch (MoveMicroorganismException ex) {
+                    logger.info(ex.getMessage(), ex);
                     penalize(ex.getColonyName());
                     Message.printErr(panel, ex.getMessage());
                 }
@@ -287,6 +288,7 @@ public class MiThread extends Thread {
                 Thread.sleep(timewait);
                 graphics.clearRect(0, 100, panel.getWidth(), 40);
             } catch (InterruptedException ignored) {
+                logger.trace(ignored.getMessage());
             }
         }
     }

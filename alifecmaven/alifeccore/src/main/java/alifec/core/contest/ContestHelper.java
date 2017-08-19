@@ -166,8 +166,7 @@ public class ContestHelper {
             }
 
         } catch (IOException ex) {
-            logger.info("Cant find battles.csv or battles_backup.csv");
-            logger.info("path: " + n);
+            logger.info("Cant find battles.csv or battles_backup.csv", ex);
         } finally {
             try {
                 if (f != null) {
@@ -178,8 +177,7 @@ public class ContestHelper {
         }
     }
 
-    public static ContestConfig buildNewContestFolder(ContestConfig config) throws CreateContestFolderException {
-
+    public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
         createFolder(config.getContestPath());
         createFolder(config.getMOsPath());
         createFolder(config.getReportPath());
@@ -187,29 +185,34 @@ public class ContestHelper {
         createFolder(config.getLogFolder());
 
         File nutrientsFile = new File(config.getNutrientsFilePath());
-        PrintWriter writter;
+        PrintWriter writter = null;
 
         try {
             writter = new PrintWriter(nutrientsFile);
 
             for (Nutrient n : Agar.nutrient)
                 writter.println(n.getID());
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             logger.error("Creating file: " + nutrientsFile + " [FAIL]");
             throw new CreateContestFolderException("Cant not create the file: " + config.getNutrientsFilePath());
+        } finally {
+            if (writter != null) writter.close();
         }
 
-        writter.close();
-        logger.error("Creating file: " + nutrientsFile + " [OK]");
+        logger.info("Creating file: " + nutrientsFile + " [OK]");
 
         //copy the cpp api
         if (!createCppApi(config.getCppApiFolder())) {
             logger.error("Creating cpp api to: " + config.getCppApiFolder() + " [FAIL]");
             throw new CreateContestFolderException("Cant not create the cpp api files in dir: " + config.getCppApiFolder());
         }
-        logger.error("Creating cpp api to: " + config.getCppApiFolder() + " [OK]");
+        logger.info("Creating cpp api to: " + config.getCppApiFolder() + " [OK]");
 
-        return config;
+        //Create examples
+        logger.info("Create examples: " + (createExamples ? "YES" : "NO"));
+        if (createExamples) {
+            createExamples(config.getMOsPath());
+        }
     }
 
     private static void createFolder(String folder) throws CreateContestFolderException {
@@ -218,22 +221,21 @@ public class ContestHelper {
             throw new CreateContestFolderException("Can not create the folder: " + folder);
         }
 
-        logger.error("Creating folder: " + folder + " [OK]");
+        logger.info("Creating folder: " + folder + " [OK]");
     }
 
     public static void createExamples(String MOsFolder) {
         try {
-            //TODO: poner una constante...
+            logger.info("Generating examples in folder " + MOsFolder);
             File source = new File(Contest.class.getClass().getResource("/examples/").toURI());
 
             Files.walk(source.toPath()).forEach(path -> {
                 try {
-                    //todo: check this path
                     File target = new File(MOsFolder + File.separator + path.getFileName());
 
                     if (new File(path.toUri()).isFile())
                         Files.copy(path, target.toPath());
-
+                    logger.info("Generated file: " + target.getAbsolutePath());
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -245,13 +247,11 @@ public class ContestHelper {
 
     private static boolean createCppApi(String targetFolder) {
         try {
-            //TODO: poner una constante...
             File source = new File(Contest.class.getClass().getResource("/cpp/").toURI());
             final boolean[] isOK = {true};
 
             Files.walk(source.toPath()).forEach(path -> {
                 try {
-                    //todo: check this path
                     File target = new File(targetFolder + File.separator + path.getFileName());
 
                     if (new File(path.toUri()).isFile()) {

@@ -9,7 +9,7 @@ import javax.swing.table.TableColumnModel;
 public class SelectColoniesUI extends JTable {
 
     public SelectColoniesUI(Object[][] rows) {
-        super(new MyTableModel(rows, "Delete", "Colony"));
+        super(new SelectColoniesTableModel(rows, "Delete", "Colony"));
 
         setAutoResizeMode(AUTO_RESIZE_LAST_COLUMN);
         shrinkCell();
@@ -55,23 +55,6 @@ public class SelectColoniesUI extends JTable {
     public boolean isSelected(int id) {
         return !(id < 0 || id > 1) && (Boolean) getModel().getValueAt(id, 0);
 
-    }
-}
-
-class MyTableModel extends DefaultTableModel {
-
-    public MyTableModel(Object[][] row, Object... column) {
-        super(row,  column);
-    }
-
-    @Override
-    public Class getColumnClass(int columnIndex) {
-        return (columnIndex == 0) ? Boolean.class : String.class;
-    }
-
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        return column == 0;
     }
 }
 

@@ -9,6 +9,7 @@ package alifec.contest.view;
 import alifec.core.contest.Contest;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.simulation.Defs;
+import org.apache.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -36,7 +37,9 @@ import java.util.List;
 
 public class ContestReport extends JDialog implements ActionListener {
     private static final long serialVersionUID = 10L;
+    Logger logger = Logger.getLogger(getClass());
 
+//todo: imporove the name using conestconfig
     public final String NAMETXT = "report-" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ".txt";
     public final String NAMECSV = "report-" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ".csv";
     ContestUI father;
@@ -108,6 +111,7 @@ public class ContestReport extends JDialog implements ActionListener {
             pw.println(txt.getText());
             pw.close();
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             return false;
         }
         return true;
@@ -132,8 +136,10 @@ public class ContestReport extends JDialog implements ActionListener {
 
             pw.close();
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             return false;
         } catch (CreateRankingException ex) {
+            logger.error(ex.getMessage(), ex);
             Message.printErr(father, ex.getMessage());
             return false;
         }
@@ -168,6 +174,7 @@ public class ContestReport extends JDialog implements ActionListener {
             txt.setDisabledTextColor(Color.BLACK);
             txt.setText(text);
         } catch (CreateRankingException ex) {
+            logger.error(ex.getMessage(), ex);
             Message.printErr(father, ex.getMessage());
         }
     }
@@ -182,13 +189,13 @@ public class ContestReport extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
         if (ev.getSource().equals(ReportTxt)) {
             if (createReportTxt()) {
-                Message.printInfo(father, NAMETXT + " created sucessfully");
+                Message.printInfo(father, NAMETXT + " created successfully");
             } else {
                 Message.printErr(father, "can't create the report.");
             }
         } else if (ev.getSource().equals(ReportCsv)) {
             if (createReportCsv()) {
-                Message.printInfo(father, NAMECSV + " created sucessfully");
+                Message.printInfo(father, NAMECSV + " created successfully");
             } else {
                 Message.printErr(father, "can't create the report.");
             }

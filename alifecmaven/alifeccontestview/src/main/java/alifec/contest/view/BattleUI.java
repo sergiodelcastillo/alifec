@@ -91,6 +91,7 @@ public class BattleUI extends JPanel implements ActionListener {
 
                 addBattle(battle, father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE);
             } catch (CreateBattleException ex) {
+                logger.error(ex.getMessage(), ex);
                 Message.printErr(father, ex.getMessage());
             }
         }// end for!!
@@ -170,6 +171,7 @@ public class BattleUI extends JPanel implements ActionListener {
             br.close();
 
         } catch (IOException ignored) {
+            logger.trace(ignored.getMessage());
             res.clear();
         }
 
@@ -321,9 +323,11 @@ public class BattleUI extends JPanel implements ActionListener {
                 if (!addBattle(battle, father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE))
                     Message.printErr(this, "Existing battle: " + battle.toString());
             } catch (CreateBattleException ex) {
+                logger.error(ex.getMessage(), ex);
                 Message.printErr(father, ex.getMessage());
             } catch (NullPointerException ex) {
-                Message.printErr(this, "List of Nutrient or Oponents are empty.");
+                logger.info(ex.getMessage(), ex);
+                Message.printErr(this, "List of Nutrient or Opponents are empty.");
             }
 
         } else if (e.getSource().equals(addAll)) {
@@ -400,7 +404,7 @@ public class BattleUI extends JPanel implements ActionListener {
                             existingBattle = true;
                         }
                     } catch (CreateBattleException ex) {
-                        logger.info("cant create battle .. :(");
+                        logger.error(ex.getMessage(), ex);
                     }
                 }
             }
@@ -421,6 +425,7 @@ public class BattleUI extends JPanel implements ActionListener {
             this.oponent1.updateUI();
             this.oponent2.updateUI();
         } catch (Exception ignored) {
+            logger.trace(ignored.getMessage());
         }
     }
 

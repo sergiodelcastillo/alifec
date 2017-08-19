@@ -6,10 +6,7 @@
 package alifec.contest.view;
 
 import alifec.core.contest.*;
-import alifec.core.exception.CreateContestException;
-import alifec.core.exception.CreateTournamentException;
-import alifec.core.exception.SaveContestConfigException;
-import alifec.core.exception.TournamentCorruptedException;
+import alifec.core.exception.*;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -142,13 +139,16 @@ public class ContestUI extends JFrame implements ActionListener {
 
             createContest(config);
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             //Todo: improve it
             Message.printErr(null, "Error de lectura...");
             return false;
         } catch (CreateTournamentException ex) {
+            logger.error(ex.getMessage(), ex);
             Message.printErr(null, ex.getMessage());
             return false;
         } catch (CreateContestException ex) {
+            logger.error(ex.getMessage(), ex);
             Message.printErr(null, ex.getMessage());
             return false;
         }
@@ -160,20 +160,24 @@ public class ContestUI extends JFrame implements ActionListener {
         ContestConfig config = dialogNewContest.doTheJob();
         boolean makeDefault;
 
-        if (config == null) {
-            return null;
-        }
+        try {
+            if (config == null) {
+                return null;
+            }
 
-        makeDefault = dialogNewContest.isMakeDefault();
+            makeDefault = dialogNewContest.isMakeDefault();
 
-        if (Contest.createContestFolder(config, dialogNewContest.isCreateExamples())) {
+            ContestHelper.buildNewContestFolder(config, dialogNewContest.isCreateExamples());
+
             if (makeDefault) {
                 boolean status = setDefaultContest(config);
 
                 if (!status) return null;
             }
-        } else {
+        } catch (CreateContestFolderException e) {
             Message.printErr(this, "Failed to create the contest " + config.toString());
+            logger.error("Failed to create the contest " + config.toString());
+            logger.error(e.getMessage(), e);
             return null;
         }
 
@@ -248,7 +252,6 @@ public class ContestUI extends JFrame implements ActionListener {
     }
 
     /**
-     *
      * @param config
      * @return
      */
@@ -288,7 +291,7 @@ public class ContestUI extends JFrame implements ActionListener {
             getContentPane().add(tUI, BorderLayout.CENTER);
             setTitle(contest.getName());
         } catch (IOException ex) {
-            logger.error("Init components", ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -436,6 +439,7 @@ public class ContestUI extends JFrame implements ActionListener {
             try {
                 new DialogPreferences(this);
             } catch (IOException ex) {
+                logger.error(ex.getMessage(), ex);
                 Message.printErr(this, "Failed to change the configuration.");
             }
         } else if (e.getSource().equals(help)) {
@@ -485,13 +489,10 @@ public class ContestUI extends JFrame implements ActionListener {
             //set languages
             JFileChooser.setDefaultLocale(Locale.ENGLISH);
             JOptionPane.setDefaultLocale(Locale.ENGLISH);
-        } catch (ClassNotFoundException ex) {
-            logger.error(ex.getMessage(), ex);
-        } catch (InstantiationException ex) {
-            logger.error(ex.getMessage(), ex);
-        } catch (IllegalAccessException ex) {
-            logger.error(ex.getMessage(), ex);
-        } catch (UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException |
+                InstantiationException |
+                IllegalAccessException |
+                UnsupportedLookAndFeelException ex) {
             logger.error(ex.getMessage(), ex);
         }
     }

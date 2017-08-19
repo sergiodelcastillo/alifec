@@ -31,7 +31,7 @@ import java.util.Stack;
 
 public class Contest {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(Contest.class);
+    private Logger logger = Logger.getLogger(getClass());
 
     /**
      * Environment ...
@@ -115,23 +115,6 @@ public class Contest {
         }
 
         return false;
-    }
-
-    public static boolean createContestFolder(ContestConfig config, boolean examples) {
-
-        try {
-            ContestHelper.buildNewContestFolder(config);
-
-            // create examples ...!!
-            if (examples)
-                ContestHelper.createExamples(config.getMOsPath());
-
-        } catch (CreateContestFolderException e) {
-            logger.error("Cant not create the ContestFolder");
-            logger.error(e.getMessage(), e);
-            return false;
-        }
-        return true;
     }
 
 
@@ -304,6 +287,7 @@ public class Contest {
             Compressor.addToZip(zipname, files);
             return true;
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             return false;
         }
     }

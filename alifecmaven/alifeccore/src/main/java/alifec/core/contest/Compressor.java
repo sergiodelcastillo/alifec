@@ -31,6 +31,7 @@ class Compressor {
             origin.close();
         }
         zo.close();
+        //TODO: ver si es necesario destination.close();
     }
 }
 
