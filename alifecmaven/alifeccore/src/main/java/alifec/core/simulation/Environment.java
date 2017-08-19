@@ -74,6 +74,7 @@ public class Environment {
                 logger.info(name + " [OK]");
             } catch (Exception ex) {
                 logger.warn(name + " [FAIL]");
+                logger.warn(ex.getMessage(), ex);
             }
         }
 
@@ -187,6 +188,7 @@ public class Environment {
                 mov = current.move(indexMO);
                 mitosis = current.mitosis(indexMO);
             } catch (Exception ex) {
+                logger.warn(ex.getMessage(), ex);
                 String txt = "The colony: " + current.getName() + " has been Penalized.";
                 throw new MoveMicroorganismException(txt, current.getName(), ex);
             }

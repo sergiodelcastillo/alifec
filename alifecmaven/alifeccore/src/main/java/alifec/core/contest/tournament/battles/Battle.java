@@ -27,7 +27,7 @@ public class Battle {
     }
 
     public Battle(String line) {
-        if (line == null || line.equalsIgnoreCase(""))
+        if (line == null || line.isEmpty())
             throw new IllegalArgumentException("The line ("+ line+") is empty");
 
         String[] tmp = line.split(",");

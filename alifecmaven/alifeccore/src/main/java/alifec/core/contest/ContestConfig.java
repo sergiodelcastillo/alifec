@@ -184,6 +184,7 @@ public class ContestConfig {
                 try {
                     path = new File(option).getCanonicalPath();
                 } catch (IOException ex) {
+                    logger.error(ex.getMessage(), ex);
                     return false;
                 }
                 break;
@@ -194,6 +195,7 @@ public class ContestConfig {
                 try {
                     mode = Integer.parseInt(option);
                 } catch (NumberFormatException ex) {
+                    logger.error(ex.getMessage(), ex);
                     return false;
                 }
                 break;
@@ -201,6 +203,7 @@ public class ContestConfig {
                 try {
                     pauseBetweenBattles = Integer.parseInt(option);
                 } catch (NumberFormatException ex) {
+                    logger.error(ex.getMessage(), ex);
                     return false;
                 }
                 break;

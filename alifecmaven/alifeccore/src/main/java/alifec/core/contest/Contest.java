@@ -92,7 +92,7 @@ public class Contest {
             }
             fr.close();
         } catch (IOException e) {
-            logger.warn("File not Found: " + nutrientsPath, e);
+            logger.error("File not Found: " + nutrientsPath, e);
         }
 
         return nutri;

@@ -109,6 +109,7 @@ public class TournamentManager {
             tournaments.add(t);
             selected = tournaments.indexOf(t);
         } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
             throw new CreateTournamentException("Cannot load the tournament...");
         }
     }

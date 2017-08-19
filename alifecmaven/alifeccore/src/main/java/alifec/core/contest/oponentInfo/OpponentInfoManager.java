@@ -6,6 +6,7 @@
 package alifec.core.contest.oponentInfo;
 
 import alifec.core.contest.ContestConfig;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import java.util.List;
 
 
 public class OpponentInfoManager {
+    Logger logger = Logger.getLogger(getClass());
+
     List<OpponentInfo> opponents = new ArrayList<>();
 
     private String path = "";
@@ -58,13 +61,16 @@ public class OpponentInfoManager {
                     line = in.readLine();
                     OpponentInfo op = new OpponentInfo(line);
                     add(op, false);
-                } catch (IllegalArgumentException ignored) {
+                } catch (IllegalArgumentException ex) {
+                    logger.error(ex.getMessage(), ex);
                 }
             } while (line != null);
 
             in.close();
         } catch (FileNotFoundException ex) {
+            logger.error(ex.getMessage(), ex);
             //todo: use ContestConfig
+            //TODO: mepa que esto está al dope
             FileWriter f = new FileWriter(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE);
             f.close();
             read();

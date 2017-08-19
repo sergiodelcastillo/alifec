@@ -232,6 +232,7 @@ public class CompileHelper {
             logger.error(ex.getMessage(), ex);
             return false;
         } catch (InterruptedException e) {
+            logger.trace(e.getMessage(), e);
             Thread.currentThread().interrupt();
             return false;
         }

@@ -154,6 +154,7 @@ public class BattleManager {
         try {
             return max(getResults().values());
         } catch (java.util.NoSuchElementException ex) {
+            logger.trace(ex.getMessage(), ex);
             return 0f;
         }
     }
@@ -170,7 +171,8 @@ public class BattleManager {
                 line = br.readLine();
 
                 battles.add(new Battle(line));
-            } catch (IllegalArgumentException ignored) {
+            } catch (IllegalArgumentException ex) {
+                logger.error(ex.getMessage(), ex);
             }
         }
     }
