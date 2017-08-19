@@ -1,5 +1,5 @@
-/**
- * @author Yeyo
+/*
+ * @author Sergio Del Castillo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 package alifec.contest.view;
@@ -276,13 +276,14 @@ public class DialogPreferences extends JDialog implements ActionListener {
     }
 
     public boolean validateDefaultPath(String p) {
+        //todo: use the validator!!!
         File f = new File(p);
 
         return !(!f.exists() || !f.isDirectory()) && ContestConfig.existsConfigFile(p);
     }
     
     public boolean validateNameOfContest(String s) {
-        //TODO: armar un validador del contest
+        //todo: use the validator!!!
         Pattern p = Pattern.compile("[^A-Za-z0-9\\_\\-]+");
         Matcher m = p.matcher(s);
 

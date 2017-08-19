@@ -1,4 +1,4 @@
-/**
+/*
  * @author Yeyo
  * mail@: sergio.jose.delcastillo@gmail.com
  */

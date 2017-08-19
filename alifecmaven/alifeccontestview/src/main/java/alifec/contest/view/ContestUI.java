@@ -301,24 +301,6 @@ public class ContestUI extends JFrame implements ActionListener {
         return status;
     }
 
-    public void reloadComponents() {
-        //TODO: check if this is required
-        try {
-
-            this.tUI = new TournamentUI(this);
-            this.battleUI = new BattleUI(this, contest.needRestore());
-            setMenuBar(getMenuBar());
-            getContentPane().removeAll();
-            getContentPane().add(messagePanel, BorderLayout.SOUTH);
-            getContentPane().add(battleUI, BorderLayout.EAST);
-            getContentPane().add(tUI, BorderLayout.CENTER);
-            setTitle(contest.getName());
-            this.repaint();
-        } catch (IOException ex) {
-            logger.error("Reload components", ex);
-        }
-    }
-
     private JMenuBar createMenu() {
         JMenuBar menu = new JMenuBar();
         JMenu menuFile = new JMenu("File");

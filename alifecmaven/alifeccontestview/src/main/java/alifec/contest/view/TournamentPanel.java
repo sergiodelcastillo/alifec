@@ -103,21 +103,19 @@ public class TournamentPanel extends JList {
         }
     }
 
-    private synchronized DefaultListModel<TournamentPanelOpponentData> addComponents() {
-        synchronized (Tournament.class) {
+    private DefaultListModel<TournamentPanelOpponentData> addComponents() {
+        DefaultListModel<TournamentPanelOpponentData> model = new DefaultListModel<TournamentPanelOpponentData>();
+        Hashtable<String, Float> h = current.getAccumulatedEnergy();
+        int index = 0;
 
-            DefaultListModel<TournamentPanelOpponentData> model = new DefaultListModel<TournamentPanelOpponentData>();
-            Hashtable<String, Float> h = current.getAccumulatedEnergy();
-            int index = 0;
-
-            for (Iterator<String> i = h.keySet().iterator(); i.hasNext(); index++) {
-                String key = i.next();
-                int value = h.get(key).intValue();
-                long max = (long) current.getMaxEnergy();
-                model.addElement(new TournamentPanelOpponentData(index + ". " + key, value, max));
-            }
-            return model;
+        for (Iterator<String> i = h.keySet().iterator(); i.hasNext(); index++) {
+            String key = i.next();
+            int value = h.get(key).intValue();
+            long max = (long) current.getMaxEnergy();
+            model.addElement(new TournamentPanelOpponentData(index + ". " + key, value, max));
         }
+
+        return model;
     }
 }
 
