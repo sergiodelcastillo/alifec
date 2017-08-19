@@ -6,8 +6,6 @@
 package alifec.core.contest.oponentInfo;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OpponentInfo {
     private String name = "";
@@ -72,14 +70,6 @@ public class OpponentInfo {
     @Override
     public String toString() {
         return name + "," + author + "," + affiliation.toUpperCase() + ",";
-    }
-
-    public List<Object> toList() {
-        List<Object> v = new ArrayList<>();
-        v.add(name);
-        v.add(author);
-        v.add(affiliation);
-        return v;
     }
 
     @Override

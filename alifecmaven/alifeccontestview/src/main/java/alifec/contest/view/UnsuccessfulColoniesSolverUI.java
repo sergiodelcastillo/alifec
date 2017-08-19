@@ -1,8 +1,6 @@
 package alifec.contest.view;
 
-
-
-import alifec.core.contest.Contest;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class UnsuccessfulColoniesSolverUI extends JDialog {
+    private Logger logger = Logger.getLogger(getClass());
     ContestUI contestUI;
     String c1, c2;
     String[] options = new String[]{"Take action with backup file", "Ignore and delete backup file"};
@@ -39,21 +38,17 @@ public class UnsuccessfulColoniesSolverUI extends JDialog {
     }
 
 
-       public static void main(String [] args){
-          new UnsuccessfulColoniesSolverUI(null, "aa", "bb").setVisible(true);
-          System.out.println("sigue");
-       }
+    public static void main(String[] args) {
+        new UnsuccessfulColoniesSolverUI(null, "aa", "bb").setVisible(true);
+        System.out.println("sigue");
+    }
 
     public JComboBox<String> createNorth() {
         String txt = "The last run didn't finish successfully, please select an option";
 
         combobox = new JComboBox<>(options);
         combobox.setBorder(BorderFactory.createTitledBorder(txt));
-        combobox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                table.setEnabled(options[0].equals(combobox.getSelectedItem()));
-            }
-        });
+        combobox.addActionListener(e -> table.setEnabled(options[0].equals(combobox.getSelectedItem())));
 
         return combobox;
     }
@@ -73,22 +68,20 @@ public class UnsuccessfulColoniesSolverUI extends JDialog {
         JButton accept = new JButton("Ok");
         JButton cancel = new JButton("Cancel");
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.exit(0);
-            }
+        cancel.addActionListener(arg0 -> {
+            logger.info("The application will shutdown.");
+            System.exit(0);
         });
-        accept.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                if (options[0].equals(combobox.getSelectedItem())) {
-                    if (table.isSelected(0))
-                        contestUI.excludeColony(c1);
 
-                    if(table.isSelected(1))
-                        contestUI.excludeColony(c2);
-                }
-                thisFrame.dispose();
+        accept.addActionListener(arg0 -> {
+            if (options[0].equals(combobox.getSelectedItem())) {
+                if (table.isSelected(0))
+                    contestUI.excludeColony(c1);
+
+                if (table.isSelected(1))
+                    contestUI.excludeColony(c2);
             }
+            thisFrame.dispose();
         });
 
         p.add(accept);

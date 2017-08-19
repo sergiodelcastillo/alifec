@@ -59,11 +59,7 @@ public class ContestUI extends JFrame implements ActionListener {
     private java.util.List<String> excluded = new ArrayList<>();
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new ContestUI();
-            }
-        });
+        SwingUtilities.invokeLater(ContestUI::new);
     }
 
     public ContestUI() {
@@ -143,11 +139,7 @@ public class ContestUI extends JFrame implements ActionListener {
             //Todo: improve it
             Message.printErr(null, "Error de lectura...");
             return false;
-        } catch (CreateTournamentException ex) {
-            logger.error(ex.getMessage(), ex);
-            Message.printErr(null, ex.getMessage());
-            return false;
-        } catch (CreateContestException ex) {
+        } catch (CreateTournamentException | CreateContestException ex) {
             logger.error(ex.getMessage(), ex);
             Message.printErr(null, ex.getMessage());
             return false;
@@ -259,7 +251,6 @@ public class ContestUI extends JFrame implements ActionListener {
         try {
             // The new contest file will be saved but it will be loaded after the restart of the application.
             // Now the application will continue without any changes at runtime.
-            //ContestConfig config = ContestConfig.buildNewConfigFile(path, name);
 
             config.save();
 

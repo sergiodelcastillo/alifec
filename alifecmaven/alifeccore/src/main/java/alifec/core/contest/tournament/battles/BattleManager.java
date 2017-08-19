@@ -19,7 +19,7 @@ import java.util.List;
 import static java.util.Collections.max;
 
 public class BattleManager {
-    Logger logger = Logger.getLogger(getClass());
+    private Logger logger = Logger.getLogger(getClass());
 
     private List<Battle> battles = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class BattleManager {
     /**
      * This Class is the manager of the class battle.
      *
-     * @param config: configuration of the contest
+     * @param config:        configuration of the contest
      * @param tournamentName The name of the tournament which contains these battles.
      * @throws IOException if can not create the file to manage the battles.
      */
@@ -39,7 +39,10 @@ public class BattleManager {
 
         if (config.isCompetitionMode()) {
             File f = new File(config.getBattlesFile(tournamentName));
-            if (!f.exists()) f.createNewFile();
+            if (!f.exists()) {
+                if(!f.createNewFile())
+                    throw new IOException("Can not create the file: " + f.getAbsolutePath());
+            }
         }
     }
 
@@ -177,16 +180,15 @@ public class BattleManager {
         }
     }
 
-    public boolean save() {
+    public void save() throws IOException {
         try {
             for (Battle b : battles) {
                 b.save(getBattlesFileName());
             }
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
-            return false;
+
         }
-        return true;
     }
 
     public List<String> getNames() {

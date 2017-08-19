@@ -149,6 +149,7 @@ public class MiThread extends Thread {
                                 break;
 
                             case STATUS_PAUSE:
+                                //noinspection ConstantConditions
                                 if (battleRunning) {
                                     battleRunning = !environment.moveColonies();
                                     paintImage();

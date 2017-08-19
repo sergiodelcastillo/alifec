@@ -58,30 +58,26 @@ public class TournamentPanel extends JList {
                 }
             }
         });
-        deleteOfContest.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String selected = getSelected();
+        deleteOfContest.addActionListener(e -> {
+            String selected = getSelected();
 
-                father.getContest().getEnvironment().delete(selected); //delete of environment
+            father.getContest().getEnvironment().delete(selected); //delete of environment
 
-                for (int i = 0; i < tm.size(); i++) {
-                    tm.getTournament(i).delete(selected);
-                }
-
-                father.getBattleUI().delete(selected); // delete of UI
-                father.getTournamentUI().updateAll(); // actualizar UI
+            for (int i = 0; i < tm.size(); i++) {
+                tm.getTournament(i).delete(selected);
             }
+
+            father.getBattleUI().delete(selected); // delete of UI
+            father.getTournamentUI().updateAll(); // actualizar UI
         });
 
-        deleteOfTournament.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String selected = getSelected();
-                father.getBattleUI().delete(selected); // delete of UI
-                tm.lastElement().delete(selected); // delete of lastTournament
-                father.getTournamentUI().updateLast(); // delete of UI
-                //father.getContest().getEnvironment().delete(selected); //delete of environment
-                update(); // actualizar UI
-            }
+        deleteOfTournament.addActionListener(e -> {
+            String selected = getSelected();
+            father.getBattleUI().delete(selected); // delete of UI
+            tm.lastElement().delete(selected); // delete of lastTournament
+            father.getTournamentUI().updateLast(); // delete of UI
+            //father.getContest().getEnvironment().delete(selected); //delete of environment
+            update(); // actualizar UI
         });
     }
 
@@ -104,7 +100,7 @@ public class TournamentPanel extends JList {
     }
 
     private DefaultListModel<TournamentPanelOpponentData> addComponents() {
-        DefaultListModel<TournamentPanelOpponentData> model = new DefaultListModel<TournamentPanelOpponentData>();
+        DefaultListModel<TournamentPanelOpponentData> model = new DefaultListModel<>();
         Hashtable<String, Float> h = current.getAccumulatedEnergy();
         int index = 0;
 

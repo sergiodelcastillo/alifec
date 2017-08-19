@@ -20,7 +20,7 @@ import java.util.Random;
  */
 public class Agar {
 
-    Logger logger = Logger.getLogger(getClass());
+    private Logger logger = Logger.getLogger(getClass());
 
     private int nutri_id = -1;
     private float[][] nutrients;
@@ -49,9 +49,14 @@ public class Agar {
      */
     public float eat(Point p) {
         if (p == null || p.x > Defs.DIAMETER || p.x < 0 ||
-                p.y > Defs.DIAMETER || p.y < 0 ||
-                nutri_id == -1)
-            throw new IllegalArgumentException("Ilegal argument");
+                p.y > Defs.DIAMETER || p.y < 0 ){
+            logger.warn("The Position is not valid: " + p);
+            throw new IllegalArgumentException("The Position is not valid: " + p);
+        }
+        if(nutri_id < 0){
+            logger.warn("The Nutrient id is not valid: " + nutri_id);
+            throw new IllegalArgumentException("The Nutrient id is not valid: " + nutri_id);
+        }
 
         int x = (nutrients.length + p.x + dx) % nutrients.length;
         int y = (nutrients.length + p.y + dy) % nutrients.length;

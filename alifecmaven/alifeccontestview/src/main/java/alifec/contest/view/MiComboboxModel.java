@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-public class MiComboboxModel extends AbstractListModel implements ComboBoxModel {
+public class MiComboboxModel extends AbstractListModel<String> implements ComboBoxModel<String> {
     private static final long serialVersionUID = 0L;
 
     Logger logger = Logger.getLogger(getClass());
@@ -39,7 +39,7 @@ public class MiComboboxModel extends AbstractListModel implements ComboBoxModel 
     }
 
     @Override
-    public Object getElementAt(int index) {
+    public String getElementAt(int index) {
         if (model.size() < index) {
             logger.warn("error: MiComboboxModel.getElementAt(" + index + ")");
             return null;

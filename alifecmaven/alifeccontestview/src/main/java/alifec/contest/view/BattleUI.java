@@ -29,7 +29,7 @@ import java.util.List;
 public class BattleUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
 
-    static Logger logger = Logger.getLogger(BattleUI.class);
+    private Logger logger = Logger.getLogger(BattleUI.class);
 
     private final ContestUI father;
 
@@ -37,9 +37,9 @@ public class BattleUI extends JPanel implements ActionListener {
     private final DefaultListModel<BattleRun> model = new DefaultListModel<>();
     private final JList<BattleRun> battlesList = new JList<>(model);
     private JScrollPane battlesSP;
-    private JComboBox opponent1;
-    private JComboBox opponent2;
-    private JComboBox nutrient;
+    private JComboBox<String> opponent1;
+    private JComboBox<String> opponent2;
+    private JComboBox<String> nutrient;
     private JButton save;
     private JButton delete;
     private JButton deleteAll;
@@ -48,7 +48,7 @@ public class BattleUI extends JPanel implements ActionListener {
     private JButton addSelected;
     private JButton addAll;
 
-    private Hashtable<String, Integer> oponents, nutrients;
+    private Hashtable<String, Integer> opponents, nutrients;
 
     private final Contest contest;
     private final ContestConfig config;
@@ -184,12 +184,12 @@ public class BattleUI extends JPanel implements ActionListener {
         JLabel labelOp2 = new JLabel("Op.2");
         JLabel labelDist = new JLabel("Nutrients");
 
-        oponents = environment.getOps();
+        opponents = environment.getOps();
         nutrients = father.getContest().getNutrients();
 
-        opponent1 = new JComboBox(new MiComboboxModel(oponents));
-        opponent2 = new JComboBox(new MiComboboxModel(oponents));
-        nutrient = new JComboBox(new MiComboboxModel(nutrients));
+        opponent1 = new JComboBox<>(new MiComboboxModel(opponents));
+        opponent2 = new JComboBox<>(new MiComboboxModel(opponents));
+        nutrient = new JComboBox<>(new MiComboboxModel(nutrients));
 
         opponent1.setMinimumSize(new Dimension(100, 20));
         opponent2.setMinimumSize(new Dimension(100, 20));
@@ -309,8 +309,8 @@ public class BattleUI extends JPanel implements ActionListener {
                 return;
             }
             try {
-                int index1 = oponents.get(opponent1.getSelectedItem());
-                int index2 = oponents.get(opponent2.getSelectedItem());
+                int index1 = opponents.get(opponent1.getSelectedItem());
+                int index2 = opponents.get(opponent2.getSelectedItem());
                 int indexNut = nutrients.get(nutrient.getSelectedItem());
                 String name1 = opponent1.getSelectedItem().toString();
                 String name2 = opponent2.getSelectedItem().toString();
@@ -381,13 +381,13 @@ public class BattleUI extends JPanel implements ActionListener {
     private void generateAllBattle() {
         boolean existingBattle = false;
 
-        for (Enumeration<String> op_a = oponents.keys(); op_a.hasMoreElements(); ) {
+        for (Enumeration<String> op_a = opponents.keys(); op_a.hasMoreElements(); ) {
             String n_a = op_a.nextElement(); // name_oponent_a
-            Integer i_a = oponents.get(n_a); // index_oponent_a
+            Integer i_a = opponents.get(n_a); // index_oponent_a
 
-            for (Enumeration<String> op_b = oponents.keys(); op_b.hasMoreElements(); ) {
+            for (Enumeration<String> op_b = opponents.keys(); op_b.hasMoreElements(); ) {
                 String n_b = op_b.nextElement(); // name_oponent_b
-                Integer i_b = oponents.get(n_b); // index_oponent_b
+                Integer i_b = opponents.get(n_b); // index_oponent_b
 
                 if (i_a >= i_b) continue;
 
@@ -452,22 +452,22 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public void clear() {
-        oponents = environment.getOps();
+        opponents = environment.getOps();
         nutrients = father.getContest().getNutrients();
-        opponent1.setModel(new MiComboboxModel(oponents));
-        opponent2.setModel(new MiComboboxModel(oponents));
+        opponent1.setModel(new MiComboboxModel(opponents));
+        opponent2.setModel(new MiComboboxModel(opponents));
         nutrient.setModel(new MiComboboxModel(nutrients));
 
         model.clear();
         battlesList.updateUI();
     }
 
-    void remove(BattleRun b) {
+    private void remove(BattleRun b) {
         model.removeElement(b);
         battlesSP.updateUI();
     }
 
-    void createBattlesFileSelected() {
+    private void createBattlesFileSelected() {
         if (config.isProgrammerMode()) return;
 //TODO: ver en todos lados se llama battle_backup.
         String backupFile = getLastTournamentBattlesBackupFile();
@@ -497,7 +497,7 @@ public class BattleUI extends JPanel implements ActionListener {
         return contest.getTournamentManager().lastElement().getName();
     }
 
-    boolean deleteBattlesFile() {
+    private boolean deleteBattlesFile() {
         if (config.isProgrammerMode()) return true;
 
 //TODO: ver en todos lados se llama battle_backup.
@@ -510,7 +510,7 @@ public class BattleUI extends JPanel implements ActionListener {
         }
     }
 
-    void createBattlesFileAll() {
+    private void createBattlesFileAll() {
         if (config.isProgrammerMode()) return;
 
         //TODO: ver en todos lados se llama battle_backup.

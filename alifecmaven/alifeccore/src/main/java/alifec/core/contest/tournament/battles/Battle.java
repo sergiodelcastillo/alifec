@@ -1,14 +1,12 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
-
 package alifec.core.contest.tournament.battles;
 
 import java.io.*;
 
 
 /**
+ * @author Sergio Del Castillo
+ * mail@: sergio.jose.delcastillo@gmail.com
+
  * Contains de history of battles.
  */
 public class Battle {
@@ -72,8 +70,8 @@ public class Battle {
         return (energy_1 > 0) ? name_1 : name_2;
     }
 
-    public boolean save(String path) throws IOException {
-        if (path == null) return false;
+    public void save(String path) throws IOException {
+        if (path == null) return;
 
         FileWriter f = new FileWriter(path, true);
         PrintWriter pw = new PrintWriter(f);
@@ -81,7 +79,6 @@ public class Battle {
         pw.append("\n");
         pw.close();
         f.close();
-        return true;
     }
 
     /**

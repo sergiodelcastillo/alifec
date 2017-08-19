@@ -139,6 +139,7 @@ public class Contest {
     }
 
     public void updateNutrient(int[] nutrients) throws IOException {
+        //todo: improve it
         String url = config.getNutrientsFilePath();
 
         new File(url).renameTo(new File(url + "_backup"));
@@ -233,6 +234,8 @@ public class Contest {
      * @return true if is successfully
      */
     public boolean createBackUp() {
+        //todo: improve it
+        //todo: use walk instead of a stack
         File f = new File(config.getBackupPath());
         ArrayList<String[]> files = new ArrayList<>();
         Stack<File> stack = new Stack<>();

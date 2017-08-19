@@ -9,7 +9,6 @@ import alifec.core.contest.tournament.battles.BattleRun;
 import org.apache.log4j.Logger;
 
 import java.awt.Point;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -116,14 +115,14 @@ public class Environment {
 
         agar.setNutrient(b.nutrientID);
 
-        for (int i = 0; i < colonies.size(); i++) {
-            if (colonies.get(i).id == b.ID1)
-                c1 = colonies.get(i);
+        for (Colony colony : colonies) {
+            if (colony.id == b.ID1)
+                c1 = colony;
         }
 
-        for (int i = 0; i < colonies.size(); i++) {
-            if (colonies.get(i).id == b.ID2)
-                c2 = colonies.get(i);
+        for (Colony colony : colonies) {
+            if (colony.id == b.ID2)
+                c2 = colony;
         }
 
 
@@ -137,7 +136,7 @@ public class Environment {
 
     }
 
-    public final boolean init(Colony c) {
+    public final void init(Colony c) {
         Random r = new Random();
 
         c.clear();
@@ -148,8 +147,6 @@ public class Environment {
             if (createInstance(p, Defs.E_INITIAL, c.id))
                 ++index;
         }
-
-        return true;
     }
 
     public boolean moveColonies() throws MoveMicroorganismException {

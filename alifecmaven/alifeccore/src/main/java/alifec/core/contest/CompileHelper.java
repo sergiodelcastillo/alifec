@@ -161,7 +161,7 @@ public class CompileHelper {
             String compileCommand = null;
 
             if (os.contains("linux")) {
-                if(jvm.equals("OpenJDK Runtime Environment")){
+                if (jvm.equals("OpenJDK Runtime Environment")) {
                     //OpenJDK
                     compileCommand = String.format(LINUX_OPENJDK_COMPILATION_LINE,
                             config.getCompilationTarget(),
@@ -170,7 +170,7 @@ public class CompileHelper {
                             javaHome + "include/",
                             javaHome + "include/linux/",
                             config.getCppApiFolder());
-                } else if(jvm.equals("Java(TM) SE Runtime Environment")){
+                } else if (jvm.equals("Java(TM) SE Runtime Environment")) {
                     // ORACLE
                     compileCommand = String.format(LINUX_ORACLE_COMPILATION_LINE,
                             config.getCompilationTarget(),
@@ -178,7 +178,7 @@ public class CompileHelper {
                             config.getMOsPath(),
                             config.getCppApiFolder());
                 }
-                if(null == compileCommand){
+                if (null == compileCommand) {
                     //throw new UnsupportedJVMException("");
                     logger.error("Unsupported JVM on linux: " + jvm);
                     return false;
@@ -186,9 +186,9 @@ public class CompileHelper {
                 console = new String[]{"/bin/bash", "-c", compileCommand};
 
             } else if (os.contains("windows")) {
-                if(jvm.equals("OpenJDK Runtime Environment")) {
+                if (jvm.equals("OpenJDK Runtime Environment")) {
                     //todo: add support to OpenJDK on windows
-                }else if(jvm.equals("Java(TM) SE Runtime Environment")){
+                } else if (jvm.equals("Java(TM) SE Runtime Environment")) {
                     // ORACLE
                     compileCommand = String.format(WINDOWS_ORACLE_COMPILATION_LINE,
                             config.getCompilationTarget(),
@@ -196,7 +196,7 @@ public class CompileHelper {
                             config.getMOsPath(),
                             config.getCppApiFolder());
                 }
-                if(null == compileCommand){
+                if (null == compileCommand) {
                     //throw new UnsupportedJVMException("");
                     logger.error("Unsupported JVM on linux: " + jvm);
                     return false;
@@ -208,7 +208,7 @@ public class CompileHelper {
             Process p = Runtime.getRuntime().exec(console);
             p.waitFor();
 
-            String buffer = "";
+            String buffer;
             BufferedReader readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
@@ -247,8 +247,10 @@ public class CompileHelper {
         List<String> names = SourceCodeFilter.listNamesCpp(config.getMOsPath());
         File env = new File(config.getCppApiFolder() + File.separator + "Environment.cpp");
         try {
-            if (!env.exists())
-                env.createNewFile();
+            if (!env.exists()) {
+                if (!env.createNewFile())
+                    throw new IOException("Cant create the file: " + env.getAbsolutePath());
+            }
 
             PrintWriter pw = new PrintWriter(env);
 
@@ -291,8 +293,11 @@ public class CompileHelper {
         File includes = new File(config.getCppApiFolder() + File.separator + "includemos.h");
         try {
 
-            if (!includes.exists())
-                includes.createNewFile();
+            if (!includes.exists()) {
+                if (!includes.createNewFile()) {
+                    throw new IOException("Can not create the file: " + includes.getAbsolutePath());
+                }
+            }
 
             PrintWriter pw = new PrintWriter(includes);
 
