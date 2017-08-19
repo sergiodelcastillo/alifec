@@ -158,7 +158,7 @@ public class TournamentUI extends JPanel implements ActionListener {
             border.setTitle(tm.getSelected().getName());
             updateUI();
         } else if (e.getSource().equals(ranking)) {
-            new ContestReport(father);
+            new ContestReportUI(father);
         } else if (e.getSource().equals(addTournament)) {
             String txt = "Are you sure you want to add a new tournament?";
 

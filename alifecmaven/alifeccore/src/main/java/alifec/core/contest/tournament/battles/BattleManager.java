@@ -37,7 +37,7 @@ public class BattleManager {
         this.config = config;
         this.tournamentName = tournamentName;
 
-        if (config.getMode() == ContestConfig.COMPETITION_MODE) {
+        if (config.isCompetitionMode()) {
             File f = new File(config.getBattlesFile(tournamentName));
             if (!f.exists()) f.createNewFile();
         }
@@ -57,7 +57,7 @@ public class BattleManager {
             throws IOException {
         Battle b = new Battle(n1, n2, nut, ene1, ene2);
 
-        if (config.getMode() == ContestConfig.COMPETITION_MODE) {
+        if (config.isCompetitionMode()) {
             b.save(getBattlesFileName());
         }
 

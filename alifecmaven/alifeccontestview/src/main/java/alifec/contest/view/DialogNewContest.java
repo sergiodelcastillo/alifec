@@ -26,7 +26,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     private JLabel labelName = new JLabel("Name of Contest");
     private JLabel labelPath = new JLabel("Path");
     private JLabel labelAccepted = new JLabel("             ");
-    private JTextField textContest = new JTextField(ContestFolderValidator.CONTEST_PREFIX);
+    private JTextField textContest = new JTextField(ContestConfig.CONTEST_NAME_PREFIX);
     private JTextField textName = new JTextField("" + Calendar.getInstance().get(Calendar.YEAR));
     private JTextField textPath = new JTextField(System.getProperty("user.dir"));
     private JButton buttonBrowse = new JButton("Browse");
@@ -139,7 +139,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
 
     public void actionPerformed(ActionEvent ev) {
         if (ev.getSource().equals(this.buttonOK)) {
-            String contestFolderName = ContestFolderValidator.CONTEST_PREFIX + textName.getText();
+            String contestFolderName = ContestConfig.CONTEST_NAME_PREFIX+ textName.getText();
             String contestFolderRoot = textPath.getText();
             String contestPath = ContestConfig.getContestPath(contestFolderRoot, contestFolderName);
 

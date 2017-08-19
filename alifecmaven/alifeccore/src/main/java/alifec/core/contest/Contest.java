@@ -7,6 +7,7 @@ package alifec.core.contest;
 
 import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.contest.oponentInfo.OpponentInfoManager;
+import alifec.core.contest.oponentInfo.OpponentReportLine;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
 import alifec.core.exception.*;
@@ -21,12 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 
 public class Contest {
@@ -51,7 +47,7 @@ public class Contest {
 
     public Contest(ContestConfig config) throws IOException, CreateTournamentException, CreateContestException {
         this.config = config;
-        opponentsInfo = new OpponentInfoManager(config.getContestPath());
+        opponentsInfo = new OpponentInfoManager(config);
         environment = new Environment(config);
         tournaments = new TournamentManager(config);
 
@@ -183,10 +179,6 @@ public class Contest {
         return config.getMOsPath();
     }
 
-    public String getReportPath() {
-
-        return config.getReportPath();
-    }
 
     public int getMode() {
         return config.getMode();
@@ -206,9 +198,9 @@ public class Contest {
      * @return information
      * @throws CreateRankingException if can not create the ranking
      */
-    public List<List<Object>> getInfo() throws CreateRankingException {
+    public List<OpponentReportLine> getInfo() throws CreateRankingException {
         Hashtable<String, Integer> ranking = tournaments.getRanking();
-        List<List<Object>> info = new ArrayList<>();
+        List<OpponentReportLine> info = new ArrayList<>();
 
         Tournament t = tournaments.lastElement();
         Hashtable<String, Float> acumulated = t.getAccumulatedEnergy();
@@ -217,25 +209,18 @@ public class Contest {
             boolean hayRanking = ranking.containsKey(oi.getName());
             boolean hayAcumulated = acumulated.containsKey(oi.getName());
 
-            List<Object> tmp = oi.toList();
-            tmp.add(hayRanking ? ranking.get(oi.getName()) : Integer.valueOf(0));
-            tmp.add(hayAcumulated ? acumulated.get(oi.getName()) : new Float(0));
-
-            info.add(tmp);
+            info.add(new OpponentReportLine(oi.getName(),
+                    oi.getAuthor(),
+                    oi.getAffiliation(),
+                    hayRanking ? ranking.get(oi.getName()) : 0,
+                    hayAcumulated ? acumulated.get(oi.getName()) : 0.0f));
         }
 
-        // ordenar por el indice 3 (puntos acumulados)!!
-        for (int i = 0; i < info.size() - 1; i++) {
-            for (int j = i + 1; j < info.size(); j++) {
-                Integer a = ((Integer) info.get(i).get(3));
-                Integer b = (Integer) info.get(j).get(3);
-                if (a < b) {
-                    List<Object> tmp = info.get(j);
-                    info.set(j, info.get(i));
-                    info.set(i, tmp);
-                }
-            }
-        }
+        // sort by accumulated points
+        Collections.sort(info);
+
+        //The biggest first
+        Collections.reverse(info);
 
         return info;
     }
@@ -298,6 +283,10 @@ public class Contest {
 
     public String getPath() {
         return config.getPath();
+    }
+
+    public ContestConfig getConfig() {
+        return config;
     }
 }
 

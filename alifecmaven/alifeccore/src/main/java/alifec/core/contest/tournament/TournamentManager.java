@@ -76,22 +76,23 @@ public class TournamentManager {
      * @return String a: the name of next tournament.
      */
     private String getNextName() {
+        Integer tournamentNumber = 1;
+
         if (tournaments.size() > 0) {
-            String NAME = tournaments.get(tournaments.size() - 1).getName();
+            String name = tournaments.get(tournaments.size() - 1).getName();
+            name = name.replace(ContestConfig.TOURNAMENT_PREFIX, "");
 
-            Integer i = (new Integer(NAME.split("-")[1]) + 1);
+            tournamentNumber = Integer.valueOf(name) + 1;
+        }
 
-            return "Tournament-" + ((i < 10) ? ("0" + i) : i);
-        } else
-            return "Tournament-01";
+        return ContestConfig.getTournamentFilename(tournamentNumber);
     }
 
     public void newTournament(List<String> colonies) throws CreateTournamentException {
         String newT = getNextName();
 
-        if (ContestConfig.COMPETITION_MODE == config.getMode()) {
-            //todo: use config file
-            if (!new File(config.getContestPath() + File.separator + newT).mkdir())
+        if (config.isCompetitionMode()) {
+            if (!new File(config.getTournamentPath(newT)).mkdir())
                 throw new CreateTournamentException("Can not create a new folder...");
         }
 
@@ -124,11 +125,11 @@ public class TournamentManager {
 
         File file = new File(t.getBattleManager().getBattlesFileName());
         if (file.exists() && !file.delete())
-            if (ContestConfig.COMPETITION_MODE == config.getMode()) return false;
+            if (config.isCompetitionMode()) return false;
 
         file = new File(config.getTournamentPath(t.getName()));
         if (file.exists() && !file.delete())
-            if (ContestConfig.COMPETITION_MODE == config.getMode()) return false;
+            if (config.isCompetitionMode()) return false;
 
 
         tournaments.remove(selected);
@@ -201,7 +202,7 @@ public class TournamentManager {
     }
 
     public void setMode(int mode) {
-        if (this.config.getMode() == ContestConfig.PROGRAMMER_MODE &&
+        if (this.config.isProgrammerMode() &&
                 mode == ContestConfig.COMPETITION_MODE) {
             lastElement().getBattleManager().setMode(mode);
             lastElement().save();

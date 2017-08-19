@@ -7,6 +7,8 @@ package alifec.contest.view;
 
 
 import alifec.core.contest.Contest;
+import alifec.core.contest.ContestConfig;
+import alifec.core.contest.oponentInfo.OpponentReportLine;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.simulation.Defs;
 import org.apache.log4j.Logger;
@@ -35,24 +37,25 @@ import java.util.Date;
 import java.util.List;
 
 
-public class ContestReport extends JDialog implements ActionListener {
+public class ContestReportUI extends JDialog implements ActionListener {
     private static final long serialVersionUID = 10L;
     Logger logger = Logger.getLogger(getClass());
 
-//todo: imporove the name using conestconfig
-    public final String NAMETXT = "report-" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ".txt";
-    public final String NAMECSV = "report-" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ".csv";
     ContestUI father;
-    Contest c;
     JTextArea txt = new JTextArea("");
     JButton ReportTxt = new JButton("Report.txt");
     JButton ReportCsv = new JButton("Report.csv");
     JButton close = new JButton("Close");
 
-    public ContestReport(ContestUI father) {
+    private Contest contest;
+    private ContestConfig config;
+
+    public ContestReportUI(ContestUI father) {
         super(father, "Contest Report", true);
-        this.c = father.getContest();
+
         this.father = father;
+        this.contest = father.getContest();
+        this.config = father.getContest().getConfig();
 
         addEscapeKey();
 
@@ -104,8 +107,8 @@ public class ContestReport extends JDialog implements ActionListener {
     }
 
     private boolean createReportTxt() {
+        String url = config.getReportFilenameTxt();
         try {
-            String url = c.getReportPath() + File.separator + NAMETXT;
             FileWriter fw = new FileWriter(url, false);
             PrintWriter pw = new PrintWriter(fw);
             pw.println(txt.getText());
@@ -119,19 +122,26 @@ public class ContestReport extends JDialog implements ActionListener {
 
     private boolean createReportCsv() {
         try {
-            String url = c.getReportPath() + File.separator + NAMECSV;
+
+            String url = config.getReportFilenameCsv();
             FileWriter fw = new FileWriter(url, false);
             PrintWriter pw = new PrintWriter(fw);
-            pw.println("Contest name:," + c.getName());
-            pw.println("Tournament name:," + c.getTournamentManager().lastElement().getName());
-            pw.println("NAME,AUTHOR,AFFILIATION,POINTS,ENERGY");
+            pw.println("Contest name:," + contest.getName());
+            pw.println("Tournament name:," + contest.getTournamentManager().lastElement().getName());
+            pw.println(String.format(ContestConfig.REPORT_CSV_FORMAT,
+                    "NAME",
+                    "AUTHOR",
+                    "AFFILIATION",
+                    "POINTS",
+                    "ENERGY"));
 
-            for (List<Object> line : c.getInfo()) {
-                pw.println(line.get(0) + "," +
-                        line.get(1) + "," +
-                        line.get(2) + "," +
-                        line.get(3) + "," +
-                        line.get(4));
+            for (OpponentReportLine line : contest.getInfo()) {
+                pw.println(String.format(ContestConfig.REPORT_CSV_FORMAT,
+                        line.getName(),
+                        line.getAuthor(),
+                        line.getAffiliation(),
+                        line.getRanking(),
+                        line.getAccumulated()));
             }
 
             pw.close();
@@ -148,54 +158,46 @@ public class ContestReport extends JDialog implements ActionListener {
 
     private void fillTxt() {
         try {
-            String text = "";
+            StringBuilder builder = new StringBuilder();
 
-            text += "NAME OF CONTEST: " + c.getName() + "\n";
-            text += "NAME OF TOURNAMENT: " + c.getTournamentManager().lastElement().getName() + "\n\n";
-            String[] table = new String[]{"NAME", "AUTHOR", "AFFILIATION", "POINTS"};
+            builder.append("NAME OF CONTEST: ");
+            builder.append(contest.getName());
+            builder.append('\n');
+            builder.append("NAME OF TOURNAMENT: ");
+            builder.append(contest.getTournamentManager().lastElement().getName());
+            builder.append("\n\n");
+            builder.append(String.format(ContestConfig.REPORT_TXT_FORMAT,
+                    "NAME",
+                    "AUTHOR",
+                    "AFFILIATION",
+                    "POINTS"));
 
-            for (String line : table)
-                text += addSpace(line) + "\t";
-
-            text += "\n";
-
-            for (List<Object> line : c.getInfo()) {
-
-                text += addSpace(line.get(0).toString());
-
-                for (int i = 1; i < line.size(); i++) {
-                    // saltar la info del ultimo tournament!!
-                    if (line.get(i) instanceof Float) continue;
-                    text += "\t" + addSpace(line.get(i).toString().trim());
-                }
-                text += "\n";
+            for (OpponentReportLine line : contest.getInfo()) {
+                builder.append(String.format(ContestConfig.REPORT_TXT_FORMAT,
+                        line.getName(),
+                        line.getAuthor(),
+                        line.getAffiliation(),
+                        line.getRanking()));
             }
 
             txt.setDisabledTextColor(Color.BLACK);
-            txt.setText(text);
+            txt.setText(builder.toString());
         } catch (CreateRankingException ex) {
             logger.error(ex.getMessage(), ex);
             Message.printErr(father, ex.getMessage());
         }
     }
 
-    private String addSpace(String txt) {
-        for (; txt.length() <= Defs.MAX_LENGTH;)
-            txt += " ";
-
-        return txt;
-    }
-
     public void actionPerformed(ActionEvent ev) {
         if (ev.getSource().equals(ReportTxt)) {
             if (createReportTxt()) {
-                Message.printInfo(father, NAMETXT + " created successfully");
+                Message.printInfo(father, "TXT Report created successfully");
             } else {
                 Message.printErr(father, "can't create the report.");
             }
         } else if (ev.getSource().equals(ReportCsv)) {
             if (createReportCsv()) {
-                Message.printInfo(father, NAMECSV + " created successfully");
+                Message.printInfo(father, "CSV Report created successfully");
             } else {
                 Message.printErr(father, "can't create the report.");
             }

@@ -36,7 +36,13 @@ public class ContestConfig {
      * Folder of reports.
      */
     public static final String REPORT_FOLDER = "Report";
-    public static final String REPORT_OPPONENTS_FILE = "competitors";
+    public static final String REPORT_FILENAME_TXT = "report-%s.txt";
+    public static final String REPORT_FILENAME_CSV = "report-%s.csv";
+    public static final String REPORT_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String REPORT_TXT_FORMAT = "%-20s%-20s%-20s%-20s\n";
+    public static final String REPORT_CSV_FORMAT = "%s,%s,%s,%s,%s";
+
+    public static final String COMPETITORS_FILE = "competitors";
     /**
      * Log Folder.
      */
@@ -48,11 +54,17 @@ public class ContestConfig {
     public static final String CONFIG_FILE = "config";
 
     public static final String COMPILATION_TARGET_FOLDER = "compiled";
-
+    public static final String COMPILATION_LOG_FILENAME = "log-%s-%s";
+    public static final String COMPILATION_DATE_PATTERN = "yyyyMMdd-HHmmss";
     /**
      * back up file
      */
     public static final String BACKUP_FOLDER = "Backup";
+
+    public static final String CONTEST_NAME_PREFIX = "Contest-";
+    public static final String CONTEST_FILENAME = "Contest-%03d";
+    public static final String TOURNAMENT_PREFIX = "Tournament-";
+    public static final String TOURNAMENT_FILENAME = "Tournament-%03d";
 
     public static final int PROGRAMMER_MODE = 0;
 
@@ -87,6 +99,12 @@ public class ContestConfig {
     private int pauseBetweenBattles = 5;
 
     private ContestConfig() {
+    }
+
+    public static void main(String[] args) {
+        String res = String.format(ContestConfig.CONTEST_FILENAME, 1);
+
+        System.out.printf("res=" + res);
     }
 
     /**
@@ -298,6 +316,28 @@ public class ContestConfig {
         return getContestPath(absolutePath, contestName) + File.separator + REPORT_FOLDER;
     }
 
+    public String getReportFilenameTxt() {
+        return getReportFilenameTxt(path, contestName);
+    }
+
+    public static String getReportFilenameTxt(String absolutePath, String contestName) {
+        String dateString = new SimpleDateFormat(REPORT_DATE_FORMAT).format(new Date());
+
+        return getReportPath(absolutePath, contestName) + File.separator +
+                String.format(REPORT_FILENAME_TXT, dateString);
+    }
+
+    public String getReportFilenameCsv() {
+        return getReportFilenameCsv(path, contestName);
+    }
+
+    public static String getReportFilenameCsv(String absolutePath, String contestName) {
+        String dateString = new SimpleDateFormat(REPORT_DATE_FORMAT).format(new Date());
+
+        return getReportPath(absolutePath, contestName) + File.separator +
+                String.format(REPORT_FILENAME_CSV, dateString);
+    }
+
     public String getContestName() {
         return this.contestName;
     }
@@ -315,16 +355,18 @@ public class ContestConfig {
     }
 
 
-    public File getCompilationFilePath(String javaFile) {
+    public File getCompilationLogFile(String javaFile) throws IOException {
         String logFolderPath = getLogFolder();
         File logFolder = new File(logFolderPath);
         if (!logFolder.exists()) {
-            logFolder.mkdir();
+            if (!logFolder.mkdir())
+                throw new IOException("Error while creating folder: " + logFolder);
         }
 
-        String compilationFile = logFolderPath + File.separator;
-        compilationFile += "log-" + javaFile.replace(".java", "") + "-";
-        compilationFile += new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+        String compilationFile = logFolderPath + File.separator +
+                String.format(COMPILATION_LOG_FILENAME,
+                        javaFile.replace(".java", ""),
+                        new SimpleDateFormat(COMPILATION_DATE_PATTERN).format(new Date()));
 
         return new File(compilationFile);
     }
@@ -351,6 +393,26 @@ public class ContestConfig {
 
     public static String getCppApiFolder(String path, String contestName) {
         return getContestPath(path, contestName) + File.separator + CPP_API_FOLDER;
+    }
+
+    public String getTournamentFile(int value) {
+        return getTournamentFile(path, contestName, value);
+    }
+
+    public static String getTournamentFile(String path, String contestName, int value) {
+        return getContestPath(path, contestName) + File.separator + getTournamentFilename(value);
+    }
+
+    public String getCompetitorsFile() {
+        return getCompetitorsFile(path, contestName);
+    }
+
+    public static String getCompetitorsFile(String path, String contestName) {
+        return getContestPath(path, contestName) + File.separator + COMPETITORS_FILE;
+    }
+
+    public static String getTournamentFilename(int value) {
+        return String.format(TOURNAMENT_FILENAME, value);
     }
 
     @Override

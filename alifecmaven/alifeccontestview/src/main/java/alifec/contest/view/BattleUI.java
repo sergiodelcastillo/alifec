@@ -6,8 +6,8 @@
 package alifec.contest.view;
 
 
-
 import alifec.contest.simulationUI.GUIdosD;
+import alifec.core.contest.Contest;
 import alifec.core.contest.ContestConfig;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.battles.BattleManager;
@@ -29,7 +29,7 @@ import java.util.List;
 public class BattleUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
 
-    Logger logger = Logger.getLogger(getClass());
+    static Logger logger = Logger.getLogger(BattleUI.class);
 
     private final ContestUI father;
 
@@ -37,8 +37,8 @@ public class BattleUI extends JPanel implements ActionListener {
     private final DefaultListModel<BattleRun> model = new DefaultListModel<>();
     private final JList<BattleRun> battlesList = new JList<>(model);
     private JScrollPane battlesSP;
-    private JComboBox oponent1;
-    private JComboBox oponent2;
+    private JComboBox opponent1;
+    private JComboBox opponent2;
     private JComboBox nutrient;
     private JButton save;
     private JButton delete;
@@ -50,13 +50,14 @@ public class BattleUI extends JPanel implements ActionListener {
 
     private Hashtable<String, Integer> oponents, nutrients;
 
-    private String backupFile = "";
-
+    private final Contest contest;
+    private final ContestConfig config;
 
     public BattleUI(ContestUI contestUI, boolean restore) throws IOException {
         this.father = contestUI;
         this.environment = father.getContest().getEnvironment();
-//		this.tournament = father.getContest().getTournamentManager().getSelected();
+        this.contest = contestUI.getContest();
+        this.config = contestUI.getContest().getConfig();
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder("Battles "));
@@ -65,19 +66,18 @@ public class BattleUI extends JPanel implements ActionListener {
         add(BorderLayout.SOUTH, createSouthPanel());
 
         if (restore) {
-            List<String[]> battles = readBattles(ContestConfig.BATTLES_FILE);
-            List<String[]> backup = readBattles(ContestConfig.BATTLES_BACKUP_FILE);
+            String lastTournament = getLastTournamentName();
+            List<String[]> battles = readBattles(config.getBattlesFile(lastTournament));
+            List<String[]> backup = readBattles(config.getBattlesBackupFile(lastTournament));
 
             validate(battles, backup);
-            restoreBattles(backup);
+            restoreBattles(backup, config.getBattlesBackupFile(lastTournament));
         }
     }
 
-    private void restoreBattles(List<String[]> backup) {
+    private void restoreBattles(List<String[]> backup, String file) {
         if (backup.size() == 0) {
-            Tournament t = father.getContest().getTournamentManager().lastElement();
-            String url = t.getPath() + File.separator + ContestConfig.BATTLES_BACKUP_FILE;
-            new File(url).delete();
+            new File(file).delete();
             return;
         }
         for (String[] line : backup) {
@@ -89,7 +89,7 @@ public class BattleUI extends JPanel implements ActionListener {
 
                 BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);
 
-                addBattle(battle, father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE);
+                addBattle(battle, config.isProgrammerMode());
             } catch (CreateBattleException ex) {
                 logger.error(ex.getMessage(), ex);
                 Message.printErr(father, ex.getMessage());
@@ -150,13 +150,11 @@ public class BattleUI extends JPanel implements ActionListener {
         backup.removeAll(todelete);
     }
 
-    private List<String[]> readBattles(String name) {
+    private List<String[]> readBattles(String path) {
         List<String[]> res = new ArrayList<>();
-        Tournament t = father.getContest().getTournamentManager().lastElement();
-        String url = t.getPath() + File.separator + name;
 
         try {
-            FileReader fr = new FileReader(url);
+            FileReader fr = new FileReader(path);
             BufferedReader br = new BufferedReader(fr);
             String line;
 
@@ -189,17 +187,17 @@ public class BattleUI extends JPanel implements ActionListener {
         oponents = environment.getOps();
         nutrients = father.getContest().getNutrients();
 
-        oponent1 = new JComboBox(new MiComboboxModel(oponents));
-        oponent2 = new JComboBox(new MiComboboxModel(oponents));
+        opponent1 = new JComboBox(new MiComboboxModel(oponents));
+        opponent2 = new JComboBox(new MiComboboxModel(oponents));
         nutrient = new JComboBox(new MiComboboxModel(nutrients));
 
-        oponent1.setMinimumSize(new Dimension(100, 20));
-        oponent2.setMinimumSize(new Dimension(100, 20));
+        opponent1.setMinimumSize(new Dimension(100, 20));
+        opponent2.setMinimumSize(new Dimension(100, 20));
 
         northPanel.add(labelOp1);
-        northPanel.add(oponent1);
+        northPanel.add(opponent1);
         northPanel.add(labelOp2);
-        northPanel.add(oponent2);
+        northPanel.add(opponent2);
         northPanel.add(labelDist);
         northPanel.add(nutrient);
 
@@ -283,7 +281,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 createBattlesFileSelected();
                 //
                 new GUIdosD(father, model_tmp);
-                
+
                 deleteBattlesFile();
                 remove(battlesList.getSelectedValue());
 
@@ -307,15 +305,15 @@ public class BattleUI extends JPanel implements ActionListener {
 
         } else if (e.getSource().equals(addSelected)) {
             if (environment.getOps().isEmpty()) {
-                Message.printErr(father, "You can´t create battles, there are not oponentes");
+                Message.printErr(father, "You can´t create battles, there are not opponents");
                 return;
             }
             try {
-                int index1 = oponents.get(oponent1.getSelectedItem());
-                int index2 = oponents.get(oponent2.getSelectedItem());
+                int index1 = oponents.get(opponent1.getSelectedItem());
+                int index2 = oponents.get(opponent2.getSelectedItem());
                 int indexNut = nutrients.get(nutrient.getSelectedItem());
-                String name1 = oponent1.getSelectedItem().toString();
-                String name2 = oponent2.getSelectedItem().toString();
+                String name1 = opponent1.getSelectedItem().toString();
+                String name2 = opponent2.getSelectedItem().toString();
                 String nameNut = nutrient.getSelectedItem().toString();
 
                 BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);
@@ -383,17 +381,17 @@ public class BattleUI extends JPanel implements ActionListener {
     private void generateAllBattle() {
         boolean existingBattle = false;
 
-        for (Enumeration<String> op_a = oponents.keys(); op_a.hasMoreElements();) {
+        for (Enumeration<String> op_a = oponents.keys(); op_a.hasMoreElements(); ) {
             String n_a = op_a.nextElement(); // name_oponent_a
             Integer i_a = oponents.get(n_a); // index_oponent_a
 
-            for (Enumeration<String> op_b = oponents.keys(); op_b.hasMoreElements();) {
+            for (Enumeration<String> op_b = oponents.keys(); op_b.hasMoreElements(); ) {
                 String n_b = op_b.nextElement(); // name_oponent_b
                 Integer i_b = oponents.get(n_b); // index_oponent_b
 
                 if (i_a >= i_b) continue;
 
-                for (Enumeration<String> nut = nutrients.keys(); nut.hasMoreElements();) {
+                for (Enumeration<String> nut = nutrients.keys(); nut.hasMoreElements(); ) {
                     String n_n = nut.nextElement();      // name_nutrient
                     Integer i_n = nutrients.get(n_n);    // index_nutrient
 
@@ -422,8 +420,8 @@ public class BattleUI extends JPanel implements ActionListener {
         try {
             super.repaint();
             this.nutrient.updateUI();
-            this.oponent1.updateUI();
-            this.oponent2.updateUI();
+            this.opponent1.updateUI();
+            this.opponent2.updateUI();
         } catch (Exception ignored) {
             logger.trace(ignored.getMessage());
         }
@@ -449,15 +447,15 @@ public class BattleUI extends JPanel implements ActionListener {
         for (BattleRun b : indexes)
             getBattles().removeElement(b);
 
-        return ((MiComboboxModel) oponent1.getModel()).remove(colonyName) &&
-                ((MiComboboxModel) oponent2.getModel()).remove(colonyName);
+        return ((MiComboboxModel) opponent1.getModel()).remove(colonyName) &&
+                ((MiComboboxModel) opponent2.getModel()).remove(colonyName);
     }
 
     public void clear() {
         oponents = environment.getOps();
         nutrients = father.getContest().getNutrients();
-        oponent1.setModel(new MiComboboxModel(oponents));
-        oponent2.setModel(new MiComboboxModel(oponents));
+        opponent1.setModel(new MiComboboxModel(oponents));
+        opponent2.setModel(new MiComboboxModel(oponents));
         nutrient.setModel(new MiComboboxModel(nutrients));
 
         model.clear();
@@ -470,11 +468,9 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     void createBattlesFileSelected() {
-        if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
-            return;
-
-        String path = father.getContest().getTournamentManager().lastElement().getPath();
-        backupFile = path + File.separator + "battles_backup.csv";
+        if (config.isProgrammerMode()) return;
+//TODO: ver en todos lados se llama battle_backup.
+        String backupFile = getLastTournamentBattlesBackupFile();
 
         try {
             FileWriter fr = new FileWriter(backupFile);
@@ -493,16 +489,19 @@ public class BattleUI extends JPanel implements ActionListener {
 
     }
 
+    private String getLastTournamentBattlesBackupFile() {
+        return config.getBattlesBackupFile(getLastTournamentName());
+    }
+
+    private String getLastTournamentName() {
+        return contest.getTournamentManager().lastElement().getName();
+    }
+
     boolean deleteBattlesFile() {
-        if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
-            return true;
+        if (config.isProgrammerMode()) return true;
 
-        if (backupFile.equals("")) {
-            logger.warn("Removing back up [FAIL]");
-            return false;
-        }
-
-        if (new File(backupFile).delete()) {
+//TODO: ver en todos lados se llama battle_backup.
+        if (new File(getLastTournamentBattlesBackupFile()).delete()) {
             logger.info("Removing back up [OK]");
             return true;
         } else {
@@ -512,12 +511,11 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     void createBattlesFileAll() {
-        if (father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE)
-            return;
+        if (config.isProgrammerMode()) return;
 
-        //TODO: verificar esto:
-        String path = father.getContest().getTournamentManager().lastElement().getPath();
-        backupFile = path + File.separator + "battles_backup.csv";
+        //TODO: ver en todos lados se llama battle_backup.
+        String backupFile = getLastTournamentBattlesBackupFile();
+
 
         try {
             String line;
@@ -542,8 +540,8 @@ public class BattleUI extends JPanel implements ActionListener {
     public void setEnabled(boolean b) {
         battlesList.setEnabled(b);
         //	private JScrollPane battlesSP;
-        oponent1.setEnabled(b);
-        oponent2.setEnabled(b);
+        opponent1.setEnabled(b);
+        opponent2.setEnabled(b);
         nutrient.setEnabled(b);
         save.setEnabled(b);
         delete.setEnabled(b);

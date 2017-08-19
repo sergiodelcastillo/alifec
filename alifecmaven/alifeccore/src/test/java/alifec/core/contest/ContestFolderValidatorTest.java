@@ -75,7 +75,8 @@ public class ContestFolderValidatorTest extends ParentTest {
 
     @Test
     public void testListOneContest() throws IOException {
-        String contestName = ContestFolderValidator.CONTEST_PREFIX + "01";
+        //TODO: usar format..
+        String contestName = ContestConfig.CONTEST_NAME_PREFIX + "01";
         createContest(contestName);
 
         String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
@@ -88,7 +89,8 @@ public class ContestFolderValidatorTest extends ParentTest {
     public void testListManyContests() throws IOException {
         //Create 100  contests
         for (int i = 0; i < 100; i++) {
-            createContest(ContestFolderValidator.CONTEST_PREFIX + Integer.toString(i));
+            //TODO: usar format..
+            createContest(ContestConfig.CONTEST_NAME_PREFIX+ Integer.toString(i));
         }
 
         String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
@@ -97,7 +99,8 @@ public class ContestFolderValidatorTest extends ParentTest {
 
         String[] target = new String[100];
         for (int i = 99; i >= 0; i--) {
-            target[i] = ContestFolderValidator.CONTEST_PREFIX + Integer.toString(i);
+            //TODO: usar format..
+            target[i] = ContestConfig.CONTEST_NAME_PREFIX + Integer.toString(i);
         }
 
         //sort to compare

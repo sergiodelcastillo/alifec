@@ -1,5 +1,5 @@
 /**
- * @author Yeyo
+ * @author Sergio Del Castillo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
@@ -13,16 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class OpponentInfoManager {
     Logger logger = Logger.getLogger(getClass());
 
     List<OpponentInfo> opponents = new ArrayList<>();
 
-    private String path = "";
 
-    public OpponentInfoManager(String path) {
-        this.path = path;
+    private ContestConfig config;
+
+    public OpponentInfoManager(ContestConfig config) {
+        this.config = config;
     }
 
     public void add(String name, String author, String affiliation) throws IOException {
@@ -33,8 +33,7 @@ public class OpponentInfoManager {
 
     void add(OpponentInfo op, boolean write) throws IOException {
         if (!opponents.contains(op)) {
-            //todo: use ContestConfig
-            if (write) op.write(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE);
+            if (write) op.write(config.getCompetitorsFile());
             opponents.add(op);
         }
     }
@@ -42,8 +41,7 @@ public class OpponentInfoManager {
     public void del(String name) throws IOException {
         for (OpponentInfo op : opponents) {
             if (op.contain(name)) {
-                //todo: use ContestConfig
-                op.del(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE);
+                op.del(config.getCompetitorsFile());
                 opponents.remove(op);
 
             }
@@ -52,8 +50,7 @@ public class OpponentInfoManager {
 
     public void read() throws IOException {
         try {
-            //todo: use ContestConfig
-            BufferedReader in = new BufferedReader(new FileReader(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE));
+            BufferedReader in = new BufferedReader(new FileReader(config.getCompetitorsFile()));
             String line = "";
 
             do {
@@ -62,18 +59,14 @@ public class OpponentInfoManager {
                     OpponentInfo op = new OpponentInfo(line);
                     add(op, false);
                 } catch (IllegalArgumentException ex) {
-                    logger.error(ex.getMessage(), ex);
+                    logger.warn("Ignore Opponent info line. Reason: " + ex.getMessage());
+                    logger.trace(ex);
                 }
             } while (line != null);
 
             in.close();
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
-            //todo: use ContestConfig
-            //TODO: mepa que esto está al dope
-            FileWriter f = new FileWriter(path + File.separator + ContestConfig.REPORT_OPPONENTS_FILE);
-            f.close();
-            read();
         }
     }
 

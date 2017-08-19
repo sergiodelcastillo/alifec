@@ -434,7 +434,7 @@ public class ContestUI extends JFrame implements ActionListener {
         } else if (e.getSource().equals(competitionMode)) {
             contest.setMode(ContestConfig.COMPETITION_MODE);
         } else if (e.getSource().equals(report)) {
-            new ContestReport(this);
+            new ContestReportUI(this);
         } else if (e.getSource().equals(preferences)) {
             try {
                 new DialogPreferences(this);

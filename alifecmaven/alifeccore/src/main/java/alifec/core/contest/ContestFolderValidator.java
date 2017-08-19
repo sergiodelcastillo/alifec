@@ -27,8 +27,7 @@ public class ContestFolderValidator extends FileFilter implements FilenameFilter
 
     private Logger logger = Logger.getLogger(getClass());
 
-    public static final String CONTEST_PREFIX = "contest-";
-    private static String STRING_PATTERN = "^(" + CONTEST_PREFIX + ")([a-zA-Z_0-9]{1,25})$";
+    private static String STRING_PATTERN = "^(" + ContestConfig.CONTEST_NAME_PREFIX+ ")([a-zA-Z_0-9]{1,25})$";
 
     private Pattern pattern;
 

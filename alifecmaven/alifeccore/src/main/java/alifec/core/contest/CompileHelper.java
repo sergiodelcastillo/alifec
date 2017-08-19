@@ -125,7 +125,7 @@ public class CompileHelper {
             if (javac == null)
                 throw new CompilerException();
 
-            File out = config.getCompilationFilePath(javaFileName);
+            File out = config.getCompilationLogFile(javaFileName);
             DataOutputStream err = new DataOutputStream(
                     new BufferedOutputStream(
                             new FileOutputStream(out)));
@@ -135,7 +135,7 @@ public class CompileHelper {
                 out.deleteOnExit();
 
             return s == 0;
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             logger.info("File not found when compiling MOs JAVA: " + javaFileFolder + File.separator + javaFileName + ".");
             return false;
         }

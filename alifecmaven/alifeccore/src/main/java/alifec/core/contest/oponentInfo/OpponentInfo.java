@@ -21,13 +21,13 @@ public class OpponentInfo {
     }
 
     public OpponentInfo(String line) {
-        if (line == null || line.equalsIgnoreCase(""))
-            throw new IllegalArgumentException("Illegal Argument");
+        if (line == null || line.isEmpty())
+            throw new IllegalArgumentException("The line is empty.");
 
         String[] info = line.trim().split(",");
 
         if (info.length != 3)
-            throw new IllegalArgumentException("Illegal Argument");
+            throw new IllegalArgumentException("The line does not have the expected pattern.");
 
         name = info[0];
         author = info[1];
@@ -43,11 +43,11 @@ public class OpponentInfo {
     }
 
     public void del(String path) throws IOException {
+        //TODO: revisar  ... mepa que la extensión está mal.
         new File(path).renameTo(new File(path + "_backup"));
 
         BufferedReader in = new BufferedReader(new FileReader(path + "_backup"));
         BufferedWriter out = new BufferedWriter(new FileWriter(path));
-
 
         String line, miLine = toString();
         do {

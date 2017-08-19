@@ -191,9 +191,6 @@ public class Tournament implements Comparable<Tournament> {
         return isEnabled;
     }
 
-    public String getPath() {
-        return config.getTournamentPath(tournamentName);
-    }
 
     public String getName(){
         return tournamentName;
