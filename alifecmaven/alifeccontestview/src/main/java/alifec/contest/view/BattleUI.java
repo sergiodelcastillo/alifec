@@ -29,7 +29,7 @@ import java.util.List;
 public class BattleUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
 
-    private Logger logger = Logger.getLogger(BattleUI.class);
+    private static Logger logger = Logger.getLogger(BattleUI.class);
 
     private final ContestUI father;
 

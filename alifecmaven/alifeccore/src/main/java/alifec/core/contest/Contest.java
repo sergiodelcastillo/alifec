@@ -54,9 +54,14 @@ public class Contest {
         //create new and empty tournament
         tournaments.newTournament(environment.getNames());
 
-        opponentsInfo.read();
-        Enumeration<Integer> ids = environment.getOps().elements();
+        try {
+            opponentsInfo.read();
+        } catch (IOException e) {
+            logger.info("Could not load competitors file. A new file will be created: "
+                    + e.getMessage());
+        }
 
+        Enumeration<Integer> ids = environment.getOps().elements();
         while (ids.hasMoreElements()) {
             Integer i = ids.nextElement();
             opponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
