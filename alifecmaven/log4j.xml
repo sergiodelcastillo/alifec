@@ -24,7 +24,7 @@
         <appender-ref ref="fileAppender" />
     </root>
     <logger name="alifec">
-        <level value="DEBUG" />
+        <level value="TRACE" />
     </logger>
 
 </log4j:configuration>
