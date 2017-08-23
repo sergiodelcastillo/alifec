@@ -170,7 +170,7 @@ public class Tournament implements Comparable<Tournament> {
         return true;
     }
 
-    public void save() {
+    public void save() throws IOException {
         File f = new File(config.getTournamentPath(tournamentName));
 
         if (!f.exists()) {

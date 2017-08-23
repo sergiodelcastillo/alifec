@@ -12,7 +12,6 @@ import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
 import alifec.core.exception.*;
 import alifec.core.simulation.Agar;
-import alifec.core.simulation.AllFilesFilter;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.log4j.Logger;
@@ -155,7 +154,7 @@ public class Contest {
         new File(url + "_backup").delete();
     }
 
-    public void setMode(int mode) {
+    public void setMode(int mode) throws IOException {
         this.config.setMode(mode);
         this.tournaments.setMode(mode);
 
@@ -194,7 +193,6 @@ public class Contest {
     }
 
     /**
-     * name,author,affilation, acumulatedPoints, lastEnergy
      *
      * @return information
      * @throws CreateRankingException if can not create the ranking
@@ -234,45 +232,10 @@ public class Contest {
      * @return true if is successfully
      */
     public boolean createBackUp() {
-        //todo: improve it
-        //todo: use walk instead of a stack
-        File f = new File(config.getBackupPath());
-        ArrayList<String[]> files = new ArrayList<>();
-        Stack<File> stack = new Stack<>();
-        String zipname;
-
-        if (!f.exists())
-            if (!f.mkdirs())
-                return false;
-
-        zipname = f.getAbsolutePath() + File.separator + "backup-";
-        zipname += new SimpleDateFormat("yyyyMMdd-hhmmss").format(new Date());
-        zipname += ".zip";
-
-        stack.add(new File(getMOsPath()));
-
-        while (!stack.isEmpty()) {
-            File file = stack.pop();
-
-            File[] allFiles = file.listFiles(new AllFilesFilter());
-
-            if (allFiles != null) {
-                for (File tmp : allFiles) {
-                    if (tmp.isFile()) {
-                        String path = tmp.getAbsolutePath();
-                        String name = path.replace(getMOsPath(), "");
-                        files.add(new String[]{path, name});
-                    } else {
-                        stack.push(tmp);
-                    }
-                }
-            }
-        }
-
 
         //generate the back up...
         try {
-            Compressor.addToZip(zipname, files);
+            ZipHelper.createZip(config);
             return true;
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);

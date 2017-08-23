@@ -1,6 +1,7 @@
 package alifec.core.contest;
 
 import alifec.ParentTest;
+import alifec.core.exception.CreateContestFolderException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -74,7 +75,7 @@ public class ContestFolderValidatorTest extends ParentTest {
     }
 
     @Test
-    public void testListOneContest() throws IOException {
+    public void testListOneContest() throws IOException, CreateContestFolderException {
         //TODO: usar format..
         String contestName = ContestConfig.CONTEST_NAME_PREFIX + "01";
         createContest(contestName);
@@ -86,7 +87,7 @@ public class ContestFolderValidatorTest extends ParentTest {
     }
 
     @Test
-    public void testListManyContests() throws IOException {
+    public void testListManyContests() throws IOException, CreateContestFolderException {
         //Create 100  contests
         for (int i = 0; i < 100; i++) {
             //TODO: usar format..
@@ -111,7 +112,7 @@ public class ContestFolderValidatorTest extends ParentTest {
     }
 
     @Test
-    public void testListManyContestsWithSimilarName() throws IOException {
+    public void testListManyContestsWithSimilarName() throws IOException, CreateContestFolderException {
         String[] contestList = new String[]{
                 "contest-01", //SI
                 "Contest-02",//SI
@@ -147,9 +148,4 @@ public class ContestFolderValidatorTest extends ParentTest {
         Assert.assertArrayEquals(contestListTarget, list);
     }
 
-    private void createContest(String name) throws IOException {
-        File file = new File(TEST_ROOT_PATH + File.separator + name);
-
-        Assert.assertTrue(file.mkdir());
-    }
 }

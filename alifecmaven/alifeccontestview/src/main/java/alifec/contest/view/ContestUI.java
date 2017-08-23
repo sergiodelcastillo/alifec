@@ -403,9 +403,19 @@ public class ContestUI extends JFrame implements ActionListener {
 
             System.exit(EXIT_ON_CLOSE);
         } else if (e.getSource().equals(programmerMode)) {
-            contest.setMode(ContestConfig.PROGRAMMER_MODE);
+            try {
+                contest.setMode(ContestConfig.PROGRAMMER_MODE);
+            } catch (IOException ex) {
+                logger.error("Failed to set the contest mode: " + ex.getMessage(), ex);
+                Message.printErr(this, "Failed to set the contest mode: " + ex.getMessage());
+            }
         } else if (e.getSource().equals(competitionMode)) {
-            contest.setMode(ContestConfig.COMPETITION_MODE);
+            try {
+                contest.setMode(ContestConfig.COMPETITION_MODE);
+            } catch (IOException ex) {
+                logger.error("Failed to set the contest mode: " + ex.getMessage(), ex);
+                Message.printErr(this, "Failed to set the contest mode: " + ex.getMessage());
+            }
         } else if (e.getSource().equals(report)) {
             new ContestReportUI(this);
         } else if (e.getSource().equals(preferences)) {

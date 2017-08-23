@@ -17,6 +17,9 @@ public class ContestConfig {
 
     static Logger logger = org.apache.log4j.Logger.getLogger(ContestConfig.class);
 
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATETIME_FORMAT = "yyyyMMdd-HHmmss";
+
     /**
      * List of nutrients that are used in contest.
      * generic form: "nutrient_id"
@@ -38,7 +41,7 @@ public class ContestConfig {
     public static final String REPORT_FOLDER = "Report";
     public static final String REPORT_FILENAME_TXT = "report-%s.txt";
     public static final String REPORT_FILENAME_CSV = "report-%s.csv";
-    public static final String REPORT_DATE_FORMAT = "yyyy-MM-dd";
+
     public static final String REPORT_TXT_FORMAT = "%-20s%-20s%-20s%-20s\n";
     public static final String REPORT_CSV_FORMAT = "%s,%s,%s,%s,%s";
 
@@ -55,11 +58,12 @@ public class ContestConfig {
 
     public static final String COMPILATION_TARGET_FOLDER = "compiled";
     public static final String COMPILATION_LOG_FILENAME = "log-%s-%s";
-    public static final String COMPILATION_DATE_PATTERN = "yyyyMMdd-HHmmss";
+
     /**
      * back up file
      */
     public static final String BACKUP_FOLDER = "Backup";
+    public static final String BACKUP_FILENAME_ZIP = "backup-%s.zip";
 
     public static final String CONTEST_NAME_PREFIX = "Contest-";
     public static final String CONTEST_FILENAME = "Contest-%03d";
@@ -321,7 +325,7 @@ public class ContestConfig {
     }
 
     public static String getReportFilenameTxt(String absolutePath, String contestName) {
-        String dateString = new SimpleDateFormat(REPORT_DATE_FORMAT).format(new Date());
+        String dateString = new SimpleDateFormat(DATE_FORMAT).format(new Date());
 
         return getReportPath(absolutePath, contestName) + File.separator +
                 String.format(REPORT_FILENAME_TXT, dateString);
@@ -332,7 +336,7 @@ public class ContestConfig {
     }
 
     public static String getReportFilenameCsv(String absolutePath, String contestName) {
-        String dateString = new SimpleDateFormat(REPORT_DATE_FORMAT).format(new Date());
+        String dateString = new SimpleDateFormat(DATE_FORMAT).format(new Date());
 
         return getReportPath(absolutePath, contestName) + File.separator +
                 String.format(REPORT_FILENAME_CSV, dateString);
@@ -346,8 +350,22 @@ public class ContestConfig {
         return this.pauseBetweenBattles;
     }
 
-    public String getBackupPath() {
-        return this.contestName + File.separator + BACKUP_FOLDER;
+    public String getBackupFolder() {
+        return getBackupFolder(path, contestName);
+    }
+
+    public static String getBackupFolder(String path, String contestName) {
+        return getContestPath(path, contestName) + File.separator + BACKUP_FOLDER;
+    }
+
+    public String getBackupFile() {
+        return getBackupFile(path, contestName);
+    }
+
+    public static String getBackupFile(String path, String contestName) {
+        return getBackupFolder(path, contestName) + File.separator +
+                String.format(BACKUP_FILENAME_ZIP,
+                        new SimpleDateFormat(DATETIME_FORMAT).format(new Date()));
     }
 
     public String getPath() {
@@ -366,7 +384,7 @@ public class ContestConfig {
         String compilationFile = logFolderPath + File.separator +
                 String.format(COMPILATION_LOG_FILENAME,
                         javaFile.replace(".java", ""),
-                        new SimpleDateFormat(COMPILATION_DATE_PATTERN).format(new Date()));
+                        new SimpleDateFormat(DATETIME_FORMAT).format(new Date()));
 
         return new File(compilationFile);
     }
@@ -424,5 +442,6 @@ public class ContestConfig {
                 ", pauseBetweenBattles=" + pauseBetweenBattles +
                 '}';
     }
+
 
 }
