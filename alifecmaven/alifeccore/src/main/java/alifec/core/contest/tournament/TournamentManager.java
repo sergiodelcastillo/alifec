@@ -201,7 +201,7 @@ public class TournamentManager {
         return tournaments.get(selected);
     }
 
-    public void setMode(int mode) {
+    public void setMode(int mode) throws IOException {
         if (this.config.isProgrammerMode() &&
                 mode == ContestConfig.COMPETITION_MODE) {
             lastElement().getBattleManager().setMode(mode);

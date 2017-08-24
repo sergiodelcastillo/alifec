@@ -1,6 +1,10 @@
 package alifec;
 
+import alifec.core.contest.ContestConfig;
+import alifec.core.contest.ContestHelper;
+import alifec.core.exception.CreateContestFolderException;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 
 import java.io.File;
@@ -28,7 +32,7 @@ public class ParentTest {
 
         //ensure that the root dir exists
         if (!rootDir.exists()) {
-            rootDir.mkdir();
+            Assert.assertTrue(rootDir.mkdir());
         }
     }
 
@@ -42,7 +46,7 @@ public class ParentTest {
             Files.walk(dirPath, FileVisitOption.FOLLOW_LINKS)
                     .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
-                    .peek(System.out::println)
+                    /*.peek(System.out::println)*/
                     .forEach(File::delete);
 
 
@@ -55,4 +59,16 @@ public class ParentTest {
         }
     }
 
+    protected ContestConfig  createContest(String name) throws IOException, CreateContestFolderException {
+        ContestConfig config = ContestConfig.buildNewConfigFile(TEST_ROOT_PATH, name);
+
+        createContest(config);
+        return config;
+
+    }
+
+    protected void createContest(ContestConfig config) throws IOException, CreateContestFolderException {
+        ContestHelper.buildNewContestFolder(config, true);
+
+    }
 }

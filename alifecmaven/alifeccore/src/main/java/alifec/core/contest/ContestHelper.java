@@ -127,12 +127,14 @@ public class ContestHelper {
         String ReportFolder = ContestConfig.getReportPath(path, name);
         String CppFolder = ContestConfig.getCppApiFolder(path, name);
         String NutrientFile = ContestConfig.getNutrientsFilePath(path, name);
+        String BackupFolder = ContestConfig.getBackupFolder(path, name);
 
         return new File(contestName).exists() &&
                 new File(MOsFolder).exists() &&
                 new File(ReportFolder).exists() &&
                 new File(CppFolder).exists() &&
-                new File(NutrientFile).exists();
+                new File(NutrientFile).exists() &&
+                new File(BackupFolder).exists();
     }
 
     private static boolean compareBattleLine(String[] a, String b[]) {
@@ -183,6 +185,7 @@ public class ContestHelper {
         createFolder(config.getReportPath());
         createFolder(config.getCppApiFolder());
         createFolder(config.getLogFolder());
+        createFolder(config.getBackupFolder());
 
         File nutrientsFile = new File(config.getNutrientsFilePath());
         PrintWriter writter = null;
