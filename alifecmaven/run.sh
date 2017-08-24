@@ -1,4 +1,4 @@
 #!/bin/bash
 
 mvn clean install
-mvn exec:exec -pl alifeccontestview
+mvn exec:java -pl alifeccontestview

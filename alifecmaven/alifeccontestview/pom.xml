@@ -41,14 +41,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
                 <configuration>
-                    <executable>java</executable>
-                    <arguments>
-                        <argument>-Dlog4j.debug</argument>
-                        <argument>-Dlog4j.configuration=file:log4j.xml</argument>
-                        <argument>-classpath</argument>
-                        <classpath/>
-                        <argument>alifec.contest.view.ContestUI</argument>
-                    </arguments>
+                    <mainClass>alifec.contest.view.ContestUI</mainClass>
                     <workingDirectory>../</workingDirectory>
                 </configuration>
             </plugin>

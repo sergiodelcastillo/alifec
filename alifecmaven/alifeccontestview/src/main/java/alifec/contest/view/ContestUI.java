@@ -61,7 +61,14 @@ public class ContestUI extends JFrame implements ActionListener {
     private java.util.List<String> excluded = new ArrayList<>();
 
     public static void main(String[] args) {
+        config();
         SwingUtilities.invokeLater(ContestUI::new);
+    }
+
+    private static void config() {
+        if (System.getProperty("log4j.configuration") == null) {
+            System.setProperty("log4j.configuration", "file:log4j.xml");
+        }
     }
 
     public ContestUI() {
