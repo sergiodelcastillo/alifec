@@ -26,7 +26,7 @@ public class JavaColony extends Colony {
         constructor = (Constructor<Microorganism>) Class.forName(super.path).getConstructors()[0];
 
         // initialise the information of colony
-        createMO(new Position(-1, -1), 0.0f);
+        createMO(1, -1, 0.0f);
         kill(0);
     }
 
@@ -68,11 +68,11 @@ public class JavaColony extends Colony {
     }
 
     @Override
-    public boolean createMO(Position pos, float ene) {
+    public boolean createMO(int x, int y, float ene) {
         Microorganism newMO;
         try {
             newMO = constructor.newInstance();
-            newMO.pos = new Position(pos.x, pos.y);
+            newMO.setPosition(x, y);
             newMO.ene = ene;
             // set Info!!
             if (name.equals("")) {
@@ -94,8 +94,7 @@ public class JavaColony extends Colony {
     @Override
     public void update(int indexMO, float ene, int x, int y) {
         instances.get(indexMO).ene = ene;
-        instances.get(indexMO).pos.x = x;
-        instances.get(indexMO).pos.y = y;
+        instances.get(indexMO).setPosition(x, y);
     }
 
     @Override

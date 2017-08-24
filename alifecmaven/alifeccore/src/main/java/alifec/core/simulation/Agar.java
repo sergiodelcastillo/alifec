@@ -47,19 +47,19 @@ public class Agar {
      * @param p must be a point into (0,0) and (50,50)
      * @return
      */
-    public float eat(Position p) {
-        if (p == null || p.x > Defs.DIAMETER || p.x < 0 ||
-                p.y > Defs.DIAMETER || p.y < 0 ){
-            logger.warn("The Position is not valid: " + p);
-            throw new IllegalArgumentException("The Position is not valid: " + p);
+    public float eat(int px, int py) {
+        if (px > Defs.DIAMETER || px < 0 ||
+                py > Defs.DIAMETER || py < 0) {
+            logger.warn("The Position is not valid: (" + px + "," + py + ")");
+            throw new IllegalArgumentException("The Position is not valid: (" + px + "," + py + ")");
         }
-        if(nutri_id < 0){
+        if (nutri_id < 0) {
             logger.warn("The Nutrient id is not valid: " + nutri_id);
             throw new IllegalArgumentException("The Nutrient id is not valid: " + nutri_id);
         }
 
-        int x = (nutrients.length + p.x + dx) % nutrients.length;
-        int y = (nutrients.length + p.y + dy) % nutrients.length;
+        int x = (nutrients.length + px + dx) % nutrients.length;
+        int y = (nutrients.length + py + dy) % nutrients.length;
 
         float foot = 0.01f * nutrients[x][y];
         nutrients[x][y] -= foot;
@@ -119,7 +119,7 @@ public class Agar {
 
         for (int i = 0; i < 50; i++)
             for (int j = 0; j < 50; j++)
-                nutrients[i][j] = nutri.getNutrient(new Position(i, j));
+                nutrients[i][j] = nutri.getNutrient(i, j);
 
         nutri_id = id;
     }

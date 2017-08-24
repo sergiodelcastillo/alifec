@@ -17,7 +17,7 @@ public abstract class Nutrient {
     /**
      * @return: a Nutrient in point p
      */
-    public abstract float getNutrient(Position p);
+    public abstract float getNutrient(int x, int y);
 
     /**
      * @return distribution Identifier

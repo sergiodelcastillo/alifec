@@ -22,10 +22,10 @@ public class Tactica1 extends Microorganism {
         //if I can attack you --> I kill you :o
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                Position p = new Position(pos.x + i, pos.y + j);
+                Position p = new Position(x + i, y + j);
 
                 if (petri.inDish(p) &&
-                        petri.canCompete(pos, p) &&
+                        petri.canCompete(x, y, p.x, p.y) &&
                         ene > petri.getEnergy(p.x, p.y)) {
                     mov.dx = i;
                     mov.dy = j;
@@ -36,8 +36,8 @@ public class Tactica1 extends Microorganism {
         // if I can't attack -->   Seek the maximun of Relative Nutrient!!
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                Position current = new Position(pos.x + i, pos.y + j);
-                Position best = new Position(pos.x + mov.dx, pos.y + mov.dy);
+                Position current = new Position(x + i, y + j);
+                Position best = new Position(x + mov.dx, y + mov.dy);
 
                 if (petri.inDish(current) &&
                         petri.getNutrient(best.x, best.y) < petri.getNutrient(current.x, current.y)) {

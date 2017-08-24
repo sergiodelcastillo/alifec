@@ -12,27 +12,27 @@ public class MoveRule implements ColonyRule {
 
     public boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
         //TODO: imporove it
-        if (mo == null || mov == null ||
-                c == null || mo.pos == null ||
-                !valid(mo.pos.x, mo.pos.y))
+        if (mo == null || mov == null ||c == null ||
+                !valid(mo.x, mo.y))
             throw new IllegalArgumentException("Illegal Argument");
 
         if (!mov.isMoved()) return false;
 
-        Position newPos = new Position(mo.pos.x + mov.dx, mo.pos.y + mov.dy);
+        int newx = mo.x + mov.dx;
+        int newy = mo.y + mov.dy;
         mo.ene -= Defs.LESS_MOVE;
 
 
         if (mo.isDied()) {
-            env.killMO(mo.pos.x, mo.pos.y);
+            env.killMO(mo.x, mo.y);
             return true;
         }
 
-        if (!mov.isValid() || !env.inDish(newPos.x, newPos.y))
+        if (!mov.isValid() || !env.inDish(newx, newy))
             return false;
 
-        if (env.getMO(newPos.x, newPos.y) == null) {
-            if (!env.moveMO(mo.pos, newPos))
+        if (env.getMO(newx, newy) == null) {
+            if (!env.moveMO(mo.x, mo.y, newx, newy))
                 System.out.println("error en move rule");
         }
 

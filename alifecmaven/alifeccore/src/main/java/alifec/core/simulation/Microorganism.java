@@ -7,7 +7,8 @@ public abstract class Microorganism {
     /**
      * Absolute position of the microorganism
      */
-    public Position pos;
+    public int x;
+    public int y;
     /**
      * Current energy of the microorganism
      */
@@ -52,5 +53,11 @@ public abstract class Microorganism {
 
     public final boolean isDead() {
         return ene <= 0.0f;
+    }
+
+    protected void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+
     }
 }

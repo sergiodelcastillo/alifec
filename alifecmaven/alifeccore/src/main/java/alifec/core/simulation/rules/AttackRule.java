@@ -16,17 +16,17 @@ public class AttackRule implements ColonyRule {
 
         if (!mov.isMoved() || !mov.isValid()) return false;
 
-        int x = mo.pos.x + mov.dx;
-        int y = mo.pos.y + mov.dy;
+        int x = mo.x + mov.dx;
+        int y = mo.y + mov.dy;
 
-        if (!env.inDish(x, y) || !canCompete(env, mo.pos, x, y))
+        if (!env.inDish(x, y) || !canCompete(env, mo.x, mo.y, x, y))
             return false;
 
         Cell enemyMO = env.getMO(x, y);
         mo.ene -= Defs.LESS_MOVE;
 
         if (mo.ene <= 0.0f) {
-            env.killMO(mo.pos.x, mo.pos.y);
+            env.killMO(mo.x, mo.y);
             return true;
         }
 
@@ -39,7 +39,7 @@ public class AttackRule implements ColonyRule {
             mo.ene = mo.ene - diff;
 
             if (mo.ene <= 0.0f) {
-                env.killMO(mo.pos.x, mo.pos.y);
+                env.killMO(mo.x, mo.y);
                 return true;
             }
         } else {
@@ -48,8 +48,8 @@ public class AttackRule implements ColonyRule {
             enemyMO.ene = enemyMO.ene - diff;
 
             if (enemyMO.ene <= 0.0f) {
-                env.killMO(enemyMO.pos.x, enemyMO.pos.y);
-                env.moveMO(mo.pos, enemyMO.pos);
+                env.killMO(enemyMO.x, enemyMO.y);
+                env.moveMO(mo.x, mo.y, enemyMO.x, enemyMO.y);
                 return true;
             }
         }
@@ -57,9 +57,9 @@ public class AttackRule implements ColonyRule {
         return false;
     }
 
-    private boolean canCompete(Environment env, Position a, int x, int y) {
-        return env.getMO(a.x, a.y) != null &&
+    private boolean canCompete(Environment env, int ax, int ay, int x, int y) {
+        return env.getMO(ax, ay) != null &&
                 env.getMO(x, y) != null &&
-                env.getMO(a.x, a.y).id != env.getMO(x, y).id;
+                env.getMO(ax, ay).id != env.getMO(x, y).id;
     }
 }

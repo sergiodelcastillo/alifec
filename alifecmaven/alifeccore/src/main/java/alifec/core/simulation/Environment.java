@@ -143,9 +143,7 @@ public class Environment {
         c.clear();
 
         for (int index = 0; index < Defs.MO_INITIAL; ) {
-            Position p = new Position(r.nextInt(Defs.DIAMETER), r.nextInt(Defs.DIAMETER));
-
-            if (createInstance(p, Defs.E_INITIAL, c.id))
+            if (createInstance(r.nextInt(Defs.DIAMETER), r.nextInt(Defs.DIAMETER), Defs.E_INITIAL, c.id))
                 ++index;
         }
     }
@@ -182,7 +180,7 @@ public class Environment {
             Movement mov;
 
             try {
-                current.update(indexMO, mo.ene, mo.pos.x, mo.pos.y);
+                current.update(indexMO, mo.ene, mo.x, mo.y);
                 mov = current.move(indexMO);
                 mitosis = current.mitosis(indexMO);
             } catch (Exception ex) {
@@ -235,20 +233,17 @@ public class Environment {
                 (Defs.RADIUS * Defs.RADIUS);
     }
 
-    public boolean moveMO(Position a, Position b) {
-        if (a == null || b == null)
+    public boolean moveMO(int ax, int ay, int bx, int by) {
+        if (microorganism[ax][ay] == null)
             return false;
 
-        if (microorganism[a.x][a.y] == null)
+        if (microorganism[bx][by] != null)
             return false;
 
-        if (microorganism[b.x][b.y] != null)
-            return false;
-
-        microorganism[b.x][b.y] = microorganism[a.x][a.y];
-        microorganism[a.x][a.y] = null;
-        microorganism[b.x][b.y].pos.x = b.x;
-        microorganism[b.x][b.y].pos.y = b.y;
+        microorganism[bx][by] = microorganism[ax][ay];
+        microorganism[ax][ay] = null;
+        microorganism[bx][by].x = bx;
+        microorganism[bx][by].y = by;
         return true;
     }
 
@@ -264,18 +259,18 @@ public class Environment {
 
     }
 
-    public boolean createInstance(Position pos, float ene, int id) {
-        if (pos == null || !inDish(pos.x, pos.y) ||
+    public boolean createInstance(int px, int py, float ene, int id) {
+        if (!inDish(px, py) ||
                 ene <= 0 || ene > Defs.E_INITIAL ||
-                microorganism[pos.x][pos.y] != null)
+                microorganism[px][py] != null)
             return false;
 
         Cell mo = new Cell(id);
-        mo.pos.x = pos.x;
-        mo.pos.y = pos.y;
+        mo.x = px;
+        mo.y = py;
         mo.ene = ene;
 
-        microorganism[pos.x][pos.y] = mo;
+        microorganism[px][py] = mo;
 
         return id == c1.id ? c1.createInstance(mo) : c2.createInstance(mo);
     }
@@ -349,10 +344,12 @@ public class Environment {
         }
         return -1;
     }
-    public Cell getMO(int x, int y){
+
+    public Cell getMO(int x, int y) {
         return microorganism[x][y];
     }
-    public float eat(Position pos){
-        return agar.eat(pos);
+
+    public float eat(int x, int y) {
+        return agar.eat(x, y);
     }
 }

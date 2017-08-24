@@ -19,8 +19,8 @@ public class VerticalBar extends Nutrient {
     */
 
     @Override
-    public float getNutrient(Position p) {
-        boolean b = (p.x > Defs.RADIUS - 5) && (p.x > Defs.RADIUS + 5);
+    public float getNutrient(int px, int py) {
+        boolean b = (px > Defs.RADIUS - 5) && (px > Defs.RADIUS + 5);
 
         return (float) (b ? Defs.MAX_NUTRI / 4.2 : 0.0);
     }

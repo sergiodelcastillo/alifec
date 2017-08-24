@@ -18,7 +18,7 @@ public class EatRule implements ColonyRule {
         if (mo == null)
             throw new IllegalArgumentException("Illegal Argument");
 
-        mo.ene += env.eat(mo.pos);
+        mo.ene += env.eat(mo.x, mo.y);
         return false;
     }
 }

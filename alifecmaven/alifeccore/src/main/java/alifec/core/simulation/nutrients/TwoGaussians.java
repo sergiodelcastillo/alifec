@@ -19,17 +19,17 @@ public class TwoGaussians extends Nutrient {
     */
 
     @Override
-    public float getNutrient(Position p) {
+    public float getNutrient(int px, int py) {
         int R = Defs.RADIUS;
-        float s1 = (float) Math.pow(Math.E, -((p.x - 0.6 * R) / (R / 4)) *
-                ((p.x - 0.6 * R) / (R / 4)) -
-                ((p.y - 0.6 * R) / (R / 4)) *
-                        ((p.y - 0.6 * R) / (R / 4)));
+        float s1 = (float) Math.pow(Math.E, -((px - 0.6 * R) / (R / 4)) *
+                ((px - 0.6 * R) / (R / 4)) -
+                ((py - 0.6 * R) / (R / 4)) *
+                        ((py - 0.6 * R) / (R / 4)));
 
-        float s2 = (float) Math.pow(Math.E, -((p.x - 1.4 * R) / (R / 4)) *
-                ((p.x - 1.4 * R) / (R / 4)) -
-                ((p.y - 1.4 * R) / (R / 4)) *
-                        ((p.y - 1.4 * R) / (R / 4)));
+        float s2 = (float) Math.pow(Math.E, -((px - 1.4 * R) / (R / 4)) *
+                ((px - 1.4 * R) / (R / 4)) -
+                ((py - 1.4 * R) / (R / 4)) *
+                        ((py - 1.4 * R) / (R / 4)));
 
         return Defs.MAX_NUTRI * (s1 + s2);
     }

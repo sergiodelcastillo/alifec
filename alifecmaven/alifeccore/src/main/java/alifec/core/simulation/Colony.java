@@ -49,12 +49,12 @@ public abstract class Colony {
     }
 
     public boolean createInstance(Cell mo) {
-        if (!createMO(mo.pos, mo.ene)) return false;
+        if (!createMO(mo.x, mo.y, mo.ene)) return false;
         moList.add(mo);
         return true;
     }
 
-    protected abstract boolean createMO(Position pos, float ene);
+    protected abstract boolean createMO(int x, int y, float ene);
 
     public final boolean kill(Cell mo) {
 

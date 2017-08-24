@@ -16,15 +16,16 @@ import alifec.core.simulation.Petri;
 public class Tactica2 extends Microorganism {
 
     public void move(Movement mov) {
-        Position p = new Position();
+        int px = 0;
+        int py = 0;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 try {
-                    p.x = pos.x + i;
-                    p.y = pos.y + j;
-                    if (Petri.getInstance().inDish(p) &&
-                            Petri.getInstance().canCompete(pos, p)) {
-                        if (Petri.getInstance().getEnergy(p.x, p.y) < ene - Defs.LESS_MOVE) {
+                    px = x + i;
+                    py = y + j;
+                    if (Petri.getInstance().inDish(px, py) &&
+                            Petri.getInstance().canCompete(x, y, px, py)) {
+                        if (Petri.getInstance().getEnergy(px, py) < ene - Defs.LESS_MOVE) {
                             mov.dx = i;
                             mov.dy = j;
                             return;
@@ -37,12 +38,12 @@ public class Tactica2 extends Microorganism {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 try {
-                    p.x = pos.x + i;
-                    p.y = pos.y + j;
-                    if (Petri.getInstance().inDish(p)) {
+                    px = x + i;
+                    py = y + j;
+                    if (Petri.getInstance().inDish(px, py)) {
                         // I like 1.4  --> you can change it!
-                        if (Petri.getInstance().getNutrient(pos.x, pos.y) * 1.4 <
-                                Petri.getInstance().getNutrient(p.x, p.y)) {
+                        if (Petri.getInstance().getNutrient(x, y) * 1.4 <
+                                Petri.getInstance().getNutrient(px, py)) {
                             mov.dx = i;
                             mov.dy = j;
                             return;

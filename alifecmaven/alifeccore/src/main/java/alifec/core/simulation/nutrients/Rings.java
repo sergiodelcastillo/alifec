@@ -19,11 +19,11 @@ public class Rings extends Nutrient {
     */
 
     @Override
-    public float getNutrient(Position p) {
+    public float getNutrient(int px, int py) {
         int R = Defs.RADIUS;
 
-        boolean b = ((p.x - R) * (p.x - R) + (p.y - R) * (p.y - R) > 40) &&
-                ((p.x - R) * (p.x - R) + (p.y - R) * (p.y - R) < 115);
+        boolean b = ((px - R) * (px - R) + (py - R) * (py - R) > 40) &&
+                ((px - R) * (px - R) + (py - R) * (py - R) < 115);
 
         return b ? Defs.MAX_NUTRI / 1.008f : 0.0f;
     }

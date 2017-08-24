@@ -5,16 +5,12 @@
 package alifec.contest.simulationUI;
 
 
-
 import alifec.contest.view.ContestUI;
 import alifec.contest.view.Message;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.exception.MoveMicroorganismException;
-import alifec.core.simulation.Colony;
-import alifec.core.simulation.Defs;
-import alifec.core.simulation.Environment;
-import alifec.core.simulation.Position;
+import alifec.core.simulation.*;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -37,15 +33,15 @@ public class MiThread extends Thread {
 
     Logger logger = Logger.getLogger(getClass());
 
-    enum Status{STATUS_PLAY,STATUS_PAUSE, STATUS_STOPPED }
+    enum Status {STATUS_PLAY, STATUS_PAUSE, STATUS_STOPPED}
 
     /**
-     *  Status value.
+     * Status value.
      * It can be:
      * STATUS_PLAY when the application is running.
      * STATUS_PAUSE when the application is in pause.
      * STATUS_STOPPED when the user press close button.
-      */
+     */
     private Status status = Status.STATUS_PLAY;
 
     private int timewait = 2000;
@@ -89,10 +85,11 @@ public class MiThread extends Thread {
     private final Tournament lastTournament;
 
     /**
-     * This class is a thread that paint the panel of battles. 
-     * @param cui a instance of ContestUI
-     * @param father this is a JDialog class and it contains the panel that will be painted
-     * @param panel A instance of Panel class where the thread will paint the battles.
+     * This class is a thread that paint the panel of battles.
+     *
+     * @param cui     a instance of ContestUI
+     * @param father  this is a JDialog class and it contains the panel that will be painted
+     * @param panel   A instance of Panel class where the thread will paint the battles.
      * @param battles list of battles that will be run
      */
     public MiThread(ContestUI cui, JDialog father, JPanel panel, DefaultListModel battles) {
@@ -139,7 +136,7 @@ public class MiThread extends Thread {
 
                 try {
                     boolean battleRunning = true;
-                    
+
                     while (battleRunning) {
                         switch (status) {
                             case STATUS_PLAY:
@@ -237,6 +234,7 @@ public class MiThread extends Thread {
 
     /**
      * Pause the running of battles
+     *
      * @throws InterruptedException if the thread was interrupted
      */
     public synchronized void pauseRun() throws InterruptedException {
@@ -244,7 +242,7 @@ public class MiThread extends Thread {
     }
 
     /**
-     * Set status to STATUS_PLAY 
+     * Set status to STATUS_PLAY
      */
     public synchronized void setPlay() {
         status = Status.STATUS_PLAY;
@@ -297,10 +295,10 @@ public class MiThread extends Thread {
 
     public synchronized void paintImage() {
         // if the application is closed by user ...
-        if (status == Status.STATUS_STOPPED){
+        if (status == Status.STATUS_STOPPED) {
             return;
         }
-        
+
         try {
             // clear All!
             graphics.clearRect(panel.getBounds().x,
@@ -341,7 +339,7 @@ public class MiThread extends Thread {
             }
 
             for (int i = 0; i < firstOponent.size(); i++) {
-                Position pos = firstOponent.getMO(i).pos;
+                Cell mo = firstOponent.getMO(i);
                 float ene = firstOponent.getMO(i).ene;
 
                 float a = ene / (Defs.E_INITIAL * 2);
@@ -351,21 +349,21 @@ public class MiThread extends Thread {
                         color1.getRed(), color1.getGreen(),
                         color1.getBlue(), (int) (255 * a)));
 
-                graphics.fillOval(GUIdosD.K * (GUIdosD.rel.x + pos.x),
-                        GUIdosD.K * (GUIdosD.rel.y + pos.y),
+                graphics.fillOval(GUIdosD.K * (GUIdosD.rel.x + mo.x),
+                        GUIdosD.K * (GUIdosD.rel.y + mo.y),
                         GUIdosD.K, GUIdosD.K);
             }
 
             for (int i = 0; i < secondOponent.size(); i++) {
-                Position pos = secondOponent.getMO(i).pos;
+                Cell mo = secondOponent.getMO(i);
                 float ene = secondOponent.getMO(i).ene;
                 float a = ene / (Defs.E_INITIAL * 2);
                 if (a > 1) a = 1;
 
                 graphics.setColor(new Color(color2.getRed(), color2.getGreen(),
                         color2.getBlue(), (int) (255 * a)));
-                graphics.fillOval(GUIdosD.K * (GUIdosD.rel.x + pos.x),
-                        GUIdosD.K * (GUIdosD.rel.y + pos.y),
+                graphics.fillOval(GUIdosD.K * (GUIdosD.rel.x + mo.x),
+                        GUIdosD.K * (GUIdosD.rel.y + mo.y),
                         GUIdosD.K, GUIdosD.K);
             }
 

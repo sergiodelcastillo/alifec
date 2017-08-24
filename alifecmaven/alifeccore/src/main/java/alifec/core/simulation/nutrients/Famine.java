@@ -16,7 +16,7 @@ public class Famine extends Nutrient {
     * Genera una distribucion de Nutrientes uniforme!!
     */
     @Override
-    public float getNutrient(Position p) {
+    public float getNutrient(int x, int y) {
         return (float) (Defs.MAX_NUTRI / 11.062);
     }
 

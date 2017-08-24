@@ -43,7 +43,7 @@ public class CppColony extends Colony {
         if (!createColony(index, colony_name))
             throw new ClassNotFoundException("Can't find:" + colony_name);
 
-        createMO(new Position(-1, -1), 0.0f);
+        createMO(-1, -1, 0.0f);
 
         name = getName(index);
         author = getAuthor(index);
@@ -55,8 +55,8 @@ public class CppColony extends Colony {
     private native boolean createColony(int id, String name);
 
     @Override
-    protected boolean createMO(Position pos, float ene) {
-        return createMO(id, pos.x, pos.y, ene);
+    protected boolean createMO(int x, int y, float ene) {
+        return createMO(id, x, y, ene);
     }
 
     private native boolean createMO(int id, int x, int y, float ene);

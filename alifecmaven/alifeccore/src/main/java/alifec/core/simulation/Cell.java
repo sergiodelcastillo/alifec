@@ -17,7 +17,9 @@ public final class Cell {
     /**
      * Energy of colony
      */
-    public Position pos = new Position();
+    public int x;
+
+    public int y;
 
     Cell(int id) {
         this.id = id;
