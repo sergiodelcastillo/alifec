@@ -1,4 +1,4 @@
-package alifec.core.contest;
+package alifec.core.compilation;
 
 import java.util.ArrayList;
 import java.util.List;

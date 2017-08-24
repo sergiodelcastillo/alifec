@@ -4,8 +4,8 @@
  */
 package alifec.core.persistence.filter;
 
-import alifec.core.contest.ContestConfig;
-import alifec.core.contest.Validator;
+import alifec.core.persistence.ContestConfig;
+import alifec.core.validation.Validator;
 import org.apache.log4j.Logger;
 
 import javax.swing.filechooser.FileFilter;

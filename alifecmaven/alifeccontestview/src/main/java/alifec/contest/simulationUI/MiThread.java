@@ -133,8 +133,8 @@ public class MiThread extends Thread {
                 battles.removeElement(battles.firstElement());
                 cui.setMessage(b.toString());
                 environment.generateOpponents(b);
-                firstOponent = environment.getFirstOponent();
-                secondOponent = environment.getSecondOponent();
+                firstOponent = environment.getFirstOpponent();
+                secondOponent = environment.getSecondOpponent();
                 updateNames(b);
 
                 try {

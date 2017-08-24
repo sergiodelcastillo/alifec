@@ -14,6 +14,8 @@ import alifec.core.exception.CreateContestException;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.CreateTournamentException;
 import alifec.core.exception.SaveContestConfigException;
+import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.ZipHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrients.Nutrient;

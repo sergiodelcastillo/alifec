@@ -4,7 +4,7 @@
  */
 package alifec.core.persistence.filter;
 
-import alifec.core.contest.ContestConfig;
+import alifec.core.persistence.ContestConfig;
 
 import java.io.File;
 import java.io.FilenameFilter;

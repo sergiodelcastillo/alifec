@@ -1,12 +1,16 @@
-package alifec.core.simulation;
+package alifec.core.simulation.rules;
+
+import alifec.core.simulation.*;
+import alifec.core.simulation.rules.ColonyRule;
 
 /**
  * @author Yeyo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-public class LifeRule extends ColonyRule {
-    public boolean apply(Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
+public class LifeRule implements ColonyRule {
+    public boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
+        //TODO: imporove it
         if (c == null || mo == null || mo.pos == null)
             throw new IllegalArgumentException("Illegal Argument");
 

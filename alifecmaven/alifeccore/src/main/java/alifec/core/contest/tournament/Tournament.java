@@ -5,7 +5,7 @@
 
 package alifec.core.contest.tournament;
 
-import alifec.core.contest.ContestConfig;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.contest.tournament.battles.BattleManager;
 import alifec.core.exception.CreateRankingException;
 import org.apache.log4j.Logger;

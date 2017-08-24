@@ -5,8 +5,8 @@
 package alifec.contest.view;
 
 import alifec.core.contest.Contest;
-import alifec.core.contest.ContestConfig;
-import alifec.core.contest.ContestHelper;
+import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.ContestHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.log4j.Logger;

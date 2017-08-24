@@ -6,7 +6,11 @@
 package alifec.contest.view;
 
 import alifec.core.contest.*;
+import alifec.core.compilation.CompilationResult;
+import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.*;
+import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.ContestHelper;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;

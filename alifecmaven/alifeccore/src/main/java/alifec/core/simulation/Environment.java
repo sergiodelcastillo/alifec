@@ -3,10 +3,11 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
-import alifec.core.contest.ContestConfig;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.persistence.filter.SourceCodeFilter;
+import alifec.core.simulation.rules.*;
 import org.apache.log4j.Logger;
 
 
@@ -31,7 +32,7 @@ public class Environment {
     /**
      * Reference to position of MOs.
      */
-    Cell microorganism[][] = new Cell[Defs.DIAMETER][Defs.DIAMETER];
+    private Cell microorganism[][] = new Cell[Defs.DIAMETER][Defs.DIAMETER];
 
     /**
      * First Oponent .. temporal reference !!
@@ -98,7 +99,6 @@ public class Environment {
         }
 
         // set the environment !!
-        ColonyRule.env = this;
         Petri.getInstance().setEnvironment(this);
     }
 
@@ -192,7 +192,7 @@ public class Environment {
             }
 
             for (ColonyRule rule : rules) {
-                if (rule.apply(current, enemy, mo, mov, mitosis)) {
+                if (rule.apply(this, current, enemy, mo, mov, mitosis)) {
                     break;      // break of rules
                 }
             }
@@ -235,7 +235,7 @@ public class Environment {
                 (Defs.RADIUS * Defs.RADIUS);
     }
 
-    boolean moveMO(Position a, Position b) {
+    public boolean moveMO(Position a, Position b) {
         if (a == null || b == null)
             return false;
 
@@ -252,7 +252,7 @@ public class Environment {
         return true;
     }
 
-    boolean killMO(int x, int y) {
+    public boolean killMO(int x, int y) {
         if (!inDish(x, y)) {
             return false;
         }
@@ -264,7 +264,7 @@ public class Environment {
 
     }
 
-    boolean createInstance(Position pos, float ene, int id) {
+    public boolean createInstance(Position pos, float ene, int id) {
         if (pos == null || !inDish(pos.x, pos.y) ||
                 ene <= 0 || ene > Defs.E_INITIAL ||
                 microorganism[pos.x][pos.y] != null)
@@ -290,11 +290,11 @@ public class Environment {
         return agar;
     }
 
-    public Colony getFirstOponent() {
+    public Colony getFirstOpponent() {
         return c1;
     }
 
-    public Colony getSecondOponent() {
+    public Colony getSecondOpponent() {
         return c2;
     }
 
@@ -349,5 +349,10 @@ public class Environment {
         }
         return -1;
     }
-
+    public Cell getMO(int x, int y){
+        return microorganism[x][y];
+    }
+    public float eat(Position pos){
+        return agar.eat(pos);
+    }
 }

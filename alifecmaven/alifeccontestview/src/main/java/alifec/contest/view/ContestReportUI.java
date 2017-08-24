@@ -7,7 +7,7 @@ package alifec.contest.view;
 
 
 import alifec.core.contest.Contest;
-import alifec.core.contest.ContestConfig;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.contest.oponentInfo.OpponentReportLine;
 import alifec.core.exception.CreateRankingException;
 import org.apache.log4j.Logger;

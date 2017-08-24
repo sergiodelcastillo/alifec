@@ -1,4 +1,4 @@
-package alifec.core.contest;
+package alifec.core.validation;
 
 /**
  * Created by Sergio Del Castillo on 15/08/17.

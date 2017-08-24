@@ -8,7 +8,7 @@ package alifec.contest.view;
 
 import alifec.contest.simulationUI.GUIdosD;
 import alifec.core.contest.Contest;
-import alifec.core.contest.ContestConfig;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.battles.BattleManager;
 import alifec.core.contest.tournament.battles.BattleRun;

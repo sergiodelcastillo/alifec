@@ -1,7 +1,7 @@
 package alifec;
 
-import alifec.core.contest.ContestConfig;
-import alifec.core.contest.ContestHelper;
+import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.ContestHelper;
 import alifec.core.exception.CreateContestFolderException;
 import org.junit.After;
 import org.junit.Assert;

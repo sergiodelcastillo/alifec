@@ -1,5 +1,7 @@
-package alifec.core.contest;
+package alifec.core.persistence;
 
+import alifec.core.contest.Contest;
+import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.persistence.filter.TournamentFilter;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.TournamentCorruptedException;

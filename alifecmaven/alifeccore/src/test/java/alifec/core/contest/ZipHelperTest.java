@@ -2,11 +2,12 @@ package alifec.core.contest;
 
 import alifec.ParentTest;
 import alifec.core.exception.CreateContestFolderException;
+import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.ZipHelper;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**

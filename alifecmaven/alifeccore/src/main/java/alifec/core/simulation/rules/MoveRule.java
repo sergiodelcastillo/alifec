@@ -1,12 +1,17 @@
-package alifec.core.simulation; /**
+package alifec.core.simulation.rules;
+
+import alifec.core.simulation.*;
+import alifec.core.simulation.rules.ColonyRule;
+
+/**
  * @author Sergio Del Castillo
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
-public class MoveRule extends ColonyRule {
+public class MoveRule implements ColonyRule {
 
-    public boolean apply(Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
-
+    public boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
+        //TODO: imporove it
         if (mo == null || mov == null ||
                 c == null || mo.pos == null ||
                 !valid(mo.pos.x, mo.pos.y))
@@ -26,7 +31,7 @@ public class MoveRule extends ColonyRule {
         if (!mov.isValid() || !env.inDish(newPos.x, newPos.y))
             return false;
 
-        if (env.microorganism[newPos.x][newPos.y] == null) {
+        if (env.getMO(newPos.x, newPos.y) == null) {
             if (!env.moveMO(mo.pos, newPos))
                 System.out.println("error en move rule");
         }

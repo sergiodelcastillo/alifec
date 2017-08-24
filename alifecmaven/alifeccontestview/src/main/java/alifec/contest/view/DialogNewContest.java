@@ -5,7 +5,7 @@
 
 package alifec.contest.view;
 
-import alifec.core.contest.ContestConfig;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.ContestFolderFilter;
 import org.apache.log4j.Logger;
 

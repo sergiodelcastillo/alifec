@@ -1,7 +1,12 @@
-package alifec.core.simulation; /**
+package alifec.core.simulation.rules; /**
  * @author Yeyo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
+
+import alifec.core.simulation.Cell;
+import alifec.core.simulation.Colony;
+import alifec.core.simulation.Environment;
+import alifec.core.simulation.Movement;
 
 /**
  * The class defines the rules of the environment
@@ -11,15 +16,12 @@ package alifec.core.simulation; /**
  *
  * @Warning: don't modify this class
  */
-public abstract class ColonyRule {
-    /**
-     * the environment
-     */
-    static Environment env;
+public interface ColonyRule {
+
 
     /**
      * The abstract method to apply the rules.
      */
-    public abstract boolean apply(Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis);
+    boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis);
 
 }

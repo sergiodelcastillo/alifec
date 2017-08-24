@@ -2,6 +2,7 @@ package alifec.core.contest;
 
 import alifec.ParentTest;
 import alifec.core.exception.CreateContestFolderException;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.ContestFolderFilter;
 import org.junit.Assert;
 import org.junit.Test;

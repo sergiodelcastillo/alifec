@@ -1,4 +1,6 @@
-package alifec.core.simulation; /**
+package alifec.core.simulation;
+
+/**
  * @author: Sergio Del Castillo
  * @email: sergio.jose.delcastillo@gmail.com
  */
@@ -51,13 +53,13 @@ public class Petri {
     /**
      * @param x
      * @param y
-     * @return  return the  Colony identifier in the position x,y. return -1 if the position is empty.
+     * @return return the  Colony identifier in the position x,y. return -1 if the position is empty.
      */
     public int getOpponent(int x, int y) {
-        if (env.microorganism[x][y] == null)
+        if (env.getMO(x, y) == null)
             return -1;  // cant
 
-        return env.microorganism[x][y].id;
+        return env.getMO(x, y).id;
     }
 
     /**
@@ -66,9 +68,9 @@ public class Petri {
      * @return the microorganism's energy in the position <b> x,y</b>. 0.0f if the position is empty.
      */
     public float getEnergy(int x, int y) {
-        if (env.microorganism[x][y] == null)
+        if (env.getMO(x, y) == null)
             return 0.0f;
-        return env.microorganism[x][y].ene;
+        return env.getMO(x, y).ene;
     }
 
     /**
@@ -76,7 +78,6 @@ public class Petri {
      * @param y
      * @return the nutrient in the position <b>x, y</b>.
      * @see Agar#getNutrient(int, int)
-
      */
     public float getNutrient(int x, int y) {
         return agar.getNutrient(x, y);
@@ -92,10 +93,10 @@ public class Petri {
      */
     public boolean canCompete(int x1, int y1, int x2, int y2) {
 
-        return env.microorganism[x1][y1] != null &&
-                env.microorganism[x2][y2] != null &&
-                env.microorganism[x1][y1] !=
-                        env.microorganism[x2][y2];
+        return env.getMO(x1, y1) != null &&
+                env.getMO(x2, y2) != null &&
+                env.getMO(x1, y1) !=
+                        env.getMO(x2, y2);
 
     }
 
@@ -110,8 +111,8 @@ public class Petri {
 
     /**
      * @return si el MO en la posicion (x,y) esta dentro del entorno,
-     *         es decir,  pertenece al circulo de entro (Defs.Radious, Defs.Radios ) y
-     *         radio Defs.radious.
+     * es decir,  pertenece al circulo de entro (Defs.Radious, Defs.Radios ) y
+     * radio Defs.radious.
      */
     public boolean inDish(int x, int y) {
         return env.inDish(x, y);
@@ -119,8 +120,8 @@ public class Petri {
 
     /**
      * @return si el MO en la posicion p esta dentro del entorno,
-     *         es decir,  pertenece al circulo de entro (Defs.Radious, Defs.Radios ) y
-     *         radio Defs.radious.
+     * es decir,  pertenece al circulo de entro (Defs.Radious, Defs.Radios ) y
+     * radio Defs.radious.
      */
     public boolean inDish(Position p) {
         return env.inDish(p.x, p.y);
