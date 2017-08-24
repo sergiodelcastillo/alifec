@@ -3,8 +3,6 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
-import java.awt.*;
-
 public class Petri {
     /**
      * reference to single instance.
@@ -106,7 +104,7 @@ public class Petri {
      * @param b
      * @return true if both the microorganism in the position <b>a</b> and <b>b</b>, have different identifiers:
      */
-    public boolean canCompete(Point a, Point b) {
+    public boolean canCompete(Position a, Position b) {
         return canCompete(a.x, a.y, b.x, b.y);
     }
 
@@ -124,7 +122,7 @@ public class Petri {
      *         es decir,  pertenece al circulo de entro (Defs.Radious, Defs.Radios ) y
      *         radio Defs.radious.
      */
-    public boolean inDish(Point p) {
+    public boolean inDish(Position p) {
         return env.inDish(p.x, p.y);
     }
 

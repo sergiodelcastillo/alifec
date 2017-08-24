@@ -1,4 +1,4 @@
-package alifec.core.simulation;
+package alifec.core.persistence.filter;
 
 import java.io.File;
 import java.io.FilenameFilter;

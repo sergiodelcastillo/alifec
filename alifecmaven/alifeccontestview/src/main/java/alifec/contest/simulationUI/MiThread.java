@@ -14,6 +14,7 @@ import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Defs;
 import alifec.core.simulation.Environment;
+import alifec.core.simulation.Position;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -340,7 +341,7 @@ public class MiThread extends Thread {
             }
 
             for (int i = 0; i < firstOponent.size(); i++) {
-                Point pos = firstOponent.getMO(i).pos;
+                Position pos = firstOponent.getMO(i).pos;
                 float ene = firstOponent.getMO(i).ene;
 
                 float a = ene / (Defs.E_INITIAL * 2);
@@ -356,7 +357,7 @@ public class MiThread extends Thread {
             }
 
             for (int i = 0; i < secondOponent.size(); i++) {
-                Point pos = secondOponent.getMO(i).pos;
+                Position pos = secondOponent.getMO(i).pos;
                 float ene = secondOponent.getMO(i).ene;
                 float a = ene / (Defs.E_INITIAL * 2);
                 if (a > 1) a = 1;

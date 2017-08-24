@@ -9,7 +9,7 @@ import alifec.core.simulation.nutrients.TwoGaussians;
 import alifec.core.simulation.nutrients.VerticalBar;
 import org.apache.log4j.Logger;
 
-import java.awt.Point;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -47,7 +47,7 @@ public class Agar {
      * @param p must be a point into (0,0) and (50,50)
      * @return
      */
-    public float eat(Point p) {
+    public float eat(Position p) {
         if (p == null || p.x > Defs.DIAMETER || p.x < 0 ||
                 p.y > Defs.DIAMETER || p.y < 0 ){
             logger.warn("The Position is not valid: " + p);
@@ -119,7 +119,7 @@ public class Agar {
 
         for (int i = 0; i < 50; i++)
             for (int j = 0; j < 50; j++)
-                nutrients[i][j] = nutri.getNutrient(new Point(i, j));
+                nutrients[i][j] = nutri.getNutrient(new Position(i, j));
 
         nutri_id = id;
     }

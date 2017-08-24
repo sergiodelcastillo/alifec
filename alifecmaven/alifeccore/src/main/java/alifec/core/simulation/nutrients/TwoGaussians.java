@@ -5,8 +5,8 @@
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
+import alifec.core.simulation.Position;
 
-import java.awt.*;
 
 /**
  * warning: don't modify this class
@@ -19,7 +19,7 @@ public class TwoGaussians extends Nutrient {
     */
 
     @Override
-    public float getNutrient(Point p) {
+    public float getNutrient(Position p) {
         int R = Defs.RADIUS;
         float s1 = (float) Math.pow(Math.E, -((p.x - 0.6 * R) / (R / 4)) *
                 ((p.x - 0.6 * R) / (R / 4)) -

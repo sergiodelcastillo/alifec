@@ -1,7 +1,7 @@
 package alifec.core.contest;
 
 import alifec.core.exception.CompilerException;
-import alifec.core.simulation.SourceCodeFilter;
+import alifec.core.persistence.filter.SourceCodeFilter;
 import org.apache.log4j.Logger;
 
 import javax.tools.JavaCompiler;

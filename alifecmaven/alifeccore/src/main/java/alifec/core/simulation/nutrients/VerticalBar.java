@@ -6,8 +6,7 @@
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
-
-import java.awt.*;
+import alifec.core.simulation.Position;
 
 /**
  * warning: don't modify this class
@@ -20,7 +19,7 @@ public class VerticalBar extends Nutrient {
     */
 
     @Override
-    public float getNutrient(Point p) {
+    public float getNutrient(Position p) {
         boolean b = (p.x > Defs.RADIUS - 5) && (p.x > Defs.RADIUS + 5);
 
         return (float) (b ? Defs.MAX_NUTRI / 4.2 : 0.0);

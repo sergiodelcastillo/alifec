@@ -51,7 +51,7 @@ public class AttackRule extends ColonyRule {
         return false;
     }
 
-    private boolean canCompete(java.awt.Point a, int x, int y) {
+    private boolean canCompete(Position a, int x, int y) {
         return env.microorganism[a.x][a.y] != null &&
                 env.microorganism[x][y] != null &&
                 env.microorganism[a.x][a.y].id != env.microorganism[x][y].id;

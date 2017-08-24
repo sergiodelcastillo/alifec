@@ -6,8 +6,7 @@
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
-
-import java.awt.*;
+import alifec.core.simulation.Position;
 
 
 public class Famine extends Nutrient {
@@ -17,7 +16,7 @@ public class Famine extends Nutrient {
     * Genera una distribucion de Nutrientes uniforme!!
     */
     @Override
-    public float getNutrient(Point p) {
+    public float getNutrient(Position p) {
         return (float) (Defs.MAX_NUTRI / 11.062);
     }
 

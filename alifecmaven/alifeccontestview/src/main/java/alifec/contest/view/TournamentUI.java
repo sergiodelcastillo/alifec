@@ -7,7 +7,6 @@ package alifec.contest.view;
 
 
 
-import alifec.core.contest.tournament.JavaFile;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
 import alifec.core.exception.CreateTournamentException;

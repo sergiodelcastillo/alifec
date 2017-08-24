@@ -2,8 +2,10 @@
  * @author Yeyo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
-package alifec.core.contest;
+package alifec.core.persistence.filter;
 
+import alifec.core.contest.ContestConfig;
+import alifec.core.contest.Validator;
 import org.apache.log4j.Logger;
 
 import javax.swing.filechooser.FileFilter;
@@ -14,7 +16,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * <n>ContestFolderValidator class was designated to filter only valid contest' names which
+ * <n>ContestFolderFilter class was designated to filter only valid contest' names which
  * follows the below rule:
  * <ol>
  * <li> Starts with the prefix <b>"contest-"</b> (case insensitive).</li>
@@ -23,7 +25,7 @@ import java.util.regex.Pattern;
  *
  * <n> For example, a valid name is "contest-01" but "contesto" is not valid. </n>
  */
-public class ContestFolderValidator extends FileFilter implements FilenameFilter, Validator<String> {
+public class ContestFolderFilter extends FileFilter implements FilenameFilter, Validator<String> {
 
     private Logger logger = Logger.getLogger(getClass());
 
@@ -34,7 +36,7 @@ public class ContestFolderValidator extends FileFilter implements FilenameFilter
     private final boolean checkExistence;
 
 
-    public ContestFolderValidator() {
+    public ContestFolderFilter() {
         this(true);
     }
 
@@ -42,7 +44,7 @@ public class ContestFolderValidator extends FileFilter implements FilenameFilter
      * @param checkExistence if the parameter is set to <b>true</b> then the existence of the folder will be checked.
      *                       This parameter was designated to use within test purposes.
      */
-    public ContestFolderValidator(boolean checkExistence) {
+    public ContestFolderFilter(boolean checkExistence) {
         this.checkExistence = checkExistence;
         pattern = Pattern.compile(STRING_PATTERN, Pattern.CASE_INSENSITIVE);
     }

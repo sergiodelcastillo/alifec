@@ -5,8 +5,7 @@
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
-
-import java.awt.*;
+import alifec.core.simulation.Position;
 
 /**
  * warning: don't modify this class.
@@ -16,7 +15,7 @@ public class Lattice extends Nutrient {
     public static final int ID = 4;
 
     @Override
-    public float getNutrient(Point p) {
+    public float getNutrient(Position p) {
         boolean b = ((p.x + p.y) % Defs.DIAMETER / 4 <= 1) ||
                 ((p.y - p.x) % Defs.DIAMETER / 3 <= 1);
 

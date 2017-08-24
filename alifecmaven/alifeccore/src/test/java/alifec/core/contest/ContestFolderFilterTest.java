@@ -2,6 +2,7 @@ package alifec.core.contest;
 
 import alifec.ParentTest;
 import alifec.core.exception.CreateContestFolderException;
+import alifec.core.persistence.filter.ContestFolderFilter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,12 +15,12 @@ import java.util.Arrays;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestFolderValidatorTest extends ParentTest {
+public class ContestFolderFilterTest extends ParentTest {
 
 
     @Test
     public void testListEmpty() {
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
+        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
 
         Assert.assertArrayEquals(f, new String[0]);
     }
@@ -30,27 +31,27 @@ public class ContestFolderValidatorTest extends ParentTest {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("contest-");
 
-        ContestFolderValidator contestFolderValidator = new ContestFolderValidator(false);
-        Assert.assertFalse(contestFolderValidator.accept(folder, stringBuilder.toString()));
-        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-|"));
-        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-|"));
-        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-1|"));
-        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-|1"));
-        Assert.assertFalse(contestFolderValidator.accept(folder, "contest-11111111111111111111111111"));
+        ContestFolderFilter contestFolderFilter = new ContestFolderFilter(false);
+        Assert.assertFalse(contestFolderFilter.accept(folder, stringBuilder.toString()));
+        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|"));
+        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|"));
+        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-1|"));
+        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|1"));
+        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-11111111111111111111111111"));
 
         for (int i = 0; i < 25; i++) {
             stringBuilder.append("c");
-            Assert.assertTrue(contestFolderValidator.accept(folder, stringBuilder.toString()));
+            Assert.assertTrue(contestFolderFilter.accept(folder, stringBuilder.toString()));
         }
 
         stringBuilder.append("c");
-        Assert.assertFalse(contestFolderValidator.accept(folder, stringBuilder.toString()));
+        Assert.assertFalse(contestFolderFilter.accept(folder, stringBuilder.toString()));
 
     }
 
     @Test
     public void testCheckPatter() {
-        ContestFolderValidator filter = new ContestFolderValidator();
+        ContestFolderFilter filter = new ContestFolderFilter();
 
         //false contest names.
         Assert.assertFalse(filter.checkPattern(null));
@@ -80,7 +81,7 @@ public class ContestFolderValidatorTest extends ParentTest {
         String contestName = ContestConfig.CONTEST_NAME_PREFIX + "01";
         createContest(contestName);
 
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
+        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
 
         Assert.assertTrue(1 == f.length);
         Assert.assertEquals(f[0], contestName);
@@ -94,7 +95,7 @@ public class ContestFolderValidatorTest extends ParentTest {
             createContest(ContestConfig.CONTEST_NAME_PREFIX+ Integer.toString(i));
         }
 
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
+        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
 
         Assert.assertTrue(100 == f.length);
 
@@ -137,7 +138,7 @@ public class ContestFolderValidatorTest extends ParentTest {
             createContest(contestName);
         }
 
-        String[] list = new File(TEST_ROOT_PATH).list(new ContestFolderValidator());
+        String[] list = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
 
         Assert.assertTrue(contestListTarget.length == list.length);
 

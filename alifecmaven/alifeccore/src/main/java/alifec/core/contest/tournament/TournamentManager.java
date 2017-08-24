@@ -3,6 +3,7 @@ package alifec.core.contest.tournament;
 import alifec.core.contest.ContestConfig;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.CreateTournamentException;
+import alifec.core.persistence.filter.TournamentFilter;
 import org.apache.log4j.Logger;
 
 import java.io.File;

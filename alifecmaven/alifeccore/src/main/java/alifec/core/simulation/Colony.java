@@ -4,7 +4,7 @@ package alifec.core.simulation; /**
  */
 
 
-import java.awt.Point;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -54,7 +54,7 @@ public abstract class Colony {
         return true;
     }
 
-    protected abstract boolean createMO(Point pos, float ene);
+    protected abstract boolean createMO(Position pos, float ene);
 
     public final boolean kill(Cell mo) {
 

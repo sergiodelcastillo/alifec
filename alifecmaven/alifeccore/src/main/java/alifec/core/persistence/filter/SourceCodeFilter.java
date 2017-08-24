@@ -1,4 +1,4 @@
-package alifec.core.simulation; /**
+package alifec.core.persistence.filter; /**
  * @author Yeyo
  * mail@: sergio.jose.delcastillo@gmail.com
  */

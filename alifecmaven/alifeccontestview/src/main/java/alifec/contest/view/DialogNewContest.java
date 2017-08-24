@@ -6,7 +6,7 @@
 package alifec.contest.view;
 
 import alifec.core.contest.ContestConfig;
-import alifec.core.contest.ContestFolderValidator;
+import alifec.core.persistence.filter.ContestFolderFilter;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     private JCheckBox checkLoad = new JCheckBox("Load new Contest", true);
     private JCheckBox examples = new JCheckBox("Generate examples", true);
     private ContestConfig config;
-    private ContestFolderValidator validator;
+    private ContestFolderFilter validator;
 
     private boolean createExamples;
     private boolean makeDefault;
@@ -43,7 +43,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     public DialogNewContest(JFrame father) {
         super(father, "New Contest ", true);
 
-        validator = new ContestFolderValidator(false);
+        validator = new ContestFolderFilter(false);
         cleanResult();
 
         initComponents();

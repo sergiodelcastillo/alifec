@@ -1,8 +1,9 @@
 package alifec.core.contest;
 
-import alifec.core.contest.tournament.TournamentFilter;
+import alifec.core.persistence.filter.TournamentFilter;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.TournamentCorruptedException;
+import alifec.core.persistence.filter.ContestFolderFilter;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.log4j.Logger;
@@ -100,7 +101,7 @@ public class ContestHelper {
     }
 
     public static List<String> listContest(String path) {
-        String list[] = new File(path).list(new ContestFolderValidator());
+        String list[] = new File(path).list(new ContestFolderFilter());
         List<String> results = new ArrayList<>();
 
         if (list != null) {

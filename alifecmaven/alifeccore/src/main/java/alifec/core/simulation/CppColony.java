@@ -4,7 +4,6 @@ package alifec.core.simulation; /**
  */
 
 import org.apache.log4j.Logger;
-import java.awt.Point;
 
 public class CppColony extends Colony {
 
@@ -44,7 +43,7 @@ public class CppColony extends Colony {
         if (!createColony(index, colony_name))
             throw new ClassNotFoundException("Can't find:" + colony_name);
 
-        createMO(new Point(-1, -1), 0.0f);
+        createMO(new Position(-1, -1), 0.0f);
 
         name = getName(index);
         author = getAuthor(index);
@@ -56,7 +55,7 @@ public class CppColony extends Colony {
     private native boolean createColony(int id, String name);
 
     @Override
-    protected boolean createMO(Point pos, float ene) {
+    protected boolean createMO(Position pos, float ene) {
         return createMO(id, pos.x, pos.y, ene);
     }
 

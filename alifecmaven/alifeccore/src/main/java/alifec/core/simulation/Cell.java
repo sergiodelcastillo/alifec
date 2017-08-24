@@ -17,7 +17,7 @@ public final class Cell {
     /**
      * Energy of colony
      */
-    public java.awt.Point pos = new java.awt.Point();
+    public Position pos = new Position();
 
     Cell(int id) {
         this.id = id;

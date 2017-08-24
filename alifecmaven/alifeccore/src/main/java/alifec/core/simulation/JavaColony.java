@@ -5,8 +5,6 @@ package alifec.core.simulation; /**
 
 
 import org.apache.log4j.Logger;
-
-import java.awt.Point;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ public class JavaColony extends Colony {
         constructor = (Constructor<Microorganism>) Class.forName(super.path).getConstructors()[0];
 
         // initialise the information of colony
-        createMO(new Point(-1, -1), 0.0f);
+        createMO(new Position(-1, -1), 0.0f);
         kill(0);
     }
 
@@ -70,13 +68,11 @@ public class JavaColony extends Colony {
     }
 
     @Override
-    public boolean createMO(Point pos, float ene) {
+    public boolean createMO(Position pos, float ene) {
         Microorganism newMO;
         try {
             newMO = constructor.newInstance();
-            newMO.pos = new Point();
-            newMO.pos.x = pos.x;
-            newMO.pos.y = pos.y;
+            newMO.pos = new Position(pos.x, pos.y);
             newMO.ene = ene;
             // set Info!!
             if (name.equals("")) {

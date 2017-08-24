@@ -3,14 +3,11 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
-import java.awt.*;
-
 public abstract class Microorganism {
-    private static final long serialVersionUID = 0L;
     /**
      * Absolute position of the microorganism
      */
-    public Point pos;
+    public Position pos;
     /**
      * Current energy of the microorganism
      */

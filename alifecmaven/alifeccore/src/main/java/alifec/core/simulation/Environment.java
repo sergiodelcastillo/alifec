@@ -6,9 +6,10 @@ package alifec.core.simulation; /**
 import alifec.core.contest.ContestConfig;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.contest.tournament.battles.BattleRun;
+import alifec.core.persistence.filter.SourceCodeFilter;
 import org.apache.log4j.Logger;
 
-import java.awt.Point;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -142,7 +143,7 @@ public class Environment {
         c.clear();
 
         for (int index = 0; index < Defs.MO_INITIAL; ) {
-            Point p = new Point(r.nextInt(Defs.DIAMETER), r.nextInt(Defs.DIAMETER));
+            Position p = new Position(r.nextInt(Defs.DIAMETER), r.nextInt(Defs.DIAMETER));
 
             if (createInstance(p, Defs.E_INITIAL, c.id))
                 ++index;
@@ -234,7 +235,7 @@ public class Environment {
                 (Defs.RADIUS * Defs.RADIUS);
     }
 
-    boolean moveMO(Point a, Point b) {
+    boolean moveMO(Position a, Position b) {
         if (a == null || b == null)
             return false;
 
@@ -263,7 +264,7 @@ public class Environment {
 
     }
 
-    boolean createInstance(Point pos, float ene, int id) {
+    boolean createInstance(Position pos, float ene, int id) {
         if (pos == null || !inDish(pos.x, pos.y) ||
                 ene <= 0 || ene > Defs.E_INITIAL ||
                 microorganism[pos.x][pos.y] != null)

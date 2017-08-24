@@ -3,8 +3,6 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
-import java.awt.*;
-
 public class MoveRule extends ColonyRule {
 
     public boolean apply(Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
@@ -16,7 +14,7 @@ public class MoveRule extends ColonyRule {
 
         if (!mov.isMoved()) return false;
 
-        Point newPos = new Point(mo.pos.x + mov.dx, mo.pos.y + mov.dy);
+        Position newPos = new Position(mo.pos.x + mov.dx, mo.pos.y + mov.dy);
         mo.ene -= Defs.LESS_MOVE;
 
 

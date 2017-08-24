@@ -5,7 +5,7 @@
 
 package alifec.core.simulation.nutrients;
 
-import java.awt.*;
+import alifec.core.simulation.Position;
 
 
 /**
@@ -17,7 +17,7 @@ public abstract class Nutrient {
     /**
      * @return: a Nutrient in point p
      */
-    public abstract float getNutrient(Point p);
+    public abstract float getNutrient(Position p);
 
     /**
      * @return distribution Identifier

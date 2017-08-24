@@ -6,8 +6,8 @@
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
+import alifec.core.simulation.Position;
 
-import java.awt.*;
 
 /**
  * warning: don't modify this class
@@ -19,7 +19,7 @@ public class InclinedPlane extends Nutrient {
      * It generates the Inclined Plane nutrient distribution
      */
     @Override
-    public float getNutrient(Point p) {
+    public float getNutrient(Position p) {
         return (float) (Defs.MAX_NUTRI * (Defs.DIAMETER - p.x) * (Defs.DIAMETER - p.y) /
                 (Defs.DIAMETER * Defs.DIAMETER) / 2.875);
     }
