@@ -19,7 +19,9 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Properties;
 
 
 public class ContestUI extends JFrame implements ActionListener {
@@ -63,11 +65,21 @@ public class ContestUI extends JFrame implements ActionListener {
     private java.util.List<String> excluded = new ArrayList<>();
 
     public static void main(String[] args) {
+        config();
         SwingUtilities.invokeLater(ContestUI::new);
+    }
+
+    private static void config() {
+        if (System.getProperty("log4j.configuration") == null) {
+            System.setProperty("log4j.configuration", "file:log4j.xml");
+        }
     }
 
     public ContestUI() {
         super("Alifecontest-java 0.02");
+
+        logSystemProperties();
+
         logger.info("Starting App");
         setLookAndLanguage();
 
@@ -86,6 +98,19 @@ public class ContestUI extends JFrame implements ActionListener {
             setVisible(true);
         } else {
             System.exit(0);
+        }
+    }
+
+    private void logSystemProperties() {
+        if (logger.isTraceEnabled()) {
+            logger.trace("System Properties:");
+            Properties p = System.getProperties();
+            Enumeration keys = p.keys();
+            while (keys.hasMoreElements()) {
+                String key = (String) keys.nextElement();
+                String value = (String) p.get(key);
+                logger.trace(" < " + key + ": " + value + " >");
+            }
         }
     }
 

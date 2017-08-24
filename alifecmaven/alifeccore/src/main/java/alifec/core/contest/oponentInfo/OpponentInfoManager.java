@@ -49,25 +49,21 @@ public class OpponentInfoManager {
     }
 
     public void read() throws IOException {
-        try {
-            BufferedReader in = new BufferedReader(new FileReader(config.getCompetitorsFile()));
-            String line = "";
+        BufferedReader in = new BufferedReader(new FileReader(config.getCompetitorsFile()));
+        String line = "";
 
-            do {
-                try {
-                    line = in.readLine();
-                    OpponentInfo op = new OpponentInfo(line);
-                    add(op, false);
-                } catch (IllegalArgumentException ex) {
-                    logger.warn("Ignore Opponent info line. Reason: " + ex.getMessage());
-                    logger.trace(ex);
-                }
-            } while (line != null);
+        do {
+            try {
+                line = in.readLine();
+                OpponentInfo op = new OpponentInfo(line);
+                add(op, false);
+            } catch (IllegalArgumentException ex) {
+                logger.warn("Ignore Opponent info line. Reason: " + ex.getMessage());
+                logger.trace(ex);
+            }
+        } while (line != null);
 
-            in.close();
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-        }
+        in.close();
     }
 
     public List<OpponentInfo> getOpponents() {

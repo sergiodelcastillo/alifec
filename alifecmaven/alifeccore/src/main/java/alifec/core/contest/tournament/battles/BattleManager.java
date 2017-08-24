@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -154,12 +155,11 @@ public class BattleManager {
      * @return max of energy of microorganism
      */
     public Float getMaxEnergy() {
-        try {
-            return max(getResults().values());
-        } catch (java.util.NoSuchElementException ex) {
-            logger.trace(ex.getMessage(), ex);
+        Collection<Float> values = getResults().values();
+        if (values.isEmpty()) {
             return 0f;
         }
+        return max(values);
     }
 
     public void read() throws IOException {
@@ -180,14 +180,13 @@ public class BattleManager {
         }
     }
 
-    public void save() throws IOException {
+    public void save() {
         try {
             for (Battle b : battles) {
                 b.save(getBattlesFileName());
             }
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
-
         }
     }
 
