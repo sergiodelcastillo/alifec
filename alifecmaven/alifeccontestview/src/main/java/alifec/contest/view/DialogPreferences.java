@@ -6,6 +6,7 @@ package alifec.contest.view;
 
 import alifec.core.contest.Contest;
 import alifec.core.contest.ContestConfig;
+import alifec.core.contest.ContestHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.log4j.Logger;
@@ -62,13 +63,13 @@ public class DialogPreferences extends JDialog implements ActionListener {
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).
                 addComponent(tabbedPane).
                 addGroup(layout.createSequentialGroup().
-                addComponent(accept).
-                addComponent(cancel)));
+                        addComponent(accept).
+                        addComponent(cancel)));
 
         layout.setVerticalGroup(layout.createSequentialGroup().
                 addComponent(tabbedPane).
                 addGroup(layout.createParallelGroup().
-                addComponent(accept).addComponent(cancel)));
+                        addComponent(accept).addComponent(cancel)));
 
         pack();
 
@@ -148,8 +149,8 @@ public class DialogPreferences extends JDialog implements ActionListener {
                                 addComponent(labelDefaultPause).
                                 addComponent(defaultPause)).
                         addGroup(layout.createSequentialGroup().
-                        addComponent(labelDefaultMode).
-                        addComponent(modeOfContest))
+                                addComponent(labelDefaultMode).
+                                addComponent(modeOfContest))
         );
 
         layout.setVerticalGroup(layout.createSequentialGroup().
@@ -163,8 +164,8 @@ public class DialogPreferences extends JDialog implements ActionListener {
                         addComponent(labelDefaultPause).
                         addComponent(defaultPause)).
                 addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).
-                addComponent(labelDefaultMode).
-                addComponent(modeOfContest)));
+                        addComponent(labelDefaultMode).
+                        addComponent(modeOfContest)));
 
         general.setBorder(BorderFactory.createTitledBorder("Default Options "));
         return general;
@@ -280,7 +281,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
 
         return !(!f.exists() || !f.isDirectory()) && ContestConfig.existsConfigFile(p);
     }
-    
+
     public boolean validateNameOfContest(String s) {
         //todo: use the validator!!!
         Pattern p = Pattern.compile("[^A-Za-z0-9\\_\\-]+");
@@ -317,7 +318,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
                 j++;
             }
 
-            contest.updateNutrient(nutrients_list);
+            ContestHelper.updateNutrient(contest.getConfig(), nutrients_list);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
             return false;

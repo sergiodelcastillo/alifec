@@ -10,17 +10,16 @@ import alifec.core.contest.oponentInfo.OpponentInfoManager;
 import alifec.core.contest.oponentInfo.OpponentReportLine;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
-import alifec.core.exception.*;
+import alifec.core.exception.CreateContestException;
+import alifec.core.exception.CreateRankingException;
+import alifec.core.exception.CreateTournamentException;
+import alifec.core.exception.SaveContestConfigException;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.log4j.Logger;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
+
+import java.io.*;
 import java.util.*;
 
 
@@ -137,35 +136,11 @@ public class Contest {
         return true;
     }
 
-    public void updateNutrient(int[] nutrients) throws IOException {
-        //todo: improve it
-        String url = config.getNutrientsFilePath();
-
-        new File(url).renameTo(new File(url + "_backup"));
-
-        File newNutrient = new File(url);
-        PrintWriter pw = new PrintWriter(newNutrient);
-
-        for (int nutriID : nutrients)
-            pw.println(nutriID);
-
-        pw.close();
-
-        new File(url + "_backup").delete();
-    }
-
     public void setMode(int mode) throws IOException {
         this.config.setMode(mode);
         this.tournaments.setMode(mode);
 
     }
-
-
-    /*
-      *************************************************************************
-      * Metodos Gets																				*
-      * *************************************************************************
-      */
 
     public TournamentManager getTournamentManager() {
         return tournaments;
@@ -173,10 +148,6 @@ public class Contest {
 
     public Environment getEnvironment() {
         return environment;
-    }
-
-    public String getMOsPath() {
-        return config.getMOsPath();
     }
 
 

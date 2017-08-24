@@ -273,4 +273,21 @@ public class ContestHelper {
             return false;
         }
     }
+
+    public static void updateNutrient(ContestConfig config, int[] nutrients) throws IOException {
+        //todo: improve it
+        String url = config.getNutrientsFilePath();
+
+        new File(url).renameTo(new File(url + "_backup"));
+
+        File newNutrient = new File(url);
+        PrintWriter pw = new PrintWriter(newNutrient);
+
+        for (int nutriID : nutrients)
+            pw.println(nutriID);
+
+        pw.close();
+
+        new File(url + "_backup").delete();
+    }
 }
