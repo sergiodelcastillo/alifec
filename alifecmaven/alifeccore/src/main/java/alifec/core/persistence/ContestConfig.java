@@ -4,6 +4,8 @@ import alifec.core.exception.SaveContestConfigException;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -19,6 +21,8 @@ public class ContestConfig {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String DATETIME_FORMAT = "yyyyMMdd-HHmmss";
+
+    public static final String BASE_FOLDER = "app";
 
     /**
      * List of nutrients that are used in contest.
@@ -157,6 +161,11 @@ public class ContestConfig {
         property.setProperty(PROPERTY_PAUSE_BETWEEN_BATTLES_KEY, Integer.toString(pauseBetweenBattles));
 
         try {
+            String basePath = getBaseFolder(path);
+
+            if (Files.notExists(Paths.get(basePath))) {
+                throw new SaveContestConfigException("The base path can not be found: " + basePath, this);
+            }
             property.store(new FileWriter(this.getConfigFilePath()),
                     "Configuration File\n Warning: do not modify this file");
         } catch (IOException e) {
@@ -287,9 +296,15 @@ public class ContestConfig {
     }
 
     public static String getConfigFilePath(String path) {
+
+
+        return getBaseFolder(path) + File.separator + CONFIG_FILE;
+    }
+
+    public static String getBaseFolder(String path) {
         if (path == null || path.isEmpty()) path = ".";
 
-        return path + File.separator + CONFIG_FILE;
+        return path + File.separator + BASE_FOLDER;
     }
 
     public static boolean existsConfigFile(String path) {
@@ -432,6 +447,7 @@ public class ContestConfig {
     public static String getTournamentFilename(int value) {
         return String.format(TOURNAMENT_FILENAME, value);
     }
+
 
     @Override
     public String toString() {

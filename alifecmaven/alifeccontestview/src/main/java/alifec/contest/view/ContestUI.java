@@ -71,7 +71,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
     private static void config() {
         if (System.getProperty("log4j.configuration") == null) {
-            System.setProperty("log4j.configuration", "file:log4j.xml");
+            System.setProperty("log4j.configuration", "file:app" + File.separator + "log4j.xml");
         }
     }
 
@@ -156,7 +156,7 @@ public class ContestUI extends JFrame implements ActionListener {
                         config.save();
                     } catch (SaveContestConfigException e) {
                         logger.error("Can not create the contest file: " + e.getConfig(), e);
-                        Message.printErr(null, "Can not create the contest file: " + e.getConfig());
+                        Message.printErr(null, "Can not create the contest file. Please check the log file.");
                         return false;
                     }
                 }

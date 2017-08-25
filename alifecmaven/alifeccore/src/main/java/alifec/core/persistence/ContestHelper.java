@@ -233,7 +233,7 @@ public class ContestHelper {
     public static void createExamples(String MOsFolder) {
         try {
             logger.info("Generating examples in folder " + MOsFolder);
-            File source = new File(Contest.class.getClass().getResource("/examples/").toURI());
+            File source = new File(Contest.class.getClass().getResource("/app/examples/").toURI());
 
             Files.walk(source.toPath()).forEach(path -> {
                 try {
@@ -253,7 +253,7 @@ public class ContestHelper {
 
     private static boolean createCppApi(String targetFolder) {
         try {
-            File source = new File(Contest.class.getClass().getResource("/cpp/").toURI());
+            File source = new File(Contest.class.getClass().getResource("/app/cpp/").toURI());
             final boolean[] isOK = {true};
 
             Files.walk(source.toPath()).forEach(path -> {
