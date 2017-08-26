@@ -1,5 +1,6 @@
 package alifec;
 
+import alifec.core.contest.Contest;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ContestHelper;
 import alifec.core.exception.CreateContestFolderException;
@@ -9,6 +10,7 @@ import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,7 +61,7 @@ public class ParentTest {
         }
     }
 
-    protected ContestConfig  createContest(String name) throws IOException, CreateContestFolderException {
+    protected ContestConfig  createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException {
         ContestConfig config = ContestConfig.buildNewConfigFile(TEST_ROOT_PATH, name);
 
         createContest(config);
@@ -67,8 +69,11 @@ public class ParentTest {
 
     }
 
-    protected void createContest(ContestConfig config) throws IOException, CreateContestFolderException {
-        ContestHelper.buildNewContestFolder(config, true);
+    protected void createContest(ContestConfig config) throws IOException, CreateContestFolderException, URISyntaxException {
+        File cppResources = new File(Contest.class.getClass().getResource("/app/cpp/").toURI());
+        File examplesResources = new File(Contest.class.getClass().getResource("/app/examples/").toURI());
+
+        ContestHelper.buildNewContestFolder(config, true, cppResources, examplesResources);
 
     }
 }

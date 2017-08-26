@@ -1,5 +1,7 @@
 #!/bin/bash
 
-mvn clean install
-mvn exec:exec -pl alifeccontestview
+
+#mvn clean install -DskipTests
+mvn clean install 
+mvn exec:exec -pl alifeccontestview 
 

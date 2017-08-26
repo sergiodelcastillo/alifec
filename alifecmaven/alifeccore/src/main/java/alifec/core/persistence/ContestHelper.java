@@ -183,43 +183,48 @@ public class ContestHelper {
     }
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
-        createFolder(config.getContestPath());
-        createFolder(config.getMOsPath());
-        createFolder(config.getReportPath());
-        createFolder(config.getCppApiFolder());
-        createFolder(config.getLogFolder());
-        createFolder(config.getBackupFolder());
-
-        File nutrientsFile = new File(config.getNutrientsFilePath());
-        PrintWriter writter = null;
-
-        try {
-            writter = new PrintWriter(nutrientsFile);
-
-            for (Nutrient n : Agar.nutrient)
-                writter.println(n.getID());
-        } catch (IOException ex) {
-            logger.error("Creating file: " + nutrientsFile + " [FAIL]");
-            throw new CreateContestFolderException("Cant not create the file: " + config.getNutrientsFilePath());
-        } finally {
-            if (writter != null) writter.close();
-        }
-
-        logger.info("Creating file: " + nutrientsFile + " [OK]");
-
-        //copy the cpp api
-        if (!createCppApi(config.getCppApiFolder())) {
-            logger.error("Creating cpp api to: " + config.getCppApiFolder() + " [FAIL]");
-            throw new CreateContestFolderException("Cant not create the cpp api files in dir: " + config.getCppApiFolder());
-        }
-        logger.info("Creating cpp api to: " + config.getCppApiFolder() + " [OK]");
-
-        //Create examples
-        logger.info("Create examples: " + (createExamples ? "YES" : "NO"));
-        if (createExamples) {
-            createExamples(config.getMOsPath());
-        }
+        File cppResources = new File("app/cpp/");
+        File examplesResources = new File("app/examples/");
+        buildNewContestFolder(config, createExamples, cppResources, examplesResources);
     }
+    public static void buildNewContestFolder(ContestConfig config, boolean createExamples, File cppResources, File exampleResources) throws CreateContestFolderException {
+            createFolder(config.getContestPath());
+            createFolder(config.getMOsPath());
+            createFolder(config.getReportPath());
+            createFolder(config.getCppApiFolder());
+            createFolder(config.getLogFolder());
+            createFolder(config.getBackupFolder());
+
+            File nutrientsFile = new File(config.getNutrientsFilePath());
+            PrintWriter writter = null;
+
+            try {
+                writter = new PrintWriter(nutrientsFile);
+
+                for (Nutrient n : Agar.nutrient)
+                    writter.println(n.getID());
+            } catch (IOException ex) {
+                logger.error("Creating file: " + nutrientsFile + " [FAIL]");
+                throw new CreateContestFolderException("Cant not create the file: " + config.getNutrientsFilePath());
+            } finally {
+                if (writter != null) writter.close();
+            }
+
+            logger.info("Creating file: " + nutrientsFile + " [OK]");
+
+            //copy the cpp api
+            if (!createCppApi(cppResources, config.getCppApiFolder())) {
+                logger.error("Creating cpp api to: " + config.getCppApiFolder() + " [FAIL]");
+                throw new CreateContestFolderException("Cant not create the cpp api files in dir: " + config.getCppApiFolder());
+            }
+            logger.info("Creating cpp api to: " + config.getCppApiFolder() + " [OK]");
+
+            //Create examples
+            logger.info("Create examples: " + (createExamples ? "YES" : "NO"));
+            if (createExamples) {
+                createExamples(exampleResources, config.getMOsPath());
+            }
+        }
 
     private static void createFolder(String folder) throws CreateContestFolderException {
         if (!new File(folder).mkdir()) {
@@ -230,10 +235,9 @@ public class ContestHelper {
         logger.info("Creating folder: " + folder + " [OK]");
     }
 
-    public static void createExamples(String MOsFolder) {
+    public static void createExamples(File source, String MOsFolder) {
         try {
             logger.info("Generating examples in folder " + MOsFolder);
-            File source = new File(Contest.class.getClass().getResource("/app/examples/").toURI());
 
             Files.walk(source.toPath()).forEach(path -> {
                 try {
@@ -246,14 +250,14 @@ public class ContestHelper {
                     logger.error(e.getMessage(), e);
                 }
             });
-        } catch (URISyntaxException | IOException ex) {
+        } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }
     }
 
-    private static boolean createCppApi(String targetFolder) {
+    private static boolean createCppApi(File source, String targetFolder) {
         try {
-            File source = new File(Contest.class.getClass().getResource("/app/cpp/").toURI());
+
             final boolean[] isOK = {true};
 
             Files.walk(source.toPath()).forEach(path -> {
@@ -271,7 +275,7 @@ public class ContestHelper {
                 }
             });
             return isOK[0];
-        } catch (URISyntaxException | IOException ex) {
+        } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
             return false;
         }

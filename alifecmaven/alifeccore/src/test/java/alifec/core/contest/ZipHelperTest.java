@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * Created by Sergio Del Castillo on 22/08/17.
@@ -18,7 +19,7 @@ import java.io.IOException;
 public class ZipHelperTest extends ParentTest {
 
     @Test
-    public void testCreateZip() throws IOException, CreateContestFolderException {
+    public void testCreateZip() throws IOException, CreateContestFolderException, URISyntaxException {
         String contestName = "contest-01";
 
         ContestConfig config = createContest(contestName);

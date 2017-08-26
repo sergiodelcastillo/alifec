@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 
 /**
@@ -77,7 +78,7 @@ public class ContestFolderFilterTest extends ParentTest {
     }
 
     @Test
-    public void testListOneContest() throws IOException, CreateContestFolderException {
+    public void testListOneContest() throws IOException, CreateContestFolderException, URISyntaxException {
         //TODO: usar format..
         String contestName = ContestConfig.CONTEST_NAME_PREFIX + "01";
         createContest(contestName);
@@ -89,7 +90,7 @@ public class ContestFolderFilterTest extends ParentTest {
     }
 
     @Test
-    public void testListManyContests() throws IOException, CreateContestFolderException {
+    public void testListManyContests() throws IOException, CreateContestFolderException, URISyntaxException {
         //Create 100  contests
         for (int i = 0; i < 100; i++) {
             //TODO: usar format..
@@ -114,7 +115,7 @@ public class ContestFolderFilterTest extends ParentTest {
     }
 
     @Test
-    public void testListManyContestsWithSimilarName() throws IOException, CreateContestFolderException {
+    public void testListManyContestsWithSimilarName() throws IOException, CreateContestFolderException, URISyntaxException {
         String[] contestList = new String[]{
                 "contest-01", //SI
                 "Contest-02",//SI
