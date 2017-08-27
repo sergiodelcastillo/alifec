@@ -5,10 +5,12 @@
 
 package alifec.core.contest.tournament;
 
-import alifec.core.persistence.ContestConfig;
 import alifec.core.contest.tournament.battles.BattleManager;
 import alifec.core.exception.CreateRankingException;
-import org.apache.log4j.Logger;
+import alifec.core.persistence.ContestConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import java.util.List;
 
 public class Tournament implements Comparable<Tournament> {
 
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
     
     /**
      * manager of battles. This battles are permanent

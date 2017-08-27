@@ -1,17 +1,15 @@
 package alifec.core.persistence;
 
-import alifec.core.contest.Contest;
 import alifec.core.contest.UnsuccessfulColonies;
-import alifec.core.persistence.filter.TournamentFilter;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.TournamentCorruptedException;
 import alifec.core.persistence.filter.ContestFolderFilter;
+import alifec.core.persistence.filter.TournamentFilter;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrients.Nutrient;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +22,7 @@ import java.util.List;
  */
 public class ContestHelper {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(ContestHelper.class);
+    static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestHelper.class);
 
     /**
      * Find the mode is competition and the Alifec software was closed unsuccessful then

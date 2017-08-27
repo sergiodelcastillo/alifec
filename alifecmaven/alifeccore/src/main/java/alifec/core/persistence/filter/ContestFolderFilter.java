@@ -6,7 +6,8 @@ package alifec.core.persistence.filter;
 
 import alifec.core.persistence.ContestConfig;
 import alifec.core.validation.Validator;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
@@ -27,7 +28,7 @@ import java.util.regex.Pattern;
  */
 public class ContestFolderFilter extends FileFilter implements FilenameFilter, Validator<String> {
 
-    private Logger logger = Logger.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
 
     private static String STRING_PATTERN = "^(" + ContestConfig.CONTEST_NAME_PREFIX+ ")([a-zA-Z_0-9]{1,25})$";
 

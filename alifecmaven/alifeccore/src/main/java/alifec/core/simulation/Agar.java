@@ -1,14 +1,8 @@
 package alifec.core.simulation;
 
-import alifec.core.simulation.nutrients.Famine;
-import alifec.core.simulation.nutrients.InclinedPlane;
-import alifec.core.simulation.nutrients.Lattice;
-import alifec.core.simulation.nutrients.Nutrient;
-import alifec.core.simulation.nutrients.Rings;
-import alifec.core.simulation.nutrients.TwoGaussians;
-import alifec.core.simulation.nutrients.VerticalBar;
-import org.apache.log4j.Logger;
-
+import alifec.core.simulation.nutrients.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +14,7 @@ import java.util.Random;
  */
 public class Agar {
 
-    private Logger logger = Logger.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
 
     private int nutri_id = -1;
     private float[][] nutrients;

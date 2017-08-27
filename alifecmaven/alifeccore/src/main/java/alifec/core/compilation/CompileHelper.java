@@ -1,9 +1,9 @@
 package alifec.core.compilation;
 
-import alifec.core.persistence.ContestConfig;
 import alifec.core.exception.CompilerException;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.SourceCodeFilter;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class CompileHelper {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(CompileHelper.class);
+    static Logger logger = org.apache.logging.log4j.LogManager.getLogger(CompileHelper.class);
 
     private static String LINUX_ORACLE_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
     private static String LINUX_OPENJDK_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";

@@ -6,7 +6,8 @@
 package alifec.contest.view;
 
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.util.Enumeration;
@@ -15,7 +16,7 @@ import java.util.Hashtable;
 public class MiComboboxModel extends AbstractListModel<String> implements ComboBoxModel<String> {
     private static final long serialVersionUID = 0L;
 
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     Hashtable<String, Integer> model;
 

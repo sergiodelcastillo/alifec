@@ -3,22 +3,18 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
-import alifec.core.persistence.ContestConfig;
-import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.contest.tournament.battles.BattleRun;
+import alifec.core.exception.MoveMicroorganismException;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.SourceCodeFilter;
 import alifec.core.simulation.rules.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Environment {
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
     /**
      * Agar of environment.
      */

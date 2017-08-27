@@ -7,23 +7,14 @@ package alifec.contest.view;
 
 
 import alifec.core.contest.Contest;
-import alifec.core.persistence.ContestConfig;
 import alifec.core.contest.oponentInfo.OpponentReportLine;
 import alifec.core.exception.CreateRankingException;
-import org.apache.log4j.Logger;
+import alifec.core.persistence.ContestConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -34,7 +25,7 @@ import java.io.PrintWriter;
 
 public class ContestReportUI extends JDialog implements ActionListener {
     private static final long serialVersionUID = 10L;
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     ContestUI father;
     JTextArea txt = new JTextArea("");

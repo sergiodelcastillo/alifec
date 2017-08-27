@@ -3,7 +3,8 @@ package alifec.core.persistence.filter; /**
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,7 +20,7 @@ import java.util.List;
  * Selecciona solo los que empiezan con begin y finalizan con end.
  */
 public class SourceCodeFilter extends AllFilesFilter {
-    static Logger logger = Logger.getLogger(SourceCodeFilter.class);
+    static Logger logger = LogManager.getLogger(SourceCodeFilter.class);
 
     private final String[] suffixes;
 

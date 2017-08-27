@@ -5,13 +5,15 @@
 
 package alifec.contest.view;
 
-import alifec.core.contest.*;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
+import alifec.core.contest.Contest;
+import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ContestHelper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +28,7 @@ import java.util.Properties;
 
 public class ContestUI extends JFrame implements ActionListener {
 
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     private static final long serialVersionUID = 0L;
     /**
@@ -70,8 +72,8 @@ public class ContestUI extends JFrame implements ActionListener {
     }
 
     private static void config() {
-        if (System.getProperty("log4j.configuration") == null) {
-            System.setProperty("log4j.configuration", "file:app" + File.separator + "log4j.xml");
+        if (System.getProperty("log4j.configurationFile") == null) {
+            System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log4j2.xml");
         }
     }
 

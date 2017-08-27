@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+    <Appenders>
+        <File name="file" fileName="log/alifec.log" append="false">
+            <PatternLayout pattern="%-5p %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1}:%L - %m%n"/>
+        </File>
+        <Console name="stdout" target="SYSTEM_OUT">
+            <PatternLayout pattern="%-5p %d{HH:mm:ss} %c{1}:%L - %m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="alifec" level="TRACE"/>
+        <Root level="INFO">
+            <AppenderRef ref="stdout"/>
+            <AppenderRef ref="file"/>
+        </Root>
+    </Loggers>
+</Configuration>

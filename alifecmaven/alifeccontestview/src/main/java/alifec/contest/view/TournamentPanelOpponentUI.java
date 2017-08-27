@@ -1,6 +1,7 @@
 package alifec.contest.view;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,7 +14,7 @@ import java.awt.*;
  */
 public class TournamentPanelOpponentUI extends JPanel implements ListCellRenderer {
     private static final long serialVersionUID = 0L;
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     private JLabel label;
     private JProgressBar progressbar;
