@@ -3,7 +3,10 @@ package alifec.core.compilation;
 import alifec.core.exception.CompilerException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.SourceCodeFilter;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -22,7 +25,11 @@ import java.util.List;
  */
 public class CompileHelper {
 
-    static Logger logger = org.apache.logging.log4j.LogManager.getLogger(CompileHelper.class);
+    static Logger logger = LogManager.getLogger(CompileHelper.class);
+
+    static Logger moLogger = LogManager.getLogger("alifec.mo.compilation");
+    static LogOutputStream out = new LogOutputStream(moLogger, Level.INFO);
+    static LogOutputStream err = new LogOutputStream(moLogger, Level.ERROR);
 
     private static String LINUX_ORACLE_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
     private static String LINUX_OPENJDK_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
@@ -126,18 +133,14 @@ public class CompileHelper {
             if (javac == null)
                 throw new CompilerException();
 
-            File out = config.getCompilationLogFile(javaFileName);
-            DataOutputStream err = new DataOutputStream(
-                    new BufferedOutputStream(
-                            new FileOutputStream(out)));
-            int s = javac.run(null, null, err, "-d", config.getCompilationTarget(), javaFileFolder + File.separator + javaFileName);
+            configureLogFile(javaFileName, config);
+            String javaFilePath = javaFileFolder + File.separator + javaFileName;
+            int s = javac.run(null, out, err, "-d", config.getCompilationTarget(), javaFilePath);
 
-            if (s == 0)
-                out.deleteOnExit();
 
             return s == 0;
-        } catch (IOException ex) {
-            logger.info("File not found when compiling MOs JAVA: " + javaFileFolder + File.separator + javaFileName + ".");
+        } catch (Exception ex) {
+            logger.info("Error compiling MOs JAVA: " + javaFileFolder + File.separator + javaFileName + ".");
             return false;
         }
 
@@ -213,16 +216,16 @@ public class CompileHelper {
             BufferedReader readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
+            configureLogFile("cpp", config);
             while ((buffer = readerInputStream.readLine()) != null) {
-                logger.trace(buffer);
+                moLogger.info(buffer);
             }
             readerInputStream.close();
             while ((buffer = readerErrorStream.readLine()) != null) {
-                logger.trace(buffer);
+                moLogger.error(buffer);
             }
             readerErrorStream.close();
             p.waitFor();
-
 
             p.getErrorStream().close();
             p.getInputStream().close();
@@ -237,6 +240,12 @@ public class CompileHelper {
             Thread.currentThread().interrupt();
             return false;
         }
+    }
+
+    private static void configureLogFile(String fileName, ContestConfig config) {
+        System.setProperty("moFilename", config.getLogFileName(fileName));
+        LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+        loggerContext.reconfigure();
     }
 
     /**

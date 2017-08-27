@@ -397,12 +397,15 @@ public class ContestConfig {
                 throw new IOException("Error while creating folder: " + logFolder);
         }
 
-        String compilationFile = logFolderPath + File.separator +
-                String.format(COMPILATION_LOG_FILENAME,
-                        javaFile.replace(".java", ""),
-                        new SimpleDateFormat(DATETIME_FORMAT).format(new Date()));
+        String compilationFile = logFolderPath + File.separator + getLogFileName(javaFile);
 
         return new File(compilationFile);
+    }
+
+    public String getLogFileName(String javaFile) {
+        return String.format(COMPILATION_LOG_FILENAME,
+                javaFile.replace(".java", ""),
+                new SimpleDateFormat(DATETIME_FORMAT).format(new Date()));
     }
 
     public String getLogFolder() {
