@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Random;
 
 public class Environment {
-    Logger logger = Logger.getLogger(getClass());
+    private Logger logger = Logger.getLogger(getClass());
     /**
      * Agar of environment.
      */
-    Agar agar;
+    private Agar agar;
 
     /**
      * All colonies!!
@@ -35,14 +35,14 @@ public class Environment {
     private Cell microorganism[][] = new Cell[Defs.DIAMETER][Defs.DIAMETER];
 
     /**
-     * First Oponent .. temporal reference !!
+     * First Opponent .. temporal reference !!
      */
-    Colony c1;
+    private Colony c1;
 
     /**
-     * Second Oponent .. temporal reference !!
+     * Second Opponent .. temporal reference !!
      */
-    Colony c2;
+    private Colony c2;
 
     /**
      * Information of current battle .. temporal reference !!
@@ -68,7 +68,7 @@ public class Environment {
         logger.info("Loading Java Colonies");
 
         //todo: decide if list java files should use the .java or .class
-        for (String name : SourceCodeFilter.listNamesJava(config.getMOsPath())) {
+        for (String name : SourceCodeFilter.listJavaFilesWithoutExtension(config.getMOsPath())) {
             try {
                 JavaColony.addClassPath(config.getCompilationTarget());
                 colonies.add(new JavaColony(colonies.size(), "MOs." + name));
@@ -85,7 +85,7 @@ public class Environment {
         if (CppColony.loadLibrary(config.getCompilationTarget())) {
             logger.info("Loading C++ Library [OK]");
 
-            for (String name : SourceCodeFilter.listNamesCpp(config.getMOsPath())) {
+            for (String name : SourceCodeFilter.listCppMOs(config.getMOsPath())) {
                 try {
                     // to initialise the name of colony
                     colonies.add(new CppColony(colonies.size(), name));
@@ -274,12 +274,6 @@ public class Environment {
 
         return id == c1.id ? c1.createInstance(mo) : c2.createInstance(mo);
     }
-
-    /*
-      ***************************************************************************
-      * Metodos Gets																				*
-      * *************************************************************************
-      */
 
     public Agar getAgar() {
         return agar;

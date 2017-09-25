@@ -1,7 +1,4 @@
-package alifec.core.persistence.filter; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
+package alifec.core.persistence.filter;
 
 import org.apache.log4j.Logger;
 
@@ -9,21 +6,37 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
- * Omite todos los arhivos temporales y ocultos.
- * Selecciona solo los que empiezan con begin y finalizan con end.
+ * @author Sergio
+ * @mail: sergio.jose.delcastillo@gmail.com
+ * <p>
+ * Lists Source code files.
+ * It does not list known hidden or temporary files.
  */
 public class SourceCodeFilter extends AllFilesFilter {
     static Logger logger = Logger.getLogger(SourceCodeFilter.class);
 
+    private static String MO_PATTERN_STRING = "^([\\s\\S]+class([\\s]+))([\\w_-]+)(\\s)*:([\\s\\S]+)Microorganism[\\s\\S]+\\z";
+
+    // got from https://blog.ostermiller.org/find-comment
+    private static String COMMENTS_PATTERN_STRING = "(?://.*)|(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)";
+
+    private static Pattern moPattern = Pattern.compile(MO_PATTERN_STRING);
+    private static Pattern commentsPattern = Pattern.compile(COMMENTS_PATTERN_STRING);
+
     private final String[] suffixes;
 
-    public SourceCodeFilter(String[] array) {
+    private SourceCodeFilter(String[] array) {
         this.suffixes = array;
     }
 
@@ -38,60 +51,51 @@ public class SourceCodeFilter extends AllFilesFilter {
     }
 
     /**
-     * Retorna un vector de String con todos los nombres
-     * de los archivos .c o .cpp o .h del directorio path.
+     * Returns the name of the files located in MOs folder which ends with .c, .cpp or .h.
      */
-    public static List<String> listFileCpp(String path) {
-        String[] cpp_files = new String[]{".h", ".c", ".cpp"};
+    public static List<String> listFilenameCpp(String path) {
         List<String> names = new ArrayList<>();
+        File[] files = listFileCpp(path);
 
-
-        File[] cpp_colonies = new File(path).listFiles(new SourceCodeFilter(cpp_files));
-
-        if (cpp_colonies != null) {
-            for (File f : cpp_colonies)
-                names.add(f.getName());
-        }
+        for (File f : files) names.add(f.getName());
 
         return names;
     }
 
     /**
-     * List all files in the folder path that end with .c or .cpp or .h without the extension
+     * Returns the files located in MOs folder which ends with .c, .cpp or .h.
+     */
+    private static File[] listFileCpp(String path) {
+        String[] cppFiles = new String[]{".h", ".c", ".cpp"};
+        File[] cppColonies = new File(path).listFiles(new SourceCodeFilter(cppFiles));
+
+        if (cppColonies == null)
+            return new File[0];
+
+        return cppColonies;
+    }
+
+    /**
+     * List all names (class name) of cpp MOs which are located in mos folder and inherits from Microorganism class.
      *
      * @param path the folder to list the names of files
-     * @return list of files without extension
+     * @return list of cpp mos
      */
-    public static List<String> listNamesCpp(String path) {
-        String[] cpp_files = new String[]{".h", ".c", ".cpp"};
+    public static List<String> listCppMOs(String path) {
         List<String> names = new ArrayList<>();
+
         try {
 
+            File[] cppCodeList = listFileCpp(path);
 
-            File[] cpp_colonies = new File(path).listFiles(new SourceCodeFilter(cpp_files));
+            for (File cppCode : cppCodeList) {
+                byte[] data = Files.readAllBytes(cppCode.toPath());
+                String line = new String(data);
 
-            if (null == cpp_colonies) {
-                return names;
-            }
+                String nameOfCppMO = getNameOfMOCpp(line);
 
-            for (File f : cpp_colonies) {
-                BufferedReader br = new BufferedReader(new FileReader(f));
-                String line;
-
-                //todo: improve the way to detect the mo name
-                //todo: it should use a patter/match instance
-                while ((line = br.readLine()) != null) {
-                    if (line.contains("class") && line.contains("public") && line.contains("Microorganism")) {
-                        int index = line.indexOf("*/");
-
-                        if (index >= 0 && index < line.indexOf(":"))
-                            line.replace(line.substring(0, index + 2), "");
-
-                        line = line.replace("class", "").trim();
-                        line = line.substring(0, line.indexOf(":"));
-                        names.add(line);
-                        break;
-                    }
+                if (nameOfCppMO != null && !nameOfCppMO.trim().isEmpty()) {
+                    names.add(nameOfCppMO);
                 }
             }
 
@@ -102,11 +106,12 @@ public class SourceCodeFilter extends AllFilesFilter {
         return names;
     }
 
+
     /**
      * List all file that end with .java it the folder path without the extension .java
      */
-    public static List<String> listNamesJava(String path) {
-        List<File> javaFiles = getFilesJava(path);
+    public static List<String> listJavaFilesWithoutExtension(String path) {
+        List<File> javaFiles = listJavaFiles(path);
         List<String> javaNames = new ArrayList<>();
 
         for (File javaFile : javaFiles)
@@ -121,7 +126,7 @@ public class SourceCodeFilter extends AllFilesFilter {
      * @param path URL of files.java
      * @return list of files that end with java
      */
-    public static List<File> getFilesJava(String path) {
+    public static List<File> listJavaFiles(String path) {
         List<File> names = new ArrayList<>();
         File[] cpp_colonies = new File(path).listFiles(new SourceCodeFilter(new String[]{".java"}));
 
@@ -130,5 +135,31 @@ public class SourceCodeFilter extends AllFilesFilter {
         }
 
         return names;
+    }
+
+    public static String getNameOfMOCpp(String line) {
+        String lineWithoutComments = removeComments(line);
+        Matcher matcher = moPattern.matcher(lineWithoutComments);
+
+        if (matcher.find()) {
+            String moName = matcher.group(3);
+
+            if (moName == null) return null;
+            return moName.trim();
+        }
+
+        return null;
+    }
+
+    public static String removeComments(String line) {
+        Matcher matcher = commentsPattern.matcher(line);
+        StringBuffer sb = new StringBuffer();
+
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "");
+        }
+        matcher.appendTail(sb);
+
+        return sb.toString();
     }
 }

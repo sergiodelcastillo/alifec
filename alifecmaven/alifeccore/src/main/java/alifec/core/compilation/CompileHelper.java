@@ -52,7 +52,7 @@ public class CompileHelper {
         logger.info("Compile JAVA Files");
         CompilationResult result = new CompilationResult();
         try {
-            for (File f : SourceCodeFilter.getFilesJava(config.getMOsPath())) {
+            for (File f : SourceCodeFilter.listJavaFiles(config.getMOsPath())) {
 
                 if (compileMOsJava(config, f.getParent(), f.getName())) {
                     logger.info(f.getAbsolutePath() + " [OK]");
@@ -245,7 +245,7 @@ public class CompileHelper {
      * @return true if is successfully
      */
     static boolean updateTournamentCpp(ContestConfig config) {
-        List<String> names = SourceCodeFilter.listNamesCpp(config.getMOsPath());
+        List<String> names = SourceCodeFilter.listCppMOs(config.getMOsPath());
         File env = new File(config.getCppApiFolder() + File.separator + "Environment.cpp");
         try {
             if (!env.exists()) {
@@ -289,7 +289,7 @@ public class CompileHelper {
      * @return true if  is successfully
      */
     static boolean updateIncludes(ContestConfig config) {
-        List<String> files = SourceCodeFilter.listFileCpp(config.getMOsPath());
+        List<String> files = SourceCodeFilter.listFilenameCpp(config.getMOsPath());
 
         File includes = new File(config.getCppApiFolder() + File.separator + "includemos.h");
         try {
