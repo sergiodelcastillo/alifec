@@ -3,11 +3,12 @@ package alifec.core.simulation; /**
  * @email: sergio.jose.delcastillo@gmail.com
  */
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CppColony extends Colony {
 
-    static Logger logger = Logger.getLogger(CppColony.class);
+    static Logger logger = LogManager.getLogger(CppColony.class);
 
     public static boolean loadLibrary(String path) {
         try {

@@ -1,6 +1,7 @@
 package alifec.core.persistence.filter;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
  * It does not list known hidden or temporary files.
  */
 public class SourceCodeFilter extends AllFilesFilter {
-    static Logger logger = Logger.getLogger(SourceCodeFilter.class);
+    static Logger logger = LogManager.getLogger(SourceCodeFilter.class);
 
     private static String MO_PATTERN_STRING = "^([\\s\\S]+class([\\s]+))([\\w_-]+)(\\s)*:([\\s\\S]+)Microorganism[\\s\\S]+\\z";
 

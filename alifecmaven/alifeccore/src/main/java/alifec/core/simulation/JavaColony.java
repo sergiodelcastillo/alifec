@@ -4,7 +4,8 @@ package alifec.core.simulation; /**
  */
 
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
  * Es la encargada de administrar cada colonia de Microorganismos codificados en en el lenguaje java.
  */
 public class JavaColony extends Colony {
-    org.apache.log4j.Logger logger = Logger.getLogger(getClass());
+    org.apache.logging.log4j.Logger logger = LogManager.getLogger(getClass());
 
     private Constructor<Microorganism> constructor;
     private List<Microorganism> instances = new ArrayList<>();

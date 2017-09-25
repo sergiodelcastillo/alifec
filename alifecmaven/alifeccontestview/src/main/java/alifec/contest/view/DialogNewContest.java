@@ -7,7 +7,8 @@ package alifec.contest.view;
 
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.ContestFolderFilter;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ import java.util.Calendar;
 
 public class DialogNewContest extends JDialog implements ActionListener, KeyListener {
     private static final long serialVersionUID = 0L;
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     private JPanel centerPanel = new JPanel();
     private JPanel southPanel = new JPanel();

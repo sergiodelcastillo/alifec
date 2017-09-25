@@ -9,7 +9,8 @@ import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ContestHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrients.Nutrient;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ import static java.lang.Integer.parseInt;
 public class DialogPreferences extends JDialog implements ActionListener {
     private static final long serialVersionUID = 0L;
 
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     private ContestUI father;
     private JTextField nameOfContest;

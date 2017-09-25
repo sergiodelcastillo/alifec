@@ -1,7 +1,8 @@
 package alifec.core.persistence;
 
 import alifec.core.exception.SaveContestConfigException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -17,7 +18,7 @@ import java.util.Properties;
  */
 public class ContestConfig {
 
-    static Logger logger = org.apache.log4j.Logger.getLogger(ContestConfig.class);
+    static Logger logger = LogManager.getLogger(ContestConfig.class);
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String DATETIME_FORMAT = "yyyyMMdd-HHmmss";
@@ -396,12 +397,15 @@ public class ContestConfig {
                 throw new IOException("Error while creating folder: " + logFolder);
         }
 
-        String compilationFile = logFolderPath + File.separator +
-                String.format(COMPILATION_LOG_FILENAME,
-                        javaFile.replace(".java", ""),
-                        new SimpleDateFormat(DATETIME_FORMAT).format(new Date()));
+        String compilationFile = logFolderPath + File.separator + getLogFileName(javaFile);
 
         return new File(compilationFile);
+    }
+
+    public String getLogFileName(String javaFile) {
+        return String.format(COMPILATION_LOG_FILENAME,
+                javaFile.replace(".java", ""),
+                new SimpleDateFormat(DATETIME_FORMAT).format(new Date()));
     }
 
     public String getLogFolder() {

@@ -10,28 +10,24 @@ import alifec.contest.view.Message;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.exception.MoveMicroorganismException;
-import alifec.core.simulation.*;
-import org.apache.log4j.Logger;
+import alifec.core.simulation.Cell;
+import alifec.core.simulation.Colony;
+import alifec.core.simulation.Defs;
+import alifec.core.simulation.Environment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.max;
-import static java.lang.Math.pow;
-import static java.lang.Math.round;
+import static java.lang.Math.*;
 
 public class MiThread extends Thread {
 
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     enum Status {STATUS_PLAY, STATUS_PAUSE, STATUS_STOPPED}
 

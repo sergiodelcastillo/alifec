@@ -1,10 +1,16 @@
 package alifec.core.persistence;
 
 import alifec.core.exception.ZipParsingException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 import java.util.zip.ZipEntry;
@@ -16,7 +22,7 @@ import java.util.zip.ZipOutputStream;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ZipHelper {
-    private final static Logger logger = Logger.getLogger(ZipHelper.class);
+    private final static Logger logger = LogManager.getLogger(ZipHelper.class);
 
     /**
      * This method creates the zip archive and then goes through

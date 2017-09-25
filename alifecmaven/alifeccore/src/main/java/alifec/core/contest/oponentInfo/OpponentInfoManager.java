@@ -6,15 +6,18 @@
 package alifec.core.contest.oponentInfo;
 
 import alifec.core.persistence.ContestConfig;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class OpponentInfoManager {
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     List<OpponentInfo> opponents = new ArrayList<>();
 

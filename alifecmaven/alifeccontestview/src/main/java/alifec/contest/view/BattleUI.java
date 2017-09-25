@@ -8,13 +8,14 @@ package alifec.contest.view;
 
 import alifec.contest.simulationUI.GUIdosD;
 import alifec.core.contest.Contest;
-import alifec.core.persistence.ContestConfig;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.battles.BattleManager;
 import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.exception.CreateBattleException;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.simulation.Environment;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +30,7 @@ import java.util.List;
 public class BattleUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
 
-    private static Logger logger = Logger.getLogger(BattleUI.class);
+    private static Logger logger = LogManager.getLogger(BattleUI.class);
 
     private final ContestUI father;
 

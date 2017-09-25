@@ -1,14 +1,18 @@
 package alifec.core.contest.tournament;
 
-import alifec.core.persistence.ContestConfig;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.CreateTournamentException;
+import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.TournamentFilter;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
 
 /**
  * Created by Sergio Del Castillo on 05/08/17.
@@ -17,7 +21,7 @@ import java.util.*;
  */
 public class TournamentManager {
 
-    Logger logger = Logger.getLogger(getClass());
+    Logger logger = LogManager.getLogger(getClass());
 
     /**
      * List of tournaments.

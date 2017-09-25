@@ -19,15 +19,18 @@ import alifec.core.persistence.ZipHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrients.Nutrient;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 
 public class Contest {
 
-    private Logger logger = Logger.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
 
     /**
      * Environment ...

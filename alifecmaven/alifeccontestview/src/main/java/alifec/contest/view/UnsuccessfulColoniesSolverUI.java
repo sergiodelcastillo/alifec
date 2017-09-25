@@ -1,15 +1,15 @@
 package alifec.contest.view;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class UnsuccessfulColoniesSolverUI extends JDialog {
-    private Logger logger = Logger.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
     ContestUI contestUI;
     String c1, c2;
     String[] options = new String[]{"Take action with backup file", "Ignore and delete backup file"};
