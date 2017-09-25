@@ -3,13 +3,9 @@ package alifec.core.persistence.filter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,7 +82,6 @@ public class SourceCodeFilter extends AllFilesFilter {
         List<String> names = new ArrayList<>();
 
         try {
-
             File[] cppCodeList = listFileCpp(path);
 
             for (File cppCode : cppCodeList) {
@@ -109,9 +104,9 @@ public class SourceCodeFilter extends AllFilesFilter {
 
 
     /**
-     * List all file that end with .java it the folder path without the extension .java
+     * List the name of Java MOs which are located in MOs folder
      */
-    public static List<String> listJavaFilesWithoutExtension(String path) {
+    public static List<String> listJavaMOs(String path) {
         List<File> javaFiles = listJavaFiles(path);
         List<String> javaNames = new ArrayList<>();
 
@@ -122,7 +117,7 @@ public class SourceCodeFilter extends AllFilesFilter {
     }
 
     /**
-     * List all file that end with .java in the folder path
+     * List all file that ends with .java in the folder path
      *
      * @param path URL of files.java
      * @return list of files that end with java

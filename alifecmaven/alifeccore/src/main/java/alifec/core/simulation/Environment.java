@@ -1,7 +1,4 @@
-package alifec.core.simulation; /**
- * @author Sergio Del Castillo
- * @email: sergio.jose.delcastillo@gmail.com
- */
+package alifec.core.simulation;
 
 import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.exception.MoveMicroorganismException;
@@ -10,9 +7,16 @@ import alifec.core.persistence.filter.SourceCodeFilter;
 import alifec.core.simulation.rules.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Random;
 
-import java.util.*;
-
+/**
+ * @author Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
+ */
 public class Environment {
     Logger logger = LogManager.getLogger(getClass());
 
@@ -65,7 +69,7 @@ public class Environment {
         logger.info("Loading Java Colonies");
 
         //todo: decide if list java files should use the .java or .class
-        for (String name : SourceCodeFilter.listJavaFilesWithoutExtension(config.getMOsPath())) {
+        for (String name : SourceCodeFilter.listJavaMOs(config.getMOsPath())) {
             try {
                 JavaColony.addClassPath(config.getCompilationTarget());
                 colonies.add(new JavaColony(colonies.size(), "MOs." + name));
