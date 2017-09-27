@@ -69,7 +69,6 @@ public class SourceCodeFilterTest {
                         "\n", "Movx"}
         };
 
-
         for (String[] line : lines) {
             Assert.assertEquals(line[1], SourceCodeFilter.getNameOfMOCpp(line[0]));
 
@@ -394,4 +393,8 @@ public class SourceCodeFilterTest {
         Assert.assertEquals(target, SourceCodeFilter.removeComments(source));
     }
 
+    @Test
+    public void testall(){
+        //@Todo: agregar los test faltantes para completar toda la clase
+    }
 }

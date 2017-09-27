@@ -1,9 +1,10 @@
-package alifec.core.simulation; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
+package alifec.core.simulation;
+
+
+/**
+ * @author Sergio Del Castillo
+ * @email sergio.jose.delcastillo@gmail.com
  */
-
-
 public final class Cell {
     /**
      * ID of colony

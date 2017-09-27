@@ -1,8 +1,9 @@
 package alifec.core.persistence;
 
-import alifec.core.exception.SaveContestConfigException;
+import alifec.core.exception.ConfigFileException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 
 import java.io.*;
 import java.nio.file.Files;
@@ -121,23 +122,29 @@ public class ContestConfig {
      *
      * @param path path to read the config
      * @return true if is successfully
-     * @throws IOException if can not find the config file
+     * @throws IOException         if can not find the config file
+     * @throws ConfigFileException if the config file is not valid
      */
-    public static ContestConfig buildFromFile(String path) throws IOException {
-        Properties property = new Properties();
-        InputStream is = new FileInputStream(getConfigFilePath(path));
-
-        property.load(is);
+    public static ContestConfig buildFromFile(String path) throws ConfigFileException {
         ContestConfig config = new ContestConfig();
-        config.setPath(path);
-        for (Object object : property.keySet()) {
+        try {
+            Properties property = new Properties();
+            InputStream is = new FileInputStream(getConfigFilePath(path));
 
-            if (!config.setProperty(object.toString(), property.getProperty(object.toString()))) {
-                logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
+            property.load(is);
+            config.setPath(path);
+            for (Object object : property.keySet()) {
+
+                if (!config.setProperty(object.toString(), property.getProperty(object.toString()))) {
+                    logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
+                }
             }
+        } catch (IOException ex) {
+            throw new ConfigFileException("Error loading the config file in path: " + path, ex, config);
         }
 
-        config.isValid();
+        //validate if the configuration is Ok.
+        config.validate();
 
         return config;
     }
@@ -153,7 +160,7 @@ public class ContestConfig {
         return config;
     }
 
-    public void save() throws SaveContestConfigException {
+    public void save() throws ConfigFileException {
         Properties property = new Properties();
 
         property.setProperty(PROPERTY_PATH_KEY, path);
@@ -165,41 +172,43 @@ public class ContestConfig {
             String basePath = getBaseFolder(path);
 
             if (Files.notExists(Paths.get(basePath))) {
-                throw new SaveContestConfigException("The base path can not be found: " + basePath, this);
+                throw new ConfigFileException("The base path can not be found: " + basePath, this);
             }
             property.store(new FileWriter(this.getConfigFilePath()),
                     "Configuration File\n Warning: do not modify this file");
         } catch (IOException e) {
-            throw new SaveContestConfigException("Can not update the config file: " + getConfigFilePath(), this);
+            throw new ConfigFileException("Can not update the config file: " + getConfigFilePath(), this);
         }
         //the property was saved so the system should be restarted.
     }
 
-    public boolean isValid() {
-        //todo: verify this method. there are some validator..maybe it is not neccesary anymore.
+    public void validate() throws ConfigFileException {
         if (pauseBetweenBattles < 0) {
-            return false;
+            throw new ConfigFileException("property pause_between_battles must have a positive integer.", this);
         }
 
         if (mode < 0 || mode > 1) {
-            return false;
-        }
-
-        if (contestName.isEmpty()) {
-            return false;
+            throw new ConfigFileException("property mode must have values 0 or 1.", this);
         }
 
         if (path.isEmpty()) {
-            return false;
+            throw new ConfigFileException("The contest path is an empty string.", this);
         }
 
-        File f = new File(path);
-        if (!f.exists())
-            return false;
+        if (contestName.isEmpty()) {
+            throw new ConfigFileException("The contest name is an empty string.", this);
+        }
+        try {
+            File f = new File(path);
+            if (!f.exists())
+                throw new ConfigFileException("The contest path folder does not exists: " + f.getCanonicalPath(), this);
 
-        f = new File(path + File.separator + contestName);
-
-        return f.exists();
+            f = new File(path + File.separator + contestName);
+            if (!f.exists())
+                throw new ConfigFileException("The contest name folder does not exists: " + f.getCanonicalPath(), this);
+        } catch (IOException ex) {
+            throw new ConfigFileException("The contest path or contest name does not exists.", this);
+        }
     }
 
     private boolean setProperty(String type, String option) {
@@ -464,4 +473,9 @@ public class ContestConfig {
     }
 
 
+    public static boolean removeConfigFile(String path) {
+        File config = new File(getConfigFilePath(path));
+
+        return config.delete();
+    }
 }

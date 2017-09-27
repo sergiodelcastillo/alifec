@@ -4,7 +4,6 @@ package alifec.core.simulation; /**
  */
 
 
-
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -16,7 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Es la encargada de administrar cada colonia de Microorganismos.
+ * @author Sergio Del Castillo
+ * @email sergio.jose.delcastillo@gmail.com
+ * <p>
+ * It is a generic class which represents the colony of microorganisms.
  */
 public abstract class Colony {
 
@@ -32,7 +34,6 @@ public abstract class Colony {
         this.id = id;
         this.path = path;
     }
-
 
 
     @Override
@@ -158,7 +159,6 @@ public abstract class Colony {
         sysPathsField.setAccessible(true);
         sysPathsField.set(null, null);
     }*/
-
     public static void addClassPath(String s) throws Exception {
         File f = new File(s);
         URI u = f.toURI();

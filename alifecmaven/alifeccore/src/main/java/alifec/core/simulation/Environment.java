@@ -15,7 +15,7 @@ import java.util.Random;
 
 /**
  * @author Sergio Del Castillo
- * @email: sergio.jose.delcastillo@gmail.com
+ * @email sergio.jose.delcastillo@gmail.com
  */
 public class Environment {
     Logger logger = LogManager.getLogger(getClass());
@@ -127,7 +127,6 @@ public class Environment {
                 c2 = colony;
         }
 
-
         Petri.getInstance().agar = agar;
         Petri.getInstance().firstOpponent = c1;
         Petri.getInstance().secondOpponent = c2;
@@ -161,6 +160,9 @@ public class Environment {
         // randomize list!
         Collections.shuffle(allOps);
 
+        boolean mitosis;
+        Movement mov;
+
         while (!allOps.isEmpty()) {
             Cell mo = allOps.remove(allOps.size() - 1);
             Colony current, enemy;
@@ -177,15 +179,12 @@ public class Environment {
             if (indexMO < 0)
                 continue;
 
-            boolean mitosis;
-            Movement mov;
-
             try {
                 current.update(indexMO, mo.ene, mo.x, mo.y);
                 mov = current.move(indexMO);
                 mitosis = current.mitosis(indexMO);
             } catch (Exception ex) {
-                logger.warn(ex.getMessage(), ex);
+                logger.error(ex.getMessage(), ex);
                 String txt = "The colony: " + current.getName() + " has been Penalized.";
                 throw new MoveMicroorganismException(txt, current.getName(), ex);
             }

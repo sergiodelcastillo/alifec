@@ -5,6 +5,7 @@
 
 package alifec.core.contest.tournament.battles;
 
+import alifec.core.exception.CreateBattleException;
 import alifec.core.persistence.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,15 +36,19 @@ public class BattleManager {
      * @param tournamentName The name of the tournament which contains these battles.
      * @throws IOException if can not create the file to manage the battles.
      */
-    public BattleManager(ContestConfig config, String tournamentName) throws IOException {
+    public BattleManager(ContestConfig config, String tournamentName) throws CreateBattleException {
         this.config = config;
         this.tournamentName = tournamentName;
 
         if (config.isCompetitionMode()) {
             File f = new File(config.getBattlesFile(tournamentName));
             if (!f.exists()) {
-                if(!f.createNewFile())
-                    throw new IOException("Can not create the file: " + f.getAbsolutePath());
+                try {
+                    if (!f.createNewFile())
+                        throw new CreateBattleException("Can not create the file: " + f.getAbsolutePath(), tournamentName);
+                } catch (IOException e) {
+                    throw new CreateBattleException("Can not create the file: " + f.getAbsolutePath(), tournamentName);
+                }
             }
         }
     }

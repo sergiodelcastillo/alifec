@@ -16,7 +16,7 @@ public class Agar {
 
     private Logger logger = LogManager.getLogger(getClass());
 
-    private int nutri_id = -1;
+    private int nutrientId = -1;
     private float[][] nutrients;
 
     private int dx = new Random().nextInt(50);
@@ -38,18 +38,15 @@ public class Agar {
     }
 
     /**
-     * @param p must be a point into (0,0) and (50,50)
-     * @return
+     * @param px it is an integer between 0 and 50
+     * @param py it is an integer between 0 and 50
+     * @return The energy that the MO have eaten in the position (px, py).
      */
     public float eat(int px, int py) {
         if (px > Defs.DIAMETER || px < 0 ||
                 py > Defs.DIAMETER || py < 0) {
-            logger.warn("The Position is not valid: (" + px + "," + py + ")");
-            throw new IllegalArgumentException("The Position is not valid: (" + px + "," + py + ")");
-        }
-        if (nutri_id < 0) {
-            logger.warn("The Nutrient id is not valid: " + nutri_id);
-            throw new IllegalArgumentException("The Nutrient id is not valid: " + nutri_id);
+            logger.warn("The Position (" + px + "," + py + ") is not valid.");
+            throw new IllegalArgumentException("The Position (" + px + "," + py + ") is not valid.");
         }
 
         int x = (nutrients.length + px + dx) % nutrients.length;
@@ -108,14 +105,14 @@ public class Agar {
                 nutri = new Famine();
                 break;
             default:
-                throw new IllegalArgumentException("IllegalArgument");
+                throw new IllegalArgumentException("There is not nutrient distribution with id = " + id + ".");
         }
 
         for (int i = 0; i < 50; i++)
             for (int j = 0; j < 50; j++)
                 nutrients[i][j] = nutri.getNutrient(i, j);
 
-        nutri_id = id;
+        nutrientId = id;
     }
 
     /**
@@ -124,18 +121,17 @@ public class Agar {
      * @return an integer representing Nutrient distribution identifier.
      */
     public int getDistNutri() {
-        return nutri_id;
+        return nutrientId;
     }
 
     /**
      * @return the among of nutrient in the position x,y.
      */
     public float getNutrient(int x, int y) {
-        if (nutri_id == -1 ||
-                x < 0 || x >= Defs.DIAMETER ||
-                y < 0 || y >= Defs.DIAMETER)
-            throw new IllegalArgumentException("Illegal Argument");
-
+        if (x < 0 || x >= Defs.DIAMETER)
+            throw new IllegalArgumentException("Value "+ x + "is wrong. The x value must be 0<=x<=50.");
+        if (y < 0 || y >= Defs.DIAMETER)
+            throw new IllegalArgumentException("Value "+ y + "is wrong. The y value must be 0<=y<=50.");
 
         int xx = (nutrients.length + x + dx) % nutrients.length;
         int yy = (nutrients.length + y + dy) % nutrients.length;
@@ -164,7 +160,7 @@ public class Agar {
      * @return a list of all nutrients.
      */
     public List<String> getNutrients() {
-        List<String> res = new ArrayList<>();
+        List<String> res = new ArrayList<>(nutrient.length);
         for (Nutrient n : nutrient) {
             res.add(n.toString());
         }

@@ -10,10 +10,7 @@ import alifec.core.contest.oponentInfo.OpponentInfoManager;
 import alifec.core.contest.oponentInfo.OpponentReportLine;
 import alifec.core.contest.tournament.Tournament;
 import alifec.core.contest.tournament.TournamentManager;
-import alifec.core.exception.CreateContestException;
-import alifec.core.exception.CreateRankingException;
-import alifec.core.exception.CreateTournamentException;
-import alifec.core.exception.SaveContestConfigException;
+import alifec.core.exception.*;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ZipHelper;
 import alifec.core.simulation.Agar;
@@ -48,26 +45,32 @@ public class Contest {
 
     private ContestConfig config;
 
-    public Contest(ContestConfig config) throws IOException, CreateTournamentException, CreateContestException {
-        this.config = config;
-        opponentsInfo = new OpponentInfoManager(config);
-        environment = new Environment(config);
-        tournaments = new TournamentManager(config);
-
-        //create new and empty tournament
-        tournaments.newTournament(environment.getNames());
-
+    public Contest(ContestConfig config) throws CreateContestException {
         try {
-            opponentsInfo.read();
-        } catch (IOException e) {
-            logger.info("Could not load competitors file. A new file will be created: "
-                    + e.getMessage());
-        }
+            this.config = config;
+            opponentsInfo = new OpponentInfoManager(config);
+            environment = new Environment(config);
+            tournaments = new TournamentManager(config);
 
-        Enumeration<Integer> ids = environment.getOps().elements();
-        while (ids.hasMoreElements()) {
-            Integer i = ids.nextElement();
-            opponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
+            //create new and empty tournament
+            tournaments.newTournament(environment.getNames());
+
+            try {
+                opponentsInfo.read();
+            } catch (IOException e) {
+                logger.info("Could not load competitors file. A new file will be created: "
+                        + e.getMessage());
+            }
+
+            Enumeration<Integer> ids = environment.getOps().elements();
+            while (ids.hasMoreElements()) {
+                Integer i = ids.nextElement();
+                opponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
+            }
+        } catch (CreateTournamentException e) {
+            throw new CreateContestException("Error creating the contest: " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new CreateContestException("Error creating the contest: Can load opponents information, please check the log for further details.", e);
         }
     }
 
@@ -111,14 +114,13 @@ public class Contest {
      */
 
     public boolean reloadConfig() throws IOException {
-        ContestConfig configTmp = ContestConfig.buildFromFile(config.getPath());
-
-        if (configTmp.isValid()) {
-            config = configTmp;
+        try {
+            config = ContestConfig.buildFromFile(config.getPath());
             return true;
+        } catch (ConfigFileException ex) {
+            logger.error(ex.getMessage(), ex);
+            return false;
         }
-
-        return false;
     }
 
 
@@ -139,7 +141,7 @@ public class Contest {
 
         try {
             config.save();
-        } catch (SaveContestConfigException e) {
+        } catch (ConfigFileException e) {
             logger.error("Error updating config file: " + e.getConfig(), e);
             return false;
         }
@@ -174,7 +176,6 @@ public class Contest {
     }
 
     /**
-     *
      * @return information
      * @throws CreateRankingException if can not create the ranking
      */

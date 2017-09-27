@@ -9,10 +9,11 @@ public class CreateTournamentException extends Exception {
     private static final long serialVersionUID = 0L;
     
 	 
-    public CreateTournamentException(String s){
-        super(s);
+    public CreateTournamentException(String message){
+        super(message);
 		  	 
     }
-	 
-           
+    public CreateTournamentException(String message, Throwable cause){
+        super(message, cause);
+    }
 }

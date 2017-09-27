@@ -6,7 +6,9 @@
 package alifec.core.contest.tournament;
 
 import alifec.core.contest.tournament.battles.BattleManager;
+import alifec.core.exception.CreateBattleException;
 import alifec.core.exception.CreateRankingException;
+import alifec.core.exception.CreateTournamentException;
 import alifec.core.persistence.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +44,7 @@ public class Tournament implements Comparable<Tournament> {
 
     private ContestConfig config;
 
-    public Tournament(ContestConfig config, String name) throws IOException {
+    public Tournament(ContestConfig config, String name) throws CreateBattleException{
         this.config = config;
         this.tournamentName = name;
 

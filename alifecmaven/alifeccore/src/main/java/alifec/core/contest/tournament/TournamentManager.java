@@ -1,5 +1,6 @@
 package alifec.core.contest.tournament;
 
+import alifec.core.exception.CreateBattleException;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.CreateTournamentException;
 import alifec.core.persistence.ContestConfig;
@@ -38,7 +39,8 @@ public class TournamentManager {
      */
     private ContestConfig config;
 
-    public TournamentManager(ContestConfig config) throws IOException, CreateTournamentException {
+    public TournamentManager(ContestConfig config) throws  CreateTournamentException {
+        try {
         this.config = config;
 
         String[] tournamentName = new File(config.getContestPath()).list(new TournamentFilter());
@@ -56,6 +58,9 @@ public class TournamentManager {
         Collections.sort(tournaments);
 
         selected = tournaments.size() - 1;
+        } catch (CreateBattleException ex){
+            throw new CreateTournamentException("Can not create the tournament: " + ex.getTournamentName(), ex);
+        }
     }
 
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
@@ -97,8 +102,9 @@ public class TournamentManager {
         String newT = getNextName();
 
         if (config.isCompetitionMode()) {
-            if (!new File(config.getTournamentPath(newT)).mkdir())
-                throw new CreateTournamentException("Can not create a new folder...");
+            String tournamentPath = config.getTournamentPath(newT);
+            if (!new File(tournamentPath).mkdir())
+                throw new CreateTournamentException("Can not create the new tournament folder: " + tournamentPath);
         }
 
         try {
@@ -114,9 +120,9 @@ public class TournamentManager {
 
             tournaments.add(t);
             selected = tournaments.indexOf(t);
-        } catch (IOException ex) {
+        } catch (CreateBattleException ex) {
             logger.error(ex.getMessage(), ex);
-            throw new CreateTournamentException("Cannot load the tournament...");
+            throw new CreateTournamentException("Cannot load the tournament: " + ex.getTournamentName());
         }
     }
 

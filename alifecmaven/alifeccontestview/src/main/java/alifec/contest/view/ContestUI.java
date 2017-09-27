@@ -118,7 +118,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
     private boolean loadContest() {
         String path;
-        ContestConfig config;
+        ContestConfig config = null;
 
         try {
             path = new File(System.getProperty("user.dir")).getCanonicalPath();
@@ -153,28 +153,19 @@ public class ContestUI extends JFrame implements ActionListener {
                         }
                     }
 
-                    try {
-                        config = ContestConfig.buildNewConfigFile(path, name);
-                        config.save();
-                    } catch (SaveContestConfigException e) {
-                        logger.error("Can not create the contest file: " + e.getConfig(), e);
-                        Message.printErr(null, "Can not create the contest file. Please check the log file.");
-                        return false;
-                    }
+                    config = ContestConfig.buildNewConfigFile(path, name);
+                    config.save();
                 }
             }
 
             createContest(config);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-            //Todo: improve it
-            Message.printErr(null, "Error de lectura...");
-            return false;
-        } catch (CreateTournamentException | CreateContestException ex) {
+
+        } catch (CreateTournamentException | CreateContestException | ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
             Message.printErr(null, ex.getMessage());
             return false;
         }
+
         return true;
     }
 
@@ -207,12 +198,10 @@ public class ContestUI extends JFrame implements ActionListener {
         return config;
     }
 
-    public void createContest(ContestConfig config) throws CreateTournamentException, IOException, CreateContestException {
+    public void createContest(ContestConfig config) throws CreateTournamentException, CreateContestException {
         if (config == null)
             throw new CreateContestException("The config file is null");
 
-        if (!config.isValid())
-            throw new CreateContestException("Bad config file: " + config.getConfigFilePath());
 
         CompilationResult result = CompileHelper.compileMOs(config);
 
@@ -265,10 +254,13 @@ public class ContestUI extends JFrame implements ActionListener {
         // Now the application will continue without any changes at runtime.
         ContestConfig config = ContestConfig.buildNewConfigFile(path, name);
 
+        try {
+            config.validate();
 
-        if (!config.isValid()) {
-            logger.error("The contest config is not valid " + config.toString());
-            Message.printErr(this, "The contest config is not valid " + config.toString());
+        } catch (ConfigFileException ex) {
+            logger.error(ex.getMessage(), ex);
+            logger.error(config.toString());
+            Message.printErr(this, ex.getMessage());
             return false;
         }
         return setDefaultContest(config);
@@ -287,7 +279,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
             logger.info("The contest file was updated as follows: " + config.toString());
 
-        } catch (SaveContestConfigException ex) {
+        } catch (ConfigFileException ex) {
             logger.error("Can not create the contest file: " + ex.getConfig().toString(), ex);
             Message.printErr(null, "Can not create the contest file: " + ex.getConfig().toString());
             return false;

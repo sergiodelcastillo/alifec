@@ -5,10 +5,21 @@
 package alifec.core.exception;
 
 
-public class  CreateBattleException extends Exception {
+public class CreateBattleException extends Exception {
     private static final long serialVersionUID = 0L;
-	 
-    public CreateBattleException(String s){
-        super(s);	 
-    }   
+
+    private String tournamentName;
+
+    public CreateBattleException(String message) {
+        super(message);
+    }
+
+    public CreateBattleException(String message, String tournamentName) {
+        super(message);
+        this.tournamentName = tournamentName;
+    }
+
+    public String getTournamentName() {
+        return tournamentName;
+    }
 }

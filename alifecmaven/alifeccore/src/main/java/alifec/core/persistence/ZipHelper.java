@@ -95,7 +95,6 @@ public class ZipHelper {
             zipStream.putNextEntry(entry);
 
             logger.info("Generated new entry for: " + inputFileName);
-
             // Now we copy the existing file into the zip archive. To do
             // this we write into the zip stream, the call to putNextEntry
             // above prepared the stream, we now write the bytes for this
