@@ -67,11 +67,11 @@ public class ContestUI extends JFrame implements ActionListener {
     private java.util.List<String> excluded = new ArrayList<>();
 
     public static void main(String[] args) {
-        config();
+        configLogging();
         SwingUtilities.invokeLater(ContestUI::new);
     }
 
-    private static void config() {
+    private static void configLogging() {
         if (System.getProperty("log4j.configurationFile") == null) {
             System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log4j2.xml");
         }
@@ -129,11 +129,20 @@ public class ContestUI extends JFrame implements ActionListener {
         }
 
         try {
-
             //Perform the best effort to load a contest.
             if (ContestConfig.existsConfigFile(path)) {
                 config = ContestConfig.buildFromFile(path);
-            } else {
+            }
+        } catch (ConfigFileException ex) {
+            logger.error(ex.getMessage(), ex);
+            if (!Message.printYesNoCancel(null, ex.getMessage() +
+                    ". Select 'Yes' to overwrite the existing config file.")) {
+                return false;
+            }
+        }
+
+        try {
+            if (config == null) {
                 java.util.List<String> list = ContestHelper.listContest(path);
 
                 if (list.isEmpty()) {
@@ -157,9 +166,7 @@ public class ContestUI extends JFrame implements ActionListener {
                     config.save();
                 }
             }
-
             createContest(config);
-
         } catch (CreateTournamentException | CreateContestException | ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
             Message.printErr(null, ex.getMessage());

@@ -4,7 +4,6 @@ import alifec.core.exception.ConfigFileException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -143,8 +142,13 @@ public class ContestConfig {
             throw new ConfigFileException("Error loading the config file in path: " + path, ex, config);
         }
 
-        //validate if the configuration is Ok.
-        config.validate();
+        try {
+            //validate if the configuration is Ok.
+            config.validate();
+        } catch (ConfigFileException e) {
+            logger.warn(config.toString());
+            throw e;
+        }
 
         return config;
     }
