@@ -43,7 +43,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
+                <version>${exec-maven-plugin.version}</version>
                 <configuration>
                     <executable>java</executable>
                     <arguments>
@@ -52,16 +52,6 @@
                         <argument>alifec.contest.view.ContestUI</argument>
                     </arguments>
                     <workingDirectory>../</workingDirectory>
-                </configuration>
-            </plugin>
-
-            <!--Avoid the execution of maven-antrun-plugin-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <configuration>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
 
