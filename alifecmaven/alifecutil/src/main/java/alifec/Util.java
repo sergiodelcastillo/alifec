@@ -28,7 +28,6 @@ public class Util {
             "\tjava -jar util-01.jar --compile-all\t It will compile all MOs java and c++.\n";
 
     public static void main(String[] args) {
-
         if (args.length > 0) {
             if ("-c".equals(args[0]) || "--compile".equals(args[0])) {
                 if (args.length == 2) {

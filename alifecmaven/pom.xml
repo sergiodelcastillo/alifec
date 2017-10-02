@@ -100,7 +100,7 @@
                                       todir="alifecontest-${project.version}/src"/>
                                 <copy file="alifecutil/target/alifec-util-${project.version}.jar"
                                       todir="alifecontest-${project.version}/src"/>
-                                
+
                                 <!-- TODO: validate what to add to the final deployment... doc, readme, etc-->
                             </tasks>
                         </configuration>

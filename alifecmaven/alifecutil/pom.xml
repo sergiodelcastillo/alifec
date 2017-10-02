@@ -41,15 +41,21 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
                             <mainClass>alifec.Util</mainClass>
                         </manifest>
                         <manifestEntries>
+                            <Class-Path>
+                                lib/log4j-api-${log4j.version}.jar
+                                lib/log4j-core-${log4j.version}.jar
+                                lib/log4j-iostreams-${log4j.version}.jar
+                                alifec-core-${project.version}.jar
+                            </Class-Path>
+
                             <Built-By>Sergio Del Castillo, Ignacio Sabbag</Built-By>
                         </manifestEntries>
                     </archive>
                 </configuration>
+
             </plugin>
         </plugins>
     </build>
