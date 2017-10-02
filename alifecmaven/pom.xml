@@ -79,14 +79,16 @@
                     <execution>
                         <phase>deploy</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <delete includeemptydirs="true" quiet="true">
                                     <fileset dir="alifecontest-${project.version}" includes="**/*"/>
                                 </delete>
 
                                 <mkdir dir="alifecontest-${project.version}"/>
                                 <copy todir="alifecontest-${project.version}/app">
-                                    <fileset dir="app/"/>
+                                    <fileset dir="app/">
+                                        <exclude name="**/config"/>
+                                    </fileset>
                                 </copy>
                                 <!-- TODO: create a better run, without maven!!!
                                 <copy file="run.sh" todir="alifecontest-${version}"/>-->
@@ -102,7 +104,7 @@
                                       todir="alifecontest-${project.version}/src"/>
 
                                 <!-- TODO: validate what to add to the final deployment... doc, readme, etc-->
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
