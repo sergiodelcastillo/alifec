@@ -310,8 +310,6 @@ public class ContestConfig {
     }
 
     public static String getConfigFilePath(String path) {
-
-
         return getBaseFolder(path) + File.separator + CONFIG_FILE;
     }
 

@@ -2,7 +2,9 @@
 *.iml
 alifeccore/target/
 alifeccontestview/target/
+alifecutil/target/
+target/
 contest-01/
-config
 Contest-01/
+config
 log/

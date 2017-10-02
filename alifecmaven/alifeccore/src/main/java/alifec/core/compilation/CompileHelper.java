@@ -44,41 +44,43 @@ public class CompileHelper {
      * @return true if successfully
      */
     public static CompilationResult compileMOs(ContestConfig config) {
-        logger.info("Cleaning up files in directory: " + config.getCompilationTarget());
+        cleanupCompilationTarget(config.getCompilationTarget());
 
-        try {
-            cleanupCompilationTarget(config.getCompilationTarget());
-            logger.info("Cleanup of compiled files [OK] ");
-        } catch (IOException e) {
-            //TODO: mostrar el log del error con un popup o algo similar.
-            logger.error("Cleanup of compiled files [FAIL] ");
-            logger.error(e.getMessage(), e);
-        }
-
-
-        logger.info("Compile JAVA Files");
         CompilationResult result = new CompilationResult();
+
+        compileJavaFiles(config, null, result);
+        compileAllCppFiles(config, result);
+
+        return result;
+    }
+
+    private static void compileJavaFiles(ContestConfig config, String mo, CompilationResult result) {
+        logger.info("Compile JAVA Files");
+
         try {
             for (File f : SourceCodeFilter.listJavaFiles(config.getMOsPath())) {
-
-                if (compileMOsJava(config, f.getParent(), f.getName())) {
-                    logger.info(f.getAbsolutePath() + " [OK]");
-                } else {
-                    logger.error(f.getAbsolutePath() + " [FAIL]");
-                    result.logJavaError("Could not compileMOs " + f.getName() + ". For more details see the logs.");
+                if (mo == null || f.getName().equals(mo + ".java")) {
+                    if (javaSourceCodeCompilation(config, f.getParent(), f.getName())) {
+                        logger.info(f.getAbsolutePath() + " [OK]");
+                    } else {
+                        logger.error(f.getAbsolutePath() + " [FAIL]");
+                        result.logJavaError("Could not compileMO " + f.getName() + ". For more details see the logs.");
+                    }
                 }
             }
         } catch (CompilerException ex) {
             logger.error(ex.getMessage(), ex);
             result.logJavaError(ex.getMessage());
         }
+    }
 
+    private static void compileAllCppFiles(ContestConfig config, CompilationResult result) {
         logger.info("Compile C++ Files");
 
         if (updateTournamentCpp(config) && updateIncludes(config)) {
             logger.info("Update C++ Files: [OK]");
 
-            if (compileAllMOsCpp(config)) {
+            if (cppCompilationAllSourceCodes(config)) {
                 logger.info("Create libcppcolonies: [OK]");
             } else {
                 logger.info("Create libcppcolonies: [FAIL]");
@@ -89,8 +91,29 @@ public class CompileHelper {
             logger.info("Update C++ Files: [FAIL]");
             result.logCppError("Could not update cpp files. For more details see log file.");
         }
+    }
 
-        return result;
+    public static CompilationResult compileOneMO(ContestConfig config, String mo) {
+        cleanupCompilationTarget(config.getCompilationTarget());
+
+        List<String> javaMOs = SourceCodeFilter.listJavaMOs(config.getMOsPath());
+        List<String> cppMos = SourceCodeFilter.listCppMOs(config.getMOsPath());
+
+        CompilationResult compilationResult = new CompilationResult();
+
+        if (javaMOs.contains(mo)) {
+            compileJavaFiles(config, mo, compilationResult);
+            return compilationResult;
+        }
+
+        if (cppMos.contains(mo)) {
+            compileAllCppFiles(config, compilationResult);
+            return compilationResult;
+        }
+        //the mo was not found.
+        compilationResult.logJavaError(mo + " was not found in java files.");
+        compilationResult.logCppError (mo + " was not found in c++ files.");
+        return compilationResult;
     }
 
     /**
@@ -99,22 +122,30 @@ public class CompileHelper {
      * @param targetFolder
      * @throws IOException
      */
-    private static void cleanupCompilationTarget(String targetFolder) throws IOException {
-        File rootDir = new File(targetFolder);
+    private static void cleanupCompilationTarget(String targetFolder) {
+        logger.info("Cleaning up files in directory: " + targetFolder);
 
-        if (rootDir.exists()) {
-            Path dirPath = Paths.get(targetFolder);
+        try {
+            File rootDir = new File(targetFolder);
 
-            Files.walk(dirPath)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .peek(file -> logger.info("Deleting: " + file))
-                    .forEach(File::delete);
+            if (rootDir.exists()) {
+                Path dirPath = Paths.get(targetFolder);
+
+                Files.walk(dirPath)
+                        .sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .peek(file -> logger.info("Deleting: " + file))
+                        .forEach(File::delete);
+            }
+
+            if (!rootDir.mkdir())
+                throw new IOException("Can not create the compilation target: " + rootDir.getAbsolutePath());
+
+            logger.info("Cleanup of compiled files [OK] ");
+        } catch (IOException ex) {
+            logger.error("Cleanup of compiled files [FAIL] ");
+            logger.error(ex.getMessage(), ex);
         }
-
-        if (!rootDir.mkdir())
-            throw new IOException("Can not create the compilation target: " + rootDir.getAbsolutePath());
-
     }
 
     /**
@@ -126,7 +157,7 @@ public class CompileHelper {
      * @return true if the compilation is successfully
      * @throws CompilerException if can not find the C/C++ compiler
      */
-    static boolean compileMOsJava(ContestConfig config, String javaFileFolder, String javaFileName) throws CompilerException {
+    static boolean javaSourceCodeCompilation(ContestConfig config, String javaFileFolder, String javaFileName) throws CompilerException {
         try {
             JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 
@@ -154,7 +185,7 @@ public class CompileHelper {
      * @param config Configuration of the Contest
      * @return true if is successfully
      */
-    static private boolean compileAllMOsCpp(ContestConfig config) {
+    static private boolean cppCompilationAllSourceCodes(ContestConfig config) {
         //@Todo Use a file with the pattern instead of hiring it in the source code
         try {
             String os = System.getProperty("os.name").toLowerCase();

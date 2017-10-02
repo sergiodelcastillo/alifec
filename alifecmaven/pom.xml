@@ -10,6 +10,7 @@
     <modules>
         <module>alifeccore</module>
         <module>alifeccontestview</module>
+        <module>alifecutil</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -48,5 +49,51 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+
+                <!--TODO: define how the deployment should work-->
+                <executions>
+                    <execution>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <tasks>
+                                <delete includeemptydirs="true" quiet="true">
+                                    <fileset dir="alifecontest" includes="**/*"/>
+                                </delete>
+                                <mkdir dir="alifecontest"/>
+
+                                <!--
+                                  Place any Ant task here. You can add anything
+                                  you can add between <target> and </target> in a
+                                  build.xml.
+                                -->
+
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>

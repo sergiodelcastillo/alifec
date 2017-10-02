@@ -7,10 +7,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>alifec-core</artifactId>
+    <artifactId>alifec-util</artifactId>
     <packaging>jar</packaging>
 
-    <name>alifec-core</name>
+    <name>alifec-util</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -19,26 +19,37 @@
 
     <dependencies>
         <dependency>
+            <groupId>alifec</groupId>
+            <artifactId>alifec-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-iostreams</artifactId>
-        </dependency>
 
     </dependencies>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>alifec.Util</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Built-By>Sergio Del Castillo, Ignacio Sabbag</Built-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
