@@ -42,6 +42,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
                             <mainClass>alifec.Util</mainClass>
                         </manifest>
                         <manifestEntries>
@@ -50,7 +51,29 @@
                     </archive>
                 </configuration>
             </plugin>
+        </plugins>
+    </build>
+
+    <!--
+    todo: evaluate if it is good to use something like the following to run the util:
+     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>alifec.contest.view.ContestUI</argument>
+                    </arguments>
+                    <workingDirectory>../</workingDirectory>
+                </configuration>
+            </plugin>
 
         </plugins>
     </build>
+    -->
 </project>
