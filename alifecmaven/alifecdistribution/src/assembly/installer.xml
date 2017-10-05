@@ -1,0 +1,45 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+    <id>installer</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <moduleSets>
+        <moduleSet>
+            <useAllReactorProjects>true</useAllReactorProjects>
+            <includes>
+                <include>alifec:alifec-contest-view</include>
+                <include>alifec:alifec-util</include>
+            </includes>
+            <binaries>
+                <outputDirectory>lib</outputDirectory>
+                <unpack>false</unpack>
+            </binaries>
+        </moduleSet>
+    </moduleSets><!--
+    <dependencySets>
+        <dependencySet>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+            <includes>
+                <include>alifec:alifec-contest-view:jar</include>
+                <include>alifec:alifec-util:jar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>-->
+    <fileSets>
+        <fileSet>
+            <directory>../app</directory>
+            <excludes>
+                <exclude>config</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>bin</directory>
+        </fileSet>
+    </fileSets>
+</assembly>
