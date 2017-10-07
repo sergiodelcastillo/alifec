@@ -5,32 +5,22 @@
         <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
-    <moduleSets>
-        <moduleSet>
-            <useAllReactorProjects>true</useAllReactorProjects>
-            <includes>
-                <include>alifec:alifec-contest-view</include>
-                <include>alifec:alifec-util</include>
-            </includes>
-            <binaries>
-                <outputDirectory>lib</outputDirectory>
-                <unpack>false</unpack>
-            </binaries>
-        </moduleSet>
-    </moduleSets><!--
+
     <dependencySets>
         <dependencySet>
             <unpack>false</unpack>
-            <scope>runtime</scope>
+            <scope>compile</scope>
             <outputDirectory>lib</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
             <useTransitiveFiltering>true</useTransitiveFiltering>
             <includes>
+                <include>alifec:alifec-core:jar</include>
                 <include>alifec:alifec-contest-view:jar</include>
                 <include>alifec:alifec-util:jar</include>
             </includes>
         </dependencySet>
-    </dependencySets>-->
+    </dependencySets>
+
     <fileSets>
         <fileSet>
             <directory>../app</directory>

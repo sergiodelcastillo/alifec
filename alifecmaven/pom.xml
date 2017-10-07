@@ -18,11 +18,9 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
-        <maven-dependency-plugin.version>3.0.0</maven-dependency-plugin.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <log4j.version>2.9.1</log4j.version>
         <junit.version>4.12</junit.version>
@@ -57,110 +55,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <build>
-        <plugins>
 
-            <!--Disable maven deploy plugin-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin.version}</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-
-            <!-- Override antrun phase: deploy , goal:run -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>${maven-antrun-plugin.version}</version>
-
-                <!--TODO: define how the deployment should work-->
-                <executions>
-                    <execution>
-                        <phase>deploy</phase>
-                        <configuration>
-                            <target>
-                                <delete includeemptydirs="true" quiet="true">
-                                    <fileset dir="alifecontest-${project.version}" includes="**/*"/>
-                                </delete>
-
-                                <mkdir dir="alifecontest-${project.version}"/>
-                                <copy todir="alifecontest-${project.version}/app">
-                                    <fileset dir="app/">
-                                        <exclude name="**/config"/>
-                                    </fileset>
-                                </copy>
-                                <!-- TODO: create a better run, without maven!!!
-                                <copy file="run.sh" todir="alifecontest-${version}"/>-->
-                                <copy todir="alifecontest-${project.version}/lib">
-                                    <fileset dir="target/lib"/>
-                                </copy>
-
-                                <copy file="alifeccore/target/alifec-core-${project.version}.jar"
-                                      todir="alifecontest-${project.version}/src"/>
-                                <copy file="alifeccontestview/target/alifec-contest-view-${project.version}.jar"
-                                      todir="alifecontest-${project.version}/src"/>
-                                <copy file="alifecutil/target/alifec-util-${project.version}.jar"
-                                      todir="alifecontest-${project.version}/src"/>
-
-                                <!-- TODO: validate what to add to the final deployment... doc, readme, etc-->
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-
-                </executions>
-                <inherited>false</inherited>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.apache.logging.log4j</groupId>
-                                    <artifactId>log4j-api</artifactId>
-                                    <version>${log4j.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.logging.log4j</groupId>
-                                    <artifactId>log4j-core</artifactId>
-                                    <version>${log4j.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.logging.log4j</groupId>
-                                    <artifactId>log4j-iostreams</artifactId>
-                                    <version>${log4j.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-                <inherited>false</inherited>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
