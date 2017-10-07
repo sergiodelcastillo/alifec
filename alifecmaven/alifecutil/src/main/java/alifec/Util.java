@@ -3,6 +3,8 @@ package alifec;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.persistence.ContestConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,9 +14,19 @@ import java.io.IOException;
  * Created by Sergio Del Castillo on 30/09/17.
  *
  * @email: sergio.jose.delcastillo@gmail.com
- *  java -classpath "/home/yeyo/work/alifec_new/alifec/alifecmaven/alifecutil/target/alifec-util-1.0-SNAPSHOT.jar:/home/yeyo/work/alifec_new/alifec/alifecmaven/alifeccore/target/alifec-core-1.0-SNAPSHOT.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-api/2.8.2/log4j-api-2.8.2.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-core/2.8.2/log4j-core-2.8.2.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-iostreams/2.8.2/log4j-iostreams-2.8.2.jar"  alifec.Util -c "asdf"
+ * java -classpath "/home/yeyo/work/alifec_new/alifec/alifecmaven/alifecutil/target/alifec-util-1.0-SNAPSHOT.jar:/home/yeyo/work/alifec_new/alifec/alifecmaven/alifeccore/target/alifec-core-1.0-SNAPSHOT.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-api/2.8.2/log4j-api-2.8.2.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-core/2.8.2/log4j-core-2.8.2.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-iostreams/2.8.2/log4j-iostreams-2.8.2.jar"  alifec.Util -c "asdf"
  */
 public class Util {
+
+    static Logger logger;
+
+    static {
+        if (System.getProperty("log4j.configurationFile") == null) {
+            System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log4j2.xml");
+        }
+
+        logger = LogManager.getLogger(Util.class);
+    }
 
     private static String USAGE = "Artificial Life Contest Command Line Utility.\n" +
             "It reads the contest configuration and compile according the parameters.\n" +
@@ -28,28 +40,30 @@ public class Util {
             "\tjava -jar util-01.jar --compile-all\t It will compile all MOs java and c++.\n";
 
     public static void main(String[] args) {
+        logger.trace("Starting Artificial Life Contest Command Line Utility.");
+
         if (args.length > 0) {
             if ("-c".equals(args[0]) || "--compile".equals(args[0])) {
                 if (args.length == 2) {
                     compileOne(args[1]);
-                    System.exit(0);
+                    exit();
                 } else {
-                    System.out.println("ERROR: -c option requires one parameter.\n");
+                    logger.error("-c option requires one parameter.");
                 }
             }
 
             if ("-ca".equals(args[0]) || "--compile-all".equals(args[0])) {
                 compileAll();
-                System.exit(0);
+                exit();
             }
         }
 
-        System.out.println(USAGE);
-        System.exit(0);
+        logger.info(USAGE);
+        exit();
     }
 
     private static void compileOne(String mo) {
-        System.out.println("compile one " + mo);
+        logger.info("compile one " + mo);
 
         ContestConfig config = null;
         try {
@@ -61,7 +75,7 @@ public class Util {
     }
 
     private static void compileAll() {
-        System.out.println("compile all mos");
+        logger.info("compile all mos");
 
         try {
             ContestConfig config = loadConfiguration();
@@ -81,12 +95,10 @@ public class Util {
 
     }
 
-    private static void configLogging() {
-        //todo... define an specific logger for the utility. Maybe only write in standard out
 
-        if (System.getProperty("log4j.configurationFile") == null) {
-            System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log4j2.xml");
-        }
+    private static void exit() {
+        logger.trace("Finished.");
+        System.exit(0);
     }
 }
 
