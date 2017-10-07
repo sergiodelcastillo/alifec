@@ -20,6 +20,7 @@ public class Util {
     static Logger logger;
 
     static {
+        //load the configuration first
         if (System.getProperty("log4j.configurationFile") == null) {
             System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log4j2.xml");
         }
