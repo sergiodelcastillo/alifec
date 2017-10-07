@@ -14,7 +14,6 @@ import java.io.IOException;
  * Created by Sergio Del Castillo on 30/09/17.
  *
  * @email: sergio.jose.delcastillo@gmail.com
- * java -classpath "/home/yeyo/work/alifec_new/alifec/alifecmaven/alifecutil/target/alifec-util-1.0-SNAPSHOT.jar:/home/yeyo/work/alifec_new/alifec/alifecmaven/alifeccore/target/alifec-core-1.0-SNAPSHOT.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-api/2.8.2/log4j-api-2.8.2.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-core/2.8.2/log4j-core-2.8.2.jar:/home/yeyo/.m2/repository/org/apache/logging/log4j/log4j-iostreams/2.8.2/log4j-iostreams-2.8.2.jar"  alifec.Util -c "asdf"
  */
 public class Util {
 
