@@ -63,7 +63,7 @@ public class Util {
     }
 
     private static void compileOne(String mo) {
-        logger.info("compile one " + mo);
+        logger.info("Compile one " + mo);
 
         ContestConfig config = null;
         try {
@@ -75,7 +75,7 @@ public class Util {
     }
 
     private static void compileAll() {
-        logger.info("compile all mos");
+        logger.info("Compile all mos");
 
         try {
             ContestConfig config = loadConfiguration();
