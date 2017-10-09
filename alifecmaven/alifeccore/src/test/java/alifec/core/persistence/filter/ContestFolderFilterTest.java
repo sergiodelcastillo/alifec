@@ -55,7 +55,6 @@ public class ContestFolderFilterTest extends ParentTest {
 
     @Test
     public void testListOneContest() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
-        //TODO: usar format..
         String contestName = ContestConfig.CONTEST_NAME_PREFIX + "01";
         createContest(contestName);
 
@@ -69,7 +68,6 @@ public class ContestFolderFilterTest extends ParentTest {
     public void testListManyContests() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         //Create 100  contests
         for (int i = 0; i < 100; i++) {
-            //TODO: usar format..
             createContest(ContestConfig.CONTEST_NAME_PREFIX+ Integer.toString(i));
         }
 
@@ -79,7 +77,6 @@ public class ContestFolderFilterTest extends ParentTest {
 
         String[] target = new String[100];
         for (int i = 99; i >= 0; i--) {
-            //TODO: usar format..
             target[i] = ContestConfig.CONTEST_NAME_PREFIX + Integer.toString(i);
         }
 
