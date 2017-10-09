@@ -4,16 +4,18 @@ import alifec.core.exception.ZipParsingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -23,21 +25,24 @@ import java.util.zip.ZipOutputStream;
  */
 public class ZipHelper {
     private final static Logger logger = LogManager.getLogger(ZipHelper.class);
+    private static int BUFFER = 2048;
 
     /**
      * This method creates the zip archive and then goes through
      * each file in the chosen directory, adding each one to the
      * archive. Note the use of the try with resource to avoid
      * any finally blocks.
+     * <p>
+     * The zip file will be generated in backup folder of the contest
      */
-    //public static void createZip(String zipFileName, String dirName) throws IOException {
-    public static void createZip(ContestConfig config) throws IOException {
+    public static String zipContest(ContestConfig config) throws IOException {
         // the directory to be zipped
+        String backupFile = config.getBackupFile();
         Path directory = Paths.get(config.getContestPath());
         String canonicalPathBackup = Paths.get(config.getBackupFolder()).toFile().getCanonicalPath();
         String canonicalPath = directory.getParent().toFile().getCanonicalPath() + File.separator;
         // the zip file name that we will create
-        File zipFile = Paths.get(config.getBackupFile()).toFile();
+        File zipFile = Paths.get(backupFile).toFile();
 
         // open the zip stream in a try resource block, no finally needed
         try (ZipOutputStream zipStream = new ZipOutputStream(
@@ -65,7 +70,17 @@ public class ZipHelper {
             logger.info("Zip file created in " + directory.toFile().getPath());
         } catch (IOException | ZipParsingException e) {
             logger.error("Error while zipping.", e);
+            throw e;
         }
+
+
+        return getName(backupFile);
+    }
+
+    private static String getName(String backupFile) {
+        String[] tmp1 = backupFile.split(File.separator);
+
+        return tmp1.length == 1 ? backupFile : tmp1[tmp1.length - 1];
     }
 
     /**
@@ -100,7 +115,8 @@ public class ZipHelper {
             // above prepared the stream, we now write the bytes for this
             // entry. For another source such as an in memory array, you'd
             // just change where you read the information from.
-            byte[] readBuffer = new byte[2048];
+
+            byte[] readBuffer = new byte[BUFFER];
             int amountRead;
             int written = 0;
 
@@ -116,5 +132,60 @@ public class ZipHelper {
         }
     }
 
+    public static void unzip(String source, String out) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(source))) {
 
+            ZipEntry entry = zis.getNextEntry();
+
+            while (entry != null) {
+
+                File file = new File(out, entry.getName());
+
+                if (entry.isDirectory()) {
+                    file.mkdirs();
+                } else {
+                    File parent = file.getParentFile();
+
+                    if (!parent.exists()) {
+                        parent.mkdirs();
+                    }
+
+                    try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
+
+                        byte[] buffer = new byte[BUFFER];
+
+                        int location;
+
+                        while ((location = zis.read(buffer)) != -1) {
+                            bos.write(buffer, 0, location);
+                        }
+                    }
+                }
+                entry = zis.getNextEntry();
+            }
+        }
+    }
+
+    /**
+     * Generate a list of files with the content of the zip file.
+     *
+     * @param zip the zip file
+     * @return a list of string which represents the content of the zip
+     * @throws IOException
+     */
+    public static List<String> listEntries(String zip) throws IOException {
+        List<String> result = new ArrayList<>();
+
+        try (ZipFile zipFile = new ZipFile(zip)) {
+            zipFile.stream()
+                    .forEach((Consumer<ZipEntry>) zipEntry -> {
+                        result.add(zipEntry.getName());
+                    });
+        } catch (IOException e) {
+            // error while opening a ZIP file
+            logger.error(e);
+            throw e;
+        }
+        return result;
+    }
 }

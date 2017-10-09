@@ -184,17 +184,17 @@ public class Contest {
         List<OpponentReportLine> info = new ArrayList<>();
 
         Tournament t = tournaments.lastElement();
-        Hashtable<String, Float> acumulated = t.getAccumulatedEnergy();
+        Hashtable<String, Float> accumulated = t.getAccumulatedEnergy();
 
         for (OpponentInfo oi : opponentsInfo.getOpponents()) {
-            boolean hayRanking = ranking.containsKey(oi.getName());
-            boolean hayAcumulated = acumulated.containsKey(oi.getName());
+            boolean hasRanking = ranking.containsKey(oi.getName());
+            boolean hasAccumulated = accumulated.containsKey(oi.getName());
 
             info.add(new OpponentReportLine(oi.getName(),
                     oi.getAuthor(),
                     oi.getAffiliation(),
-                    hayRanking ? ranking.get(oi.getName()) : 0,
-                    hayAcumulated ? acumulated.get(oi.getName()) : 0.0f));
+                    hasRanking ? ranking.get(oi.getName()) : 0,
+                    hasAccumulated ? accumulated.get(oi.getName()) : 0.0f));
         }
 
         // sort by accumulated points
@@ -217,7 +217,7 @@ public class Contest {
 
         //generate the back up...
         try {
-            ZipHelper.createZip(config);
+            ZipHelper.zipContest(config);
             return true;
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
