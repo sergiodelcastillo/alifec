@@ -60,7 +60,7 @@ public class ZipHelperTest extends ParentTest {
 
         String zipfile = ZipHelper.zipContest(config);
 
-        List<String> entries = ZipHelper.listEntries(zipfile);
+        List<String> entries = ZipHelper.listEntries(config.getBackupFolder()+ File.separator+zipfile);
 
         Assert.assertThat(entries, Matchers.containsInAnyOrder(target));
     }
