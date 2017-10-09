@@ -1,7 +1,3 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 
 package alifec.core.contest.tournament;
 
@@ -52,9 +48,7 @@ public class Tournament implements Comparable<Tournament> {
         colonies = new ArrayList<>();
     }
     /**
-     * Busca la maxima energia acumulada hasta el momento y la retorna
-     *
-     * @return energia maxima.
+     * @return the maximum accumulated energy
      */
     public float getMaxEnergy() {
         return battleManager.getMaxEnergy();
@@ -99,7 +93,7 @@ public class Tournament implements Comparable<Tournament> {
         int MAX = 3;
         int size = MAX > acumulated.size() ? acumulated.size() : MAX;
 
-        // agregar los que tienen puntos
+        // add colonies which already earn points.
         for (int index = 0; index < size; index++) {
             Float max = Collections.max(acumulated.values());
             List<String> winTemp = new ArrayList<>();
@@ -124,7 +118,7 @@ public class Tournament implements Comparable<Tournament> {
                     keyWin = tmp;
                 }
             }
-            // chequear<si no hay varios con el mismo numero de batallas ganadas>!!
+
             acumulated.remove(keyWin);
             h.put(keyWin, MAX - index);
         }

@@ -1,8 +1,3 @@
-/**
- * @author Sergio Del Castillo
- * @email sergio.jose.delcastillo@gmail.com
- */
-
 package alifec.core.contest.oponentInfo;
 
 import java.io.BufferedReader;

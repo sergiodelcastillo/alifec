@@ -1,8 +1,4 @@
-package alifec.core.simulation; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
-
+package alifec.core.simulation;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -13,7 +9,7 @@ import java.util.List;
 
 
 /**
- * Es la encargada de administrar cada colonia de Microorganismos codificados en en el lenguaje java.
+  * Manager of Microorganisms which are implemented in Java Language.
  */
 public class JavaColony extends Colony {
     org.apache.logging.log4j.Logger logger = LogManager.getLogger(getClass());

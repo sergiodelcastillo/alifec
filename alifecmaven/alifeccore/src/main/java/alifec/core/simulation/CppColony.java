@@ -1,8 +1,4 @@
-package alifec.core.simulation; /**
- * @author Sergio Del Castillo
- * @email: sergio.jose.delcastillo@gmail.com
- */
-
+package alifec.core.simulation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

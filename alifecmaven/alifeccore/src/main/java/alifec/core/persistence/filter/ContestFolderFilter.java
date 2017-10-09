@@ -1,19 +1,12 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 package alifec.core.persistence.filter;
 
-import alifec.core.persistence.ContestConfig;
-import alifec.core.validation.Validator;
+import alifec.core.validation.ContestNameValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -26,13 +19,11 @@ import java.util.regex.Pattern;
  *
  * <n> For example, a valid name is "contest-01" but "contesto" is not valid. </n>
  */
-public class ContestFolderFilter extends FileFilter implements FilenameFilter, Validator<String> {
+public class ContestFolderFilter extends FileFilter implements FilenameFilter {
 
     private Logger logger = LogManager.getLogger(getClass());
 
-    private static String STRING_PATTERN = "^(" + ContestConfig.CONTEST_NAME_PREFIX+ ")([a-zA-Z_0-9]{1,25})$";
-
-    private Pattern pattern;
+    private ContestNameValidator validator;
 
     private final boolean checkExistence;
 
@@ -47,12 +38,13 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter, V
      */
     public ContestFolderFilter(boolean checkExistence) {
         this.checkExistence = checkExistence;
-        pattern = Pattern.compile(STRING_PATTERN, Pattern.CASE_INSENSITIVE);
+        this.validator = new ContestNameValidator();
+
     }
 
     public boolean accept(File dir, String name) {
         try {
-            if (!checkPattern(name)) return false;
+            if (!validator.validate(name)) return false;
 
             if (!checkExistence) return true;
 
@@ -83,16 +75,7 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter, V
         return "Contest-file";
     }
 
-    public boolean checkPattern(String name) {
-        if (name == null) return false;
 
-        Matcher matcher = pattern.matcher(name);
 
-        return matcher.matches();
-    }
 
-    @Override
-    public boolean validate(String contestFolder) {
-        return accept(new File(contestFolder));
-    }
 }

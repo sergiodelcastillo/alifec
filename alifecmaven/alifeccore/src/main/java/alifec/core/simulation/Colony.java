@@ -1,8 +1,4 @@
-package alifec.core.simulation; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
-
+package alifec.core.simulation;
 
 import java.io.File;
 import java.lang.reflect.Field;

@@ -1,7 +1,4 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
+
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
@@ -9,14 +6,10 @@ import alifec.core.simulation.Position;
 
 
 /**
- * warning: don't modify this class
+ * It generates the Two Gaussians nutrient distribution
  */
-public class TwoGaussians extends Nutrient {
+public class TwoGaussians implements Nutrient {
     public static final int ID = 5;
-    /*
-    * Genera una distribucion de nutrientes en forma de
-    * dos gausianas ...
-    */
 
     @Override
     public float getNutrient(int px, int py) {

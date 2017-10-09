@@ -1,7 +1,4 @@
-package alifec.core.simulation.rules; /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
+package alifec.core.simulation.rules;
 
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Colony;

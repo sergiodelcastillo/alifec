@@ -1,6 +1,7 @@
 package alifec.core.persistence;
 
 import alifec.ParentTest;
+import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -21,7 +22,7 @@ import java.util.List;
 public class ZipHelperTest extends ParentTest {
 
     @Test
-    public void testCreateZip() throws IOException, CreateContestFolderException, URISyntaxException {
+    public void testCreateZip() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         String contestName = "contest-01";
 
         ContestConfig config = createContest(contestName);
@@ -35,7 +36,7 @@ public class ZipHelperTest extends ParentTest {
     }
 
     @Test
-    public void testVerifyTheZipContent() throws CreateContestFolderException, IOException, URISyntaxException {
+    public void testVerifyTheZipContent() throws CreateContestFolderException, IOException, URISyntaxException, ConfigFileException {
         String[] target = new String[]{
                 "contest-01/MOs/Movx.java",
                 "contest-01/MOs/Tactica1.java",
@@ -65,7 +66,7 @@ public class ZipHelperTest extends ParentTest {
     }
 
     @Test
-    public void testUnzip() throws CreateContestFolderException, IOException, URISyntaxException {
+    public void testUnzip() throws CreateContestFolderException, IOException, URISyntaxException, ConfigFileException {
         String[] target = new String[]{
                 "contest-01/MOs/Movx.java",
                 "contest-01/MOs/Tactica1.java",

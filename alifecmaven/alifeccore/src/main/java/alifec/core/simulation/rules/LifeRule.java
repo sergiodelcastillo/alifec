@@ -3,10 +3,7 @@ package alifec.core.simulation.rules;
 import alifec.core.simulation.*;
 import alifec.core.simulation.rules.ColonyRule;
 
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
+
 
 public class LifeRule implements ColonyRule {
     public boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {

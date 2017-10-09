@@ -13,10 +13,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 
-/**
- * @author Sergio Del Castillo
- * @email sergio.jose.delcastillo@gmail.com
- */
+
 public class Environment {
     Logger logger = LogManager.getLogger(getClass());
 

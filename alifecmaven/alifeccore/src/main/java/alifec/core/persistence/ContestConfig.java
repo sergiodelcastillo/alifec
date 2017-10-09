@@ -319,6 +319,10 @@ public class ContestConfig {
         return path + File.separator + BASE_FOLDER;
     }
 
+    public String getBaseFolder() {
+        return getBaseFolder(path);
+    }
+
     public static boolean existsConfigFile(String path) {
         return new File(getConfigFilePath(path)).exists();
     }

@@ -1,6 +1,7 @@
-package alifec.core.contest;
+package alifec.core.persistence.filter;
 
 import alifec.ParentTest;
+import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.ContestFolderFilter;
@@ -18,7 +19,6 @@ import java.util.Arrays;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ContestFolderFilterTest extends ParentTest {
-
 
     @Test
     public void testListEmpty() {
@@ -51,34 +51,10 @@ public class ContestFolderFilterTest extends ParentTest {
 
     }
 
-    @Test
-    public void testCheckPatter() {
-        ContestFolderFilter filter = new ContestFolderFilter();
 
-        //false contest names.
-        Assert.assertFalse(filter.checkPattern(null));
-        Assert.assertFalse(filter.checkPattern(""));
-        Assert.assertFalse(filter.checkPattern("asdñfjlaskdfjalñksdfjlakjsdfñlk"));
-        Assert.assertFalse(filter.checkPattern("contest-"));
-        Assert.assertFalse(filter.checkPattern("contest-*"));
-        Assert.assertFalse(filter.checkPattern("contest-a*"));
-        Assert.assertFalse(filter.checkPattern("contest-b+"));
-        Assert.assertFalse(filter.checkPattern("contest-+"));
-        Assert.assertFalse(filter.checkPattern("1contest-0"));
-        Assert.assertFalse(filter.checkPattern("ccontest-01"));
-        Assert.assertFalse(filter.checkPattern("_contest-01"));
-        Assert.assertFalse(filter.checkPattern("contest-1111122222111112222211111a"));
-
-        Assert.assertTrue(filter.checkPattern("CONTEST-01"));
-        Assert.assertTrue(filter.checkPattern("Contest-01"));
-        Assert.assertTrue(filter.checkPattern("cOntEsT-01"));
-        Assert.assertTrue(filter.checkPattern("contest-1"));
-        Assert.assertTrue(filter.checkPattern("contest-1111122222111112222211111"));
-        Assert.assertTrue(filter.checkPattern("contest-abc1234DEF"));
-    }
 
     @Test
-    public void testListOneContest() throws IOException, CreateContestFolderException, URISyntaxException {
+    public void testListOneContest() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         //TODO: usar format..
         String contestName = ContestConfig.CONTEST_NAME_PREFIX + "01";
         createContest(contestName);
@@ -90,7 +66,7 @@ public class ContestFolderFilterTest extends ParentTest {
     }
 
     @Test
-    public void testListManyContests() throws IOException, CreateContestFolderException, URISyntaxException {
+    public void testListManyContests() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         //Create 100  contests
         for (int i = 0; i < 100; i++) {
             //TODO: usar format..
@@ -115,7 +91,7 @@ public class ContestFolderFilterTest extends ParentTest {
     }
 
     @Test
-    public void testListManyContestsWithSimilarName() throws IOException, CreateContestFolderException, URISyntaxException {
+    public void testListManyContestsWithSimilarName() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         String[] contestList = new String[]{
                 "contest-01", //SI
                 "Contest-02",//SI

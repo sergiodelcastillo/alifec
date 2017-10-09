@@ -1,8 +1,3 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
-
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
@@ -10,14 +5,12 @@ import alifec.core.simulation.Position;
 
 
 /**
- * warning: don't modify this class
+ * It generates the Inclined Plane nutrient distribution
  */
-public class InclinedPlane extends Nutrient {
+public class InclinedPlane implements Nutrient {
     public static final int ID = 1;
 
-    /**
-     * It generates the Inclined Plane nutrient distribution
-     */
+
     @Override
     public float getNutrient(int px, int py) {
         return (float) (Defs.MAX_NUTRI * (Defs.DIAMETER - px) * (Defs.DIAMETER - py) /

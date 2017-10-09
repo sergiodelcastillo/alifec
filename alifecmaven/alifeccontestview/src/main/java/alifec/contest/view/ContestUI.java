@@ -1,7 +1,3 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 
 package alifec.contest.view;
 
@@ -31,27 +27,13 @@ public class ContestUI extends JFrame implements ActionListener {
     Logger logger = LogManager.getLogger(getClass());
 
     private static final long serialVersionUID = 0L;
-    /**
-     * Interface grafica que representa los encuentros realizados y
-     * el que se esta realizando.
-     */
+
     private TournamentUI tUI;
 
-    /**
-     * Interfe grafica que permite administrar las batallas
-     * que se van a realizar.
-     */
     private BattleUI battleUI;
 
-    /**
-     * Manejador del Contexto, usa la clase Contest para realizar las
-     * operaciones a nivel de constest
-     */
     private Contest contest;
 
-    /**
-     * Panel de mensages!.. se informan los eventos que van sucediendo.
-     */
     private MessagePanel messagePanel = new MessagePanel();
 
     private JMenuItem newContest;

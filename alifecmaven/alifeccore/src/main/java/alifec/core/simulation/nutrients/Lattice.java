@@ -1,16 +1,12 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
 import alifec.core.simulation.Position;
 
 /**
- * warning: don't modify this class.
+ * It generates the Lattice nutrient distribution
  */
-public class Lattice extends Nutrient {
+public class Lattice implements Nutrient {
 
     public static final int ID = 4;
 

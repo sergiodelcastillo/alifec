@@ -1,7 +1,5 @@
-package alifec.core.simulation; /**
- * @author: Sergio Del Castillo
- * @email: sergio.jose.delcastillo@gmail.com
- */
+package alifec.core.simulation;
+
 
 public abstract class Microorganism {
     /**
@@ -16,29 +14,30 @@ public abstract class Microorganism {
 
 
     /**
-     * Permite a un Microorganismo moverse a una posicion relativa
-     * de su posicion actual (pos).
+     * Move the microorganism to a relative position.
+     * The microorganism can decide to move to a better position
+     * or to attach the enemy.
      *
      * @param mov
      */
     public abstract void move(Movement mov);
 
     /**
-     * Permite a un microorganismo duplicarse.
+     * This is a way that the microorganism can duplicate himself.
      *
-     * @return true si la mitosis se a concluido.
+     * @return true if the mitosis will be performed..
      */
     public abstract boolean mitosis();
 
     /**
-     * Nombre de la colonia de Microorganismos.
+     * The name of the microorganism.
      *
      * @return
      */
     public abstract String getName();
 
     /**
-     * Autor del code.
+     * Author del code.
      *
      * @return
      */

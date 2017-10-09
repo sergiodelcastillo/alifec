@@ -1,7 +1,3 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 
 package alifec.contest.view;
 
@@ -22,20 +18,9 @@ import java.util.List;
 public class TournamentUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
 
-    /**
-     * administra tanto los turnos ya corridos y como
-     * el que se esta corriendo actualmente.
-     */
     private TournamentManager tm;
-    /**
-     * Interface grafica padre (Frame principal).
-     */
     private ContestUI father;
 
-    /**
-     * Cada TournamentPanel es un panel
-     * con cada turno ejecutado o que se esta ejecutando.
-     */
     private List<TournamentPanel> tPanel;
 
     private List<JScrollPane> tScroll;
@@ -126,7 +111,7 @@ public class TournamentUI extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(addColony)) {
             JFileChooser fc = new JFileChooser();
-            fc.setFileFilter(new JavaFile());
+            fc.setFileFilter(new JavaFileFilter());
 
             if (fc.showOpenDialog(father) == 0 &&
                     fc.getSelectedFile() != null &&

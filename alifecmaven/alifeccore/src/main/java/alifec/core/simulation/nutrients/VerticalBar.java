@@ -1,7 +1,4 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
+
 
 package alifec.core.simulation.nutrients;
 
@@ -9,14 +6,11 @@ import alifec.core.simulation.Defs;
 import alifec.core.simulation.Position;
 
 /**
- * warning: don't modify this class
+ * It generates the Vertical Bar nutrient distribution
  */
-public class VerticalBar extends Nutrient {
+public class VerticalBar implements Nutrient {
     public static final int ID = 2;
-    /*
-    * Genera una distribucion de nutrientes en forma de una
-    * barra vertical.
-    */
+
 
     @Override
     public float getNutrient(int px, int py) {

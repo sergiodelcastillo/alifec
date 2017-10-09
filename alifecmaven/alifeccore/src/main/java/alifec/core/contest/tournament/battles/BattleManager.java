@@ -1,7 +1,3 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 
 package alifec.core.contest.tournament.battles;
 

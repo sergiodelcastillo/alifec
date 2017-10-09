@@ -1,6 +1,7 @@
 package alifec;
 
 import alifec.core.contest.Contest;
+import alifec.core.exception.ConfigFileException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ContestHelper;
 import alifec.core.exception.CreateContestFolderException;
@@ -61,10 +62,17 @@ public class ParentTest {
         }
     }
 
-    protected ContestConfig  createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException {
+    protected ContestConfig  createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         ContestConfig config = ContestConfig.buildNewConfigFile(TEST_ROOT_PATH, name);
 
         createContest(config);
+
+        File baseFolder = new File(config.getBaseFolder());
+
+        if(!baseFolder.exists())
+            Assert.assertTrue(baseFolder.mkdirs());
+
+        config.save();
         return config;
 
     }

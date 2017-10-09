@@ -1,7 +1,3 @@
-/**
- * @author Yeyo
- * @mail: sergio.jose.delcastillo@gmail.com
- */
 package alifec.core.simulation.nutrients;
 
 import alifec.core.simulation.Defs;
@@ -9,14 +5,10 @@ import alifec.core.simulation.Position;
 
 
 /**
- * warning: don't modify this class
+ * It generates the Rings nutrient distribution
  */
-public class Rings extends Nutrient {
+public class Rings implements Nutrient {
     public static final int ID = 3;
-    /*
-    * Genera una distribucion de nutrientes en forma 
-    * de un anillo.
-    */
 
     @Override
     public float getNutrient(int px, int py) {

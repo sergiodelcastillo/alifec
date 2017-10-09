@@ -1,8 +1,3 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
-
 package alifec.contest.view;
 
 
@@ -24,7 +19,7 @@ public class MiComboboxModel extends AbstractListModel<String> implements ComboB
 
     public MiComboboxModel(Hashtable<String, Integer> m) {
         if (m == null || m.size() == 0)
-            logger.debug("There are not elements");
+            logger.debug("There are no elements");
 
         model = m;
 

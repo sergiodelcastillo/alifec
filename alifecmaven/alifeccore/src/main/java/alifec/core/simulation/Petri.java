@@ -1,9 +1,5 @@
 package alifec.core.simulation;
 
-/**
- * @author: Sergio Del Castillo
- * @email: sergio.jose.delcastillo@gmail.com
- */
 
 public class Petri {
     /**
@@ -110,31 +106,29 @@ public class Petri {
     }
 
     /**
-     * @return si el MO en la posicion (x,y) esta dentro del entorno,
-     * es decir,  pertenece al circulo de entro (Defs.Radious, Defs.Radios ) y
-     * radio Defs.radious.
+     * @return true if the MO in the position (x,y) is not out of the dish.
+     * It means that the MO is within the circle with diameter {@link Defs#DIAMETER} and center ({@link Defs#RADIUS}, {@link Defs#RADIUS}).
      */
     public boolean inDish(int x, int y) {
         return env.inDish(x, y);
     }
 
     /**
-     * @return si el MO en la posicion p esta dentro del entorno,
-     * es decir,  pertenece al circulo de entro (Defs.Radious, Defs.Radios ) y
-     * radio Defs.radious.
+     * @return true if the MO in the position (p.x,p.y) is not out of the dish.
+     * It means that the MO is within the circle with diameter {@link Defs#DIAMETER} and center ({@link Defs#RADIUS}, {@link Defs#RADIUS}).
      */
     public boolean inDish(Position p) {
         return env.inDish(p.x, p.y);
     }
 
     /**
-     * Retorna informacion acerca de la distribucion de nutrientes actual.
-     * 1  : plano inclinado (Inclined  Plane)
-     * 2  : barra vertical (Vertical Bar)
-     * 3  : anillo (Rings)
-     * 4  : grilla (Lattice)
-     * 5  : dos gausianas (Two Gaussians)
-     * 100: distrubucion uniforme (Famine)
+     * Return the current nutrient distribution.
+     * 1  : Inclined  Plane
+     * 2  : Vertical Bar
+     * 3  : Rings
+     * 4  : Lattice
+     * 5  : Two Gaussians
+     * 100: Famine
      */
     public int getDistNutri() {
         return env.getAgar().getDistNutri();

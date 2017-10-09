@@ -1,7 +1,3 @@
-/**
- * @author Sergio
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 
 package alifec.core.contest;
 
@@ -29,9 +25,6 @@ public class Contest {
 
     private Logger logger = LogManager.getLogger(getClass());
 
-    /**
-     * Environment ...
-     */
     private Environment environment;
     /**
      * manager of tournaments

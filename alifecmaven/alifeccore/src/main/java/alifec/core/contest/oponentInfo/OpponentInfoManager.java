@@ -1,8 +1,3 @@
-/**
- * @author Sergio Del Castillo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
-
 package alifec.core.contest.oponentInfo;
 
 import alifec.core.persistence.ContestConfig;

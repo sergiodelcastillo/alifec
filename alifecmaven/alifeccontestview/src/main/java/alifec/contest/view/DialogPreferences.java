@@ -1,7 +1,3 @@
-/*
- * @author Sergio Del Castillo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 package alifec.contest.view;
 
 import alifec.core.contest.Contest;
@@ -9,6 +5,8 @@ import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ContestHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrients.Nutrient;
+import alifec.core.validation.ContestNameValidator;
+import alifec.core.validation.ContestPathValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,8 +18,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
 
@@ -36,10 +32,12 @@ public class DialogPreferences extends JDialog implements ActionListener {
     private JComboBox<String> defaultPause;
     private JComboBox<String> modeOfContest;
     private JCheckBox[] nutrients = new JCheckBox[Agar.nutrient.length];
+    private ContestNameValidator contestNameValidator;
+    private ContestPathValidator contestPathValidator;
 
-    private final String[] time = new String[]{"200", "400", "600", "800",
-            "1000", "1200", "1400", "1600",
-            "1800", "2000"};
+    private final String[] time = new String[]
+            {"200", "400", "600", "800", "1000",
+                    "1200", "1400", "1600", "1800", "2000"};
 
     private JButton accept = new JButton("Accept");
     private JButton cancel = new JButton("Cancel");
@@ -47,6 +45,8 @@ public class DialogPreferences extends JDialog implements ActionListener {
     public DialogPreferences(ContestUI father) throws IOException {
         super(father, "Preferences ", true);
         this.father = father;
+        this.contestNameValidator = new ContestNameValidator();
+        this.contestPathValidator = new ContestPathValidator();
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -246,18 +246,18 @@ public class DialogPreferences extends JDialog implements ActionListener {
             dispose();
         }
         if (ev.getSource().equals(accept)) {
-            if (!nameOfContest.getText().toLowerCase().startsWith("contest")) {
-                Message.printErr(this, "The Contest's name must be begin with Contest");
+            if (!ContestNameValidator.checkPrefix(nameOfContest.getText())) {
+                Message.printErr(this, "The Contest's name must start with Contest-");
                 return;
             }
-            if (!validateNameOfContest(nameOfContest.getText())) {
+            if (!contestNameValidator.validate(nameOfContest.getText())) {
                 Message.printErr(this, "The Contest's name must contain only numbers or letters and \"-\" or \"_\"");
                 return;
             }
             String path = defaultPath.getText();
 
-            if (!validateDefaultPath(path)) {
-                Message.printErr(this, "The PATH of Contest is invalid");
+            if (!contestPathValidator.validate(path)) {
+                Message.printErr(this, "The Contest path is not valid. Please input a right one.");
                 return;
             }
 
@@ -274,21 +274,6 @@ public class DialogPreferences extends JDialog implements ActionListener {
             }
             dispose();
         }
-    }
-
-    public boolean validateDefaultPath(String p) {
-        //todo: use the validator!!!
-        File f = new File(p);
-
-        return !(!f.exists() || !f.isDirectory()) && ContestConfig.existsConfigFile(p);
-    }
-
-    public boolean validateNameOfContest(String s) {
-        //todo: use the validator!!!
-        Pattern p = Pattern.compile("[^A-Za-z0-9\\_\\-]+");
-        Matcher m = p.matcher(s);
-
-        return !m.find();
     }
 
     private boolean updateConfig() {

@@ -1,7 +1,4 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
+
 package alifec.core.persistence.filter;
 
 import alifec.core.persistence.ContestConfig;

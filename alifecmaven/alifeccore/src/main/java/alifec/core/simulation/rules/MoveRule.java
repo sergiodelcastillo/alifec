@@ -3,10 +3,6 @@ package alifec.core.simulation.rules;
 import alifec.core.simulation.*;
 import alifec.core.simulation.rules.ColonyRule;
 
-/**
- * @author Sergio Del Castillo
- * @email: sergio.jose.delcastillo@gmail.com
- */
 
 public class MoveRule implements ColonyRule {
 

@@ -1,12 +1,9 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
-
 package alifec.contest.view;
 
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.ContestFolderFilter;
+import alifec.core.validation.ContestFolderValidator;
+import alifec.core.validation.ContestNameValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,7 +33,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     private JCheckBox checkLoad = new JCheckBox("Load new Contest", true);
     private JCheckBox examples = new JCheckBox("Generate examples", true);
     private ContestConfig config;
-    private ContestFolderFilter validator;
+    private ContestFolderValidator contestFolderValidator;
 
     private boolean createExamples;
     private boolean makeDefault;
@@ -44,7 +41,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     public DialogNewContest(JFrame father) {
         super(father, "New Contest ", true);
 
-        validator = new ContestFolderFilter(false);
+        contestFolderValidator = new ContestFolderValidator();
         cleanResult();
 
         initComponents();
@@ -144,7 +141,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
             String contestFolderRoot = textPath.getText();
             String contestPath = ContestConfig.getContestPath(contestFolderRoot, contestFolderName);
 
-            if (validator.validate(contestPath)) {
+            if (contestFolderValidator.validate(contestPath)) {
                 config = ContestConfig.buildNewConfigFile(contestFolderRoot, contestFolderName);
                 createExamples = examples.isSelected() ? Boolean.TRUE : Boolean.FALSE;
                 makeDefault = checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE;
