@@ -7,6 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Validate if the Contest Name have the right pattern: contest-"<xx>".
+ * Please not that contest- is not case sensitive and xx are numbers between 0 and 9999999999999999999999999.
+ *
  * Created by Sergio Del Castillo on 08/10/17.
  *
  * @email: sergio.jose.delcastillo@gmail.com

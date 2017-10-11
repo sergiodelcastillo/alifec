@@ -1,9 +1,7 @@
 package alifec.contest.view;
 
 import alifec.core.persistence.ContestConfig;
-import alifec.core.persistence.filter.ContestFolderFilter;
-import alifec.core.validation.ContestFolderValidator;
-import alifec.core.validation.ContestNameValidator;
+import alifec.core.validation.NewContestFolderValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,7 +31,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     private JCheckBox checkLoad = new JCheckBox("Load new Contest", true);
     private JCheckBox examples = new JCheckBox("Generate examples", true);
     private ContestConfig config;
-    private ContestFolderValidator contestFolderValidator;
+    private NewContestFolderValidator newContestFolderValidator;
 
     private boolean createExamples;
     private boolean makeDefault;
@@ -41,7 +39,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     public DialogNewContest(JFrame father) {
         super(father, "New Contest ", true);
 
-        contestFolderValidator = new ContestFolderValidator();
+        newContestFolderValidator = new NewContestFolderValidator();
         cleanResult();
 
         initComponents();
@@ -141,7 +139,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
             String contestFolderRoot = textPath.getText();
             String contestPath = ContestConfig.getContestPath(contestFolderRoot, contestFolderName);
 
-            if (contestFolderValidator.validate(contestPath)) {
+            if (newContestFolderValidator.validate(contestPath)) {
                 config = ContestConfig.buildNewConfigFile(contestFolderRoot, contestFolderName);
                 createExamples = examples.isSelected() ? Boolean.TRUE : Boolean.FALSE;
                 makeDefault = checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE;

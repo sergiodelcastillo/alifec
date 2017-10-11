@@ -3,15 +3,16 @@ package alifec.core.validation;
 import java.io.File;
 
 /**
+ * Validates if the Contest Folder does not exists and have a valid name.
  * Created by Sergio Del Castillo on 08/10/17.
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestFolderValidator implements Validator<String> {
+public class NewContestFolderValidator implements Validator<String> {
 
     private ContestNameValidator contestNameValidator;
 
-    public ContestFolderValidator() {
+    public NewContestFolderValidator() {
         this.contestNameValidator = new ContestNameValidator();
     }
 
