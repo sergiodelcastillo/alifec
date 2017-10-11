@@ -1,23 +1,18 @@
 package alifec.core.simulation.rules;
 
 import alifec.core.simulation.*;
-import alifec.core.simulation.rules.ColonyRule;
-
 
 
 public class LifeRule implements ColonyRule {
-    public boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
-        //TODO: imporove it
-        if (c == null || mo == null )
-            throw new IllegalArgumentException("Illegal Argument");
+    public Status apply(Environment env, Cell mo, Movement mov, boolean mitosis) {
 
         mo.ene -= Defs.LESS_LIVE;
 
         if (mo.ene <= 0.0f) {
             env.killMO(mo.x, mo.y);
-            return true;
+            return Status.CURRENT_DEAD;
         }
 
-        return false;
+        return Status.NONE;
     }
 }

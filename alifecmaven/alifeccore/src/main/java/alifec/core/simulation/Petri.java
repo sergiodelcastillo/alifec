@@ -15,11 +15,11 @@ public class Petri {
     /**
      * First opponent into the current battle..
      */
-    Colony firstOpponent;
+   // Colony firstOpponent;
     /**
      * Second opponent into the current battle
      */
-    Colony secondOpponent;
+    //Colony secondOpponent;
     /**
      * this class contains the nutrients in the battle.
      */
@@ -52,10 +52,10 @@ public class Petri {
      * @return return the  Colony identifier in the position x,y. return -1 if the position is empty.
      */
     public int getOpponent(int x, int y) {
-        if (env.getMO(x, y) == null)
+        if (env.getCell(x, y) == null)
             return -1;  // cant
 
-        return env.getMO(x, y).id;
+        return env.getCell(x, y).id;
     }
 
     /**
@@ -64,9 +64,9 @@ public class Petri {
      * @return the microorganism's energy in the position <b> x,y</b>. 0.0f if the position is empty.
      */
     public float getEnergy(int x, int y) {
-        if (env.getMO(x, y) == null)
+        if (env.getCell(x, y) == null)
             return 0.0f;
-        return env.getMO(x, y).ene;
+        return env.getCell(x, y).ene;
     }
 
     /**
@@ -89,10 +89,10 @@ public class Petri {
      */
     public boolean canCompete(int x1, int y1, int x2, int y2) {
 
-        return env.getMO(x1, y1) != null &&
-                env.getMO(x2, y2) != null &&
-                env.getMO(x1, y1) !=
-                        env.getMO(x2, y2);
+        return env.getCell(x1, y1) != null &&
+                env.getCell(x2, y2) != null &&
+                env.getCell(x1, y1) !=
+                        env.getCell(x2, y2);
 
     }
 
@@ -137,4 +137,9 @@ public class Petri {
     void setEnvironment(Environment e) {
         this.env = e;
     }
+
+    public int getLiveTime() {
+        return this.env.getLiveTime();
+    }
+
 }

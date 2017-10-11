@@ -164,4 +164,8 @@ public abstract class Colony {
         method.setAccessible(true);
         method.invoke(urlClassLoader, u.toURL());
     }
+
+    public int getId() {
+        return this.id;
+    }
 }

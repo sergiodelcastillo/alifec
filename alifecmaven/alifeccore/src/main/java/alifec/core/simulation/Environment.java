@@ -7,6 +7,7 @@ import alifec.core.persistence.filter.SourceCodeFilter;
 import alifec.core.simulation.rules.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -41,6 +42,11 @@ public class Environment {
      * Second Opponent .. temporal reference !!
      */
     private Colony c2;
+
+    /**
+     * Simulation time
+     */
+    private int liveTime;
 
     /**
      * Information of current battle .. temporal reference !!
@@ -109,21 +115,27 @@ public class Environment {
         return false;
     }
 
-    public void generateOpponents(BattleRun b) {
+    /*
+     * Initialize the two colonies and the agar to fight.
+     *
+     * @param b is a battle to run
+     * @return if was successful
+     */
+    public boolean createBattle(BattleRun b) {
         opponents = b;
 
-        agar.setNutrient(b.nutrientID);
+        if (!agar.setNutrient(b.nutrientID)) return false;
 
-        for (Colony colony : colonies) {
-            if (colony.id == b.ID1)
-                c1 = colony;
+
+        if ((c1 = getColonyById(b.ID1)) == null) {
+            return false;
         }
 
-        for (Colony colony : colonies) {
-            if (colony.id == b.ID2)
-                c2 = colony;
+        if ((c2 = getColonyById(b.ID2)) == null) {
+            return false;
         }
 
+        //TODO: check if it is neccesary
         Petri.getInstance().agar = agar;
         Petri.getInstance().firstOpponent = c1;
         Petri.getInstance().secondOpponent = c2;
@@ -131,6 +143,9 @@ public class Environment {
         microorganism = new Cell[Defs.DIAMETER][Defs.DIAMETER];
         init(c1);
         init(c2);
+
+        liveTime = 0;
+        return true;
 
     }
 
@@ -148,11 +163,8 @@ public class Environment {
     public boolean moveColonies() throws MoveMicroorganismException {
         List<Cell> allOps = new ArrayList<>();
 
-        for (int i = 0; i < c1.size(); i++)
-            allOps.add(c1.getMO(i));
-
-        for (int i = 0; i < c2.size(); i++)
-            allOps.add(c2.getMO(i));
+        allOps.addAll(c1.getMOs());
+        allOps.addAll(c2.getMOs());
 
         // randomize list!
         Collections.shuffle(allOps);
@@ -160,41 +172,35 @@ public class Environment {
         boolean mitosis;
         Movement mov;
 
-        while (!allOps.isEmpty()) {
-            Cell mo = allOps.remove(allOps.size() - 1);
-            Colony current, enemy;
+        for (Cell mo : allOps) {
+            Colony current = (mo.id == c2.id) ? c2 : c1;
 
-            if (mo.id == c2.id) {
-                current = c2;
-                enemy = c1;
-            } else {
-                current = c1;
-                enemy = c2;
+            if (mo.isDied()) {
+                continue;
             }
 
             int indexMO = current.getMOs().indexOf(mo);
-            if (indexMO < 0)
-                continue;
 
             try {
                 current.update(indexMO, mo.ene, mo.x, mo.y);
                 mov = current.move(indexMO);
                 mitosis = current.mitosis(indexMO);
             } catch (Exception ex) {
+                //todo: check the logs.
                 logger.error(ex.getMessage(), ex);
                 String txt = "The colony: " + current.getName() + " has been Penalized.";
                 throw new MoveMicroorganismException(txt, current.getName(), ex);
             }
 
             for (ColonyRule rule : rules) {
-                if (rule.apply(this, current, enemy, mo, mov, mitosis)) {
+                if (ColonyRule.Status.CURRENT_DEAD == rule.apply(this, mo, mov, mitosis)) {
                     break;      // break of rules
                 }
             }
         }
 
-        if (new Random().nextInt(4) > 1)
-            agar.moveRandom();
+        agar.moveRandom();
+        ++liveTime;
 
         return updateStatus();
     }
@@ -327,7 +333,7 @@ public class Environment {
         throw new ArrayIndexOutOfBoundsException("cant find id: " + id);
     }
 
-    public int getColonyID(String col) {
+    public int getColonyIdByName(String col) {
         for (Colony c : colonies) {
             if (c.getName().toLowerCase().equals(col.toLowerCase())) {
                 return c.id;
@@ -336,11 +342,54 @@ public class Environment {
         return -1;
     }
 
-    public Cell getMO(int x, int y) {
+    /**
+     * get the colony  with the id = id
+     *
+     * @param id the colony identifier
+     * @return a colony f exists. null in another case.
+     */
+    public Colony getColonyById(int id) {
+        for (Colony c : colonies) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public Cell getCell(int x, int y) {
         return microorganism[x][y];
     }
 
     public float eat(int x, int y) {
         return agar.eat(x, y);
+    }
+
+    /**
+     * create a instance of MO in the position (x,y) with the energy = ene and id = id
+     *
+     * @param x
+     * @param y
+     * @param ene
+     * @param id
+     * @return the if can create the mo.
+     */
+    public boolean createMO(int x, int y, float ene, int id) {
+        if (!inDish(x, y) || ene <= 0 || microorganism[x][y] != null) {
+            return false;
+        }
+
+        Cell mo = new Cell(id);
+        mo.x = x;
+        mo.y = y;
+        mo.ene = ene;
+
+        microorganism[x][y] = mo;
+
+        return id == c1.id ? c1.createInstance(mo) : c2.createInstance(mo);
+    }
+
+    public int getLiveTime() {
+        return liveTime;
     }
 }

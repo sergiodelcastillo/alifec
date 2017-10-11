@@ -63,4 +63,5 @@ public class BattleRun {
         hash = 11 * hash + this.ID2;
         return hash;
     }
+
 }

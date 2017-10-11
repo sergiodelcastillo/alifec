@@ -13,12 +13,16 @@ import alifec.core.simulation.rules.ColonyRule;
 
 public class EatRule implements ColonyRule {
 
-    public boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
-        //TODO: imporove it
-        if (mo == null)
-            throw new IllegalArgumentException("Illegal Argument");
-
-        mo.ene += env.eat(mo.x, mo.y);
-        return false;
+    /**
+     * The current MO increment(eat) 1% of agar in the current position.
+     * @param env the environment of the competition
+     * @param mo current MO
+     * @param mov the results of call the method MO.move
+     * @param mitosis the results of call the method MO.mitosis
+     * @return false
+     */
+    public Status apply(Environment env, Cell mo, Movement mov, boolean mitosis) {
+        mo.ene += env.getAgar().eat(mo.x, mo.y);
+        return Status.NONE;
     }
 }

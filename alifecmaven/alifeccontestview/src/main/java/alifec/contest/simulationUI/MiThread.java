@@ -125,7 +125,7 @@ public class MiThread extends Thread {
                 BattleRun b = (BattleRun) battles.firstElement();
                 battles.removeElement(battles.firstElement());
                 cui.setMessage(b.toString());
-                environment.generateOpponents(b);
+                environment.createBattle(b);
                 firstOponent = environment.getFirstOpponent();
                 secondOponent = environment.getSecondOpponent();
                 updateNames(b);

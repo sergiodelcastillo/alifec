@@ -79,8 +79,8 @@ public class BattleUI extends JPanel implements ActionListener {
         for (String[] line : backup) {
             try {
                 String name1 = line[0], name2 = line[1], nameNut = line[2];
-                int index1 = environment.getColonyID(name1);
-                int index2 = environment.getColonyID(name2);
+                int index1 = environment.getColonyIdByName(name1);
+                int index2 = environment.getColonyIdByName(name2);
                 int indexNut = environment.getAgar().getNutrientID(nameNut);
 
                 BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);

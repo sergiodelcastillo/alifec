@@ -1,7 +1,8 @@
 package alifec.core.simulation.rules;
 
 import alifec.core.simulation.*;
-import alifec.core.simulation.rules.ColonyRule;
+
+import java.util.Random;
 
 /**
  * @author: Sergio Del Castillo
@@ -9,57 +10,76 @@ import alifec.core.simulation.rules.ColonyRule;
  */
 
 public class AttackRule implements ColonyRule {
-    public boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis) {
-        //TODO: imporove it
-        if (mov == null || mo == null || enemy == null || c == null)
-            throw new IllegalArgumentException("Illegal Argument");
+    private static final Random random = new Random();
+    /**
+     * The current MO and its opponent will fight if:
+     * 1) The destination of the MO is an opponent position.
+     * 2) The movement is relative and not empty (0,0)
+     *
+     * @param env     the environment of the competition
+     * @param mo      current MO
+     * @param mov     the results of call the method MO.move
+     * @param mitosis the results of call the method MO.mitosis
+     * @return true if the mo is dead.
+     */
+    public Status apply(Environment env, Cell mo, Movement mov, boolean mitosis) {
+        if (!mov.isMoved()) {
+            return Status.NONE;
+        }
 
-        if (!mov.isMoved() || !mov.isValid()) return false;
+        if (!mov.isValid()) {
+            return Status.NONE;
+        }
 
         int x = mo.x + mov.dx;
         int y = mo.y + mov.dy;
 
-        if (!env.inDish(x, y) || !canCompete(env, mo.x, mo.y, x, y))
-            return false;
+        if (!env.inDish(x, y)) {
+            return Status.NONE;
+        }
 
-        Cell enemyMO = env.getMO(x, y);
+        Cell enemy = env.getCell(x, y);
+
+        if (enemy == null || enemy.id == mo.id) {
+            //delegate to move role.
+            return Status.NONE;
+        }
+
         mo.ene -= Defs.LESS_MOVE;
 
-        if (mo.ene <= 0.0f) {
+        if (enemy.ene == mo.ene) {
+            mo.ene += (0.001f * (random.nextInt(100) > 50 ? 1 : -1));
+        }
+
+        if (mo.isDied()) {
             env.killMO(mo.x, mo.y);
-            return true;
+            return Status.CURRENT_DEAD;
         }
 
-        if (enemyMO.ene == mo.ene)
-            mo.ene += 0.01f * (new java.util.Random().nextInt(2) == 0 ? 1 : -1);
-
-        if (enemyMO.ene > mo.ene) {
-            float diff = enemyMO.ene - mo.ene;
-            enemyMO.ene = enemyMO.ene + 0.075f * mo.ene;
-            mo.ene = mo.ene - diff;
-
-            if (mo.ene <= 0.0f) {
-                env.killMO(mo.x, mo.y);
-                return true;
-            }
+        if (enemy.ene > mo.ene) {
+            doAttack(mo, enemy);
         } else {
-            float diff = mo.ene - enemyMO.ene;
-            mo.ene = mo.ene + 0.075f * enemyMO.ene;
-            enemyMO.ene = enemyMO.ene - diff;
-
-            if (enemyMO.ene <= 0.0f) {
-                env.killMO(enemyMO.x, enemyMO.y);
-                env.moveMO(mo.x, mo.y, enemyMO.x, enemyMO.y);
-                return true;
-            }
+            doAttack(enemy, mo);
         }
 
-        return false;
+        if (mo.isDied()) {
+            env.killMO(mo.x, mo.y);
+
+            return Status.CURRENT_DEAD;
+        } else if (enemy.isDied()) {
+            env.killMO(enemy.x, enemy.y);
+            env.moveMO(mo.x, mo.y, enemy.x, enemy.y);
+            return Status.OPPONENT_DEAD;
+        }
+
+        return Status.NONE;
     }
 
-    private boolean canCompete(Environment env, int ax, int ay, int x, int y) {
-        return env.getMO(ax, ay) != null &&
-                env.getMO(x, y) != null &&
-                env.getMO(ax, ay).id != env.getMO(x, y).id;
+    private void doAttack(Cell mo, Cell moWinner) {
+        float diff = moWinner.ene - mo.ene;
+
+        moWinner.ene -= 0.075f * mo.ene;
+        mo.ene -= diff;
     }
+
 }

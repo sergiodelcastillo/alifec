@@ -82,7 +82,7 @@ public class Agar {
      *            5 : Two Gaussians
      *            100: Famine
      */
-    public void setNutrient(int id) {
+    public boolean setNutrient(int id) {
         Nutrient nutri;
 
         switch (id) {
@@ -113,6 +113,7 @@ public class Agar {
                 nutrients[i][j] = nutri.getNutrient(i, j);
 
         nutrientId = id;
+        return true;
     }
 
     /**

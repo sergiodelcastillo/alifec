@@ -9,15 +9,18 @@ import alifec.core.simulation.Movement;
  * The class defines the rules of the environment
  * Every sub-class defines a rule that the
  * environment will use when the microorganism is moved.
- *
- * @Warning: don't modify this class
  */
 public interface ColonyRule {
-
+    enum Status {
+        CURRENT_DEAD,
+        OPPONENT_DEAD,
+        NONE
+    }
 
     /**
      * The abstract method to apply the rules.
      */
-    boolean apply(Environment env, Colony c, Colony enemy, Cell mo, Movement mov, boolean mitosis);
+    Status apply(Environment env, Cell mo, Movement mov, boolean mitosis);
+
 
 }
