@@ -1,9 +1,0 @@
-class MoveMicroorganismException
-!!!132731.java!!!	MoveMicroorganismException(in s : String, in c : String, inout ex : Exception)
-		super(s);
-      exception = ex;
-		colony = c;
-!!!132859.java!!!	getColonyName() : String
-		return colony;
-!!!132987.java!!!	getException() : Exception
-       return exception;

@@ -1,4 +1,0 @@
-class CreateContestException
-!!!131963.java!!!	CreateContestException(in s : String)
-        super(s);
-		  	 

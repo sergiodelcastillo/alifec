@@ -1,9 +1,0 @@
-class InclinedPlane
-!!!170235.java!!!	getNutrient(inout p : Point) : float
-      return (float) (Defs.MAX_NUTRI * (Defs.DIAMETER - p.x) * (Defs.DIAMETER - p.y) / 
-                     (Defs.DIAMETER * Defs.DIAMETER) / 2.875);
-      
-!!!170363.java!!!	toString() : String
-		return "InclinedPlane";
-!!!170491.java!!!	getID() : int
-		return ID;

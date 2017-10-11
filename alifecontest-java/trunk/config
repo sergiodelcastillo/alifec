@@ -1,7 +1,0 @@
-#Configuration File
-# Warning: do not modify this file
-#Sat Jun 10 02:01:27 ART 2017
-name=Contest_01
-url=.
-pause\ between\ battles=100
-mode=0

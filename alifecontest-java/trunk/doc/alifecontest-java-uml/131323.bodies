@@ -1,5 +1,0 @@
-class Cell
-!!!135291.java!!!	Cell(in id : int)
-      this.id = id;
-!!!135419.java!!!	isDied() : boolean
-		return ene <= 0.0f;

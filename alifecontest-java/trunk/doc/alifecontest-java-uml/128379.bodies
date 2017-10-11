@@ -1,9 +1,0 @@
-class Movement
-!!!146427.java!!!	Movement(in dx : int, in dy : int)
-      this.dx = dx;
-      this.dy = dy;
-!!!146555.java!!!	isValid() : boolean
-        return (dx == -1 || dx == 0 || dx == 1) && 
-               (dy == -1 || dy == 0 || dy == 1);
-!!!146683.java!!!	isMoved() : boolean
-        return dx != 0 || dy != 0; 

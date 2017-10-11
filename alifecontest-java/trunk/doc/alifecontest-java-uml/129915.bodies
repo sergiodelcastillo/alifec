@@ -1,3 +1,0 @@
-class DeadColonyException
-!!!132347.java!!!	DeadColonyException(in s : String)
-        super(s);

@@ -1,4 +1,0 @@
-class CreateBattleException
-!!!131707.java!!!	CreateBattleException(in s : String)
-        super(s);
-		  	 

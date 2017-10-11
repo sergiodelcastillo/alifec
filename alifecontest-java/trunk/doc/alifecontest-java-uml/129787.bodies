@@ -1,4 +1,0 @@
-class CreateTournamentException
-!!!132219.java!!!	CreateTournamentException(in s : String)
-        super(s);
-		  	 

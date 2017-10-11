@@ -1,3 +1,0 @@
-class Microorganism
-!!!128763.java!!!	isDead() : boolean
-		 return ene <= 0.0f;

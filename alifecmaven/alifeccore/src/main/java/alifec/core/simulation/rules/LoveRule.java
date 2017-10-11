@@ -36,7 +36,7 @@ public class LoveRule implements ColonyRule {
 
         mo.ene = (0.99f * mo.ene) / 2;
 
-        // crear un Nuevo MO!!
+        // create the new mo
         Position p = posRel.get(new Random().nextInt(posRel.size()));
         env.createInstance(p.x, p.y, mo.ene, mo.id);
         return false;

@@ -9,32 +9,32 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * The Agar class contain all nutrient that each Microorganism can eat.
- * Don't modify this class
+ * The Agar class contain all nutrient that microorganisms can eat.
  */
 public class Agar {
 
     private Logger logger = LogManager.getLogger(getClass());
 
-    private int nutrientId = -1;
+    private int nutrientId;
     private float[][] nutrients;
 
-    private int dx = new Random().nextInt(50);
-    private int dy = new Random().nextInt(50);
+    private int dx;
+    private int dy;
 
     public static final Nutrient nutrient[] = {
             new InclinedPlane(),
             new VerticalBar(),
             new Rings(),
-            //			new Lattice(),
+            new Lattice(),
             new TwoGaussians(),
             new Famine()};
 
-    /**
-     * Default constructor: can´t instance this class out of this package!
-     */
+
     public Agar() {
-        nutrients = new float[50][50];
+        this.nutrients = new float[Defs.DIAMETER][Defs.DIAMETER];
+        this.dx = new Random().nextInt(Defs.DIAMETER);
+        this.dy = new Random().nextInt(Defs.DIAMETER);
+        this.nutrientId = -1;
     }
 
     /**
@@ -49,8 +49,8 @@ public class Agar {
             throw new IllegalArgumentException("The Position (" + px + "," + py + ") is not valid.");
         }
 
-        int x = (nutrients.length + px + dx) % nutrients.length;
-        int y = (nutrients.length + py + dy) % nutrients.length;
+        int x = (Defs.DIAMETER + px + dx) % Defs.DIAMETER;
+        int y = (Defs.DIAMETER + py + dy) % Defs.DIAMETER;
 
         float foot = 0.01f * nutrients[x][y];
         nutrients[x][y] -= foot;
@@ -108,8 +108,8 @@ public class Agar {
                 throw new IllegalArgumentException("There is not nutrient distribution with id = " + id + ".");
         }
 
-        for (int i = 0; i < 50; i++)
-            for (int j = 0; j < 50; j++)
+        for (int i = 0; i < Defs.DIAMETER; i++)
+            for (int j = 0; j < Defs.DIAMETER; j++)
                 nutrients[i][j] = nutri.getNutrient(i, j);
 
         nutrientId = id;
@@ -133,8 +133,8 @@ public class Agar {
         if (y < 0 || y >= Defs.DIAMETER)
             throw new IllegalArgumentException("Value "+ y + "is wrong. The y value must be 0<=y<=50.");
 
-        int xx = (nutrients.length + x + dx) % nutrients.length;
-        int yy = (nutrients.length + y + dy) % nutrients.length;
+        int xx = (Defs.DIAMETER + x + dx) % Defs.DIAMETER;
+        int yy = (Defs.DIAMETER + y + dy) % Defs.DIAMETER;
         try {
             return nutrients[xx][yy];
         } catch (Exception e) {
@@ -160,7 +160,7 @@ public class Agar {
      * @return a list of all nutrients.
      */
     public List<String> getNutrients() {
-        List<String> res = new ArrayList<>(nutrient.length);
+        List<String> res = new ArrayList<>(Defs.DIAMETER);
         for (Nutrient n : nutrient) {
             res.add(n.toString());
         }

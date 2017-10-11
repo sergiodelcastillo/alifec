@@ -1,0 +1,28 @@
+Versión 1.0.0-beta
+- Cambio de jerarquía del proyecto.
+- Refactor y reimplementación de las clases principales.
+- Testeo automatizado.
+- Optimización de la UI.
+- Cambio de la forma de acceso a petri en C/C++. Ahora se accede por Petri::getInstance()->[metodos de petri]
+- Cambio del tipo de datos Point a Position en Java para que quede del mismo nombre que la de C++.
+- El compilador de java ahora es recursivo, osea, ahora permite tener clases separadas.
+- Una única carpeta centralizada de log
+
+Versión 1.0.1-beta
+- Agregado de All en los combobox de selección de oponentes.
+- Agregado de la penalización cuando un MO 
+- Agregado de la restauración cuando se cierra por alguna señal de C/C++
+- Agregado de soporte para Windows 7 de 32 bits
+
+Versión 1.0.2
+- Cambio del esquema de nutrientes para permitir nutrientes más abanzados
+- Agregado de una nueva distribucion de nutrientes : balls
+- Resolviendo el BUG del boton addBattle cuando se selecciona la opción All en los combobox.Ahora no agrega más las batallas duplicadas.   
+- La compilación de los MOs en C/C++ ahora depende del modo, si es modo competencia se utilizan opciones de optimización en la compilación. 
+En caso contrario se utiliza la opción de debug para permitir a los programadores realizar un debug de su código.
+- Resolviendo el BUG de la modificación de las propiedades. Ahora se puede renombrar el contest.
+- Agregando información a la clase petri: LiveTime and battleId
+
+Versión 1.0.3
+- Resolviendo un BUG del método getLiveTime de la clase Petri para que funciona apropiadamente.
+

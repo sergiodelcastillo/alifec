@@ -1,0 +1,6 @@
+#Configuration File
+# Warning: do not modify this file
+#Mon Nov 07 18:23:13 ART 2011
+name=Contest-example
+mode=0
+pause\ between\ battle=200
