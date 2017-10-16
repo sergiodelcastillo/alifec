@@ -8,22 +8,22 @@ public class Petri {
     private static Petri INSTANCE = null;
 
     /*
-      * Environment reference.
-      */
+     * Environment reference.
+     */
     private Environment env;
 
-    /**
+    /*
      * First opponent into the current battle..
      */
-   // Colony firstOpponent;
-    /**
+    // Colony firstOpponent;
+    /*
      * Second opponent into the current battle
      */
     //Colony secondOpponent;
-    /**
+    /*
      * this class contains the nutrients in the battle.
      */
-    Agar agar;
+    // Agar agar;
 
     /**
      * The Petri Class use the Singleton pattern.
@@ -76,7 +76,7 @@ public class Petri {
      * @see Agar#getNutrient(int, int)
      */
     public float getNutrient(int x, int y) {
-        return agar.getNutrient(x, y);
+        return env.getAgar().getNutrient(x, y);
     }
 
 

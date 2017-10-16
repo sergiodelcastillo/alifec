@@ -24,8 +24,8 @@ class Petri{
 		 * 0 : No hay ningun MO en esa posicion
 		 * 1 : Identificador de la colonia 1
 		 * 2 : Identificador de la colonia 2 
-		 */int getOponent(int x, int y){
-			jmethodID methodID = env->GetMethodID(env->GetObjectClass(petri),"getOponent", "(II)I");
+		 */int getOpponent(int x, int y){
+			jmethodID methodID = env->GetMethodID(env->GetObjectClass(petri),"getOpponent", "(II)I");
 			jint id = env->CallIntMethod(petri, methodID, x, y);
 			return id;
 		}
@@ -63,17 +63,17 @@ class Petri{
 		/*
 		 * retorna true si el MO que esta en la posicion (x1,y1) puede atacar al 
 		 * MO que esta en la posición (x2,y2)
-		 */bool canCompite(int x1, int y1, int x2, int y2){
-			jmethodID methodID = env->GetMethodID(env->GetObjectClass(petri),"canCompite", "(IIII)Z");
-			jboolean can_compite = env->CallBooleanMethod(petri, methodID, x1, y1, x2, y2);
-			return can_compite;
+		 */bool canCompete(int x1, int y1, int x2, int y2){
+			jmethodID methodID = env->GetMethodID(env->GetObjectClass(petri),"canCompete", "(IIII)Z");
+			jboolean can_compete = env->CallBooleanMethod(petri, methodID, x1, y1, x2, y2);
+			return can_compete;
 		}
 
 		/*
 		 * retorna true si el MO que esta en la posicion (x1,y1) puede atacar al 
 		 * MO que esta en la posición (x2,y2)
-		 */bool canCompite(Position a, Position b)  {
-			return canCompite(a.x, a.y, b.x, b.y);
+		 */bool canCompete(Position a, Position b)  {
+			return canCompete(a.x, a.y, b.x, b.y);
 		}
 
 		/*
@@ -91,5 +91,9 @@ class Petri{
 		}
 };
 
+/*
+Define the instance which will be used by competitors
+*/
+Petri petri;
 
 #endif

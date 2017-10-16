@@ -54,7 +54,8 @@ public abstract class Microorganism {
         return ene <= 0.0f;
     }
 
-    protected void setPosition(int x, int y) {
+    protected void update(float ene, int x, int y) {
+        this.ene = ene;
         this.x = x;
         this.y = y;
 

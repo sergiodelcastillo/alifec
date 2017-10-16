@@ -46,12 +46,12 @@ public abstract class Colony {
     }
 
     public boolean createInstance(Cell mo) {
-        if (!createMO(mo.x, mo.y, mo.ene)) return false;
+        if (!createMO(mo.ene, mo.x, mo.y)) return false;
         moList.add(mo);
         return true;
     }
 
-    protected abstract boolean createMO(int x, int y, float ene);
+    protected abstract boolean createMO(float ene, int x, int y);
 
     public final boolean kill(Cell mo) {
 
@@ -144,7 +144,7 @@ public abstract class Colony {
     /**
      * Sets the java library path to the specified path
      *
-     * @param path the new library path
+     * @param s the new library path
      * @throws Exception
      */
    /* protected static void setLibraryPath(String path) throws Exception {

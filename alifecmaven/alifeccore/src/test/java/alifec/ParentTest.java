@@ -1,10 +1,15 @@
 package alifec;
 
 import alifec.core.contest.Contest;
+import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.CreateBattleException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ContestHelper;
 import alifec.core.exception.CreateContestFolderException;
+import alifec.core.simulation.Colony;
+import alifec.core.simulation.Environment;
+import alifec.core.simulation.nutrients.Nutrient;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -83,5 +88,15 @@ public class ParentTest {
 
         ContestHelper.buildNewContestFolder(config, true, cppResources, examplesResources);
 
+    }
+
+    protected BattleRun createBattle(Environment env, int colony1, int colony2, Nutrient dist) throws CreateBattleException {
+        Colony c1 = env.getColonyById(colony1);
+        Colony c2 = env.getColonyById(colony2);
+
+        BattleRun battle = new BattleRun(c1.getId(), c2.getId(), dist.getID(), c1.getName(), c2.getName(), dist.toString());
+        env.createBattle(battle);
+
+        return battle;
     }
 }

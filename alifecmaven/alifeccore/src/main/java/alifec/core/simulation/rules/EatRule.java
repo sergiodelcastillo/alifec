@@ -1,13 +1,10 @@
 package alifec.core.simulation.rules;
 
-import alifec.core.simulation.Cell;
-import alifec.core.simulation.Colony;
-import alifec.core.simulation.Environment;
-import alifec.core.simulation.Movement;
+import alifec.core.simulation.*;
 import alifec.core.simulation.rules.ColonyRule;
 
 /**
- * @author Yeyo
+ * @author Sergio Del Castillo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 
@@ -22,7 +19,17 @@ public class EatRule implements ColonyRule {
      * @return false
      */
     public Status apply(Environment env, Cell mo, Movement mov, boolean mitosis) {
-        mo.ene += env.getAgar().eat(mo.x, mo.y);
+        if(mo.isDied()){
+            env.killMO(mo.x, mo.y);
+            return Status.CURRENT_DEAD;
+        }
+
+        Agar agar = env.getAgar();
+        float eat = Defs.EAT_PERCENT * agar.getNutrient(mo.x, mo.y);
+
+        env.getAgar().eat(mo.x, mo.y, eat);
+        mo.ene += eat;
+
         return Status.NONE;
     }
 }

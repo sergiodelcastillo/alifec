@@ -52,4 +52,9 @@ public class Defs {
      * Max length of strings.
      */
     public static final int MAX_LENGTH = 13;
+
+    /**
+     * Eat percent
+     */
+    public static final float EAT_PERCENT = 0.01f;
 }

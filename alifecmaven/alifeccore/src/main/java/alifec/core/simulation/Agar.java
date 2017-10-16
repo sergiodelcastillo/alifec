@@ -27,7 +27,8 @@ public class Agar {
             new Rings(),
             new Lattice(),
             new TwoGaussians(),
-            new Famine()};
+            new Famine()
+    };
 
 
     public Agar() {
@@ -42,7 +43,7 @@ public class Agar {
      * @param py it is an integer between 0 and 50
      * @return The energy that the MO have eaten in the position (px, py).
      */
-    public float eat(int px, int py) {
+    public void eat(int px, int py, float eat) {
         if (px > Defs.DIAMETER || px < 0 ||
                 py > Defs.DIAMETER || py < 0) {
             logger.warn("The Position (" + px + "," + py + ") is not valid.");
@@ -52,14 +53,11 @@ public class Agar {
         int x = (Defs.DIAMETER + px + dx) % Defs.DIAMETER;
         int y = (Defs.DIAMETER + py + dy) % Defs.DIAMETER;
 
-        float foot = 0.01f * nutrients[x][y];
-        nutrients[x][y] -= foot;
+        nutrients[x][y] -= eat;
 
 
         if (nutrients[x][y] < 0)
             nutrients[x][y] = 0;
-
-        return foot;
     }
 
     public void moveRandom() {
@@ -130,9 +128,9 @@ public class Agar {
      */
     public float getNutrient(int x, int y) {
         if (x < 0 || x >= Defs.DIAMETER)
-            throw new IllegalArgumentException("Value "+ x + "is wrong. The x value must be 0<=x<=50.");
+            throw new IllegalArgumentException("Value " + x + "is wrong. The x value must be 0<=x<=50.");
         if (y < 0 || y >= Defs.DIAMETER)
-            throw new IllegalArgumentException("Value "+ y + "is wrong. The y value must be 0<=y<=50.");
+            throw new IllegalArgumentException("Value " + y + "is wrong. The y value must be 0<=y<=50.");
 
         int xx = (Defs.DIAMETER + x + dx) % Defs.DIAMETER;
         int yy = (Defs.DIAMETER + y + dy) % Defs.DIAMETER;

@@ -136,9 +136,9 @@ public class Environment {
         }
 
         //TODO: check if it is neccesary
-        Petri.getInstance().agar = agar;
-        Petri.getInstance().firstOpponent = c1;
-        Petri.getInstance().secondOpponent = c2;
+      //  Petri.getInstance().agar = agar;
+        //Petri.getInstance().firstOpponent = c1;
+        //Petri.getInstance().secondOpponent = c2;
 
         microorganism = new Cell[Defs.DIAMETER][Defs.DIAMETER];
         init(c1);
@@ -259,7 +259,6 @@ public class Environment {
 
         microorganism[x][y] = null;
         return mo != null && ((mo.id == c1.id) ? c1.kill(mo) : c2.kill(mo));
-
     }
 
     public boolean createInstance(int px, int py, float ene, int id) {
@@ -359,10 +358,6 @@ public class Environment {
 
     public Cell getCell(int x, int y) {
         return microorganism[x][y];
-    }
-
-    public float eat(int x, int y) {
-        return agar.eat(x, y);
     }
 
     /**

@@ -11,9 +11,8 @@
 #include <iostream>
 using namespace std;
 
-
+#include "Petri.h"
 #include "CppColony.h"
-#include "includemos.h"
 
 class Environment{
 	private:
@@ -32,9 +31,7 @@ class Environment{
 			for(unsigned short i = 0; i < colonies.size(); i++)
 				if(colonies[i]->getID()== id){
 					colonies[i]->clear();
-					vector<CppColony<Microorganism> *>::iterator it = colonies.begin();
-					it += i;
-					colonies.erase(it);
+					colonies.erase(colonies.begin()+i);
 					return true;
 				}
 					
@@ -45,12 +42,14 @@ class Environment{
 
 			for(unsigned i = 0; i < colonies.size(); i++){
 				CppColony <Microorganism> * col = colonies[i];
-				if(col != NULL && col->getID() == id){					return col;
+				if(col != NULL && col->getID() == id){
+					return col;
 				}
 			}		
 			return 0;
 		}
 
 };
+#include "includemos.h"
 #include "Environment.cpp" 
 #endif

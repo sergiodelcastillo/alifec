@@ -1,4 +1,5 @@
 package alifec.core.simulation;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +41,7 @@ public class CppColony extends Colony {
         if (!createColony(index, colony_name))
             throw new ClassNotFoundException("Can't find:" + colony_name);
 
-        createMO(-1, -1, 0.0f);
+        createMO(0.0f,-1, -1);
 
         name = getName(index);
         author = getAuthor(index);
@@ -52,16 +53,16 @@ public class CppColony extends Colony {
     private native boolean createColony(int id, String name);
 
     @Override
-    protected boolean createMO(int x, int y, float ene) {
-        return createMO(id, x, y, ene);
+    protected boolean createMO(float ene, int x, int y) {
+        return createMO(id, ene, x, y);
     }
 
-    private native boolean createMO(int id, int x, int y, float ene);
+    private native boolean createMO(int id, float ene, int x, int y);
 
     @Override
     protected void kill(int indexMO) {
         if (!kill(id, indexMO))
-            System.out.println("error de eliminar MO");
+            logger.error("failed to delete cpp mo: " + id + ", index=" + indexMO);
     }
 
     private native boolean kill(int id, int indexMO);

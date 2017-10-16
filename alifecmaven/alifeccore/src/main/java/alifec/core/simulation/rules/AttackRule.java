@@ -47,8 +47,8 @@ public class AttackRule implements ColonyRule {
 
         mo.ene -= Defs.LESS_MOVE;
 
-        if (enemy.ene == mo.ene) {
-            mo.ene += (0.001f * (random.nextInt(100) > 50 ? 1 : -1));
+        if (Float.compare(enemy.ene , mo.ene) == 0) {
+            mo.ene += (0.001f * (random.nextInt(2) == 0 ? 1 : -1));
         }
 
         if (mo.isDied()) {
