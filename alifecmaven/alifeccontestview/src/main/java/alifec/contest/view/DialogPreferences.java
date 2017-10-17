@@ -18,7 +18,7 @@ import java.awt.event.KeyEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Hashtable;
 
 import static java.lang.Integer.parseInt;
@@ -49,7 +49,6 @@ public class DialogPreferences extends JDialog implements ActionListener {
         this.father = father;
         this.contestNameValidator = new ContestNameValidator();
         this.contestPathValidator = new ContestPathValidator();
-        this.nutrients = new JCheckBox[father.getContest().getConfig().getNutrients().size()];
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -216,29 +215,31 @@ public class DialogPreferences extends JDialog implements ActionListener {
         JPanel nutrientPanel = new JPanel();
         GroupLayout layout = new GroupLayout(nutrientPanel);
         Hashtable<String, Integer> selNutrients = father.getContest().getNutrients();
+        Collection<Nutrient> allNutrients = Agar.getAllNutrient().values();
+        this.nutrients = new JCheckBox[allNutrients.size()];
 
         nutrientPanel.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
-        GroupLayout.SequentialGroup sequentialgroup = layout.createSequentialGroup();
-        GroupLayout.ParallelGroup parallelgroup = layout.createParallelGroup();
+        GroupLayout.SequentialGroup sequentialGroup = layout.createSequentialGroup();
+        GroupLayout.ParallelGroup parallelGroup = layout.createParallelGroup();
 
         int i = 0;
-        for(Nutrient nutrient: Agar.getAllNutrient().values()){
+
+        for(Nutrient nutrient: allNutrients){
             nutrients[i] = new JCheckBox(nutrient.toString());
 
             if (selNutrients.containsKey(nutrient.toString()))
                 nutrients[i].setSelected(true);
 
-            sequentialgroup.addComponent(nutrients[i]);
-            parallelgroup.addComponent(nutrients[i]);
+            sequentialGroup.addComponent(nutrients[i]);
+            parallelGroup.addComponent(nutrients[i]);
             i++;
         }
 
-
-        layout.setHorizontalGroup(parallelgroup);
-        layout.setVerticalGroup(sequentialgroup);
+        layout.setHorizontalGroup(parallelGroup);
+        layout.setVerticalGroup(sequentialGroup);
         nutrientPanel.setBorder(BorderFactory.createTitledBorder("Nutrient Options "));
 
         return nutrientPanel;

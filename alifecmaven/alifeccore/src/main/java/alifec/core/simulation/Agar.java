@@ -44,8 +44,8 @@ public class Agar {
         this.current = null;
     }
 
-    public float eat(int x, int y, float ene) {
-        return current.eat(x, y, ene);
+    public void eat(int x, int y, float ene) {
+        this.current.eat(x, y, ene);
     }
 
     public void moveRandom() {
@@ -97,7 +97,7 @@ public class Agar {
      */
     public static Nutrient getNutrientByName(String nut) {
         for (Nutrient nutrient : nutrients.values()) {
-            if (nut.equals(nut)) return nutrient;
+            if (nutrient.toString().equals(nut)) return nutrient;
         }
 
         return null;

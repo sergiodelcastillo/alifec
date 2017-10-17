@@ -53,9 +53,9 @@ template < class MO > class CppColony{
        * Crea un Microorganismo y lo agrega a la lista 
 		 *	de microorganismos. La posicion del nuevo Microorganismo 
        * es pos y su energia es ene.
-		 */ virtual void add(Position pos, float ene){
+		 */ virtual void createMO(float ene, int x, int y){
 			MO *mo = new MO();
-			mo->update(pos, ene);
+			mo->update(ene, x, y);
 			mos.push_back(mo);
 			if(name == ""){
 				affiliation = mo->getAffiliation();
@@ -81,11 +81,11 @@ template < class MO > class CppColony{
 		/**
        * Actualiza la posicion (p) y la energia (f) del y el Microorganismo 
 		 * que está en la posicion index 
-       */ virtual bool update(unsigned int index, Position p, float f){
+       */ virtual bool update(unsigned int index, float ene, int x, int y){
 			if(index < 0 ||index >= mos.size()){
 				return false;
 			}
-			mos[index]->update(p, f); 
+			mos[index]->update(ene, x, y);
 			return true;
 		}
 		/*
@@ -108,7 +108,7 @@ template < class MO > class CppColony{
 		 * La identificacion es unica para todas las
        * colonias del entorno.	
 		 */ virtual int getID() {
-			return this->id; 
+			return this->id;
 		}
 		
 		/*
@@ -130,5 +130,6 @@ template < class MO > class CppColony{
 			return affiliation;
 		}
 };
-						
+
+						
 #endif //end CPPCOLONY_H

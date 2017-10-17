@@ -20,7 +20,7 @@ class AdvancedMO: public Microorganism{
 	
 };
 
-template < typename MO > class CppColony{
+template < class MO = Microorganism > class CppColony{
 protected:
 	vector<MO > mos;
 
@@ -39,14 +39,14 @@ int main(){
 
 	cout << "asdf"<< endl;
 	CppColony<AdvancedMO> colony;
-	vector<CppColony<Microorganism> *> colonies;
+	vector<CppColony<Microorganism> > colonies;
 
 	colony.createMO("mo_a");
 	colony.createMO("mo_b");
 
 	vector<AdvancedMO> list = colony.getMOs();
 	
-	colonies.push_back(dynamic_cast<CppColony<AdvancedMO>*>(&colony));
+	colonies.push_back(colony);
 	
 
 	for(int i = 0; i< list.size(); i++){

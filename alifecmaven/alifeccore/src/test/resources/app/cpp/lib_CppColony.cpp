@@ -19,19 +19,21 @@ JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_createColony
 }
  
 JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_createMO
-  (JNIEnv *env, jobject ob, jint id, jint x, jint y, jfloat ene){
+  (JNIEnv *env, jobject ob, jint id, jfloat ene, jint x, jint y){
 	CppColony<Microorganism> *col = environment.getColony(id);
 
 	if(col == NULL) return JNI_FALSE;
-	
-	Position pos={x,y};
-	col->add(pos, ene);
+
+	col->createMO(ene, x, y);
+
 	return JNI_TRUE; 
 }
 
 JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_kill
   (JNIEnv *env, jobject ob, jint id, jint index){
     CppColony<Microorganism> *col = environment.getColony(id);
+
+    if(col == NULL) return JNI_FALSE;
 
     if(col->kill(index))
 		return JNI_TRUE;
@@ -136,9 +138,8 @@ JNIEXPORT void JNICALL Java_alifec_core_simulation_CppColony_update
 	CppColony<Microorganism> *col = environment.getColony(id);
 	
 	if(col == 0) return;
-	Position p={x,y};
-		
-	col->update(indexMO, p, ene);
+
+	col->update(indexMO, ene, x, y);
   }
 
 

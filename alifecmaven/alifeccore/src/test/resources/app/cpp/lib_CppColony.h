@@ -1,16 +1,16 @@
 /**
- * @author Yeyo
+ * @author Sergio Del Castillo
  * mail@: sergio.jose.delcastillo@gmail.com
  */
 #include <jni.h>
 
-
-#include "Environment.h"
-#include "includemos.h"
 #include "Petri.h"
+#include "Defs.h"
+//#include "includemos.h"
+#include "Environment.h"
 
 Environment environment;
-Petri petri;
+
 
 #ifndef _Included_alifec_core_simulation_CppColony
 #define _Included_alifec_core_simulation_CppColony
@@ -36,7 +36,7 @@ JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_createColony
  * Signature: (IIIF)Z
  */
 JNIEXPORT jboolean JNICALL Java_alifec_core_simulation_CppColony_createMO
-  (JNIEnv *, jobject, jint, jint, jint, jfloat);
+  (JNIEnv *, jobject, jint, jfloat, jint, jint);
 
 /*
  * Class:     alifec_core_simulation_CppColony

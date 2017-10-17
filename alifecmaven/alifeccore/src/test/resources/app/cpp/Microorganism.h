@@ -1,8 +1,3 @@
-/**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
- 
 #ifndef MICROORGANISM_H
 #define MICROORGANISM_H
 
@@ -13,9 +8,16 @@ using namespace std;
 
 class Microorganism{
 	protected:
-		float ene;    // energia del microorganismo.
-		Position pos; // posicion absoluta del microorganismo dentro del petri.
+		float ene;
+		int x;
+		int y;
 	public:
+	    Microorganism(){
+	    }
+
+	    virtual ~Microorganism(){
+	    // please override the destructor in order to cleanup memory
+	    }
 		/**
 		 * Invoca a un Microorganismo para que se mueva.	
 		 * Movement mov: movimiento relativo a la posicion (pos) 
@@ -34,27 +36,27 @@ class Microorganism{
 		/**
 		 * Retorna el nombre de la colonia de microorganismos.
 		 */ virtual string getName() const {
-			return "Nombre: no sabe";
+			return "Name: unknown";
 		};
 		
 		/**
 		 * Retorna el nombre del autor del codigo.
 		 */ virtual string getAuthor() const {
-			return "Author: no sabe";
+			return "Author: unknown";
 		};
 		
 		/**
 		 * Retorna la universidad a la que pertenece el microorganismo.
 		 */ virtual string getAffiliation() const {
-			return "Aff: no sabe";
+			return "Affiliation: unknown";
 		};
 		
 		/**
 		 * Actualiza los datos del Microorganismo.
-		 */const void update(Position pos, float ene) {
-			this->pos.x = pos.x;
-			this->pos.y = pos.y;
-			this->ene = ene;
+		 */const void update(float ene, int x, int y) {
+		 	this->ene = ene;
+			this->x = x;
+			this->y = y;
 		};
 };
 

@@ -75,23 +75,23 @@ public class BallsNutrient implements Nutrient {
     }
 
     @Override
-    public float eat(int x, int y, float percent) {
+    public void eat(int x, int y, float eat) {
         int xx1 = (ball1.length + x - dx1) % ball1.length;
         int yy1 = (ball1.length + y - dy1) % ball1.length;
         int xx2 = (ball2.length + x - dx2) % ball2.length;
         int yy2 = (ball2.length + y - dy2) % ball2.length;
 
-        float foot = get(x, y) * percent;
 
-        if (foot <= ball1[xx1][yy1]) {
-            ball1[xx1][yy1] = Math.max(0f, ball1[xx1][yy1] - foot);
+        if (eat <= ball1[xx1][yy1]) {
+            ball1[xx1][yy1] -= eat;
         } else {
-            float less = foot - ball1[xx1][yy1];
+            float less = eat - ball1[xx1][yy1];
             ball1[xx1][yy1] = 0f;
-            ball2[xx2][yy2] = Math.max(0f, ball2[xx2][yy2] - less);
+            ball2[xx2][yy2] -= less;
         }
 
-        return foot;
+        if(ball1[xx1][yy1] < 0f) ball1[xx1][yy1] = 0f;
+        if(ball2[xx1][yy1] < 0f) ball2[xx1][yy1] = 0f;
     }
 
     @Override

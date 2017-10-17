@@ -42,6 +42,7 @@ public class ZipHelperTest extends ParentTest {
                 "contest-01/MOs/Tactica1.java",
                 "contest-01/MOs/RandomColony.java",
                 "contest-01/MOs/Tactica2.java",
+                "contest-01/MOs/advancedMO.h",
                 "contest-01/MOs/movx.h",
                 "contest-01/cpp/CppColony.h",
                 "contest-01/cpp/Data.h",
@@ -52,8 +53,8 @@ public class ZipHelperTest extends ParentTest {
                 "contest-01/cpp/Petri.h",
                 "contest-01/cpp/includemos.h",
                 "contest-01/cpp/lib_CppColony.cpp",
-                "contest-01/cpp/lib_CppColony.h",
-                "contest-01/nutrients"};
+                "contest-01/cpp/lib_CppColony.h"
+        };
         String contestName = "contest-01";
 
         ContestConfig config = createContest(contestName);
@@ -72,6 +73,7 @@ public class ZipHelperTest extends ParentTest {
                 "contest-01/MOs/Tactica1.java",
                 "contest-01/MOs/RandomColony.java",
                 "contest-01/MOs/Tactica2.java",
+                "contest-01/MOs/advancedMO.h",
                 "contest-01/MOs/movx.h",
                 "contest-01/cpp/CppColony.h",
                 "contest-01/cpp/Data.h",
@@ -82,8 +84,8 @@ public class ZipHelperTest extends ParentTest {
                 "contest-01/cpp/Petri.h",
                 "contest-01/cpp/includemos.h",
                 "contest-01/cpp/lib_CppColony.cpp",
-                "contest-01/cpp/lib_CppColony.h",
-                "contest-01/nutrients"};
+                "contest-01/cpp/lib_CppColony.h"
+        };
         String contestName = "contest-01";
 
         ContestConfig config = createContest(contestName);

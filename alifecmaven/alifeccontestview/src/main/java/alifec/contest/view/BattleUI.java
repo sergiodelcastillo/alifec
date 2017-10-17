@@ -83,7 +83,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 int index1 = environment.getColonyIdByName(name1);
                 int index2 = environment.getColonyIdByName(name2);
                 Nutrient nutri = environment.getAgar().getNutrientByName(nameNut);
-                int indexNut = nutri == null ? -1: nutri.getId();
+                int indexNut = nutri == null ? -1 : nutri.getId();
 
                 BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);
 
@@ -417,11 +417,14 @@ public class BattleUI extends JPanel implements ActionListener {
     public synchronized void repaint() {
         try {
             super.repaint();
-            this.nutrient.updateUI();
-            this.opponent1.updateUI();
-            this.opponent2.updateUI();
+            if (nutrient != null)
+                this.nutrient.updateUI();
+            if (opponent1 != null)
+                this.opponent1.updateUI();
+            if (opponent2 != null)
+                this.opponent2.updateUI();
         } catch (Exception ignored) {
-            logger.trace(ignored.getMessage());
+            logger.trace(ignored.getMessage(), ignored);
         }
     }
 

@@ -34,7 +34,7 @@ public interface Nutrient {
      * @param x
      * @param y
      */
-    float eat(int x, int y, float percent);
+    void eat(int x, int y, float percent);
 
     void init();
 }

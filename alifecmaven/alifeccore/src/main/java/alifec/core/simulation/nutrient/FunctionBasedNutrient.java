@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class FunctionBasedNutrient implements Nutrient {
     private Function function;
-    protected static final Random random = new Random();
+    private static final Random random = new Random();
 
     private float[][] nutrients;
     private int rx = random.nextInt(Defs.DIAMETER);
@@ -18,8 +18,6 @@ public class FunctionBasedNutrient implements Nutrient {
     public FunctionBasedNutrient(Function function) {
         this.function = function;
         this.nutrients = new float[Defs.DIAMETER][Defs.DIAMETER];
-
-
     }
 
     public void init() {
@@ -63,14 +61,13 @@ public class FunctionBasedNutrient implements Nutrient {
 
 
     @Override
-    public float eat(int x, int y, float percent) {
+    public void eat(int x, int y, float eat) {
         int xx = (nutrients.length + x + rx) % nutrients.length;
         int yy = (nutrients.length + y + ry) % nutrients.length;
 
-        float foot = nutrients[xx][yy] * percent;
+        nutrients[xx][yy] -= eat;
 
-        nutrients[xx][yy] = Math.max(0f, nutrients[xx][yy]-foot);
-
-        return foot;
+        if (nutrients[xx][yy] < 0f)
+            nutrients[xx][yy] = 0f;
     }
 }
