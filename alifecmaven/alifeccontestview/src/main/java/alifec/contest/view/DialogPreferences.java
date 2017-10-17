@@ -1,10 +1,10 @@
 package alifec.contest.view;
 
 import alifec.core.contest.Contest;
-import alifec.core.persistence.ContestConfig;
+import alifec.core.exception.ConfigFileException;
 import alifec.core.persistence.ContestHelper;
 import alifec.core.simulation.Agar;
-import alifec.core.simulation.nutrients.Nutrient;
+import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.validation.ContestNameValidator;
 import alifec.core.validation.ContestPathValidator;
 import org.apache.logging.log4j.LogManager;
@@ -15,8 +15,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 
 import static java.lang.Integer.parseInt;
@@ -31,7 +33,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
     private JTextField defaultPath;
     private JComboBox<String> defaultPause;
     private JComboBox<String> modeOfContest;
-    private JCheckBox[] nutrients = new JCheckBox[Agar.nutrient.length];
+    private JCheckBox[] nutrients;
     private ContestNameValidator contestNameValidator;
     private ContestPathValidator contestPathValidator;
 
@@ -47,6 +49,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
         this.father = father;
         this.contestNameValidator = new ContestNameValidator();
         this.contestPathValidator = new ContestPathValidator();
+        this.nutrients = new JCheckBox[father.getContest().getConfig().getNutrients().size()];
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -221,16 +224,18 @@ public class DialogPreferences extends JDialog implements ActionListener {
         GroupLayout.SequentialGroup sequentialgroup = layout.createSequentialGroup();
         GroupLayout.ParallelGroup parallelgroup = layout.createParallelGroup();
 
-        for (int i = 0; i < Agar.nutrient.length; i++) {
-            Nutrient n = Agar.nutrient[i];
-            nutrients[i] = new JCheckBox(n.toString());
+        int i = 0;
+        for(Nutrient nutrient: Agar.getAllNutrient().values()){
+            nutrients[i] = new JCheckBox(nutrient.toString());
 
-            if (selNutrients.containsKey(n.toString()))
+            if (selNutrients.containsKey(nutrient.toString()))
                 nutrients[i].setSelected(true);
 
             sequentialgroup.addComponent(nutrients[i]);
             parallelgroup.addComponent(nutrients[i]);
+            i++;
         }
+
 
         layout.setHorizontalGroup(parallelgroup);
         layout.setVerticalGroup(sequentialgroup);
@@ -289,26 +294,21 @@ public class DialogPreferences extends JDialog implements ActionListener {
     private boolean updateNutrient() {
         try {
             Contest contest = father.getContest();
-            int size = 0;
+            ArrayList<Integer> nutrientsIds = new ArrayList<>();
 
-            // count the selected nutrients_list.
-            for (JCheckBox nut : this.nutrients)
-                if (nut.isSelected()) ++size;
-
-            int[] nutrients_list = new int[size];
-            int j = 0;
-
-            for (int nut = 0; nut < nutrients_list.length; nut++) {
-                while (!this.nutrients[j].isSelected()) ++j;
-                nutrients_list[nut] = Agar.nutrient[j].getID();
-                j++;
+            for (JCheckBox nutrient : nutrients) {
+                if (nutrient.isSelected()) {
+                    Nutrient nutri = Agar.getNutrientByName(nutrient.getText());
+                    nutrientsIds.add(nutri.getId());
+                }
             }
 
-            ContestHelper.updateNutrient(contest.getConfig(), nutrients_list);
-        } catch (IOException ex) {
+            ContestHelper.updateNutrient(contest.getConfig(), nutrientsIds);
+        } catch (ConfigFileException  ex) {
             logger.error(ex.getMessage(), ex);
             return false;
         }
+
         return true;
     }
 }

@@ -9,6 +9,7 @@ import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.simulation.Environment;
+import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,7 +82,8 @@ public class BattleUI extends JPanel implements ActionListener {
                 String name1 = line[0], name2 = line[1], nameNut = line[2];
                 int index1 = environment.getColonyIdByName(name1);
                 int index2 = environment.getColonyIdByName(name2);
-                int indexNut = environment.getAgar().getNutrientID(nameNut);
+                Nutrient nutri = environment.getAgar().getNutrientByName(nameNut);
+                int indexNut = nutri == null ? -1: nutri.getId();
 
                 BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);
 
@@ -113,7 +115,7 @@ public class BattleUI extends JPanel implements ActionListener {
             }
         }
         // Eliminar las batallas con distribuciones de nutrientes que no están disponibles.
-        List<String> nutrients = environment.getAgar().getNutrients();
+        List<String> nutrients = environment.getAgar().getNutrientsName();
 
         for (String[] l : backup) {
             boolean b = false;

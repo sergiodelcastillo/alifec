@@ -1,12 +1,11 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.UnsuccessfulColonies;
+import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.TournamentCorruptedException;
 import alifec.core.persistence.filter.ContestFolderFilter;
 import alifec.core.persistence.filter.TournamentFilter;
-import alifec.core.simulation.Agar;
-import alifec.core.simulation.nutrients.Nutrient;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
@@ -127,14 +126,14 @@ public class ContestHelper {
         String MOsFolder = ContestConfig.getMOsPath(path, name);
         String ReportFolder = ContestConfig.getReportPath(path, name);
         String CppFolder = ContestConfig.getCppApiFolder(path, name);
-        String NutrientFile = ContestConfig.getNutrientsFilePath(path, name);
+       // String NutrientFile = ContestConfig.getNutrientsFilePath(path, name);
         String BackupFolder = ContestConfig.getBackupFolder(path, name);
 
         return new File(contestName).exists() &&
                 new File(MOsFolder).exists() &&
                 new File(ReportFolder).exists() &&
                 new File(CppFolder).exists() &&
-                new File(NutrientFile).exists() &&
+         //       new File(NutrientFile).exists() &&
                 new File(BackupFolder).exists();
     }
 
@@ -193,14 +192,15 @@ public class ContestHelper {
             createFolder(config.getLogFolder());
             createFolder(config.getBackupFolder());
 
-            File nutrientsFile = new File(config.getNutrientsFilePath());
+            /*File nutrientsFile = new File(config.getNutrientsFilePath());
             PrintWriter writter = null;
 
             try {
                 writter = new PrintWriter(nutrientsFile);
 
-                for (Nutrient n : Agar.nutrient)
-                    writter.println(n.getID());
+                for (int nutrientId : ContestConfig.getDefaultNutrients()){
+                    writter.println(nutrientId);
+                }
             } catch (IOException ex) {
                 logger.error("Creating file: " + nutrientsFile + " [FAIL]");
                 throw new CreateContestFolderException("Cant not create the file: " + config.getNutrientsFilePath());
@@ -208,7 +208,7 @@ public class ContestHelper {
                 if (writter != null) writter.close();
             }
 
-            logger.info("Creating file: " + nutrientsFile + " [OK]");
+            logger.info("Creating file: " + nutrientsFile + " [OK]");*/
 
             //copy the cpp api
             if (!createCppApi(cppResources, config.getCppApiFolder())) {
@@ -279,20 +279,10 @@ public class ContestHelper {
         }
     }
 
-    public static void updateNutrient(ContestConfig config, int[] nutrients) throws IOException {
-        //todo: improve it
-        String url = config.getNutrientsFilePath();
+    public static void updateNutrient(ContestConfig config, List<Integer> nutrients) throws ConfigFileException {
+        config.setNutrients(nutrients);
 
-        new File(url).renameTo(new File(url + "_backup"));
+        config.save();
 
-        File newNutrient = new File(url);
-        PrintWriter pw = new PrintWriter(newNutrient);
-
-        for (int nutriID : nutrients)
-            pw.println(nutriID);
-
-        pw.close();
-
-        new File(url + "_backup").delete();
     }
 }

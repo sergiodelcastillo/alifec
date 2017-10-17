@@ -2,6 +2,7 @@ package alifec.core.simulation;
 
 import alifec.core.contest.tournament.battles.BattleRun;
 import alifec.core.exception.MoveMicroorganismException;
+import alifec.core.exception.NutrientException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.SourceCodeFilter;
 import alifec.core.simulation.rules.*;
@@ -124,7 +125,12 @@ public class Environment {
     public boolean createBattle(BattleRun b) {
         opponents = b;
 
-        if (!agar.setNutrient(b.nutrientID)) return false;
+        try {
+            agar.setNutrient(b.nutrientID);
+        } catch (NutrientException e) {
+            logger.error(e.getMessage(), e);
+            return false;
+        }
 
 
         if ((c1 = getColonyById(b.ID1)) == null) {

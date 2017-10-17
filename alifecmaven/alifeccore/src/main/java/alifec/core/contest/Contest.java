@@ -11,7 +11,7 @@ import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ZipHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
-import alifec.core.simulation.nutrients.Nutrient;
+import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,33 +69,15 @@ public class Contest {
 
 
     public Hashtable<String, Integer> getNutrients() {
+        Hashtable<String, Integer> result = new Hashtable<>();
+        List<Integer> current = config.getNutrients();
+        Hashtable<Integer, Nutrient> allNutrients = Agar.getAllNutrient();
 
-        Hashtable<String, Integer> nutri = new Hashtable<>();
-        String nutrientsPath = config.getNutrientsFilePath();
-
-        try {
-            FileReader fr = new FileReader(nutrientsPath);
-            BufferedReader in = new BufferedReader(fr);
-            String line;
-
-            while ((line = in.readLine()) != null) {
-                line = line.trim();
-                if (!line.equals("")) {
-                    Integer i = new Integer(line);
-
-                    for (Nutrient n : Agar.nutrient) {
-                        if (i == n.getID())
-                            nutri.put(n.toString(), n.getID());
-                    }
-
-                }
-            }
-            fr.close();
-        } catch (IOException e) {
-            logger.error("File not Found: " + nutrientsPath, e);
+        for (int nutrientId : current) {
+            result.put(allNutrients.get(nutrientId).toString(), nutrientId);
         }
 
-        return nutri;
+        return result;
     }
 
 

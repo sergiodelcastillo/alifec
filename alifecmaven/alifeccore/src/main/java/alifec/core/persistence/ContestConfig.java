@@ -1,6 +1,8 @@
 package alifec.core.persistence;
 
 import alifec.core.exception.ConfigFileException;
+import alifec.core.simulation.Agar;
+import alifec.core.simulation.nutrient.function.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,8 +10,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 05/08/17.
@@ -85,6 +86,17 @@ public class ContestConfig {
     private static final String PROPERTY_CONTEST_NAME_KEY = "contest_name";
     private static final String PROPERTY_PAUSE_BETWEEN_BATTLES_KEY = "pause_between_battles";
     private static final String PROPERTY_MODE_KEY = "contest_mode";
+    private static final String PROPERTY_NUTRIENTS_KEY = "nutrients";
+
+    private static final Integer[] DEFAULT_NUTRIENTS = new Integer[]{
+            InclinedPlaneFunction.ID,
+            VerticalBarFunction.ID,
+            RingsFunction.ID,
+            LatticeFunction.ID,
+            TwoGaussiansFunction.ID,
+            FamineFunction.ID
+    };
+
 
     /**
      * Absolute path of Contest.
@@ -107,13 +119,10 @@ public class ContestConfig {
      */
     private int pauseBetweenBattles = 5;
 
+    private List<Integer> nutrients;
+
     private ContestConfig() {
-    }
-
-    public static void main(String[] args) {
-        String res = String.format(ContestConfig.CONTEST_FILENAME, 1);
-
-        System.out.printf("res=" + res);
+        nutrients = new ArrayList<>();
     }
 
     /**
@@ -160,6 +169,7 @@ public class ContestConfig {
         config.setPath(path);
         config.setContestName(contestName);
         config.setPauseBetweenBattles(ContestConfig.DEFAULT_PAUSE_BETWEEN_BATTLES);
+        config.setNutrients(Arrays.asList(DEFAULT_NUTRIENTS));
 
         return config;
     }
@@ -171,6 +181,7 @@ public class ContestConfig {
         property.setProperty(PROPERTY_CONTEST_NAME_KEY, contestName);
         property.setProperty(PROPERTY_MODE_KEY, Integer.toString(mode));
         property.setProperty(PROPERTY_PAUSE_BETWEEN_BATTLES_KEY, Integer.toString(pauseBetweenBattles));
+        property.setProperty(PROPERTY_NUTRIENTS_KEY, String.join(",", nutrientsToString()));
 
         try {
             String basePath = getBaseFolder(path);
@@ -184,6 +195,16 @@ public class ContestConfig {
             throw new ConfigFileException("Can not update the config file: " + getConfigFilePath(), this);
         }
         //the property was saved so the system should be restarted.
+    }
+
+    private String nutrientsToString() {
+        StringBuilder builder = new StringBuilder();
+
+        for (Integer nutrient : nutrients) {
+            builder.append(nutrient);
+            builder.append(",");
+        }
+        return builder.toString();
     }
 
     public void validate() throws ConfigFileException {
@@ -212,6 +233,10 @@ public class ContestConfig {
                 throw new ConfigFileException("The contest name folder does not exists: " + f.getCanonicalPath(), this);
         } catch (IOException ex) {
             throw new ConfigFileException("The contest path or contest name does not exists.", this);
+        }
+
+        if (nutrients.isEmpty()) {
+            throw new ConfigFileException("Please specify one or more distribution of nutrients.", this);
         }
     }
 
@@ -252,6 +277,28 @@ public class ContestConfig {
                     return false;
                 }
                 break;
+            case PROPERTY_NUTRIENTS_KEY:
+                try {
+                    String[] temp = option.split(",");
+
+                    for (String nutrientString : temp) {
+                        try {
+                            Integer nutrientInt = Integer.parseInt(nutrientString);
+
+                            if (Agar.existsId(nutrientInt))
+                                nutrients.add(nutrientInt);
+                            else
+                                logger.warn("Nutrient Id unknown: " + nutrientString);
+                        } catch (NumberFormatException ex) {
+                            logger.warn("Can not interpret Nutrient id : " + nutrientString);
+                        }
+                    }
+
+                } catch (Exception ex) {
+                    logger.error(ex.getMessage(), ex);
+                    return false;
+                }
+
         }
         return true;
     }
@@ -327,13 +374,6 @@ public class ContestConfig {
         return new File(getConfigFilePath(path)).exists();
     }
 
-    public String getNutrientsFilePath() {
-        return getNutrientsFilePath(path, contestName);
-    }
-
-    public static String getNutrientsFilePath(String absolutePath, String contestName) {
-        return getContestPath(absolutePath, contestName) + File.separator + NUTRIENTS_FILE;
-    }
 
     public String getMOsPath() {
         return getMOsPath(path, contestName);
@@ -483,5 +523,21 @@ public class ContestConfig {
         File config = new File(getConfigFilePath(path));
 
         return config.delete();
+    }
+
+    public static Integer[] getDefaultNutrients() {
+        return DEFAULT_NUTRIENTS;
+    }
+
+    public void setNutrients(List<Integer> nut) {
+        nutrients.clear();
+
+        for (Integer nutrientId : nut) {
+            nutrients.add(nutrientId);
+        }
+    }
+
+    public List<Integer> getNutrients() {
+        return nutrients;
     }
 }

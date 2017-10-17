@@ -3,15 +3,15 @@ package alifec.core.simulation.rules;
 import alifec.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
-import alifec.core.contest.tournament.battles.BattleRun;
-import alifec.core.exception.CreateBattleException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.simulation.*;
-import alifec.core.simulation.nutrients.Famine;
-import alifec.core.simulation.nutrients.InclinedPlane;
-import alifec.core.simulation.nutrients.Nutrient;
+
+import alifec.core.simulation.nutrient.FunctionBasedNutrient;
+import alifec.core.simulation.nutrient.function.FamineFunction;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -21,6 +21,13 @@ import static org.junit.Assert.*;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class EatRuleTest extends ParentTest {
+
+    @Test
+    public void test(){
+        int [] test = new int[]{1,2,3,4};
+
+        System.out.println(Arrays.toString(test));
+    }
     @Test
     public void testApply() throws Exception {
         //create the contest and the folder structure
@@ -34,7 +41,7 @@ public class EatRuleTest extends ParentTest {
         Environment environment = new Environment(config);
 
         //create a battle: 0= first colony, 1= second colony, famine= uniform nutrient distribution
-        Nutrient dist = new Famine();
+        alifec.core.simulation.nutrient.Nutrient dist = new FunctionBasedNutrient(new FamineFunction());
         createBattle(environment, 0, 1, dist);
 
         Cell mo = environment.getFirstOpponent().getMO(0);
@@ -50,7 +57,7 @@ public class EatRuleTest extends ParentTest {
         Assert.assertEquals(mo.ene, Defs.E_INITIAL + nutriInitial * (Defs.EAT_PERCENT), 0.00001);
 
         //validate that the nutrient have decreased 1%
-        Assert.assertEquals(dist.getNutrient(mo.x, mo.y) * (1 - Defs.EAT_PERCENT), environment.getAgar().getNutrient(mo.x, mo.y), 0.00001);
+        Assert.assertEquals(dist.get(mo.x, mo.y) * (1 - Defs.EAT_PERCENT), environment.getAgar().getNutrient(mo.x, mo.y), 0.00001);
     }
 
 

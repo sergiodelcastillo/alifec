@@ -9,7 +9,7 @@ import alifec.core.persistence.ContestHelper;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
-import alifec.core.simulation.nutrients.Nutrient;
+import alifec.core.simulation.nutrient.Nutrient;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -94,7 +94,7 @@ public class ParentTest {
         Colony c1 = env.getColonyById(colony1);
         Colony c2 = env.getColonyById(colony2);
 
-        BattleRun battle = new BattleRun(c1.getId(), c2.getId(), dist.getID(), c1.getName(), c2.getName(), dist.toString());
+        BattleRun battle = new BattleRun(c1.getId(), c2.getId(), dist.getId(), c1.getName(), c2.getName(), dist.toString());
         env.createBattle(battle);
 
         return battle;
