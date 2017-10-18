@@ -32,10 +32,9 @@ public class Agar {
         nutrients.put(FamineFunction.ID, new FunctionBasedNutrient(new FamineFunction()));
         nutrients.put(BallsNutrient.ID, new BallsNutrient());
     }
-    public static final boolean existsId(Integer id){
-        if (id == null) return false;
+    public static boolean existsId(Integer id) {
+        return id != null && nutrients.get(id) != null;
 
-        return nutrients.get(id) != null;
     }
 
     private Nutrient current;

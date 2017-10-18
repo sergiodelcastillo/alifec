@@ -23,12 +23,6 @@ import static org.junit.Assert.*;
 public class EatRuleTest extends ParentTest {
 
     @Test
-    public void test(){
-        int [] test = new int[]{1,2,3,4};
-
-        System.out.println(Arrays.toString(test));
-    }
-    @Test
     public void testApply() throws Exception {
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");
@@ -41,8 +35,7 @@ public class EatRuleTest extends ParentTest {
         Environment environment = new Environment(config);
 
         //create a battle: 0= first colony, 1= second colony, famine= uniform nutrient distribution
-        alifec.core.simulation.nutrient.Nutrient dist = new FunctionBasedNutrient(new FamineFunction());
-        createBattle(environment, 0, 1, dist);
+        createBattle(environment, 0, 1, FamineFunction.ID, new FamineFunction().getName());
 
         Cell mo = environment.getFirstOpponent().getMO(0);
         Movement mov = new Movement(0, 0);
@@ -57,7 +50,7 @@ public class EatRuleTest extends ParentTest {
         Assert.assertEquals(mo.ene, Defs.E_INITIAL + nutriInitial * (Defs.EAT_PERCENT), 0.00001);
 
         //validate that the nutrient have decreased 1%
-        Assert.assertEquals(dist.get(mo.x, mo.y) * (1 - Defs.EAT_PERCENT), environment.getAgar().getNutrient(mo.x, mo.y), 0.00001);
+        Assert.assertEquals(nutriInitial * (1 - Defs.EAT_PERCENT), environment.getAgar().getNutrient(mo.x, mo.y), 0.00001);
     }
 
 

@@ -90,11 +90,11 @@ public class ParentTest {
 
     }
 
-    protected BattleRun createBattle(Environment env, int colony1, int colony2, Nutrient dist) throws CreateBattleException {
+    protected BattleRun createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws CreateBattleException {
         Colony c1 = env.getColonyById(colony1);
         Colony c2 = env.getColonyById(colony2);
 
-        BattleRun battle = new BattleRun(c1.getId(), c2.getId(), dist.getId(), c1.getName(), c2.getName(), dist.toString());
+        BattleRun battle = new BattleRun(c1.getId(), c2.getId(), nutrientId, c1.getName(), c2.getName(), nutrientName);
         env.createBattle(battle);
 
         return battle;
