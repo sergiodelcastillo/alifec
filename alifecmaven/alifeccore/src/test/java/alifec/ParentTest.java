@@ -88,13 +88,19 @@ public class ParentTest {
 
         ContestHelper.buildNewContestFolder(config, true, cppResources, examplesResources);
 
+        //the app folder can exists if this method was already called.
+        // The app folder is not contest folder dependent so it have to be created only the first time.
         //create the app folder
         File app = new File(config.getBaseAppFolder());
-        Assert.assertTrue(app.mkdir());
+        if (!app.exists())
+            Assert.assertTrue(app.mkdir());
 
         //create the file compiler.properties
-        URI compilerConfigFile = ParentTest.class.getClass().getResource("/app/compiler.properties").toURI();
-        Files.copy(new File(compilerConfigFile).toPath(), new File(config.getCompilerConfigFile()).toPath());
+        File compilerProperties = new File(config.getCompilerConfigFile());
+        if (!compilerProperties.exists()) {
+            URI compilerConfigFile = ParentTest.class.getClass().getResource("/app/compiler.properties").toURI();
+            Files.copy(new File(compilerConfigFile).toPath(), compilerProperties.toPath());
+        }
     }
 
     protected BattleRun createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws CreateBattleException {
