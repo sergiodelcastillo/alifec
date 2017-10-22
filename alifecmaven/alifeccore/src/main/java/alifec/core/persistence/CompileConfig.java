@@ -29,10 +29,9 @@ public class CompileConfig {
     private final String cppApiFolder;
     private final String mosPath;
 
-    private String linuxOracleLine;
-    private String linuxOpenJdkLine;
-    private String windowsOracleLine;
-
+    private String linuxOracle;
+    private String linuxOpenJdk;
+    private String windowsOracle;
 
 
     public CompileConfig(String compilerConfigFile, String compilationTarget, String cppApiFolder, String mosPath) throws CompileConfigException {
@@ -75,13 +74,13 @@ public class CompileConfig {
     }
 
     private void validate() throws CompileConfigException {
-        if (linuxOracleLine == null || linuxOracleLine.isEmpty())
+        if (linuxOracle == null || linuxOracle.isEmpty())
             throw new CompileConfigException("The property for java on GNU/Linux using Oracle JVM was not set.", this);
 
-        if (linuxOpenJdkLine == null || linuxOpenJdkLine.isEmpty())
+        if (linuxOpenJdk == null || linuxOpenJdk.isEmpty())
             throw new CompileConfigException("The property for java on GNU/Linux using OpenJDK JVM was not set.", this);
 
-        if (windowsOracleLine == null || windowsOracleLine.isEmpty())
+        if (windowsOracle == null || windowsOracle.isEmpty())
             throw new CompileConfigException("The property for java on Windows using Oracle JVM was not set.", this);
     }
 
@@ -96,13 +95,13 @@ public class CompileConfig {
 
         switch (type) {
             case LINUX_ORACLE_KEY:
-                linuxOracleLine = option;
+                linuxOracle = option;
                 break;
             case LINUX_OPENJDK_KEY:
-                linuxOpenJdkLine = option;
+                linuxOpenJdk = option;
                 break;
             case WINDOWS_ORACLE_KEY:
-                windowsOracleLine = option;
+                windowsOracle = option;
                 break;
             default:
                 return false;
@@ -112,27 +111,17 @@ public class CompileConfig {
     }
 
     public String getLinuxOracleLine() {
-        /*compileCommand = String.format(LINUX_ORACLE_COMPILATION_LINE,
-                config.getCompilationTarget(),
-                config.getCppApiFolder(),
-                config.getMOsPath(),
-                config.getCppApiFolder());*/
-        return String.format(linuxOracleLine,
+        return String.format(linuxOracle,
                 compilationTarget,
                 cppApiFolder,
                 mosPath,
+                javaHome + "include/",
+                javaHome + "include/linux/",
                 cppApiFolder);
     }
 
     public String getLinuxOpenJdkLine() {
-        /*compileCommand = String.format(LINUX_OPENJDK_COMPILATION_LINE,
-                config.getCompilationTarget(),
-                config.getCppApiFolder(),
-                config.getMOsPath(),
-                javaHome + "include/",
-                javaHome + "include/linux/",
-                config.getCppApiFolder());*/
-        return String.format(linuxOpenJdkLine,
+        return String.format(linuxOpenJdk,
                 compilationTarget,
                 cppApiFolder,
                 mosPath,
@@ -142,16 +131,23 @@ public class CompileConfig {
     }
 
     public String getWindowsOracleLine() {
-        /*compileCommand = String.format(WINDOWS_ORACLE_COMPILATION_LINE,
-                config.getCompilationTarget(),
-                config.getCppApiFolder(),
-                config.getMOsPath(),
-                config.getCppApiFolder());*/
-        return String.format(windowsOracleLine,
+        return String.format(windowsOracle,
                 compilationTarget,
                 cppApiFolder,
                 mosPath,
                 cppApiFolder);
+    }
+
+    public String getLinuxOracle() {
+        return linuxOracle;
+    }
+
+    public String getLinuxOpenJdk() {
+        return linuxOpenJdk;
+    }
+
+    public String getWindowsOracle() {
+        return windowsOracle;
     }
 
     public String getJavaHome() {
@@ -165,4 +161,21 @@ public class CompileConfig {
     public String getOs() {
         return os;
     }
+
+    public boolean isLinux() {
+        return os.toLowerCase().contains("linux");
+    }
+
+    public boolean isWindows() {
+        return os.toLowerCase().contains("windows");
+    }
+
+    public boolean isOpenJDKJVM(){
+        return jvm.equals("OpenJDK Runtime Environment");
+    }
+
+    public boolean isOracleJVM(){
+        return jvm.equals("Java(TM) SE Runtime Environment");
+    }
+
 }

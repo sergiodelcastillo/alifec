@@ -9,13 +9,13 @@ import alifec.core.persistence.ContestHelper;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
-import alifec.core.simulation.nutrient.Nutrient;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -67,14 +67,14 @@ public class ParentTest {
         }
     }
 
-    protected ContestConfig  createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
+    protected ContestConfig createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         ContestConfig config = ContestConfig.buildNewConfigFile(TEST_ROOT_PATH, name);
 
         createContest(config);
 
-        File baseFolder = new File(config.getBaseFolder());
+        File baseFolder = new File(config.getBaseAppFolder());
 
-        if(!baseFolder.exists())
+        if (!baseFolder.exists())
             Assert.assertTrue(baseFolder.mkdirs());
 
         config.save();
@@ -83,11 +83,18 @@ public class ParentTest {
     }
 
     protected void createContest(ContestConfig config) throws IOException, CreateContestFolderException, URISyntaxException {
-        File cppResources = new File(Contest.class.getClass().getResource("/app/cpp/").toURI());
-        File examplesResources = new File(Contest.class.getClass().getResource("/app/examples/").toURI());
+        File cppResources = new File(ParentTest.class.getClass().getResource("/app/cpp/").toURI());
+        File examplesResources = new File(ParentTest.class.getClass().getResource("/app/examples/").toURI());
 
         ContestHelper.buildNewContestFolder(config, true, cppResources, examplesResources);
 
+        //create the app folder
+        File app = new File(config.getBaseAppFolder());
+        Assert.assertTrue(app.mkdir());
+
+        //create the file compiler.properties
+        URI compilerConfigFile = ParentTest.class.getClass().getResource("/app/compiler.properties").toURI();
+        Files.copy(new File(compilerConfigFile).toPath(), new File(config.getCompilerConfigFile()).toPath());
     }
 
     protected BattleRun createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws CreateBattleException {

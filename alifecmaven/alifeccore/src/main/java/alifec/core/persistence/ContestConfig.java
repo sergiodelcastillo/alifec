@@ -24,7 +24,7 @@ public class ContestConfig {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String DATETIME_FORMAT = "yyyyMMdd-HHmmss";
 
-    public static final String BASE_FOLDER = "app";
+    public static final String BASE_APP_FOLDER = "app";
 
     /**
      * List of nutrients that are used in contest.
@@ -185,7 +185,7 @@ public class ContestConfig {
         property.setProperty(PROPERTY_NUTRIENTS_KEY, String.join(",", nutrientsToString()));
 
         try {
-            String basePath = getBaseFolder(path);
+            String basePath = getBaseAppFolder(path);
 
             if (Files.notExists(Paths.get(basePath))) {
                 throw new ConfigFileException("The base path can not be found: " + basePath, this);
@@ -358,17 +358,17 @@ public class ContestConfig {
     }
 
     public static String getConfigFilePath(String path) {
-        return getBaseFolder(path) + File.separator + CONFIG_FILE;
+        return getBaseAppFolder(path) + File.separator + CONFIG_FILE;
     }
 
-    public static String getBaseFolder(String path) {
+    public static String getBaseAppFolder(String path) {
         if (path == null || path.isEmpty()) path = ".";
 
-        return path + File.separator + BASE_FOLDER;
+        return path + File.separator + BASE_APP_FOLDER;
     }
 
-    public String getBaseFolder() {
-        return getBaseFolder(path);
+    public String getBaseAppFolder() {
+        return getBaseAppFolder(path);
     }
 
     public static boolean existsConfigFile(String path) {
@@ -543,6 +543,6 @@ public class ContestConfig {
     }
 
     public String getCompilerConfigFile() {
-        return getBaseFolder(path) + File.separator + COMPILER_CONFIG_FILE ;
+        return getBaseAppFolder(path) + File.separator + COMPILER_CONFIG_FILE ;
     }
 }

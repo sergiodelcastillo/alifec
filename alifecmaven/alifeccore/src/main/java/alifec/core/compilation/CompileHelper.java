@@ -1,6 +1,8 @@
 package alifec.core.compilation;
 
+import alifec.core.exception.CompileConfigException;
 import alifec.core.exception.CompilerException;
+import alifec.core.persistence.CompileConfig;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.filter.SourceCodeFilter;
 import org.apache.logging.log4j.Level;
@@ -30,10 +32,6 @@ public class CompileHelper {
     static Logger moLogger = LogManager.getLogger("alifec.mo.compilation");
     static LogOutputStream out = new LogOutputStream(moLogger, Level.INFO);
     static LogOutputStream err = new LogOutputStream(moLogger, Level.ERROR);
-
-    private static String LINUX_ORACLE_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
-    private static String LINUX_OPENJDK_COMPILATION_LINE = "g++ -o \"%s/libcppcolonies.so\" -fPIC -Wall -shared -lm -I\"%s\" -I\"%s\" -I\"%s\" -I\"%s\" \"%s/lib_CppColony.cpp\"";
-    private static String WINDOWS_ORACLE_COMPILATION_LINE = "g++ -o \"%s\\libcppcolonies.dll\" -Wl,--add-stdcall-alias -Wall -shared -lm -I\"%s\" -I\"%s\" \"%s\\lib_CppColony.cpp\"";
 
     /**
      * Compile .java and .cpp files
@@ -168,7 +166,6 @@ public class CompileHelper {
             String javaFilePath = javaFileFolder + File.separator + javaFileName;
             int s = javac.run(null, out, err, "-d", config.getCompilationTarget(), javaFilePath);
 
-
             return s == 0;
         } catch (Exception ex) {
             logger.info("Error compiling MOs JAVA: " + javaFileFolder + File.separator + javaFileName + ".");
@@ -186,54 +183,34 @@ public class CompileHelper {
      * @return true if is successfully
      */
     static private boolean cppCompilationAllSourceCodes(ContestConfig config) {
-        //@Todo Use a file with the pattern instead of hiring it in the source code
         try {
-            String os = System.getProperty("os.name").toLowerCase();
-            String jvm = System.getProperty("java.runtime.name");
-            String javaHome = System.getProperty("java.home") + File.separator + "../";
+        CompileConfig compileConfig = new CompileConfig(config);
 
             String[] console = {""};
             String compileCommand = null;
 
-            if (os.contains("linux")) {
-                if (jvm.equals("OpenJDK Runtime Environment")) {
-                    //OpenJDK
-                    compileCommand = String.format(LINUX_OPENJDK_COMPILATION_LINE,
-                            config.getCompilationTarget(),
-                            config.getCppApiFolder(),
-                            config.getMOsPath(),
-                            javaHome + "include/",
-                            javaHome + "include/linux/",
-                            config.getCppApiFolder());
-                } else if (jvm.equals("Java(TM) SE Runtime Environment")) {
-                    // ORACLE
-                    compileCommand = String.format(LINUX_ORACLE_COMPILATION_LINE,
-                            config.getCompilationTarget(),
-                            config.getCppApiFolder(),
-                            config.getMOsPath(),
-                            config.getCppApiFolder());
+            if (compileConfig.isLinux()) {
+                if (compileConfig.isOpenJDKJVM()) {
+                    compileCommand = compileConfig.getLinuxOpenJdkLine();
+                } else if (compileConfig.isOracleJVM()) {
+                    compileCommand = compileConfig.getLinuxOracleLine();
                 }
                 if (null == compileCommand) {
                     //throw new UnsupportedJVMException("");
-                    logger.error("Unsupported JVM on linux: " + jvm);
+                    logger.error("Unsupported JVM on GNU/Linux: " + compileConfig.getJvm());
                     return false;
                 }
                 console = new String[]{"/bin/bash", "-c", compileCommand};
 
-            } else if (os.contains("windows")) {
-                if (jvm.equals("OpenJDK Runtime Environment")) {
+            } else if (compileConfig.isWindows()) {
+                if (compileConfig.isOpenJDKJVM()) {
                     //todo: add support to OpenJDK on windows
-                } else if (jvm.equals("Java(TM) SE Runtime Environment")) {
-                    // ORACLE
-                    compileCommand = String.format(WINDOWS_ORACLE_COMPILATION_LINE,
-                            config.getCompilationTarget(),
-                            config.getCppApiFolder(),
-                            config.getMOsPath(),
-                            config.getCppApiFolder());
+                } else if (compileConfig.isOracleJVM()) {
+                    compileCommand = compileConfig.getWindowsOracleLine();
                 }
                 if (null == compileCommand) {
                     //throw new UnsupportedJVMException("");
-                    logger.error("Unsupported JVM on linux: " + jvm);
+                    logger.error("Unsupported JVM on Windows: " + compileConfig.getJvm());
                     return false;
                 }
                 console = new String[]{"cmd.exe", "/C", compileCommand};
@@ -269,6 +246,9 @@ public class CompileHelper {
         } catch (InterruptedException e) {
             logger.trace(e.getMessage(), e);
             Thread.currentThread().interrupt();
+            return false;
+        } catch (CompileConfigException e) {
+            logger.trace(e.getMessage(), e);
             return false;
         }
     }
