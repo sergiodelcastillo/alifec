@@ -61,6 +61,7 @@ public class ContestConfig {
      * Configuration file.
      */
     public static final String CONFIG_FILE = "config";
+    public static final String COMPILER_CONFIG_FILE = "compiler.properties";
 
     public static final String COMPILATION_TARGET_FOLDER = "compiled";
     public static final String COMPILATION_LOG_FILENAME = "log-%s-%s";
@@ -539,5 +540,9 @@ public class ContestConfig {
 
     public List<Integer> getNutrients() {
         return nutrients;
+    }
+
+    public String getCompilerConfigFile() {
+        return getBaseFolder(path) + File.separator + COMPILER_CONFIG_FILE ;
     }
 }

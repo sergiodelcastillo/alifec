@@ -26,7 +26,6 @@ public class OpponentInfoManager {
     public void add(String name, String author, String affiliation) throws IOException {
         OpponentInfo op = new OpponentInfo(name, author, affiliation);
         add(op, true);
-
     }
 
     void add(OpponentInfo op, boolean write) throws IOException {

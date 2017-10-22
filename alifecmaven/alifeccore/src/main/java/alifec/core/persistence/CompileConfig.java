@@ -1,0 +1,168 @@
+package alifec.core.persistence;
+
+import alifec.core.exception.CompileConfigException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+/**
+ * Created by Sergio Del Castillo on 17/10/17.
+ *
+ * @email: sergio.jose.delcastillo@gmail.com
+ */
+public class CompileConfig {
+    static Logger logger = LogManager.getLogger(CompileConfig.class);
+
+    private static final String LINUX_ORACLE_KEY = "linux.oracle";
+    private static final String LINUX_OPENJDK_KEY = "linux.openjdk";
+    private static final String WINDOWS_ORACLE_KEY = "windows.oracle";
+
+    private final String javaHome;
+    private final String jvm;
+    private final String os;
+    private final String compilationTarget;
+    private final String cppApiFolder;
+    private final String mosPath;
+
+    private String linuxOracleLine;
+    private String linuxOpenJdkLine;
+    private String windowsOracleLine;
+
+
+
+    public CompileConfig(String compilerConfigFile, String compilationTarget, String cppApiFolder, String mosPath) throws CompileConfigException {
+        try {
+            Properties property = new Properties();
+            InputStream is = new FileInputStream(compilerConfigFile);
+
+            property.load(is);
+
+            for (Object object : property.keySet()) {
+
+                if (!setProperty(object.toString(), property.getProperty(object.toString()))) {
+                    logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
+                }
+            }
+        } catch (IOException e) {
+            throw new CompileConfigException("Error loading the config file in path: " + compilerConfigFile, e, this);
+        }
+        try {
+            //validate if the configuration is Ok.
+            validate();
+        } catch (CompileConfigException e) {
+            logger.warn(e.getMessage(), e);
+            throw e;
+        }
+
+        this.os = System.getProperty("os.name").toLowerCase();
+        this.jvm = System.getProperty("java.runtime.name");
+        this.javaHome = System.getProperty("java.home") + File.separator + "../";
+        this.compilationTarget = compilationTarget;
+        this.cppApiFolder = cppApiFolder;
+        this.mosPath = mosPath;
+    }
+
+    public CompileConfig(ContestConfig config) throws CompileConfigException {
+        this(config.getCompilerConfigFile(),
+                config.getCompilationTarget(),
+                config.getCppApiFolder(),
+                config.getMOsPath());
+    }
+
+    private void validate() throws CompileConfigException {
+        if (linuxOracleLine == null || linuxOracleLine.isEmpty())
+            throw new CompileConfigException("The property for java on GNU/Linux using Oracle JVM was not set.", this);
+
+        if (linuxOpenJdkLine == null || linuxOpenJdkLine.isEmpty())
+            throw new CompileConfigException("The property for java on GNU/Linux using OpenJDK JVM was not set.", this);
+
+        if (windowsOracleLine == null || windowsOracleLine.isEmpty())
+            throw new CompileConfigException("The property for java on Windows using Oracle JVM was not set.", this);
+    }
+
+    private boolean setProperty(String type, String option) {
+        if (type == null || option == null) return false;
+
+        type = type.trim().toLowerCase();
+        option = option.trim();
+
+        if (type.isEmpty() || option.isEmpty())
+            return false;
+
+        switch (type) {
+            case LINUX_ORACLE_KEY:
+                linuxOracleLine = option;
+                break;
+            case LINUX_OPENJDK_KEY:
+                linuxOpenJdkLine = option;
+                break;
+            case WINDOWS_ORACLE_KEY:
+                windowsOracleLine = option;
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+    public String getLinuxOracleLine() {
+        /*compileCommand = String.format(LINUX_ORACLE_COMPILATION_LINE,
+                config.getCompilationTarget(),
+                config.getCppApiFolder(),
+                config.getMOsPath(),
+                config.getCppApiFolder());*/
+        return String.format(linuxOracleLine,
+                compilationTarget,
+                cppApiFolder,
+                mosPath,
+                cppApiFolder);
+    }
+
+    public String getLinuxOpenJdkLine() {
+        /*compileCommand = String.format(LINUX_OPENJDK_COMPILATION_LINE,
+                config.getCompilationTarget(),
+                config.getCppApiFolder(),
+                config.getMOsPath(),
+                javaHome + "include/",
+                javaHome + "include/linux/",
+                config.getCppApiFolder());*/
+        return String.format(linuxOpenJdkLine,
+                compilationTarget,
+                cppApiFolder,
+                mosPath,
+                javaHome + "include/",
+                javaHome + "include/linux/",
+                cppApiFolder);
+    }
+
+    public String getWindowsOracleLine() {
+        /*compileCommand = String.format(WINDOWS_ORACLE_COMPILATION_LINE,
+                config.getCompilationTarget(),
+                config.getCppApiFolder(),
+                config.getMOsPath(),
+                config.getCppApiFolder());*/
+        return String.format(windowsOracleLine,
+                compilationTarget,
+                cppApiFolder,
+                mosPath,
+                cppApiFolder);
+    }
+
+    public String getJavaHome() {
+        return javaHome;
+    }
+
+    public String getJvm() {
+        return jvm;
+    }
+
+    public String getOs() {
+        return os;
+    }
+}

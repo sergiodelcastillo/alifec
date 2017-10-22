@@ -141,11 +141,6 @@ public class Environment {
             return false;
         }
 
-        //TODO: check if it is neccesary
-      //  Petri.getInstance().agar = agar;
-        //Petri.getInstance().firstOpponent = c1;
-        //Petri.getInstance().secondOpponent = c2;
-
         microorganism = new Cell[Defs.DIAMETER][Defs.DIAMETER];
         init(c1);
         init(c2);
