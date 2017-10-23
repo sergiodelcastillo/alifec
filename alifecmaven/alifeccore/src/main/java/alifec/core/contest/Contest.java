@@ -5,9 +5,9 @@ import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.contest.oponentInfo.OpponentInfoManager;
 import alifec.core.contest.oponentInfo.OpponentReportLine;
 import alifec.core.exception.*;
-import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.ZipHelper;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrient.Nutrient;
@@ -381,6 +381,11 @@ public class Contest {
         return tournamentList.get(selected);
     }
 
+    public static void updateNutrient(ContestConfig config, List<Integer> nutrients) throws ConfigFileException {
+        config.setNutrients(nutrients);
+
+        config.save();
+    }
 
 }
 

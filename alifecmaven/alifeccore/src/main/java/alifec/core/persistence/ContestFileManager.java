@@ -23,9 +23,6 @@ public class ContestFileManager {
 
     static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestFileManager.class);
 
-
-
-
     public static List<String> listContest(String path) {
         List<String> result = new ArrayList<>();
         try {
@@ -130,9 +127,5 @@ public class ContestFileManager {
         }
     }
 
-    public static void updateNutrient(ContestConfig config, List<Integer> nutrients) throws ConfigFileException {
-        config.setNutrients(nutrients);
 
-        config.save();
-    }
 }
