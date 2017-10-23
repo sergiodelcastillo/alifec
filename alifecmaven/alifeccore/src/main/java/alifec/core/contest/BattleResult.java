@@ -2,7 +2,7 @@ package alifec.core.contest;
 
 import alifec.core.exception.CreateBattleException;
 
-public class BattleRun {
+public class BattleResult {
 
     public String nutrient;
     public String name1;
@@ -12,10 +12,10 @@ public class BattleRun {
     public int ID1 = -1;
     public int ID2 = -1;
 
-    public float winner_energy = 0.0f;
-    public int winnerID = -1;
+    private float winner_energy = 0.0f;
+    private int winnerID = -1;
 
-    public BattleRun(int op1, int op2, int nutri, String name1, String name2, String n)
+    public BattleResult(int op1, int op2, int nutri, String name1, String name2, String n)
             throws CreateBattleException {
         if (op1 == op2)
             throw new CreateBattleException("Opponent 1 and 2 can not be the same.");
@@ -47,9 +47,9 @@ public class BattleRun {
 
     @Override
     public boolean equals(Object ob) {
-        if (ob == null || !(ob instanceof BattleRun))
+        if (ob == null || !(ob instanceof BattleResult))
             return false;
-        BattleRun b = (BattleRun) ob;
+        BattleResult b = (BattleResult) ob;
         return nutrientID == b.nutrientID &&
                 ID1 == b.ID1 &&
                 ID2 == b.ID2;
@@ -64,4 +64,12 @@ public class BattleRun {
         return hash;
     }
 
+    public Battle toBattle(){
+        return new Battle(this);
+    }
+
+    public void setWinner(int id, float energy){
+        this.winnerID = id;
+        this.winner_energy = energy;
+    }
 }

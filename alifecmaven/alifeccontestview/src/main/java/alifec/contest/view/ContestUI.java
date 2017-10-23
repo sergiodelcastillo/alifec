@@ -214,7 +214,7 @@ public class ContestUI extends JFrame implements ActionListener {
                 solver.setVisible(true);
 
                 for (String c : contest.getEnvironment().getNames()) {
-                    contest.lastElement().addColony(c);
+                    contest.lastTournament().addColony(c);
                 }
             }
             //create an instance of the contest

@@ -4,7 +4,7 @@ package alifec.contest.view;
 import alifec.contest.simulationUI.GUIdosD;
 import alifec.core.contest.Contest;
 import alifec.core.contest.Tournament;
-import alifec.core.contest.BattleRun;
+import alifec.core.contest.BattleResult;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Environment;
@@ -30,8 +30,8 @@ public class BattleUI extends JPanel implements ActionListener {
     private final ContestUI father;
 
     private final Environment environment;
-    private final DefaultListModel<BattleRun> model = new DefaultListModel<>();
-    private final JList<BattleRun> battlesList = new JList<>(model);
+    private final DefaultListModel<BattleResult> model = new DefaultListModel<>();
+    private final JList<BattleResult> battlesList = new JList<>(model);
     private JScrollPane battlesSP;
     private JComboBox<String> opponent1;
     private JComboBox<String> opponent2;
@@ -84,7 +84,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 Nutrient nutri = environment.getAgar().getNutrientByName(nameNut);
                 int indexNut = nutri == null ? -1 : nutri.getId();
 
-                BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);
+                BattleResult battle = new BattleResult(index1, index2, indexNut, name1, name2, nameNut);
 
                 addBattle(battle, config.isProgrammerMode());
             } catch (CreateBattleException ex) {
@@ -243,7 +243,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        Tournament last = father.getContest().lastElement();
+        Tournament last = father.getContest().lastTournament();
         if (e.getSource().equals(save)) {
             Message.printErr(father, "Not Supported yet");
         } else if (e.getSource().equals(delete)) {
@@ -272,7 +272,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 Message.printErr(father, "You must select a battle.");
             } else {
                 father.setMessage("Running Selected Battle");
-                final DefaultListModel<BattleRun> model_tmp = new DefaultListModel<>();
+                final DefaultListModel<BattleResult> model_tmp = new DefaultListModel<>();
                 model_tmp.addElement(battlesList.getSelectedValue());
 
                 createBattlesFileSelected();
@@ -313,7 +313,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 String name2 = opponent2.getSelectedItem().toString();
                 String nameNut = nutrient.getSelectedItem().toString();
 
-                BattleRun battle = new BattleRun(index1, index2, indexNut, name1, name2, nameNut);
+                BattleResult battle = new BattleResult(index1, index2, indexNut, name1, name2, nameNut);
 
                 if (!addBattle(battle, father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE))
                     Message.printErr(this, "Existing battle: " + battle.toString());
@@ -347,8 +347,8 @@ public class BattleUI extends JPanel implements ActionListener {
      * @param programmerMode mode of contest, can be PROGRAMMER or COMPETITION
      * @return true if is successfully
      */
-    private boolean addBattle(BattleRun b, boolean programmerMode) {
-        Tournament last = father.getContest().lastElement();
+    private boolean addBattle(BattleResult b, boolean programmerMode) {
+        Tournament last = father.getContest().lastTournament();
 
         boolean addOK = last.isEnabled(); // to be sure
 
@@ -394,7 +394,7 @@ public class BattleUI extends JPanel implements ActionListener {
                     try {
                         boolean option = father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE;
 
-                        if (!addBattle(new BattleRun(i_a, i_b, i_n, n_a, n_b, n_n), option)) {
+                        if (!addBattle(new BattleResult(i_a, i_b, i_n, n_a, n_b, n_n), option)) {
                             existingBattle = true;
                         }
                     } catch (CreateBattleException ex) {
@@ -407,7 +407,7 @@ public class BattleUI extends JPanel implements ActionListener {
             Message.printErr(this, "There are existing battles.");
     }
 
-    public DefaultListModel<BattleRun> getBattles() {
+    public DefaultListModel<BattleResult> getBattles() {
         return model;
     }
 
@@ -434,16 +434,16 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public boolean delete(String colonyName) {
-        List<BattleRun> indexes = new ArrayList<>();
+        List<BattleResult> indexes = new ArrayList<>();
 
         for (int i = 0; i < getBattles().size(); i++) {
-            BattleRun b = getBattles().elementAt(i);
+            BattleResult b = getBattles().elementAt(i);
 
             if (b.name1.equals(colonyName) || b.name2.equals(colonyName))
                 indexes.add(b);
         }
 
-        for (BattleRun b : indexes)
+        for (BattleResult b : indexes)
             getBattles().removeElement(b);
 
         return ((MiComboboxModel) opponent1.getModel()).remove(colonyName) &&
@@ -461,7 +461,7 @@ public class BattleUI extends JPanel implements ActionListener {
         battlesList.updateUI();
     }
 
-    private void remove(BattleRun b) {
+    private void remove(BattleResult b) {
         model.removeElement(b);
         battlesSP.updateUI();
     }
@@ -493,7 +493,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     private String getLastTournamentName() {
-        return contest.lastElement().getName();
+        return contest.lastTournament().getName();
     }
 
     private boolean deleteBattlesFile() {
@@ -549,7 +549,7 @@ public class BattleUI extends JPanel implements ActionListener {
         runAll.setEnabled(b);
         addSelected.setEnabled(b);
         addAll.setEnabled(b);
-        father.getContest().lastElement().setEnabled(b);
+        father.getContest().lastTournament().setEnabled(b);
     }
 }
 

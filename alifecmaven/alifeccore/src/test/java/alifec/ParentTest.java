@@ -1,6 +1,6 @@
 package alifec;
 
-import alifec.core.contest.BattleRun;
+import alifec.core.contest.BattleResult;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.exception.CreateContestFolderException;
@@ -18,7 +18,9 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
@@ -99,13 +101,51 @@ public class ParentTest {
         }
     }
 
-    protected BattleRun createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws CreateBattleException {
+    protected BattleResult createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws CreateBattleException {
         Colony c1 = env.getColonyById(colony1);
         Colony c2 = env.getColonyById(colony2);
 
-        BattleRun battle = new BattleRun(c1.getId(), c2.getId(), nutrientId, c1.getName(), c2.getName(), nutrientName);
+        BattleResult battle = new BattleResult(c1.getId(), c2.getId(), nutrientId, c1.getName(), c2.getName(), nutrientName);
         env.createBattle(battle);
 
         return battle;
+    }
+
+    public List<BattleResult> battleResultDataSet() throws CreateBattleException {
+        List<BattleResult> list = new ArrayList<>();
+
+        BattleResult battle1 = new BattleResult(1,2, 1, "col1", "col2", "Famine");
+        battle1.setWinner(1, 100f);
+        BattleResult battle2 = new BattleResult(1,3, 1, "col1", "col3", "Famine");
+        battle1.setWinner(3, 140f);
+        BattleResult battle3 = new BattleResult(1,4, 1, "col1", "col4", "Famine");
+        battle1.setWinner(1, 130f);
+        BattleResult battle4 = new BattleResult(1,2, 2, "col1", "col2", "Balls");
+        battle1.setWinner(2, 200f);
+        BattleResult battle5 = new BattleResult(1,3, 2, "col1", "col3", "Balls");
+        battle1.setWinner(1, 10f);
+        BattleResult battle6 = new BattleResult(1,4, 2, "col1", "col4", "Balls");
+        battle1.setWinner(4, 1000f);
+        BattleResult battle7 = new BattleResult(2,3, 1, "col2", "col3", "Famine");
+        battle1.setWinner(2, 2000f);
+        BattleResult battle8 = new BattleResult(2,4, 1, "col2", "col4", "Famine");
+        battle1.setWinner(4, 500f);
+        BattleResult battle9 = new BattleResult(3,4, 1, "col3", "col4", "Famine");
+        battle1.setWinner(3, 750f);
+        BattleResult battle10 = new BattleResult(1,4, 2, "col1", "col4", "Balls");
+        battle1.setWinner(4, 1000f);
+
+        list.add(battle1);
+        list.add(battle2);
+        list.add(battle3);
+        list.add(battle4);
+        list.add(battle5);
+        list.add(battle6);
+        list.add(battle7);
+        list.add(battle8);
+        list.add(battle9);
+        list.add(battle10);
+
+        return list;
     }
 }

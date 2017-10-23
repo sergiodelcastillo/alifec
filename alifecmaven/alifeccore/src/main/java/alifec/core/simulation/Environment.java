@@ -1,6 +1,6 @@
 package alifec.core.simulation;
 
-import alifec.core.contest.BattleRun;
+import alifec.core.contest.BattleResult;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.NutrientException;
 import alifec.core.persistence.config.ContestConfig;
@@ -52,7 +52,7 @@ public class Environment {
     /**
      * Information of current battle .. temporal reference !!
      */
-    private BattleRun opponents;
+    private BattleResult opponents;
 
     private ColonyRule[] rules = {
             new LifeRule(),
@@ -122,7 +122,7 @@ public class Environment {
      * @param b is a battle to run
      * @return if was successful
      */
-    public boolean createBattle(BattleRun b) {
+    public boolean createBattle(BattleResult b) {
         opponents = b;
 
         try {
@@ -217,14 +217,16 @@ public class Environment {
         }
 
         if (c1.isDied()) {
-            opponents.winnerID = opponents.ID2;
-            opponents.winner_energy = c2.getEnergy();
+            opponents.setWinner(opponents.ID2, c2.getEnergy());
+            //opponents.winnerID = opponents.ID2;
+            //opponents.winner_energy = c2.getEnergy();
             return true;
         }
 
         if (c2.isDied()) {
-            opponents.winnerID = opponents.ID1;
-            opponents.winner_energy = c1.getEnergy();
+            opponents.setWinner(opponents.ID1, c1.getEnergy());
+            //opponents.winnerID = opponents.ID1;
+            //opponents.winner_energy = c1.getEnergy();
             return true;
         }
 
@@ -290,7 +292,7 @@ public class Environment {
         return c2;
     }
 
-    public BattleRun getResults() {
+    public BattleResult getResults() {
         return opponents;
     }
 

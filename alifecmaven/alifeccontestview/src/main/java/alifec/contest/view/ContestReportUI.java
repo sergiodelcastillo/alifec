@@ -108,7 +108,7 @@ public class ContestReportUI extends JDialog implements ActionListener {
             FileWriter fw = new FileWriter(url, false);
             PrintWriter pw = new PrintWriter(fw);
             pw.println("Contest name:," + contest.getName());
-            pw.println("Tournament name:," + contest.lastElement().getName());
+            pw.println("Tournament name:," + contest.lastTournament().getName());
             pw.println(String.format(ContestConfig.REPORT_CSV_FORMAT,
                     "NAME",
                     "AUTHOR",
@@ -145,7 +145,7 @@ public class ContestReportUI extends JDialog implements ActionListener {
             builder.append(contest.getName());
             builder.append('\n');
             builder.append("NAME OF TOURNAMENT: ");
-            builder.append(contest.lastElement().getName());
+            builder.append(contest.lastTournament().getName());
             builder.append("\n\n");
             builder.append(String.format(ContestConfig.REPORT_TXT_FORMAT,
                     "NAME",

@@ -180,7 +180,7 @@ public class TournamentUI extends JPanel implements ActionListener {
                 if (!contest.removeSelected()) {
                     Message.printErr(father, "The tournament can't be removed");
                 } else {
-                    if (contest.getSelectedID() != selected && contest.getSelected().equals(contest.lastElement())) {
+                    if (contest.getSelectedID() != selected && contest.getSelected().equals(contest.lastTournament())) {
                         father.getBattleUI().setEnabled(false);
 //						father.getBattleUI().setHastTournament(false);
                     }
@@ -209,7 +209,7 @@ public class TournamentUI extends JPanel implements ActionListener {
      */
     public void penalize(String colonyName) {
         father.getContest().getEnvironment().delete(colonyName);
-        contest.lastElement().penalize(colonyName);
+        contest.lastTournament().delete(colonyName);
         tPanel.get(tPanel.size()-1).update();
     }
 }

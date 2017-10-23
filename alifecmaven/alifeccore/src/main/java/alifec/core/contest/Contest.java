@@ -31,7 +31,7 @@ public class Contest {
     /**
      * List of tournaments.
      */
-    private List<Tournament> tournamentList;
+    private List<Tournament> tournaments;
 
     /**
      * current tournament.
@@ -51,19 +51,19 @@ public class Contest {
             this.config = config;
             opponentsInfo = new OpponentInfoManager(config);
             environment = new Environment(config);
-            tournamentList = new ArrayList<>();
+            tournaments = new ArrayList<>();
 
             for (String name : TournamentFileManager.listTournaments(config.getContestPath())) {
                 Tournament t = new Tournament(config, name);
 
-                if (t.read())
-                    tournamentList.add(t);
+                if (t.load())
+                    tournaments.add(t);
             }
 
             //creating a  new Tournament!.
-            Collections.sort(tournamentList);
+            Collections.sort(tournaments);
 
-            selected = tournamentList.size() - 1;
+            selected = tournaments.size() - 1;
 
             //create new and empty tournament
             newTournament(environment.getNames());
@@ -101,10 +101,10 @@ public class Contest {
             }
 
             if (selected >= 0)
-                tournamentList.get(selected).setEnabled(false);
+                tournaments.get(selected).setEnabled(false);
 
-            tournamentList.add(t);
-            selected = tournamentList.indexOf(t);
+            tournaments.add(t);
+            selected = tournaments.indexOf(t);
         } catch (CreateBattleException ex) {
             logger.error(ex.getMessage(), ex);
             throw new CreateTournamentException("Cannot load the tournament: " + ex.getTournamentName());
@@ -128,10 +128,10 @@ public class Contest {
                 if (config.isCompetitionMode()) return false;
             }
 
-            tournamentList.remove(selected);
+            tournaments.remove(selected);
 
-            if (selected >= tournamentList.size())
-                selected = tournamentList.size() - 1;
+            if (selected >= tournaments.size())
+                selected = tournaments.size() - 1;
 
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -146,7 +146,7 @@ public class Contest {
 
     public Tournament getSelected() {
         try {
-            return tournamentList.get(selected);
+            return tournaments.get(selected);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }
@@ -162,8 +162,8 @@ public class Contest {
     private String getNextName() {
         Integer tournamentNumber = 1;
 
-        if (tournamentList.size() > 0) {
-            String name = tournamentList.get(tournamentList.size() - 1).getName();
+        if (tournaments.size() > 0) {
+            String name = tournaments.get(tournaments.size() - 1).getName();
             name = name.replace(ContestConfig.TOURNAMENT_PREFIX, "");
 
             tournamentNumber = Integer.valueOf(name) + 1;
@@ -231,7 +231,7 @@ public class Contest {
         this.config.setMode(mode);
         if (this.config.isProgrammerMode() &&
                 mode == ContestConfig.COMPETITION_MODE) {
-            lastElement().save();
+            lastTournament().save();
         }
 
     }
@@ -243,11 +243,11 @@ public class Contest {
         return selected;
     }
 
-    public synchronized Tournament lastElement() {
-        if (tournamentList.size() == 0)
+    public synchronized Tournament lastTournament() {
+        if (tournaments.size() == 0)
             return null;
 
-        return tournamentList.get(tournamentList.size() - 1);
+        return tournaments.get(tournaments.size() - 1);
     }
 
 
@@ -277,7 +277,7 @@ public class Contest {
         Hashtable<String, Integer> ranking = getRanking();
         List<OpponentReportLine> info = new ArrayList<>();
 
-        Tournament t = lastElement();
+        Tournament t = lastTournament();
         Hashtable<String, Float> accumulated = t.getAccumulatedEnergy();
 
         for (OpponentInfo oi : opponentsInfo.getOpponents()) {
@@ -302,7 +302,7 @@ public class Contest {
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
         Hashtable<String, Integer> ranking = new Hashtable<>();
 
-        for (Tournament t : tournamentList) {
+        for (Tournament t : tournaments) {
             Hashtable<String, Integer> tRanking = t.getRanking();
 
             for (String name : tRanking.keySet()) {
@@ -334,7 +334,7 @@ public class Contest {
     }
 
     public boolean needRestore() {
-        return tournamentList.size() != 0 && lastElement().hasBackUpFile();
+        return tournaments.size() != 0 && lastTournament().hasBackUpFile();
     }
 
     public String getPath() {
@@ -351,14 +351,14 @@ public class Contest {
      * @return tournament i.
      */
     public Tournament getTournament(int i) {
-        return tournamentList.get(i);
+        return tournaments.get(i);
     }
 
     /**
      * @return count of tournaments.
      */
     public int size() {
-        return tournamentList.size();
+        return tournaments.size();
     }
 
     /**
@@ -368,17 +368,17 @@ public class Contest {
      * @return next the next Tournament
      */
     public Tournament next() {
-        if (selected < tournamentList.size() - 1)
+        if (selected < tournaments.size() - 1)
             selected++;
 
-        return tournamentList.get(selected);
+        return tournaments.get(selected);
     }
 
     public Tournament prev() {
         if (selected > 0)
             selected--;
 
-        return tournamentList.get(selected);
+        return tournaments.get(selected);
     }
 
     public static void updateNutrient(ContestConfig config, List<Integer> nutrients) throws ConfigFileException {

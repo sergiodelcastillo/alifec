@@ -3,6 +3,7 @@ package alifec.core.contest;
 
 import alifec.core.exception.CreateBattleException;
 import alifec.core.exception.CreateRankingException;
+import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,41 +21,38 @@ import static java.util.Collections.max;
 
 public class Tournament implements Comparable<Tournament> {
 
-    Logger logger = LogManager.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
 
-    /**
-     * manager of battles. This battles are permanent
-     */
     private List<Battle> battles;
     /**
      * Colonies that have not competed!
      */
     private List<String> colonies;
 
-    /**
-     * Nombre del tournament
-     */
-    private final String tournamentName;
+    private final String name;
 
-    public boolean isEnabled = false;
+    private TournamentFileManager persistence;
+
+    private boolean isEnabled = false;
 
     private ContestConfig config;
 
     public Tournament(ContestConfig config, String name) throws CreateBattleException {
         this.config = config;
-        this.tournamentName = name;
+        this.name = name;
 
         battles = new ArrayList<>();
         colonies = new ArrayList<>();
+        this.persistence = new TournamentFileManager();
 
         if (config.isCompetitionMode()) {
-            Path path = Paths.get(config.getBattlesFile(tournamentName));
+            Path path = Paths.get(config.getBattlesFile(this.name));
 
             if (Files.notExists(path)) {
                 try {
                     Files.createFile(path);
                 } catch (IOException e) {
-                    throw new CreateBattleException("Can not create the file: " + path.toString(), tournamentName);
+                    throw new CreateBattleException("Can not create the file: " + path.toString(), this.name);
                 }
             }
         }
@@ -78,13 +76,12 @@ public class Tournament implements Comparable<Tournament> {
             colonies.add(c);
     }
 
-    public boolean add(String n1, String n2, String nut, float ene1, float ene2) {
+    public boolean addResult(BattleResult battleResult) {
         try {
-            //  battleManager.add(n1, n2, nut, ene1, ene2);
-            Battle battle = new Battle(n1, n2, nut, ene1, ene2);
+            Battle battle = battleResult.toBattle();
 
             if (config.isCompetitionMode()) {
-                battle.save(config.getBattlesFile(tournamentName));
+                persistence.append(config.getBattlesFile(name), battle);
             }
 
             battles.add(battle);
@@ -95,49 +92,30 @@ public class Tournament implements Comparable<Tournament> {
         return true;
     }
 
-    public boolean penalize(String name) {
-        try {
-            List<Battle> tmp = new ArrayList<>();
-
-            for (Battle b : battles) {
-                if (b.contain(name)) {
-                    if (!b.delete(config.getBattlesFile(tournamentName)))
-                        return false;
-                    tmp.add(b);
-                }
-            }
-
-            battles.removeAll(tmp);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-            return false;
-        }
-
-        return colonies.remove(name);
-    }
 
     public boolean delete(String name) {
-        List<Battle> tmp = new ArrayList<>();
+        try {
+            List<Battle> toDelete = new ArrayList<>();
 
-        for (Battle battle : battles) {
-            if (battle.contain(name)) {
-                try {
-                    tmp.add(battle); // delete instance
-                    battle.delete(config.getBattlesFile(tournamentName)); // delete battle of file
-                } catch (IOException ex) {
-                    logger.warn(ex.getMessage(), ex);
-                }
+            for (Battle b : battles) {
+                if (b.contain(name)) toDelete.add(b);
             }
+
+            persistence.delete(config.getBattlesFile(this.name), toDelete);
+            battles.removeAll(toDelete);
+            colonies.remove(name);
+
+            return true;
+        } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
         }
 
-        battles.removeAll(tmp);
-
-        return colonies.remove(name);
+        return false;
     }
 
     @Override
     public int compareTo(Tournament o) {
-        return tournamentName.compareTo(o.tournamentName);
+        return name.compareTo(o.name);
     }
 
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
@@ -163,7 +141,7 @@ public class Tournament implements Comparable<Tournament> {
                 if (maxBattlesWin != 0 && maxBattlesWin == battlesWon) {
                     String s = "Ranking can't be created because there are two " +
                             "opponents with the same energy and the same number" +
-                            " of battles won in the " + tournamentName;
+                            " of battles won in the " + name;
                     throw new CreateRankingException(s);
                 }
                 if (battlesWon > maxBattlesWin) {
@@ -194,6 +172,7 @@ public class Tournament implements Comparable<Tournament> {
         }
         return count;
     }
+
     public Hashtable<String, Float> getAccumulatedEnergy() {
         Hashtable<String, Float> results = new Hashtable<>();
 
@@ -215,7 +194,6 @@ public class Tournament implements Comparable<Tournament> {
     }
 
 
-
     public List<String> getNames() {
         List<String> names = new ArrayList<>();
 
@@ -235,9 +213,9 @@ public class Tournament implements Comparable<Tournament> {
         return names;
     }
 
-    public boolean read() {
+    public boolean load() {
         try {
-            String path = config.getBattlesFile(tournamentName);
+            String path = config.getBattlesFile(name);
 
             FileReader fr = new FileReader(path);
             BufferedReader br = new BufferedReader(fr);
@@ -260,19 +238,20 @@ public class Tournament implements Comparable<Tournament> {
     }
 
     public void save() throws IOException {
-        Path path = Paths.get(config.getTournamentPath(tournamentName));
+        //TODO: improve it. It should be delegated to persistence
+        Path path = Paths.get(config.getTournamentPath(name));
 
         if (Files.notExists(path)) {
             Files.createDirectory(path);
         }
 
         for (Battle b : battles) {
-            b.save(config.getBattlesFile(tournamentName));
+            persistence.append(config.getBattlesFile(name), b);
         }
     }
 
     public boolean hasBackUpFile() {
-        return Files.exists(Paths.get(config.getBattlesBackupFile(tournamentName)));
+        return Files.exists(Paths.get(config.getBattlesBackupFile(name)));
     }
 
     public void setEnabled(boolean b) {
@@ -285,11 +264,11 @@ public class Tournament implements Comparable<Tournament> {
 
 
     public String getName() {
-        return tournamentName;
+        return name;
     }
 
 
-    public boolean contains(BattleRun br) {
+    public boolean contains(BattleResult br) {
         for (Battle b : this.battles) {
             if (b.getNutrient().equalsIgnoreCase(br.nutrient) &&
                     ((b.getFirstColony().equalsIgnoreCase(br.name1) &&

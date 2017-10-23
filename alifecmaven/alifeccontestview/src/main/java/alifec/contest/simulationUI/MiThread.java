@@ -4,7 +4,7 @@ package alifec.contest.simulationUI;
 import alifec.contest.view.ContestUI;
 import alifec.contest.view.Message;
 import alifec.core.contest.Tournament;
-import alifec.core.contest.BattleRun;
+import alifec.core.contest.BattleResult;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Colony;
@@ -107,7 +107,7 @@ public class MiThread extends Thread {
             h2_yPoints[i] = history.y;
         }
         environment = cui.getContest().getEnvironment();
-        lastTournament = cui.getContest().lastElement();
+        lastTournament = cui.getContest().lastTournament();
 
     }
 
@@ -118,7 +118,7 @@ public class MiThread extends Thread {
 
             while (battles.size() > 0) {
 
-                BattleRun b = (BattleRun) battles.firstElement();
+                BattleResult b = (BattleResult) battles.firstElement();
                 battles.removeElement(battles.firstElement());
                 cui.setMessage(b.toString());
                 environment.createBattle(b);
@@ -159,8 +159,8 @@ public class MiThread extends Thread {
 
 
                     // update the results !!
-                    BattleRun r = environment.getResults();
-                    lastTournament.add(r.name1, r.name2, r.nutrient, r.energy1(), r.energy2());
+                    BattleResult r = environment.getResults();
+                    lastTournament.addResult(r);
                     cui.getTournamentUI().updateLast();
 
                     panel.repaint();
@@ -184,16 +184,16 @@ public class MiThread extends Thread {
 
         cui.getTournamentUI().penalize(colonyName);
 
-        List<BattleRun> indexs = new ArrayList<>();
+        List<BattleResult> indexs = new ArrayList<>();
 
         for (int i = 0; i < battles.size(); i++) {
-            BattleRun b = (BattleRun) battles.elementAt(i);
+            BattleResult b = (BattleResult) battles.elementAt(i);
 
             if (b.name1.equals(colonyName) || b.name2.equals(colonyName))
                 indexs.add(b);
         }
 
-        for (BattleRun b : indexs) {
+        for (BattleResult b : indexs) {
             battles.removeElement(b);
         }
     }
@@ -456,7 +456,7 @@ public class MiThread extends Thread {
                 ((radio) * (radio));
     }
 
-    private void updateNames(BattleRun b) {
+    private void updateNames(BattleResult b) {
         anchoNum = graphics.getFontMetrics().stringWidth("0000000");
         textOponent = environment.getName(b.ID1) + " vs " + environment.getName(b.ID2);
         anchoText = graphics.getFontMetrics().stringWidth(textOponent + "   ");

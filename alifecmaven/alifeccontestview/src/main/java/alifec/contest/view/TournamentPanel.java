@@ -68,7 +68,7 @@ public class TournamentPanel extends JList {
         deleteOfTournament.addActionListener(e -> {
             String selected = getSelected();
             father.getBattleUI().delete(selected); // delete of UI
-            contest.lastElement().delete(selected); // delete of lastTournament
+            contest.lastTournament().delete(selected); // delete of lastTournament
             father.getTournamentUI().updateLast(); // delete of UI
             //father.getContest().getEnvironment().delete(selected); //delete of environment
             update(); // actualizar UI

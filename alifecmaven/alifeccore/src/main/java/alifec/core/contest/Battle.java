@@ -5,9 +5,9 @@ import java.io.*;
 
 /**
  * @author Sergio Del Castillo
- * mail@: sergio.jose.delcastillo@gmail.com
-
- * Contains de history of battles.
+ *         mail@: sergio.jose.delcastillo@gmail.com
+ *         <p>
+ *         Contains de history of battles.
  */
 public class Battle {
     private float energy_1;
@@ -26,7 +26,7 @@ public class Battle {
 
     public Battle(String line) {
         if (line == null || line.isEmpty())
-            throw new IllegalArgumentException("The line ("+ line+") is empty");
+            throw new IllegalArgumentException("The line (" + line + ") is empty");
 
         String[] tmp = line.split(",");
 
@@ -38,6 +38,14 @@ public class Battle {
         nutrient = tmp[2];
         energy_1 = Float.parseFloat(tmp[3]);
         energy_2 = Float.parseFloat(tmp[4]);
+    }
+
+    public Battle(BattleResult b) {
+        this.name_1 = b.name1;
+        this.name_2 = b.name2;
+        this.nutrient = b.nutrient;
+        this.energy_1 = b.energy1();
+        this.energy_2 = b.energy2();
     }
 
 
@@ -70,59 +78,21 @@ public class Battle {
         return (energy_1 > 0) ? name_1 : name_2;
     }
 
-    public void save(String path) throws IOException {
-        if (path == null) return;
-
-        FileWriter f = new FileWriter(path, true);
-        PrintWriter pw = new PrintWriter(f);
-        pw.append(this.toString());
-        pw.append("\n");
-        pw.close();
-        f.close();
-    }
-
-    /**
-     * Delete this battle from battles.csv file
-     * @param path of battle to delete
-     * @return true if is successfully
-     * @throws IOException
-     */
-    public boolean delete(String path) throws IOException {
-        if (!new File(path).renameTo(new File(path + "_backup")))
-            return false;
-
-        String thisLine = this.toString(), line;
-
-        BufferedReader br = new BufferedReader(new FileReader(path + "_backup"));
-        PrintWriter pw = new PrintWriter(path);
-
-        while ((line = br.readLine()) != null) {
-            if (!line.equalsIgnoreCase("") && !line.equalsIgnoreCase(thisLine))
-                pw.println(line);
-        }
-
-        pw.close();
-        br.close();
-        new File(path + "_backup").delete();
-        return true;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (o != null && o instanceof Battle) {
             Battle b = (Battle) o;
-            return name_1.equalsIgnoreCase(b.name_1) &&
-                    name_2.equalsIgnoreCase(b.name_2) &&
-                    nutrient.equalsIgnoreCase(b.nutrient) &&
-                    energy_1 == b.energy_1 &&
-                    energy_2 == b.energy_2;
 
+            return ((name_1.equals(b.name_1) && name_2.equals(b.name_2)) ||
+                    (name_1.equals(b.name_2) && name_2.equals(b.name_1))) &&
+                    nutrient.equals(b.nutrient);
         }
         return false;
     }
 
     public boolean contain(String name) {
-        return name_1.equalsIgnoreCase(name) || name_2.equalsIgnoreCase(name);
+        return name_1.equals(name) || name_2.equals(name);
     }
 
     @Override

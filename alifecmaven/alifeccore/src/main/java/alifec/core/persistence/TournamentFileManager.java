@@ -1,20 +1,20 @@
 package alifec.core.persistence;
 
+import alifec.core.contest.Battle;
 import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.TournamentCorruptedException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.filter.TournamentFilter;
 import org.apache.logging.log4j.LogManager;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Sergio Del Castillo on 23/10/17.
@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class TournamentFileManager {
     static org.apache.logging.log4j.Logger logger = LogManager.getLogger(TournamentFileManager.class);
+    private static final String TEMP_SUFFIX = ".tmp";
 
     public static List<String> listTournaments(String path) throws IOException {
         List<String> result = new ArrayList<>();
@@ -54,7 +55,7 @@ public class TournamentFileManager {
         try {
             tournaments = TournamentFileManager.listTournaments(config.getContestPath());
         } catch (IOException e) {
-            throw  new TournamentCorruptedException("The tournament list can not be loaded.", e);
+            throw new TournamentCorruptedException("The tournament list can not be loaded.", e);
         }
 
         if (tournaments.isEmpty()) {
@@ -98,6 +99,7 @@ public class TournamentFileManager {
         return new UnsuccessfulColonies(null, null, null, false);
 
     }
+
     private static boolean compareBattleLine(String[] a, String b[]) {
         //todo improve it
         if (a.length != b.length) return false;
@@ -108,6 +110,7 @@ public class TournamentFileManager {
         }
         return true;
     }
+
     private static void loadBattleFile(String n, List<String[]> b) {
         //todo improve it
         BufferedReader f = null;
@@ -160,6 +163,46 @@ public class TournamentFileManager {
         } catch (CreateTournamentException ex) {
             logger.info("Creating new Tournament [FAIL]");
         }*/
+    }
+
+    public void append(String path, Battle battle) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), StandardOpenOption.APPEND)) {
+            writer.write(battle.toString() + '\n');
+        }
+    }
+
+    /**
+     * Delete the battles list from battles.csv file
+     *
+     * @param path of battle.csv file
+     * @throws IOException
+     */
+    public void delete(String path, List<Battle> battles) throws IOException {
+        Path tempFile = Paths.get(path + TEMP_SUFFIX);
+        Path originalFile = Paths.get(path);
+
+        //rename the file
+        Files.move(originalFile, tempFile);
+        List<String> filteredList;
+
+        try (Stream<String> stream = Files.lines(tempFile)) {
+            filteredList = stream.filter(s -> {
+                try {
+                    return !battles.contains(new Battle(s));
+                } catch (Exception ex) {
+                    logger.error(ex.getMessage(), ex);
+                    return false;
+                }
+            }).collect(Collectors.toList());
+
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw e;
+        }
+
+        try (BufferedWriter writer = Files.newBufferedWriter(originalFile)) {
+            for(String line: filteredList) writer.write(line);
+        }
     }
 
 }
