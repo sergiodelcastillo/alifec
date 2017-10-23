@@ -56,13 +56,13 @@ public class CompileHelper {
         logger.info("Compile JAVA Files");
 
         try {
-            for (File f : SourceCodeFilter.listJavaFiles(config.getMOsPath())) {
-                if (mo == null || f.getName().equals(mo + ".java")) {
-                    if (javaSourceCodeCompilation(config, f.getParent(), f.getName())) {
-                        logger.info(f.getAbsolutePath() + " [OK]");
+            for (Path f : SourceCodeFilter.listJavaFiles(config.getMOsPath())) {
+                if (mo == null || f.getFileName().toString().equals(mo + ".java")) {
+                    if (javaSourceCodeCompilation(config, f.getParent().toString(), f.getFileName().toString())) {
+                        logger.info(f.toString() + " [OK]");
                     } else {
-                        logger.error(f.getAbsolutePath() + " [FAIL]");
-                        result.logJavaError("Could not compileMO " + f.getName() + ". For more details see the logs.");
+                        logger.error(f.toString() + " [FAIL]");
+                        result.logJavaError("Could not compileMO " + f.getFileName().toString() + ". For more details see the logs.");
                     }
                 }
             }
@@ -124,9 +124,9 @@ public class CompileHelper {
         logger.info("Cleaning up files in directory: " + targetFolder);
 
         try {
-            File rootDir = new File(targetFolder);
+            Path rootDir = Paths.get(targetFolder);
 
-            if (rootDir.exists()) {
+            if (Files.exists(rootDir)) {
                 Path dirPath = Paths.get(targetFolder);
 
                 Files.walk(dirPath)
@@ -136,8 +136,7 @@ public class CompileHelper {
                         .forEach(File::delete);
             }
 
-            if (!rootDir.mkdir())
-                throw new IOException("Can not create the compilation target: " + rootDir.getAbsolutePath());
+            Files.createDirectory(rootDir);
 
             logger.info("Cleanup of compiled files [OK] ");
         } catch (IOException ex) {
@@ -266,14 +265,13 @@ public class CompileHelper {
      */
     static boolean updateTournamentCpp(ContestConfig config) {
         List<String> names = SourceCodeFilter.listCppMOs(config.getMOsPath());
-        File env = new File(config.getCppApiFolder() + File.separator + "Environment.cpp");
+        Path env = Paths.get(config.getCppApiFolder() + File.separator + "Environment.cpp");
         try {
-            if (!env.exists()) {
-                if (!env.createNewFile())
-                    throw new IOException("Cant create the file: " + env.getAbsolutePath());
+            if (Files.notExists(env)) {
+                Files.createFile(env);
             }
 
-            PrintWriter pw = new PrintWriter(env);
+            PrintWriter pw = new PrintWriter(env.toFile());
 
             pw.println("");
             pw.println("bool Environment::addColony(string name, int id){");
@@ -311,16 +309,14 @@ public class CompileHelper {
     static boolean updateIncludes(ContestConfig config) {
         List<String> files = SourceCodeFilter.listFilenameCpp(config.getMOsPath());
 
-        File includes = new File(config.getCppApiFolder() + File.separator + "includemos.h");
+        Path includes = Paths.get(config.getCppApiFolder() + File.separator + "includemos.h");
         try {
 
-            if (!includes.exists()) {
-                if (!includes.createNewFile()) {
-                    throw new IOException("Can not create the file: " + includes.getAbsolutePath());
-                }
+            if (Files.notExists(includes)) {
+                Files.createFile(includes);
             }
 
-            PrintWriter pw = new PrintWriter(includes);
+            PrintWriter pw = new PrintWriter(includes.toFile());
 
             for (String n : files) {
                 pw.println("#include \"" + n + "\"");

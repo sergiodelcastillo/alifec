@@ -1,14 +1,10 @@
-/**
- * @author Sergio Del Castillo
- * mail@: sergio.jose.delcastillo@gmail.com
- */
 package alifec.contest.simulationUI;
 
 
 import alifec.contest.view.ContestUI;
 import alifec.contest.view.Message;
-import alifec.core.contest.tournament.Tournament;
-import alifec.core.contest.tournament.battles.BattleRun;
+import alifec.core.contest.Tournament;
+import alifec.core.contest.BattleRun;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Colony;
@@ -111,7 +107,7 @@ public class MiThread extends Thread {
             h2_yPoints[i] = history.y;
         }
         environment = cui.getContest().getEnvironment();
-        lastTournament = cui.getContest().getTournamentManager().lastElement();
+        lastTournament = cui.getContest().lastElement();
 
     }
 

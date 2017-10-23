@@ -3,6 +3,8 @@ package alifec.core.validation;
 import alifec.core.persistence.ContestConfig;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Validate if the Contest path is valid.
@@ -15,11 +17,9 @@ import java.io.File;
 public class ContestPathValidator implements Validator<String> {
     @Override
     public boolean validate(String path) {
-        File f = new File(path);
 
-        if (!f.exists() || !f.isDirectory()) return false;
-
-        return ContestConfig.existsConfigFile(path);
+        return Files.isDirectory(Paths.get(path)) &&
+                ContestConfig.existsConfigFile(path);
 
     }
 }

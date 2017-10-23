@@ -1,5 +1,6 @@
 package alifec.core.persistence.filter;
 
+import alifec.core.persistence.ContestConfig;
 import alifec.core.validation.ContestNameValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,6 +8,10 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.function.Predicate;
 
 
 /**
@@ -14,14 +19,14 @@ import java.io.FilenameFilter;
  * follows the below rule:
  * <ol>
  * <li> Starts with the prefix <b>"contest-"</b> (case insensitive).</li>
- * <li> Continues with up to 25 letters or digits.</li>
+ * <li> Continues with up to 25 letters or digits and have a valid structure.</li>
  * </ol>
- *
+ * <p>
  * <n> For example, a valid name is "contest-01" but "contesto" is not valid. </n>
  */
-public class ContestFolderFilter extends FileFilter implements FilenameFilter {
+public class ContestFolderFilter implements Predicate<Path> {
 
-    private Logger logger = LogManager.getLogger(getClass());
+    //private Logger logger = LogManager.getLogger(getClass());
 
     private ContestNameValidator validator;
 
@@ -42,40 +47,33 @@ public class ContestFolderFilter extends FileFilter implements FilenameFilter {
 
     }
 
-    public boolean accept(File dir, String name) {
-        try {
-            if (!validator.validate(name)) return false;
-
-            if (!checkExistence) return true;
-
-            File contest = new File(dir.getAbsolutePath() + File.separator + name);
-
-            return contest.exists() && contest.isDirectory();
-
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-            return false;
-        }
-    }
-
-    public boolean accept(File dir) {
-        try {
-            String[] names = dir.getAbsolutePath().split("/");
-            String name = names[names.length - 1];
-
-            return accept(dir.getParentFile(), name);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-            return false;
-        }
-    }
-
     @Override
-    public String getDescription() {
-        return "Contest-file";
+    public boolean test(Path path) {
+        String folderName = path.getFileName().toString();
+
+        return validator.validate(folderName) &&
+                (!checkExistence || checkContestFolder(path.getParent().toString(), folderName));
+
     }
 
+    private static boolean checkContestFolder(String path, String name) {
+        if (path == null || path.equals("")) {
+            return false;
+        }
+        if (name == null || name.equals("")) {
+            return false;
+        }
 
+        Path contestName = Paths.get(ContestConfig.getContestPath(path, name));
+        Path MOsFolder = Paths.get(ContestConfig.getMOsPath(path, name));
+        Path ReportFolder = Paths.get(ContestConfig.getReportPath(path, name));
+        Path CppFolder = Paths.get(ContestConfig.getCppApiFolder(path, name));
+        Path BackupFolder = Paths.get(ContestConfig.getBackupFolder(path, name));
 
-
+        return Files.isDirectory(contestName) &&
+                Files.isDirectory(MOsFolder) &&
+                Files.isDirectory(ReportFolder) &&
+                Files.isDirectory(CppFolder) &&
+                Files.isDirectory(BackupFolder);
+    }
 }

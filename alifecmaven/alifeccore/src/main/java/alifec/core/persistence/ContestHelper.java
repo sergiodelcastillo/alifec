@@ -10,9 +10,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by Sergio Del Castillo on 06/08/17.
@@ -23,172 +27,38 @@ public class ContestHelper {
 
     static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestHelper.class);
 
-    /**
-     * Find the mode is competition and the Alifec software was closed unsuccessful then
-     * it could be inconsistency in saved battles. This method helps to find unsaved run and
-     * give the possibility to take an action.
-     *
-     * @param config
-     * @return
-     * @throws TournamentCorruptedException
-     */
-    public static UnsuccessfulColonies findFinishedUnsuccessful(ContestConfig config) throws TournamentCorruptedException {
-        if (config.getMode() == ContestConfig.PROGRAMMER_MODE) {
-            return new UnsuccessfulColonies(null, null, null, false);
-        }
-        String[] tournamentsName = new File(config.getContestName()).list(new TournamentFilter());
-        if (tournamentsName == null) {
-            return new UnsuccessfulColonies(null, null, null, false);
-        }
 
-        List<String> tournamentList = new ArrayList<>();
 
-        Collections.addAll(tournamentList, tournamentsName);
-
-        String lastTournament = Collections.max(tournamentList);
-
-        String backupFilePath = config.getBattlesBackupFile(lastTournament);
-        String battlesFilePath = config.getBattlesFile(lastTournament);
-
-        //Check the existence of the backup file (battles_backup.csv file)
-        if (!new File(backupFilePath).exists()) {
-            return new UnsuccessfulColonies(null, null, null, false);
-        }
-
-        //find unsaved battles.
-        List<String[]> battles = new ArrayList<>();
-        List<String[]> backup = new ArrayList<>();
-
-        loadBattleFile(battlesFilePath, battles);
-        loadBattleFile(backupFilePath, backup);
-
-        int index = 0;
-        for (; index < battles.size(); index++) {
-            if (!compareBattleLine(battles.get(index), backup.get(index))) {
-                throw new TournamentCorruptedException("Tournament " + lastTournament + " is corrupt. Please verify battles.csv and battles_backup.csv files.");
-            }
-        }
-
-        if (backup.size() > index) {
-            return new UnsuccessfulColonies(lastTournament, backup.get(index)[0], backup.get(index)[1], true);
-        }
-
-        //try to remove battles_backup.csv file because it is equals to battles.csv file.
-        new File(backupFilePath).delete();
-
-        return new UnsuccessfulColonies(null, null, null, false);
-
-    }
-
-    public static void deleteBattleBackupFile(ContestConfig config, UnsuccessfulColonies unsuccessful) {
-        File backupFile = new File(config.getBattlesBackupFile(unsuccessful.getTournament()));
-
-        if (backupFile.exists()) {
-            if (backupFile.delete()) {
-                logger.info("Delete back up file [OK]");
-            } else {
-                logger.info("Delete back up file [FAIL]");
-            }
-        }
-        /*TODO: ver porque esto estaba acá, mepa que está al dope
-        try {
-            tournaments.newTournament(environment.getNames());
-            logger.info("Creating new Tournament [OK]");
-        } catch (CreateTournamentException ex) {
-            logger.info("Creating new Tournament [FAIL]");
-        }*/
-    }
 
     public static List<String> listContest(String path) {
-        String list[] = new File(path).list(new ContestFolderFilter());
-        List<String> results = new ArrayList<>();
-
-        if (list != null) {
-            for (String name : list) {
-                if (checkContestFolder(path, name)) {
-                    results.add(name);
-                }
-
-            }
-        }
-        return results;
-    }
-
-    private static boolean checkContestFolder(String path, String name) {
-        if (path == null || path.equals("")) {
-            return false;
-        }
-        if (name == null || name.equals("")) {
-            return false;
-        }
-
-        String contestName = ContestConfig.getContestPath(path, name);
-        String MOsFolder = ContestConfig.getMOsPath(path, name);
-        String ReportFolder = ContestConfig.getReportPath(path, name);
-        String CppFolder = ContestConfig.getCppApiFolder(path, name);
-        String BackupFolder = ContestConfig.getBackupFolder(path, name);
-
-        return new File(contestName).exists() &&
-                new File(MOsFolder).exists() &&
-                new File(ReportFolder).exists() &&
-                new File(CppFolder).exists() &&
-                new File(BackupFolder).exists();
-    }
-
-    private static boolean compareBattleLine(String[] a, String b[]) {
-        //todo: pasar a BattleHelper
-        if (a.length != b.length) return false;
-
-        for (int i = 0; i < a.length; i++) {
-            if (!a[i].toLowerCase().equalsIgnoreCase(b[i].toLowerCase()))
-                return false;
-        }
-        return true;
-    }
-
-    private static void loadBattleFile(String n, List<String[]> b) {
-        //todo: pasar a BattleHelper
-        BufferedReader f = null;
-        String line;
-
+        List<String> result = new ArrayList<>();
         try {
-            f = new BufferedReader(new FileReader(n));
-
-            while ((line = f.readLine()) != null) {
-                String[] tmp = line.split(",");
-                if (tmp.length == 3) {
-                    String tmp2[] = new String[3];
-
-                    tmp2[0] = tmp[0];
-                    tmp2[1] = tmp[1];
-                    tmp2[2] = tmp[2];
-
-                    b.add(tmp2);
-                }
-            }
-
-        } catch (IOException ex) {
-            logger.info("Cant find battles.csv or battles_backup.csv", ex);
-        } finally {
-            try {
-                if (f != null) {
-                    f.close();
-                }
-            } catch (IOException ignored) {
-            }
+            Files.list(Paths.get(path))
+                    .filter(new ContestFolderFilter())
+                    .forEach(path1 -> {
+                        result.add(path1.getFileName().toString());
+                    });
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
+
+        return result;
     }
+
+
+
+
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
-        File cppResources = new File("app/cpp/");
-        File examplesResources = new File("app/examples/");
+        Path cppResources = Paths.get("app/cpp/");
+        Path examplesResources = Paths.get("app/examples/");
         buildNewContestFolder(config, createExamples, cppResources, examplesResources);
     }
 
     public static void buildNewContestFolder(ContestConfig config,
-                                              boolean createExamples,
-                                              File cppResources,
-                                              File exampleResources) throws CreateContestFolderException {
+                                             boolean createExamples,
+                                             Path cppResources,
+                                             Path exampleResources) throws CreateContestFolderException {
         createFolder(config.getContestPath());
         createFolder(config.getMOsPath());
         createFolder(config.getReportPath());
@@ -211,25 +81,27 @@ public class ContestHelper {
     }
 
     private static void createFolder(String folder) throws CreateContestFolderException {
-        if (!new File(folder).mkdir()) {
+        try {
+            Files.createDirectory(Paths.get(folder));
+        } catch (IOException e) {
             logger.error("Creating folder: " + folder + " [FAIL]");
-            throw new CreateContestFolderException("Can not create the folder: " + folder);
+            throw new CreateContestFolderException("Can not create the folder: " + folder, e);
         }
 
         logger.info("Creating folder: " + folder + " [OK]");
     }
 
-    public static void createExamples(File source, String MOsFolder) {
+    public static void createExamples(Path source, String MOsFolder) {
         try {
             logger.info("Generating examples in folder " + MOsFolder);
 
-            Files.walk(source.toPath()).forEach(path -> {
+            Files.walk(source).forEach(path -> {
                 try {
-                    File target = new File(MOsFolder + File.separator + path.getFileName());
+                    Path target = Paths.get(MOsFolder + File.separator + path.getFileName());
 
-                    if (new File(path.toUri()).isFile())
-                        Files.copy(path, target.toPath());
-                    logger.info("Generated file: " + target.getAbsolutePath());
+                    if (Files.isRegularFile(path))
+                        Files.copy(path, target);
+                    logger.info("Generated file: " + target.toFile().getAbsolutePath());
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -239,18 +111,19 @@ public class ContestHelper {
         }
     }
 
-    private static boolean createCppApi(File source, String targetFolder) {
+    private static boolean createCppApi(Path source, String targetFolder) {
         try {
 
             final boolean[] isOK = {true};
 
-            Files.walk(source.toPath()).forEach(path -> {
+            Files.walk(source).forEach(path -> {
                 try {
-                    File target = new File(targetFolder + File.separator + path.getFileName());
 
-                    if (new File(path.toUri()).isFile()) {
-                        Files.copy(path, target.toPath());
-                        logger.info("Copying file: " + target.getAbsolutePath());
+                    Path target = Paths.get(targetFolder + File.separator + path.getFileName());
+
+                    if (Files.isRegularFile(path)) {
+                        Files.copy(path, target);
+                        logger.info("Copying file: " + target.toFile().getAbsolutePath());
                     }
                 } catch (IOException e) {
                     isOK[0] = false;

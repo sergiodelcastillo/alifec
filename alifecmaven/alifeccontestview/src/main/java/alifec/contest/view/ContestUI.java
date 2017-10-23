@@ -8,6 +8,7 @@ import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ContestHelper;
+import alifec.core.persistence.TournamentHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -206,14 +207,14 @@ public class ContestUI extends JFrame implements ActionListener {
 
         try {
             //load everything
-            UnsuccessfulColonies uColonies = ContestHelper.findFinishedUnsuccessful(config);
+            UnsuccessfulColonies uColonies = TournamentHelper.findFinishedUnsuccessful(config);
 
             if (uColonies.isUnsuccessful()) {
                 UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, uColonies.getColonyA(), uColonies.getColonyB());
                 solver.setVisible(true);
 
                 for (String c : contest.getEnvironment().getNames()) {
-                    contest.getTournamentManager().lastElement().addColony(c);
+                    contest.lastElement().addColony(c);
                 }
             }
             //create an instance of the contest
@@ -225,7 +226,7 @@ public class ContestUI extends JFrame implements ActionListener {
             }
 
             //delete backup file
-            ContestHelper.deleteBattleBackupFile(config, uColonies);
+            TournamentHelper.deleteBattleBackupFile(config, uColonies);
 
         } catch (TournamentCorruptedException e) {
             //TODO: ver que mostrar acá.

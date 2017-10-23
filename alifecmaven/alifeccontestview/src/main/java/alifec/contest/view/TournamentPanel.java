@@ -1,8 +1,8 @@
 package alifec.contest.view;
 
 
-import alifec.core.contest.tournament.Tournament;
-import alifec.core.contest.tournament.TournamentManager;
+import alifec.core.contest.Contest;
+import alifec.core.contest.Tournament;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,12 +23,12 @@ public class TournamentPanel extends JList {
     JMenuItem deleteOfTournament = new JMenuItem("Delete Colony of Tournament");
 
     private Tournament current;
-    private TournamentManager tm;
+    private Contest contest;
 
     public TournamentPanel(final ContestUI father, Tournament t, Color c) {
         super();
         current = t;
-        tm = father.getContest().getTournamentManager();
+        contest = father.getContest();
         setCellRenderer(new TournamentPanelOpponentUI(this));
         this.setModel(addComponents());
         this.setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue()));
@@ -42,7 +42,7 @@ public class TournamentPanel extends JList {
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 //verify if the selected tournament has tournament.
-                if (!tm.getSelected().isEnabled()) {
+                if (!contest.getSelected().isEnabled()) {
                     return;
                 }
 
@@ -57,8 +57,8 @@ public class TournamentPanel extends JList {
 
             father.getContest().getEnvironment().delete(selected); //delete of environment
 
-            for (int i = 0; i < tm.size(); i++) {
-                tm.getTournament(i).delete(selected);
+            for (int i = 0; i < contest.size(); i++) {
+                contest.getTournament(i).delete(selected);
             }
 
             father.getBattleUI().delete(selected); // delete of UI
@@ -68,7 +68,7 @@ public class TournamentPanel extends JList {
         deleteOfTournament.addActionListener(e -> {
             String selected = getSelected();
             father.getBattleUI().delete(selected); // delete of UI
-            tm.lastElement().delete(selected); // delete of lastTournament
+            contest.lastElement().delete(selected); // delete of lastTournament
             father.getTournamentUI().updateLast(); // delete of UI
             //father.getContest().getEnvironment().delete(selected); //delete of environment
             update(); // actualizar UI

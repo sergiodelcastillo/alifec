@@ -3,14 +3,18 @@ package alifec.core.persistence.filter;
 
 import alifec.core.persistence.ContestConfig;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.function.Predicate;
 
-public class TournamentFilter implements FilenameFilter {
+public class TournamentFilter implements Predicate<Path> {
 
-    public boolean accept(File dir, String name) {
-        return name.indexOf(ContestConfig.TOURNAMENT_PREFIX) == 0 &&
-                new File(dir.getAbsolutePath() + File.separator + name).isDirectory();
+    @Override
+    public boolean test(Path path) {
+        return path.getFileName().toString().startsWith(ContestConfig.TOURNAMENT_PREFIX)  &&
+                Files.isDirectory(path);
     }
+
+
 }
 

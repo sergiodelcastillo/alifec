@@ -4,14 +4,16 @@ import alifec.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.ContestConfig;
-import alifec.core.persistence.filter.ContestFolderFilter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
@@ -21,70 +23,70 @@ import java.util.Arrays;
 public class ContestFolderFilterTest extends ParentTest {
 
     @Test
-    public void testListEmpty() {
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
+    public void testListEmpty() throws IOException {
 
-        Assert.assertArrayEquals(f, new String[0]);
+        Assert.assertEquals(Files.list(Paths.get(TEST_ROOT_PATH))
+                .filter(new ContestFolderFilter()).count(), 0);
     }
 
     @Test
     public void testAccept() {
-        File folder = new File(TEST_ROOT_PATH);
+        Path folder = Paths.get(TEST_ROOT_PATH);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("contest-");
 
         ContestFolderFilter contestFolderFilter = new ContestFolderFilter(false);
-        Assert.assertFalse(contestFolderFilter.accept(folder, stringBuilder.toString()));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|"));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|"));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-1|"));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-|1"));
-        Assert.assertFalse(contestFolderFilter.accept(folder, "contest-11111111111111111111111111"));
+        Assert.assertFalse(contestFolderFilter.test(folder.resolve(stringBuilder.toString())));
+        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-|")));
+        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-|")));
+        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-1|")));
+        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-|1")));
+        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-11111111111111111111111111")));
 
         for (int i = 0; i < 25; i++) {
             stringBuilder.append("c");
-            Assert.assertTrue(contestFolderFilter.accept(folder, stringBuilder.toString()));
+            Assert.assertTrue(contestFolderFilter.test(folder.resolve(stringBuilder.toString())));
         }
 
         stringBuilder.append("c");
-        Assert.assertFalse(contestFolderFilter.accept(folder, stringBuilder.toString()));
-
+        Assert.assertFalse(contestFolderFilter.test(folder.resolve(stringBuilder.toString())));
     }
-
-
 
     @Test
     public void testListOneContest() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         String contestName = ContestConfig.CONTEST_NAME_PREFIX + "01";
         createContest(contestName);
 
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
 
-        Assert.assertTrue(1 == f.length);
-        Assert.assertEquals(f[0], contestName);
+        Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH))
+                .filter(new ContestFolderFilter())
+                .allMatch(path -> path.getFileName().toString().equals(contestName)));
     }
 
     @Test
     public void testListManyContests() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
+        List<String> target = new ArrayList<>(100);
+        for (int i = 99; i >= 0; i--) {
+            target.add(ContestConfig.CONTEST_NAME_PREFIX + Integer.toString(i));
+        }
+
         //Create 100  contests
         for (int i = 0; i < 100; i++) {
-            createContest(ContestConfig.CONTEST_NAME_PREFIX+ Integer.toString(i));
+            createContest(ContestConfig.CONTEST_NAME_PREFIX + Integer.toString(i));
         }
 
-        String[] f = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
 
-        Assert.assertTrue(100 == f.length);
+        Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH)).filter(new ContestFolderFilter()).allMatch(path -> {
+            String file = path.getFileName().toString();
+            if (target.contains(file)) {
+                target.remove(file);
+                return true;
+            }
 
-        String[] target = new String[100];
-        for (int i = 99; i >= 0; i--) {
-            target[i] = ContestConfig.CONTEST_NAME_PREFIX + Integer.toString(i);
-        }
+            return false;
+        }));
 
-        //sort to compare
-        Arrays.sort(f);
-        Arrays.sort(target);
-
-        Assert.assertArrayEquals(target, f);
+        Assert.assertTrue(target.isEmpty());
     }
 
     @Test
@@ -101,27 +103,32 @@ public class ContestFolderFilterTest extends ParentTest {
                 "Tcontest-09",//NO
                 "contest-"//NO
         };
-        String[] contestListTarget = new String[]{
-                "contest-01", //SI
-                "Contest-02",//SI
-                "cOntest-03",//SI
-                "contesT-04",//SI
-                "CONTEST-06"//SI
-        };
+
+        List<String> contestListTarget = new ArrayList<>();
+        contestListTarget.add("contest-01");
+        contestListTarget.add("Contest-02");
+        contestListTarget.add("cOntest-03");
+        contestListTarget.add("contesT-04");
+        contestListTarget.add("CONTEST-06");
+
 
         for (String contestName : contestList) {
             createContest(contestName);
         }
 
-        String[] list = new File(TEST_ROOT_PATH).list(new ContestFolderFilter());
 
-        Assert.assertTrue(contestListTarget.length == list.length);
+        Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH))
+                .filter(new ContestFolderFilter())
+                .allMatch(path -> {
+                    String file = path.getFileName().toString();
+                    if (contestListTarget.contains(file)) {
+                        contestListTarget.remove(file);
+                        return true;
+                    }
 
-        //sort to compare
-        Arrays.sort(list);
-        Arrays.sort(contestListTarget);
-
-        Assert.assertArrayEquals(contestListTarget, list);
+                    return false;
+                }));
+        Assert.assertTrue(contestListTarget.isEmpty());
     }
 
 }

@@ -1,6 +1,9 @@
 package alifec.core.validation;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Validates if the Contest Folder does not exists and have a valid name.
@@ -21,11 +24,11 @@ public class NewContestFolderValidator implements Validator<String> {
 
         if (folder == null || folder.isEmpty()) return false;
 
-        File file = new File(folder);
+        Path file = Paths.get(folder);
 
-        if (file.exists()) return false;
+        if (Files.exists(file)) return false;
 
-        String[] names = file.getAbsolutePath().split("/");
+        String[] names = file.toFile().getAbsolutePath().split("/");
         String name = names[names.length - 1];
 
         return contestNameValidator.validate(name);

@@ -10,4 +10,8 @@ public class TournamentCorruptedException extends Exception {
     public TournamentCorruptedException(String message) {
         super(message);
     }
+
+    public TournamentCorruptedException(String message, Throwable t) {
+        super(message, t);
+    }
 }

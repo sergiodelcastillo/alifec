@@ -3,13 +3,13 @@ package alifec.contest.view;
 
 
 
-import alifec.core.contest.tournament.Tournament;
-import alifec.core.contest.tournament.TournamentManager;
+import alifec.core.contest.Contest;
+import alifec.core.contest.Tournament;
 import alifec.core.exception.CreateTournamentException;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 public class TournamentUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 0L;
 
-    private TournamentManager tm;
+    private Contest contest;
     private ContestUI father;
 
     private List<TournamentPanel> tPanel;
@@ -38,21 +38,21 @@ public class TournamentUI extends JPanel implements ActionListener {
     public TournamentUI(ContestUI cui) {
         setBorder(border);
         this.father = cui;
-        this.tm = cui.getContest().getTournamentManager();
-        this.tPanel = new ArrayList<>(tm.size());
-        this.tScroll = new ArrayList<>(tm.size());
+        this.contest = cui.getContest();
+        this.tPanel = new ArrayList<>(contest.size());
+        this.tScroll = new ArrayList<>(contest.size());
 
-        border.setTitle(tm.getSelected().getName());
+        border.setTitle(contest.getSelected().getName());
         this.setLayout(new BorderLayout());
         this.add(createMenuBar(), BorderLayout.SOUTH);
         //      JScrollPane sp = new JScrollPane();
 
-        for (int i = 0; i < tm.size(); i++) {
-            Tournament t = tm.getTournament(i);
+        for (int i = 0; i < contest.size(); i++) {
+            Tournament t = contest.getTournament(i);
             addTournament(t);
         }
 
-        add(tScroll.get(tm.getSelectedID()), BorderLayout.CENTER);
+        add(tScroll.get(contest.getSelectedID()), BorderLayout.CENTER);
         addColony.setEnabled(false);
     }
 
@@ -130,16 +130,16 @@ public class TournamentUI extends JPanel implements ActionListener {
                 }
             }
         } else if (e.getSource().equals(prevTournament)) {
-            remove(tScroll.get(tm.getSelectedID()));
-            tm.prev();
-            add(tScroll.get(tm.getSelectedID()), BorderLayout.CENTER);
-            border.setTitle(tm.getSelected().getName());
+            remove(tScroll.get(contest.getSelectedID()));
+            contest.prev();
+            add(tScroll.get(contest.getSelectedID()), BorderLayout.CENTER);
+            border.setTitle(contest.getSelected().getName());
             updateUI();
         } else if (e.getSource().equals(nextTournament)) {
-            remove(tScroll.get(tm.getSelectedID()));
-            tm.next();
-            add(tScroll.get(tm.getSelectedID()), BorderLayout.CENTER);
-            border.setTitle(tm.getSelected().getName());
+            remove(tScroll.get(contest.getSelectedID()));
+            contest.next();
+            add(tScroll.get(contest.getSelectedID()), BorderLayout.CENTER);
+            border.setTitle(contest.getSelected().getName());
             updateUI();
         } else if (e.getSource().equals(ranking)) {
             new ContestReportUI(father);
@@ -149,13 +149,13 @@ public class TournamentUI extends JPanel implements ActionListener {
             if (Message.printYesNoCancel(father, txt)) {
                 try {
                     father.getBattleUI().setEnabled(true);
-                    remove(tScroll.get(tm.getSelectedID()));
-                    tm.newTournament(father.getContest().getEnvironment().getNames());
+                    remove(tScroll.get(contest.getSelectedID()));
+                    contest.newTournament(father.getContest().getEnvironment().getNames());
 
-                    addTournament(tm.getSelected());
+                    addTournament(contest.getSelected());
                     father.getBattleUI().clear();
-                    border.setTitle(tm.getSelected().getName());
-                    add(tScroll.get(tm.getSelectedID()));
+                    border.setTitle(contest.getSelected().getName());
+                    add(tScroll.get(contest.getSelectedID()));
                     updateUI();
                 } catch (CreateTournamentException ex) {
                     Message.printErr(father, "Can't create a new Tournament");
@@ -163,32 +163,32 @@ public class TournamentUI extends JPanel implements ActionListener {
             }
 
         } else if (e.getSource().equals(delTournament)) {
-            int selected = tm.getSelectedID();
-            String txt = "Are you sure you want to delete " + tm.getSelected().getName() + "?";
+            int selected = contest.getSelectedID();
+            String txt = "Are you sure you want to delete " + contest.getSelected().getName() + "?";
 
             if (Message.printYesNoCancel(father, txt)) {
-                if (tm.size() == 0) {
+                if (contest.size() == 0) {
                     Message.printErr(father, "The are not tournament to be removed.");
                     return;
                 }
-                if (tm.size() == 1) {
+                if (contest.size() == 1) {
                     Message.printErr(father, "You can't delete the tournament. The application requires at least one tournament for the contest");
                     return;
                 }
 
 
-                if (!tm.removeSelected()) {
+                if (!contest.removeSelected()) {
                     Message.printErr(father, "The tournament can't be removed");
                 } else {
-                    if (tm.getSelectedID() != selected && tm.getSelected().equals(tm.lastElement())) {
+                    if (contest.getSelectedID() != selected && contest.getSelected().equals(contest.lastElement())) {
                         father.getBattleUI().setEnabled(false);
 //						father.getBattleUI().setHastTournament(false);
                     }
                     remove(tScroll.get(selected));
                     tPanel.remove(selected);
                     tScroll.remove(selected);
-                    add(tScroll.get(tm.getSelectedID()), BorderLayout.CENTER);
-                    border.setTitle(tm.getSelected().getName());
+                    add(tScroll.get(contest.getSelectedID()), BorderLayout.CENTER);
+                    border.setTitle(contest.getSelected().getName());
                     updateUI();
                 }
             }
@@ -209,7 +209,7 @@ public class TournamentUI extends JPanel implements ActionListener {
      */
     public void penalize(String colonyName) {
         father.getContest().getEnvironment().delete(colonyName);
-        tm.lastElement().penalize(colonyName);
+        contest.lastElement().penalize(colonyName);
         tPanel.get(tPanel.size()-1).update();
     }
 }

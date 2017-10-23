@@ -3,14 +3,16 @@ package alifec.core.persistence.filter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -37,24 +39,31 @@ public class SourceCodeFilter extends AllFilesFilter {
         this.suffixes = array;
     }
 
-    public boolean accept(File dir, String name) {
-        if (!super.accept(dir, name)) return false;
+    @Override
+    public boolean test(Path path) {
+        if (!super.test(path)) return false;
 
         for (String suffix : suffixes) {
-            if (name.endsWith(suffix)) return true;
+            if (path.getFileName().toString().endsWith(suffix)) return true;
         }
 
         return false;
     }
 
+
     /**
      * Returns the name of the files located in MOs folder which ends with .c, .cpp or .h.
      */
     public static List<String> listFilenameCpp(String path) {
+        //todo: craete a sourcecodehelper to implement the static methods.
         List<String> names = new ArrayList<>();
-        File[] files = listFileCpp(path);
-
-        for (File f : files) names.add(f.getName());
+        try {
+            listFilesCpp(path).forEach(path1 -> {
+                names.add(path1.getFileName().toString());
+            });
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
 
         return names;
     }
@@ -62,14 +71,10 @@ public class SourceCodeFilter extends AllFilesFilter {
     /**
      * Returns the files located in MOs folder which ends with .c, .cpp or .h.
      */
-    private static File[] listFileCpp(String path) {
+    private static Stream<Path> listFilesCpp(String path) throws IOException {
         String[] cppFiles = new String[]{".h", ".c", ".cpp"};
-        File[] cppColonies = new File(path).listFiles(new SourceCodeFilter(cppFiles));
 
-        if (cppColonies == null)
-            return new File[0];
-
-        return cppColonies;
+        return Files.list(Paths.get(path)).filter(new SourceCodeFilter(cppFiles));
     }
 
     /**
@@ -82,18 +87,20 @@ public class SourceCodeFilter extends AllFilesFilter {
         List<String> names = new ArrayList<>();
 
         try {
-            File[] cppCodeList = listFileCpp(path);
+            listFilesCpp(path).forEach(path1 -> {
+                try {
+                    byte[] data = Files.readAllBytes(path1);
+                    String line = new String(data);
 
-            for (File cppCode : cppCodeList) {
-                byte[] data = Files.readAllBytes(cppCode.toPath());
-                String line = new String(data);
+                    String nameOfCppMO = getNameOfMOCpp(line);
 
-                String nameOfCppMO = getNameOfMOCpp(line);
-
-                if (nameOfCppMO != null && !nameOfCppMO.trim().isEmpty()) {
-                    names.add(nameOfCppMO);
+                    if (nameOfCppMO != null && !nameOfCppMO.trim().isEmpty()) {
+                        names.add(nameOfCppMO);
+                    }
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
                 }
-            }
+            });
 
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
@@ -107,11 +114,12 @@ public class SourceCodeFilter extends AllFilesFilter {
      * List the name of Java MOs which are located in MOs folder
      */
     public static List<String> listJavaMOs(String path) {
-        List<File> javaFiles = listJavaFiles(path);
+        //TODO: investigate if it can be defined by used custom collector
+        List<Path> javaFiles = listJavaFiles(path);
         List<String> javaNames = new ArrayList<>();
 
-        for (File javaFile : javaFiles)
-            javaNames.add(javaFile.getName().replace(".java", ""));
+        for (Path p : javaFiles)
+            javaNames.add(p.getFileName().toString().replace(".java", ""));
 
         return javaNames;
     }
@@ -122,15 +130,16 @@ public class SourceCodeFilter extends AllFilesFilter {
      * @param path URL of files.java
      * @return list of files that end with java
      */
-    public static List<File> listJavaFiles(String path) {
-        List<File> names = new ArrayList<>();
-        File[] cpp_colonies = new File(path).listFiles(new SourceCodeFilter(new String[]{".java"}));
-
-        if (cpp_colonies != null) {
-            names.addAll(Arrays.asList(cpp_colonies));
+    public static List<Path> listJavaFiles(String path) {
+        try {
+            return Files.list(Paths.get(path))
+                    .filter(new SourceCodeFilter(new String[]{".java"}))
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
 
-        return names;
+        return new ArrayList<>();
     }
 
     public static String getNameOfMOCpp(String line) {

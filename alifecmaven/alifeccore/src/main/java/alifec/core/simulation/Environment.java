@@ -1,6 +1,6 @@
 package alifec.core.simulation;
 
-import alifec.core.contest.tournament.battles.BattleRun;
+import alifec.core.contest.BattleRun;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.NutrientException;
 import alifec.core.persistence.ContestConfig;

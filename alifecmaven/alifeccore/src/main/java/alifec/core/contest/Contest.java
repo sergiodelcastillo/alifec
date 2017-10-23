@@ -4,10 +4,9 @@ package alifec.core.contest;
 import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.contest.oponentInfo.OpponentInfoManager;
 import alifec.core.contest.oponentInfo.OpponentReportLine;
-import alifec.core.contest.tournament.Tournament;
-import alifec.core.contest.tournament.TournamentManager;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.TournamentHelper;
 import alifec.core.persistence.ZipHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
@@ -15,9 +14,11 @@ import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -26,10 +27,17 @@ public class Contest {
     private Logger logger = LogManager.getLogger(getClass());
 
     private Environment environment;
+
     /**
-     * manager of tournaments
+     * List of tournaments.
      */
-    private TournamentManager tournaments;
+    private List<Tournament> tournamentList;
+
+    /**
+     * current tournament.
+     */
+    private int selected = -1;
+
 
     /**
      * info of all opponents
@@ -43,30 +51,126 @@ public class Contest {
             this.config = config;
             opponentsInfo = new OpponentInfoManager(config);
             environment = new Environment(config);
-            tournaments = new TournamentManager(config);
+            tournamentList = new ArrayList<>();
+
+            for (String name : TournamentHelper.listTournaments(config.getContestPath())) {
+                Tournament t = new Tournament(config, name);
+
+                if (t.read())
+                    tournamentList.add(t);
+            }
+
+            //creating a  new Tournament!.
+            Collections.sort(tournamentList);
+
+            selected = tournamentList.size() - 1;
 
             //create new and empty tournament
-            tournaments.newTournament(environment.getNames());
+            newTournament(environment.getNames());
 
-            try {
-                opponentsInfo.read();
-            } catch (IOException e) {
-                logger.info("Could not load competitors file. A new file will be created: "
-                        + e.getMessage());
-            }
+            opponentsInfo.read();
 
             Enumeration<Integer> ids = environment.getOps().elements();
             while (ids.hasMoreElements()) {
                 Integer i = ids.nextElement();
                 opponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
             }
-        } catch (CreateTournamentException e) {
+            //TODO: evaluate the messages
+        } catch (CreateTournamentException | CreateBattleException e) {
             throw new CreateContestException("Error creating the contest: " + e.getMessage(), e);
         } catch (IOException e) {
             throw new CreateContestException("Error creating the contest: Can load opponents information, please check the log for further details.", e);
         }
     }
 
+    public void newTournament(List<String> colonies) throws CreateTournamentException {
+        String newT = getNextName();
+
+        if (config.isCompetitionMode()) {
+            String tournamentPath = config.getTournamentPath(newT);
+            if (!new File(tournamentPath).mkdir())
+                throw new CreateTournamentException("Can not create the new tournament folder: " + tournamentPath);
+        }
+
+        try {
+            Tournament t = new Tournament(config, newT);
+            t.setEnabled(true);
+
+            for (String c : colonies) {
+                t.addColony(c);
+            }
+
+            if (selected >= 0)
+                tournamentList.get(selected).setEnabled(false);
+
+            tournamentList.add(t);
+            selected = tournamentList.indexOf(t);
+        } catch (CreateBattleException ex) {
+            logger.error(ex.getMessage(), ex);
+            throw new CreateTournamentException("Cannot load the tournament: " + ex.getTournamentName());
+        }
+    }
+    /**
+     * Remove the selected tournament
+     *
+     * @return true if the current tournament can be removed!
+     */
+    public boolean removeSelected() {
+        try {
+            Path file = Paths.get(config.getBattlesFile(getSelected().getName()));
+            if (Files.exists(file)) {
+                Files.delete(file);
+                if (config.isCompetitionMode()) return false;
+            }
+
+            if (Files.exists(file.getParent())) {
+                Files.delete(file.getParent());
+                if (config.isCompetitionMode()) return false;
+            }
+
+            tournamentList.remove(selected);
+
+            if (selected >= tournamentList.size())
+                selected = tournamentList.size() - 1;
+
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return the selected tournament.
+     */
+
+    public Tournament getSelected() {
+        try {
+            return tournamentList.get(selected);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    /**
+     * This method suppose  that the maximum of tournament of the
+     * current contest in not longer than 100.
+     *
+     * @return String a: the name of next tournament.
+     */
+    private String getNextName() {
+        Integer tournamentNumber = 1;
+
+        if (tournamentList.size() > 0) {
+            String name = tournamentList.get(tournamentList.size() - 1).getName();
+            name = name.replace(ContestConfig.TOURNAMENT_PREFIX, "");
+
+            tournamentNumber = Integer.valueOf(name) + 1;
+        }
+
+        return ContestConfig.getTournamentFilename(tournamentNumber);
+    }
 
     public Hashtable<String, Integer> getNutrients() {
         Hashtable<String, Integer> result = new Hashtable<>();
@@ -125,13 +229,28 @@ public class Contest {
 
     public void setMode(int mode) throws IOException {
         this.config.setMode(mode);
-        this.tournaments.setMode(mode);
+        if (this.config.isProgrammerMode() &&
+                mode == ContestConfig.COMPETITION_MODE) {
+            lastElement().save();
+        }
 
     }
 
-    public TournamentManager getTournamentManager() {
-        return tournaments;
+    /**
+     * @return the selected id of tournaments.
+     */
+    public int getSelectedID() {
+        return selected;
     }
+
+    public synchronized Tournament lastElement() {
+        if (tournamentList.size() == 0)
+            return null;
+
+        return tournamentList.get(tournamentList.size() - 1);
+    }
+
+
 
     public Environment getEnvironment() {
         return environment;
@@ -155,10 +274,10 @@ public class Contest {
      * @throws CreateRankingException if can not create the ranking
      */
     public List<OpponentReportLine> getInfo() throws CreateRankingException {
-        Hashtable<String, Integer> ranking = tournaments.getRanking();
+        Hashtable<String, Integer> ranking = getRanking();
         List<OpponentReportLine> info = new ArrayList<>();
 
-        Tournament t = tournaments.lastElement();
+        Tournament t = lastElement();
         Hashtable<String, Float> accumulated = t.getAccumulatedEnergy();
 
         for (OpponentInfo oi : opponentsInfo.getOpponents()) {
@@ -179,6 +298,20 @@ public class Contest {
         Collections.reverse(info);
 
         return info;
+    }
+    public Hashtable<String, Integer> getRanking() throws CreateRankingException {
+        Hashtable<String, Integer> ranking = new Hashtable<>();
+
+        for (Tournament t : tournamentList) {
+            Hashtable<String, Integer> tRanking = t.getRanking();
+
+            for (String name : tRanking.keySet()) {
+                Integer point = ranking.containsKey(name) ? ranking.remove(name) : new Integer(0);
+                ranking.put(name, point + tRanking.get(name));
+            }
+        }
+
+        return ranking;
     }
 
     /**
@@ -201,7 +334,7 @@ public class Contest {
     }
 
     public boolean needRestore() {
-        return tournaments.size() != 0 && tournaments.lastElement().hasBackUpFile();
+        return tournamentList.size() != 0 && lastElement().hasBackUpFile();
     }
 
     public String getPath() {
@@ -211,5 +344,43 @@ public class Contest {
     public ContestConfig getConfig() {
         return config;
     }
+
+
+    /**
+     * @param i: index of tournaments
+     * @return tournament i.
+     */
+    public Tournament getTournament(int i) {
+        return tournamentList.get(i);
+    }
+
+    /**
+     * @return count of tournaments.
+     */
+    public int size() {
+        return tournamentList.size();
+    }
+
+    /**
+     * Return the next tournament
+     * if the selected tournament is the last this function return the last tournament
+     *
+     * @return next the next Tournament
+     */
+    public Tournament next() {
+        if (selected < tournamentList.size() - 1)
+            selected++;
+
+        return tournamentList.get(selected);
+    }
+
+    public Tournament prev() {
+        if (selected > 0)
+            selected--;
+
+        return tournamentList.get(selected);
+    }
+
+
 }
 

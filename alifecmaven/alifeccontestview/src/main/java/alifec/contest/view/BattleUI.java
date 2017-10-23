@@ -3,9 +3,8 @@ package alifec.contest.view;
 
 import alifec.contest.simulationUI.GUIdosD;
 import alifec.core.contest.Contest;
-import alifec.core.contest.tournament.Tournament;
-import alifec.core.contest.tournament.battles.BattleManager;
-import alifec.core.contest.tournament.battles.BattleRun;
+import alifec.core.contest.Tournament;
+import alifec.core.contest.BattleRun;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.simulation.Environment;
@@ -244,7 +243,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        Tournament last = father.getContest().getTournamentManager().lastElement();
+        Tournament last = father.getContest().lastElement();
         if (e.getSource().equals(save)) {
             Message.printErr(father, "Not Supported yet");
         } else if (e.getSource().equals(delete)) {
@@ -349,8 +348,7 @@ public class BattleUI extends JPanel implements ActionListener {
      * @return true if is successfully
      */
     private boolean addBattle(BattleRun b, boolean programmerMode) {
-        Tournament last = father.getContest().getTournamentManager().lastElement();
-        BattleManager bm = last.getBattleManager();
+        Tournament last = father.getContest().lastElement();
 
         boolean addOK = last.isEnabled(); // to be sure
 
@@ -362,7 +360,7 @@ public class BattleUI extends JPanel implements ActionListener {
             if (model.contains(b)) { // battle existing
                 addOK = false;
             }
-            if (bm.contain(b)) { // battle was run
+            if (last.contains(b)) { // battle was run
                 addOK = false;
             }
 
@@ -495,7 +493,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     private String getLastTournamentName() {
-        return contest.getTournamentManager().lastElement().getName();
+        return contest.lastElement().getName();
     }
 
     private boolean deleteBattlesFile() {
@@ -551,7 +549,7 @@ public class BattleUI extends JPanel implements ActionListener {
         runAll.setEnabled(b);
         addSelected.setEnabled(b);
         addAll.setEnabled(b);
-        father.getContest().getTournamentManager().lastElement().setEnabled(b);
+        father.getContest().lastElement().setEnabled(b);
     }
 }
 

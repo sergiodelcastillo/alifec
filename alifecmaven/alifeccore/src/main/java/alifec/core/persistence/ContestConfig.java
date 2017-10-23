@@ -224,17 +224,12 @@ public class ContestConfig {
         if (contestName.isEmpty()) {
             throw new ConfigFileException("The contest name is an empty string.", this);
         }
-        try {
-            File f = new File(path);
-            if (!f.exists())
-                throw new ConfigFileException("The contest path folder does not exists: " + f.getCanonicalPath(), this);
 
-            f = new File(path + File.separator + contestName);
-            if (!f.exists())
-                throw new ConfigFileException("The contest name folder does not exists: " + f.getCanonicalPath(), this);
-        } catch (IOException ex) {
-            throw new ConfigFileException("The contest path or contest name does not exists.", this);
-        }
+        if (!Files.isDirectory(Paths.get(path)))
+            throw new ConfigFileException("The contest path folder does not exists: " + path, this);
+
+        if (!Files.isDirectory(Paths.get(path + File.separator + contestName)))
+            throw new ConfigFileException("The contest name folder does not exists: " + path + File.separator + contestName, this);
 
         if (nutrients.isEmpty()) {
             throw new ConfigFileException("Please specify one or more distribution of nutrients.", this);
@@ -253,8 +248,8 @@ public class ContestConfig {
         switch (type) {
             case PROPERTY_PATH_KEY:
                 try {
-                    path = new File(option).getCanonicalPath();
-                } catch (IOException ex) {
+                    path = Paths.get(option).normalize().toAbsolutePath().toString();
+                } catch (Exception ex) {
                     logger.error(ex.getMessage(), ex);
                     return false;
                 }
@@ -372,7 +367,7 @@ public class ContestConfig {
     }
 
     public static boolean existsConfigFile(String path) {
-        return new File(getConfigFilePath(path)).exists();
+        return Files.isRegularFile(Paths.get(getConfigFilePath(path)));
     }
 
 
@@ -445,19 +440,6 @@ public class ContestConfig {
     }
 
 
-    public File getCompilationLogFile(String javaFile) throws IOException {
-        String logFolderPath = getLogFolder();
-        File logFolder = new File(logFolderPath);
-        if (!logFolder.exists()) {
-            if (!logFolder.mkdir())
-                throw new IOException("Error while creating folder: " + logFolder);
-        }
-
-        String compilationFile = logFolderPath + File.separator + getLogFileName(javaFile);
-
-        return new File(compilationFile);
-    }
-
     public String getLogFileName(String javaFile) {
         return String.format(COMPILATION_LOG_FILENAME,
                 javaFile.replace(".java", ""),
@@ -521,9 +503,13 @@ public class ContestConfig {
 
 
     public static boolean removeConfigFile(String path) {
-        File config = new File(getConfigFilePath(path));
-
-        return config.delete();
+        try {
+            Files.delete(Paths.get(getConfigFilePath(path)));
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            return false;
+        }
+        return true;
     }
 
     public static Integer[] getDefaultNutrients() {
@@ -543,6 +529,6 @@ public class ContestConfig {
     }
 
     public String getCompilerConfigFile() {
-        return getBaseAppFolder(path) + File.separator + COMPILER_CONFIG_FILE ;
+        return getBaseAppFolder(path) + File.separator + COMPILER_CONFIG_FILE;
     }
 }

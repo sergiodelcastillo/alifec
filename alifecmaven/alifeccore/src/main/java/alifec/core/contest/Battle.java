@@ -1,4 +1,4 @@
-package alifec.core.contest.tournament.battles;
+package alifec.core.contest;
 
 import java.io.*;
 

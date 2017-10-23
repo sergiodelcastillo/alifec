@@ -1,6 +1,6 @@
 package alifec.core.persistence;
 
-import alifec.core.contest.tournament.battles.Battle;
+import alifec.core.contest.Battle;
 
 import java.util.List;
 

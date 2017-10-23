@@ -1,21 +1,18 @@
 package alifec;
 
-import alifec.core.contest.Contest;
-import alifec.core.contest.tournament.battles.BattleRun;
+import alifec.core.contest.BattleRun;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateBattleException;
+import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.ContestConfig;
 import alifec.core.persistence.ContestHelper;
-import alifec.core.exception.CreateContestFolderException;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -35,20 +32,20 @@ public class ParentTest {
     public static String TEST_ROOT_PATH = ROOT_PATH + File.separator + "alifectests";
 
     @Before
-    public void init() {
-        File rootDir = new File(TEST_ROOT_PATH);
+    public void init() throws IOException {
+        Path rootDir = Paths.get(TEST_ROOT_PATH);
 
         //ensure that the root dir exists
-        if (!rootDir.exists()) {
-            Assert.assertTrue(rootDir.mkdir());
+        if (Files.notExists(rootDir)) {
+            Files.createDirectory(rootDir);
         }
     }
 
     @After
     public void cleanup() throws IOException {
-        File rootDir = new File(TEST_ROOT_PATH);
+        Path rootDir = Paths.get(TEST_ROOT_PATH);
 
-        if (rootDir.exists()) {
+        if (Files.exists(rootDir)) {
             Path dirPath = Paths.get(TEST_ROOT_PATH);
 
             Files.walk(dirPath, FileVisitOption.FOLLOW_LINKS)
@@ -72,34 +69,33 @@ public class ParentTest {
 
         createContest(config);
 
-        File baseFolder = new File(config.getBaseAppFolder());
+        Path basePath = Paths.get(config.getBaseAppFolder());
 
-        if (!baseFolder.exists())
-            Assert.assertTrue(baseFolder.mkdirs());
+        if (Files.notExists(basePath))
+            Files.createDirectory(basePath);
 
         config.save();
         return config;
-
     }
 
     protected void createContest(ContestConfig config) throws IOException, CreateContestFolderException, URISyntaxException {
-        File cppResources = new File(ParentTest.class.getClass().getResource("/app/cpp/").toURI());
-        File examplesResources = new File(ParentTest.class.getClass().getResource("/app/examples/").toURI());
+        Path cppResources = Paths.get(ParentTest.class.getClass().getResource("/app/cpp/").toURI());
+        Path examplesResources = Paths.get(ParentTest.class.getClass().getResource("/app/examples/").toURI());
 
         ContestHelper.buildNewContestFolder(config, true, cppResources, examplesResources);
 
         //the app folder can exists if this method was already called.
         // The app folder is not contest folder dependent so it have to be created only the first time.
         //create the app folder
-        File app = new File(config.getBaseAppFolder());
-        if (!app.exists())
-            Assert.assertTrue(app.mkdir());
+        Path app = Paths.get(config.getBaseAppFolder());
+        if (Files.notExists(app))
+            Files.createDirectory(app);
 
         //create the file compiler.properties
-        File compilerProperties = new File(config.getCompilerConfigFile());
-        if (!compilerProperties.exists()) {
-            URI compilerConfigFile = ParentTest.class.getClass().getResource("/app/compiler.properties").toURI();
-            Files.copy(new File(compilerConfigFile).toPath(), compilerProperties.toPath());
+        Path compilerProperties = Paths.get(config.getCompilerConfigFile());
+        if (Files.notExists(compilerProperties)) {
+            Path compilerConfigFile = Paths.get(ParentTest.class.getClass().getResource("/app/compiler.properties").toURI());
+            Files.copy(compilerConfigFile, compilerProperties);
         }
     }
 
