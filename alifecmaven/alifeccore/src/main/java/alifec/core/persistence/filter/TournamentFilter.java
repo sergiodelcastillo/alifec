@@ -1,7 +1,7 @@
 
 package alifec.core.persistence.filter;
 
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -1,6 +1,7 @@
 package alifec.core.persistence;
 
 import alifec.core.exception.ZipParsingException;
+import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -44,14 +44,14 @@ public class Battle {
     /**
      * @return name of first colony
      */
-    public String getName_1() {
+    public String getFirstColony() {
         return name_1;
     }
 
     /**
      * @return name of second colony
      */
-    public String getName_2() {
+    public String getSecondColony() {
         return name_2;
     }
 

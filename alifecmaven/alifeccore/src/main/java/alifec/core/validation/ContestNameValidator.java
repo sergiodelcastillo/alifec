@@ -1,6 +1,6 @@
 package alifec.core.validation;
 
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

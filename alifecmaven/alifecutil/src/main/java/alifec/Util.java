@@ -2,7 +2,7 @@ package alifec;
 
 import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.ConfigFileException;
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

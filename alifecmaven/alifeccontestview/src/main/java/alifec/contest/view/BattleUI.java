@@ -6,7 +6,7 @@ import alifec.core.contest.Contest;
 import alifec.core.contest.Tournament;
 import alifec.core.contest.BattleRun;
 import alifec.core.exception.CreateBattleException;
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;

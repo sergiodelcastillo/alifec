@@ -3,17 +3,12 @@ package alifec.core.simulation.rules;
 import alifec.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.*;
 
-import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.function.FamineFunction;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Arrays;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Sergio Del Castillo on 14/10/17.

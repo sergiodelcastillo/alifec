@@ -3,6 +3,7 @@ package alifec.core.persistence;
 import alifec.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
+import alifec.core.persistence.config.ContestConfig;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,8 +11,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**

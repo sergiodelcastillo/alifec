@@ -2,8 +2,8 @@ package alifec.core.compilation;
 
 import alifec.core.exception.CompileConfigException;
 import alifec.core.exception.CompilerException;
-import alifec.core.persistence.CompileConfig;
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.CompileConfig;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.filter.SourceCodeFilter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

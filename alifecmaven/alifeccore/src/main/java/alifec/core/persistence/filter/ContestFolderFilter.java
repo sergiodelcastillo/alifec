@@ -1,13 +1,8 @@
 package alifec.core.persistence.filter;
 
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.validation.ContestNameValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import javax.swing.filechooser.FileFilter;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

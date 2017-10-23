@@ -2,6 +2,7 @@ package alifec.core.persistence;
 
 import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.TournamentCorruptedException;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.filter.TournamentFilter;
 import org.apache.logging.log4j.LogManager;
 
@@ -20,8 +21,8 @@ import java.util.List;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class TournamentHelper {
-    static org.apache.logging.log4j.Logger logger = LogManager.getLogger(TournamentHelper.class);
+public class TournamentFileManager {
+    static org.apache.logging.log4j.Logger logger = LogManager.getLogger(TournamentFileManager.class);
 
     public static List<String> listTournaments(String path) throws IOException {
         List<String> result = new ArrayList<>();
@@ -51,7 +52,7 @@ public class TournamentHelper {
 
         List<String> tournaments = null;
         try {
-            tournaments = TournamentHelper.listTournaments(config.getContestPath());
+            tournaments = TournamentFileManager.listTournaments(config.getContestPath());
         } catch (IOException e) {
             throw  new TournamentCorruptedException("The tournament list can not be loaded.", e);
         }

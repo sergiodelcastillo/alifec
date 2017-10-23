@@ -1,6 +1,6 @@
 package alifec.core.contest.oponentInfo;
 
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

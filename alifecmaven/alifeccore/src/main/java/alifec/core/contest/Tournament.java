@@ -3,7 +3,7 @@ package alifec.core.contest;
 
 import alifec.core.exception.CreateBattleException;
 import alifec.core.exception.CreateRankingException;
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -221,10 +221,10 @@ public class Tournament implements Comparable<Tournament> {
 
         //add from battles
         for (Battle b : battles) {
-            if (!names.contains(b.getName_1()))
-                names.add(b.getName_1());
-            if (!names.contains(b.getName_2()))
-                names.add(b.getName_2());
+            if (!names.contains(b.getFirstColony()))
+                names.add(b.getFirstColony());
+            if (!names.contains(b.getSecondColony()))
+                names.add(b.getSecondColony());
         }
 
         //add from colonies
@@ -292,10 +292,10 @@ public class Tournament implements Comparable<Tournament> {
     public boolean contains(BattleRun br) {
         for (Battle b : this.battles) {
             if (b.getNutrient().equalsIgnoreCase(br.nutrient) &&
-                    ((b.getName_1().equalsIgnoreCase(br.name1) &&
-                            b.getName_2().equalsIgnoreCase(br.name2)) ||
-                            (b.getName_1().equalsIgnoreCase(br.name2) &&
-                                    b.getName_2().equalsIgnoreCase(br.name1))))
+                    ((b.getFirstColony().equalsIgnoreCase(br.name1) &&
+                            b.getSecondColony().equalsIgnoreCase(br.name2)) ||
+                            (b.getFirstColony().equalsIgnoreCase(br.name2) &&
+                                    b.getSecondColony().equalsIgnoreCase(br.name1))))
                 return true;
         }
         return false;

@@ -1,31 +1,27 @@
 package alifec.core.persistence;
 
-import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
-import alifec.core.exception.TournamentCorruptedException;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.filter.ContestFolderFilter;
-import alifec.core.persistence.filter.TournamentFilter;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Created by Sergio Del Castillo on 06/08/17.
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestHelper {
+public class ContestFileManager {
 
-    static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestHelper.class);
+    static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestFileManager.class);
 
 
 
@@ -44,10 +40,6 @@ public class ContestHelper {
 
         return result;
     }
-
-
-
-
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
         Path cppResources = Paths.get("app/cpp/");

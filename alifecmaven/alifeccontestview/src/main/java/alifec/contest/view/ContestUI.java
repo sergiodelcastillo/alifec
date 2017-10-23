@@ -6,9 +6,9 @@ import alifec.core.compilation.CompileHelper;
 import alifec.core.contest.Contest;
 import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.*;
-import alifec.core.persistence.ContestConfig;
-import alifec.core.persistence.ContestHelper;
-import alifec.core.persistence.TournamentHelper;
+import alifec.core.persistence.config.ContestConfig;
+import alifec.core.persistence.ContestFileManager;
+import alifec.core.persistence.TournamentFileManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -126,7 +126,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
         try {
             if (config == null) {
-                java.util.List<String> list = ContestHelper.listContest(path);
+                java.util.List<String> list = ContestFileManager.listContest(path);
 
                 if (list.isEmpty()) {
                     config = createNewContest(null);
@@ -171,7 +171,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
             makeDefault = dialogNewContest.isMakeDefault();
 
-            ContestHelper.buildNewContestFolder(config, dialogNewContest.isCreateExamples());
+            ContestFileManager.buildNewContestFolder(config, dialogNewContest.isCreateExamples());
 
             if (makeDefault) {
                 boolean status = setDefaultContest(config);
@@ -207,7 +207,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
         try {
             //load everything
-            UnsuccessfulColonies uColonies = TournamentHelper.findFinishedUnsuccessful(config);
+            UnsuccessfulColonies uColonies = TournamentFileManager.findFinishedUnsuccessful(config);
 
             if (uColonies.isUnsuccessful()) {
                 UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, uColonies.getColonyA(), uColonies.getColonyB());
@@ -226,7 +226,7 @@ public class ContestUI extends JFrame implements ActionListener {
             }
 
             //delete backup file
-            TournamentHelper.deleteBattleBackupFile(config, uColonies);
+            TournamentFileManager.deleteBattleBackupFile(config, uColonies);
 
         } catch (TournamentCorruptedException e) {
             //TODO: ver que mostrar acá.

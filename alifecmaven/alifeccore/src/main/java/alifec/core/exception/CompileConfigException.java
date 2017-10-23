@@ -1,6 +1,6 @@
 package alifec.core.exception;
 
-import alifec.core.persistence.CompileConfig;
+import alifec.core.persistence.config.CompileConfig;
 
 
 /**

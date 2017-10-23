@@ -3,7 +3,7 @@ package alifec.core.persistence.filter;
 import alifec.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -3,7 +3,7 @@ package alifec.core.simulation;
 import alifec.core.contest.BattleRun;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.NutrientException;
-import alifec.core.persistence.ContestConfig;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.filter.SourceCodeFilter;
 import alifec.core.simulation.rules.*;
 import org.apache.logging.log4j.LogManager;

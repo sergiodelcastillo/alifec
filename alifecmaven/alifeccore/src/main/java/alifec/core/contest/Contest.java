@@ -5,8 +5,8 @@ import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.contest.oponentInfo.OpponentInfoManager;
 import alifec.core.contest.oponentInfo.OpponentReportLine;
 import alifec.core.exception.*;
-import alifec.core.persistence.ContestConfig;
-import alifec.core.persistence.TournamentHelper;
+import alifec.core.persistence.config.ContestConfig;
+import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.ZipHelper;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
@@ -53,7 +53,7 @@ public class Contest {
             environment = new Environment(config);
             tournamentList = new ArrayList<>();
 
-            for (String name : TournamentHelper.listTournaments(config.getContestPath())) {
+            for (String name : TournamentFileManager.listTournaments(config.getContestPath())) {
                 Tournament t = new Tournament(config, name);
 
                 if (t.read())

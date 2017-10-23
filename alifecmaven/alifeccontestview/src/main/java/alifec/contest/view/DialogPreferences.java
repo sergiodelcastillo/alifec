@@ -2,7 +2,7 @@ package alifec.contest.view;
 
 import alifec.core.contest.Contest;
 import alifec.core.exception.ConfigFileException;
-import alifec.core.persistence.ContestHelper;
+import alifec.core.persistence.ContestFileManager;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.validation.ContestNameValidator;
@@ -304,7 +304,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
                 }
             }
 
-            ContestHelper.updateNutrient(contest.getConfig(), nutrientsIds);
+            ContestFileManager.updateNutrient(contest.getConfig(), nutrientsIds);
         } catch (ConfigFileException  ex) {
             logger.error(ex.getMessage(), ex);
             return false;

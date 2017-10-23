@@ -4,8 +4,8 @@ import alifec.core.contest.BattleRun;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.exception.CreateContestFolderException;
-import alifec.core.persistence.ContestConfig;
-import alifec.core.persistence.ContestHelper;
+import alifec.core.persistence.config.ContestConfig;
+import alifec.core.persistence.ContestFileManager;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
 import org.junit.After;
@@ -82,7 +82,7 @@ public class ParentTest {
         Path cppResources = Paths.get(ParentTest.class.getClass().getResource("/app/cpp/").toURI());
         Path examplesResources = Paths.get(ParentTest.class.getClass().getResource("/app/examples/").toURI());
 
-        ContestHelper.buildNewContestFolder(config, true, cppResources, examplesResources);
+        ContestFileManager.buildNewContestFolder(config, true, cppResources, examplesResources);
 
         //the app folder can exists if this method was already called.
         // The app folder is not contest folder dependent so it have to be created only the first time.
