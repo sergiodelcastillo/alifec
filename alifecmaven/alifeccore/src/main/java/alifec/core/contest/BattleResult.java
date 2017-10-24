@@ -2,7 +2,7 @@ package alifec.core.contest;
 
 import alifec.core.exception.CreateBattleException;
 
-public class BattleResult {
+public class BattleResult implements Comparable<BattleResult>{
 
     public String nutrient;
     public String name1;
@@ -71,5 +71,18 @@ public class BattleResult {
     public void setWinner(int id, float energy){
         this.winnerID = id;
         this.winner_energy = energy;
+    }
+
+    @Override
+    public int compareTo(BattleResult o) {
+        int result = name1.compareTo(o.name1);
+
+        if (result != 0) return result;
+
+        result = name2.compareTo(o.name2);
+
+        if (result != 0) return result;
+
+        return nutrient.compareTo(o.nutrient);
     }
 }

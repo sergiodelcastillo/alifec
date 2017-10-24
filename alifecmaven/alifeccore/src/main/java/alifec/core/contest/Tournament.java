@@ -8,8 +8,6 @@ import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -215,21 +213,7 @@ public class Tournament implements Comparable<Tournament> {
 
     public boolean load() {
         try {
-            String path = config.getBattlesFile(name);
-
-            FileReader fr = new FileReader(path);
-            BufferedReader br = new BufferedReader(fr);
-            String line = "";
-
-            while (line != null) {
-                try {
-                    line = br.readLine();
-
-                    battles.add(new Battle(line));
-                } catch (IllegalArgumentException ex) {
-                    logger.error(ex.getMessage(), ex);
-                }
-            }
+            this.battles.addAll(persistence.readAll(config.getBattlesFile(name)));
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
             return false;
@@ -238,16 +222,7 @@ public class Tournament implements Comparable<Tournament> {
     }
 
     public void save() throws IOException {
-        //TODO: improve it. It should be delegated to persistence
-        Path path = Paths.get(config.getTournamentPath(name));
-
-        if (Files.notExists(path)) {
-            Files.createDirectory(path);
-        }
-
-        for (Battle b : battles) {
-            persistence.append(config.getBattlesFile(name), b);
-        }
+        persistence.saveAll(config.getBattlesFile(name), battles);
     }
 
     public boolean hasBackUpFile() {

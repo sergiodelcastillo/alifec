@@ -9,7 +9,7 @@ import java.io.*;
  *         <p>
  *         Contains de history of battles.
  */
-public class Battle {
+public class Battle implements Comparable<Battle> {
     private float energy_1;
     private float energy_2;
     private String name_1;
@@ -112,4 +112,16 @@ public class Battle {
         return hash;
     }
 
+    @Override
+    public int compareTo(Battle o) {
+        int result = name_1.compareTo(o.name_1);
+
+        if (result != 0) return result;
+
+        result = name_2.compareTo(o.name_2);
+
+        if (result != 0) return result;
+
+        return nutrient.compareTo(o.nutrient);
+    }
 }

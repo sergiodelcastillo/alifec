@@ -1,10 +1,13 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
+import alifec.core.contest.BattleResult;
 import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.TournamentCorruptedException;
+import alifec.core.persistence.collector.BattlesCollector;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.filter.TournamentFilter;
+import alifec.core.persistence.predicate.ExcludeBattlesPredicate;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
@@ -12,7 +15,6 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -166,7 +168,7 @@ public class TournamentFileManager {
     }
 
     public void append(String path, Battle battle) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), StandardOpenOption.APPEND)) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
             writer.write(battle.toString() + '\n');
         }
     }
@@ -186,23 +188,47 @@ public class TournamentFileManager {
         List<String> filteredList;
 
         try (Stream<String> stream = Files.lines(tempFile)) {
-            filteredList = stream.filter(s -> {
-                try {
-                    return !battles.contains(new Battle(s));
-                } catch (Exception ex) {
-                    logger.error(ex.getMessage(), ex);
-                    return false;
-                }
-            }).collect(Collectors.toList());
+            filteredList = stream
+                    .filter(new ExcludeBattlesPredicate(battles))
+                    .collect(Collectors.toList());
 
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             throw e;
         }
 
-        try (BufferedWriter writer = Files.newBufferedWriter(originalFile)) {
-            for(String line: filteredList) writer.write(line);
+        saveAll(originalFile, filteredList);
+
+        //clean temporal file
+        Files.delete(tempFile);
+    }
+
+    public void saveAll(String pathToFile, List<?> battles) throws IOException {
+        Path path = Paths.get(pathToFile);
+
+        saveAll(path, battles);
+    }
+
+    private void saveAll(Path path, List<?> battles) throws IOException {
+        if (Files.notExists(path.getParent())) {
+            Files.createDirectory(path.getParent());
+        }
+
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (Object line : battles) {
+                if (line instanceof BattleResult)
+                    writer.write(((BattleResult) line).toBattle().toString() + '\n');
+                else
+                    writer.write(line.toString() + '\n');
+            }
         }
     }
+
+    public List<Battle> readAll(String file) throws IOException {
+        Path path = Paths.get(file);
+
+        return Files.lines(path).collect(new BattlesCollector());
+    }
+
 
 }
