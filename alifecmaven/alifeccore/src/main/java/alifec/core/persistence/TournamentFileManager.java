@@ -66,7 +66,7 @@ public class TournamentFileManager {
 
         String lastTournament = Collections.max(tournaments);
 
-        String backupFilePath = config.getBattlesBackupFile(lastTournament);
+        String backupFilePath = config.getBattlesTargetRunFile(lastTournament);
         String battlesFilePath = config.getBattlesFile(lastTournament);
 
         //Check the existence of the backup file (battles_backup.csv file)
@@ -147,7 +147,7 @@ public class TournamentFileManager {
     }
 
     public static void deleteBattleBackupFile(ContestConfig config, UnsuccessfulColonies unsuccessful) {
-        Path backupFile = Paths.get(config.getBattlesBackupFile(unsuccessful.getTournament()));
+        Path backupFile = Paths.get(config.getBattlesTargetRunFile(unsuccessful.getTournament()));
 
         if (Files.exists(backupFile)) {
             try {
@@ -217,7 +217,7 @@ public class TournamentFileManager {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : battles) {
                 if (line instanceof BattleResult)
-                    writer.write(((BattleResult) line).toBattle().toString() + '\n');
+                    writer.write(((BattleResult) line).toCsv() + '\n');
                 else
                     writer.write(line.toString() + '\n');
             }
@@ -230,5 +230,11 @@ public class TournamentFileManager {
         return Files.lines(path).collect(new BattlesCollector());
     }
 
+    public void deleteFile(String file) throws IOException {
+        Files.deleteIfExists(Paths.get(file));
+    }
 
+    public boolean existsFile(String file) {
+        return Files.exists(Paths.get(file));
+    }
 }

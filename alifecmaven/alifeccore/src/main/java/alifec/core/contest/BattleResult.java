@@ -2,7 +2,7 @@ package alifec.core.contest;
 
 import alifec.core.exception.CreateBattleException;
 
-public class BattleResult implements Comparable<BattleResult>{
+public class BattleResult implements Comparable<BattleResult> {
 
     public String nutrient;
     public String name1;
@@ -40,9 +40,14 @@ public class BattleResult implements Comparable<BattleResult>{
 
     @Override
     public String toString() {
-        return name1.toUpperCase() +
-                " vs " + name2.toUpperCase() +
-                " in " + nutrient.toUpperCase();
+        StringBuilder builder = new StringBuilder(100);
+        builder.append(name1)
+                .append(" vs ")
+                .append(name2)
+                .append(" in ")
+                .append(nutrient);
+
+        return builder.toString();
     }
 
     @Override
@@ -64,11 +69,11 @@ public class BattleResult implements Comparable<BattleResult>{
         return hash;
     }
 
-    public Battle toBattle(){
+    public Battle toBattle() {
         return new Battle(this);
     }
 
-    public void setWinner(int id, float energy){
+    public void setWinner(int id, float energy) {
         this.winnerID = id;
         this.winner_energy = energy;
     }
@@ -84,5 +89,16 @@ public class BattleResult implements Comparable<BattleResult>{
         if (result != 0) return result;
 
         return nutrient.compareTo(o.nutrient);
+    }
+
+    public String toCsv() {
+        StringBuilder builder = new StringBuilder(100);
+        builder.append(name1)
+                .append(',')
+                .append(name2)
+                .append(',')
+                .append(nutrient);
+
+        return builder.toString();
     }
 }

@@ -1,7 +1,5 @@
 package alifec.core.contest;
 
-import java.io.*;
-
 
 /**
  * @author Sergio Del Castillo
@@ -15,14 +13,6 @@ public class Battle implements Comparable<Battle> {
     private String name_1;
     private String name_2;
     private String nutrient;
-
-    public Battle(String n1, String n2, String nut, float ene1, float ene2) {
-        name_1 = n1;
-        name_2 = n2;
-        nutrient = nut;
-        energy_1 = ene1;
-        energy_2 = ene2;
-    }
 
     public Battle(String line) {
         if (line == null || line.isEmpty())
@@ -77,7 +67,6 @@ public class Battle implements Comparable<Battle> {
     public String getWinnerName() {
         return (energy_1 > 0) ? name_1 : name_2;
     }
-
 
     @Override
     public boolean equals(Object o) {

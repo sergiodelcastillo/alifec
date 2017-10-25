@@ -52,13 +52,13 @@ public class TournamentPanelOpponentUI extends JPanel implements ListCellRendere
         label.setText(l.getName());
         label.setAlignmentX(JLabel.LEFT_ALIGNMENT);
 
+        try {
         progressbar.setValue(l.getValue());
         progressbar.setString("" + l.getValue());
         progressbar.setStringPainted(true);
         progressbar.setMaximum((int) l.getMax());
-        try {
             progressbar.updateUI();
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             logger.trace(ex.getMessage(), ex);
 
         }

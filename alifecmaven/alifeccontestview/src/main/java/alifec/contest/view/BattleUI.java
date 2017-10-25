@@ -17,12 +17,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 import java.util.List;
 
 public class BattleUI extends JPanel implements ActionListener {
+    enum RunOption {
+        ALL,
+        SELECTED;
+    }
+
     private static final long serialVersionUID = 0L;
 
     private static Logger logger = LogManager.getLogger(BattleUI.class);
@@ -64,10 +67,10 @@ public class BattleUI extends JPanel implements ActionListener {
         if (restore) {
             String lastTournament = getLastTournamentName();
             List<String[]> battles = readBattles(config.getBattlesFile(lastTournament));
-            List<String[]> backup = readBattles(config.getBattlesBackupFile(lastTournament));
+            List<String[]> backup = readBattles(config.getBattlesTargetRunFile(lastTournament));
 
             validate(battles, backup);
-            restoreBattles(backup, config.getBattlesBackupFile(lastTournament));
+            restoreBattles(backup, config.getBattlesTargetRunFile(lastTournament));
         }
     }
 
@@ -275,11 +278,11 @@ public class BattleUI extends JPanel implements ActionListener {
                 final DefaultListModel<BattleResult> model_tmp = new DefaultListModel<>();
                 model_tmp.addElement(battlesList.getSelectedValue());
 
-                createBattlesFileSelected();
+                createTargetRunFile(RunOption.SELECTED);
                 //
                 new GUIdosD(father, model_tmp);
 
-                deleteBattlesFile();
+                deleteTargetRunFile();
                 remove(battlesList.getSelectedValue());
 
                 if (battlesList.getSelectedIndex() >= model.size())
@@ -294,9 +297,9 @@ public class BattleUI extends JPanel implements ActionListener {
                 Message.printErr(father, "You must create a battle.");
             } else {
                 father.setMessage("Running All Battles");
-                createBattlesFileAll();
+                createTargetRunFile(RunOption.ALL);
                 new GUIdosD(father, model);
-                deleteBattlesFile();
+                deleteTargetRunFile();
                 father.setMessage("Ok");
             }
 
@@ -466,75 +469,48 @@ public class BattleUI extends JPanel implements ActionListener {
         battlesSP.updateUI();
     }
 
-    private void createBattlesFileSelected() {
+    private void createTargetRunFile(RunOption mode) {
         if (config.isProgrammerMode()) return;
-//TODO: ver en todos lados se llama battle_backup.
-        String backupFile = getLastTournamentBattlesBackupFile();
 
         try {
-            FileWriter fr = new FileWriter(backupFile);
-            PrintWriter pw = new PrintWriter(fr);
-            String line = battlesList.getSelectedValue().toString();
-            line = line.replace(" vs ", ",");
-            line = line.replace(" in ", ",");
-            pw.println(line);
-            pw.close();
+            switch (mode){
+                case ALL:
+                contest.lastTournament().saveTargetRun(Collections.list(model.elements()));
+                    break;
+                case SELECTED:
+                contest.lastTournament().saveTargetRun(battlesList.getSelectedValuesList());
+                    break;
+            }
 
-            logger.info("Creating back up [OK]");
+            logger.info("Creating target run file [OK]");
 
         } catch (IOException ex) {
-            logger.error("Creating back up [FAIL]", ex);
+            logger.error("Creating back up [FAIL]");
+            logger.error(ex.getMessage(), ex);
         }
 
     }
 
-    private String getLastTournamentBattlesBackupFile() {
-        return config.getBattlesBackupFile(getLastTournamentName());
+    private String getLastTournamentTargetRunFile() {
+        return config.getBattlesTargetRunFile(getLastTournamentName());
     }
 
     private String getLastTournamentName() {
         return contest.lastTournament().getName();
     }
 
-    private boolean deleteBattlesFile() {
-        if (config.isProgrammerMode()) return true;
-
-//TODO: ver en todos lados se llama battle_backup.
-        if (new File(getLastTournamentBattlesBackupFile()).delete()) {
-            logger.info("Removing back up [OK]");
-            return true;
-        } else {
-            logger.warn("Removing back up [FAIL]");
-            return false;
-        }
-    }
-
-    private void createBattlesFileAll() {
-        if (config.isProgrammerMode()) return;
-
-        //TODO: ver en todos lados se llama battle_backup.
-        String backupFile = getLastTournamentBattlesBackupFile();
-
-
+    private void deleteTargetRunFile() {
         try {
-            String line;
-            FileWriter fr = new FileWriter(backupFile);
-            PrintWriter pw = new PrintWriter(fr);
-
-            for (int i = 0; i < model.getSize(); i++) {
-                line = model.getElementAt(i).toString();
-                line = line.replace(" vs ", ",");
-                line = line.replace(" in ", ",");
-                pw.println(line);
+            if (config.isProgrammerMode()) {
+                contest.lastTournament().deleteTargetRunFile();
+                logger.info("Removing target run file [OK]");
             }
-
-            pw.close();
-            logger.info("Creating back up [OK]");
-
-        } catch (IOException ex) {
-            logger.error("Creating back up [FAIL]", ex);
+        } catch (Throwable t) {
+            logger.warn("Removing target run file [FAIL]");
+            logger.error(t.getMessage(), t);
         }
     }
+
 
     public void setEnabled(boolean b) {
         battlesList.setEnabled(b);

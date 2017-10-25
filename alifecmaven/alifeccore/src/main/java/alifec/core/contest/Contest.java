@@ -334,7 +334,7 @@ public class Contest {
     }
 
     public boolean needRestore() {
-        return tournaments.size() != 0 && lastTournament().hasBackUpFile();
+        return tournaments.size() != 0 && lastTournament().existsTargetRunFile();
     }
 
     public String getPath() {

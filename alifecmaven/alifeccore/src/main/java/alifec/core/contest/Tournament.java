@@ -225,9 +225,6 @@ public class Tournament implements Comparable<Tournament> {
         persistence.saveAll(config.getBattlesFile(name), battles);
     }
 
-    public boolean hasBackUpFile() {
-        return Files.exists(Paths.get(config.getBattlesBackupFile(name)));
-    }
 
     public void setEnabled(boolean b) {
         isEnabled = b;
@@ -255,4 +252,15 @@ public class Tournament implements Comparable<Tournament> {
         return false;
     }
 
+    public void deleteTargetRunFile() throws IOException {
+        persistence.deleteFile(config.getBattlesTargetRunFile(name));
+    }
+
+    public void saveTargetRun(List<BattleResult> battles) throws IOException {
+        persistence.saveAll(config.getBattlesTargetRunFile(name), battles);
+    }
+
+    public boolean existsTargetRunFile() {
+        return persistence.existsFile(config.getBattlesTargetRunFile(name));
+    }
 }
