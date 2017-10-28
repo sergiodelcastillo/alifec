@@ -1,6 +1,7 @@
 package alifec.core.persistence.custom;
 
 import alifec.core.contest.oponentInfo.OpponentInfo;
+import alifec.core.exception.OpponentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +17,12 @@ public class OpponentFunction implements Function<String, OpponentInfo> {
 
     @Override
     public OpponentInfo apply(String s) {
-        return new OpponentInfo(s);
+        try {
+            return new OpponentInfo(s);
+        } catch (OpponentException e) {
+            logger.error(e.getMessage(), e);
+        }
+        //shouldn't happen.
+        return null;
     }
 }

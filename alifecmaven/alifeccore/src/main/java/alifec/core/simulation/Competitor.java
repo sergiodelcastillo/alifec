@@ -1,6 +1,7 @@
 package alifec.core.simulation;
 
 import alifec.core.contest.oponentInfo.OpponentInfo;
+import alifec.core.exception.OpponentException;
 
 /**
  * Created by Sergio Del Castillo on 28/10/17.
@@ -12,7 +13,7 @@ public class Competitor {
     private final int index;
     private OpponentInfo info;
 
-    public Competitor(int i, String name, String author, String affiliation) {
+    public Competitor(int i, String name, String author, String affiliation) throws OpponentException {
         this.index = i;
         this.info = new OpponentInfo(name, author, affiliation);
     }

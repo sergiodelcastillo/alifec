@@ -1,5 +1,10 @@
 package alifec.core.contest.oponentInfo;
 
+import alifec.core.exception.OpponentException;
+import alifec.core.exception.ValidationException;
+import alifec.core.validation.OpponentInfoLineValidator;
+import alifec.core.validation.OpponentInfoValidator;
+
 import java.util.Objects;
 
 public class OpponentInfo {
@@ -7,24 +12,42 @@ public class OpponentInfo {
     private final String author;
     private final String affiliation;
 
-    public OpponentInfo(String n, String au, String af) {
+    public OpponentInfo(String n, String au, String af) throws OpponentException {
         this.name = n;
         this.author = au;
         this.affiliation = af;
+        try {
+            checkOpponentInfo(this);
+        } catch (Throwable t) {
+            throw new OpponentException(t.getMessage(), t);
+        }
     }
 
-    public OpponentInfo(String line) {
-        if (line == null || line.isEmpty())
-            throw new IllegalArgumentException("The line is empty.");
+    public OpponentInfo(String line) throws OpponentException {
+        try {
+            checkLineFromCSV(line);
 
-        String[] info = line.trim().split(",");
+            String[] info = line.trim().split(",");
 
-        if (info.length != 3)
-            throw new IllegalArgumentException("The line does not have the expected pattern.");
+            name = info[0];
+            author = info[1];
+            affiliation = info[2];
+            checkOpponentInfo(this);
+        } catch (Throwable t) {
+            throw new OpponentException(t.getMessage(), t);
+        }
+    }
 
-        name = info[0];
-        author = info[1];
-        affiliation = info[2];
+    private void checkOpponentInfo(OpponentInfo info) throws ValidationException {
+        OpponentInfoValidator validator = new OpponentInfoValidator();
+
+        validator.validate(info);
+    }
+
+    private void checkLineFromCSV(String line) throws ValidationException {
+        OpponentInfoLineValidator validator = new OpponentInfoLineValidator();
+
+        validator.validate(line);
     }
 
     public String getAffiliation() {

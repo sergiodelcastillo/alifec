@@ -4,6 +4,7 @@ import alifec.core.contest.Battle;
 import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.NutrientException;
+import alifec.core.exception.OpponentException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.filter.SourceCodeFilter;
 import alifec.core.simulation.rules.*;
@@ -299,13 +300,16 @@ public class Environment {
     }
 
 
-
     public List<Competitor> getCompetitors() {
         List<Competitor> list = new ArrayList<>();
 
         for (int i = 0, coloniesSize = colonies.size(); i < coloniesSize; i++) {
             Colony c = colonies.get(i);
-            list.add(new Competitor(i, c.getName(), c.getAuthor(), c.getAffiliation()));
+            try {
+                list.add(new Competitor(i, c.getName(), c.getAuthor(), c.getAffiliation()));
+            } catch (OpponentException e) {
+                logger.error(e.getMessage(), e);
+            }
         }
 
         return list;
