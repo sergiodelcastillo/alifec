@@ -22,9 +22,7 @@ public class Tournament implements Comparable<Tournament> {
     private Logger logger = LogManager.getLogger(getClass());
 
     private List<Battle> battles;
-    /**
-     * Colonies that have not competed!
-     */
+
     private List<String> colonies;
 
     private final String name;
@@ -41,14 +39,16 @@ public class Tournament implements Comparable<Tournament> {
 
         this.battles = new ArrayList<>();
         this.colonies = new ArrayList<>();
-        this.persistence = new TournamentFileManager();
 
-        if (config.isCompetitionMode()) {
-            try {
-                persistence.createFileAndPathIfNotExists(config.getBattlesFile(this.name));
-            } catch (IOException e) {
-                throw new TournamentException("Can not create the file: " + name, e);
+        try {
+            this.persistence = new TournamentFileManager(config.getBattlesFile(name),config.isCompetitionMode());
+
+            if (config.isCompetitionMode()) {
+                //load battles
+                loadAllBattles();
             }
+        } catch (IOException e) {
+            throw new TournamentException("Can not create the file: " + name, e);
         }
     }
 
@@ -58,25 +58,27 @@ public class Tournament implements Comparable<Tournament> {
     public float getMaxEnergy() {
         Collection<Float> values = getAccumulatedEnergy().values();
 
-        return values.isEmpty() ? 0f : max(values);
+        return values.isEmpty() ? 0f : Collections.max(values);
     }
 
-    public int size() {
-        return battles.size();
+    public List<Battle> getBattles() {
+        return battles;
     }
 
-    public void addColony(String c) {
-        if (!colonies.contains(c))
-            colonies.add(c);
-    }
-
-    public boolean addResult(Battle battle) {
+    public boolean addBattle(Battle battle) {
         try {
             if (config.isCompetitionMode()) {
-                persistence.append(config.getBattlesFile(name), battle);
+                persistence.append(battle);
             }
 
             battles.add(battle);
+
+            if (!colonies.contains(battle.getFirstColony()))
+                colonies.add(battle.getFirstColony());
+
+            if (!colonies.contains(battle.getSecondColony()))
+                colonies.add(battle.getSecondColony());
+
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
             return false;
@@ -93,7 +95,7 @@ public class Tournament implements Comparable<Tournament> {
                 if (b.contain(name)) toDelete.add(b);
             }
 
-            persistence.delete(config.getBattlesFile(this.name), toDelete);
+            persistence.deleteFromBattlesFile(toDelete);
             battles.removeAll(toDelete);
             colonies.remove(name);
 
@@ -187,38 +189,24 @@ public class Tournament implements Comparable<Tournament> {
 
 
     public List<String> getColonyNames() {
-        List<String> names = new ArrayList<>();
-
-        //add from battles
-        for (Battle b : battles) {
-            if (!names.contains(b.getFirstColony()))
-                names.add(b.getFirstColony());
-            if (!names.contains(b.getSecondColony()))
-                names.add(b.getSecondColony());
-        }
-
-        //add from colonies
-        for (String c : colonies)
-            if (!names.contains(c))
-                names.add(c);
-
-        return names;
+        return colonies;
     }
 
-    public boolean load() {
-        try {
-            this.battles.addAll(persistence.readAll(config.getBattlesFile(name)));
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-            return false;
+    public void loadAllBattles() throws IOException {
+        this.battles.addAll(persistence.readAll());
+
+        for (Battle battle : battles) {
+            if (!colonies.contains(battle.getFirstColony()))
+                colonies.add(battle.getFirstColony());
+
+            if (!colonies.contains(battle.getSecondColony()))
+                colonies.add(battle.getSecondColony());
         }
-        return true;
     }
 
     public void save() throws IOException {
-        persistence.saveAll(config.getBattlesFile(name), battles);
+        persistence.saveAll(battles);
     }
-
 
     public void setEnabled(boolean b) {
         isEnabled = b;
@@ -260,7 +248,7 @@ public class Tournament implements Comparable<Tournament> {
 
         for (int i = 0, competitorsSize = competitors.size(); i < competitorsSize; i++) {
             Competitor c1 = competitors.get(i);
-            for (int i1 = i+1, competitorsSize1 = competitors.size(); i1 < competitorsSize1; i1++) {
+            for (int i1 = i + 1, competitorsSize1 = competitors.size(); i1 < competitorsSize1; i1++) {
                 Competitor c2 = competitors.get(i1);
                 for (NutrientDistribution n : nutrients) {
                     try {

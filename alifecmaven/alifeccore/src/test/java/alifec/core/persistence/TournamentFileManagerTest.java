@@ -26,13 +26,13 @@ public class TournamentFileManagerTest extends ParentTest {
     public void testAppend() throws BattleException, IOException {
         List<Battle> list = battleDataSet();
 
-        TournamentFileManager manager = new TournamentFileManager();
         String path = TEST_ROOT_PATH + File.separator + "battles.csv";
+        TournamentFileManager manager = new TournamentFileManager(path, true);
 
         for (Battle b : list)
-            manager.append(path, b);
+            manager.append(b);
 
-        List<Battle> result = manager.readAll(path);
+        List<Battle> result = manager.readAll();
 
         Collections.sort(list);
         Collections.sort(result);
@@ -48,8 +48,8 @@ public class TournamentFileManagerTest extends ParentTest {
     public void testSave() throws BattleException, IOException {
         List<Battle> list = battleDataSet();
 
-        TournamentFileManager manager = new TournamentFileManager();
         String path = TEST_ROOT_PATH + File.separator + "battles.csv";
+        TournamentFileManager manager = new TournamentFileManager(path, true);
 
         manager.saveAll(path, list);
 
@@ -69,14 +69,14 @@ public class TournamentFileManagerTest extends ParentTest {
     public void testDelete() throws BattleException, IOException {
         List<Battle> list = battleDataSet();
 
-        TournamentFileManager manager = new TournamentFileManager();
         String path = TEST_ROOT_PATH + File.separator + "battles.csv";
+        TournamentFileManager manager = new TournamentFileManager(path, true);
 
-        //delete all
+        //deleteFromBattlesFile all
         manager.saveAll(path, list);
 
         List<Battle> result = manager.readAll(path);
-        manager.delete(path, result);
+        manager.deleteFromBattlesFile(result);
 
         //add lines which are not allowed so should be ignored.
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path))) {
@@ -89,24 +89,24 @@ public class TournamentFileManagerTest extends ParentTest {
 
         Assert.assertEquals(0, result.size());
 
-        //delete the first
+        //deleteFromBattlesFile the first
          manager.saveAll(path, list.subList(0, 2));
-        manager.delete(path, Arrays.asList(list.get(0)));
+        manager.deleteFromBattlesFile(Arrays.asList(list.get(0)));
         result = manager.readAll(path);
         Assert.assertEquals(1, result.size());
         Assert.assertEquals(list.get(1), result.get(0));
 
-        //delete in the middle, the first and the last
+        //deleteFromBattlesFile in the middle, the first and the last
         manager.saveAll(path, list.subList(0, 5));
-        manager.delete(path, Arrays.asList(list.get(0), list.get(2), list.get(4)));
+        manager.deleteFromBattlesFile( Arrays.asList(list.get(0), list.get(2), list.get(4)));
         result = manager.readAll(path);
         Assert.assertEquals(2, result.size());
         Assert.assertEquals(list.get(1), result.get(0));
         Assert.assertEquals(list.get(3), result.get(1));
 
-        //do not delete
+        //do not deleteFromBattlesFile
         manager.saveAll(path, list.subList(0, 5));
-        manager.delete(path, Arrays.asList(list.get(6), list.get(7), list.get(8)));
+        manager.deleteFromBattlesFile(Arrays.asList(list.get(6), list.get(7), list.get(8)));
         result = manager.readAll(path);
         Assert.assertEquals(5, result.size());
         for (int i = 0; i < result.size(); i++)

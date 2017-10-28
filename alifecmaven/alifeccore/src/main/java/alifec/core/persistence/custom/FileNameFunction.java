@@ -8,7 +8,7 @@ import java.util.function.Function;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestNameFunction implements Function<Path, String> {
+public class FileNameFunction implements Function<Path, String> {
     @Override
     public String apply(Path path) {
         return path.getFileName().toString();

@@ -19,24 +19,33 @@ import java.util.stream.Collectors;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class OpponentFileManager {
-    static Logger logger = org.apache.logging.log4j.LogManager.getLogger(OpponentFileManager.class);
+    private static Logger logger = org.apache.logging.log4j.LogManager.getLogger(OpponentFileManager.class);
+
+    private final Path path;
+
+    public OpponentFileManager(String file, boolean createFile) throws IOException {
+        this.path = Paths.get(file);
+
+        if (createFile) {
+            if (Files.notExists(path)) {
+                Files.createFile(path);
+            }
+        }
+    }
 
 
-    public List<OpponentInfo> readAll(String file) throws IOException {
-        Path path = Paths.get(file);
-
+    public List<OpponentInfo> readAll() throws IOException {
         return Files.lines(path).map(new OpponentFunction()).collect(Collectors.toList());
     }
 
-    public void saveAll(String competitorsFile, List<OpponentInfo> opponents) {
-        Path path = Paths.get(competitorsFile);
-
+    public void saveAll(List<OpponentInfo> opponents) {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : opponents) {
-                    writer.write(line.toString() + '\n');
+                writer.write(line.toString() + '\n');
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            //todo: lanzar una exception
         }
     }
 }

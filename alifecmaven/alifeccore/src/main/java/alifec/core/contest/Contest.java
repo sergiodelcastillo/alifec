@@ -49,18 +49,15 @@ public class Contest {
     public Contest(ContestConfig config) throws CreateContestException {
         try {
             this.config = config;
-            this.persistence = new ContestFileManager();
+            this.persistence = new ContestFileManager(config.getContestPath());
 
             this.environment = new Environment(config);
             this.opponentsInfo = new Opponent(config);
 
             this.tournaments = new ArrayList<>();
 
-            for (String name : TournamentFileManager.listTournaments(config.getContestPath())) {
-                Tournament t = new Tournament(config, name);
-
-                if (t.load())
-                    tournaments.add(t);
+            for (String name : persistence.listTournaments(config.getContestPath())) {
+                tournaments.add(new Tournament(config, name));
             }
 
             //creating a  new Tournament!.
@@ -69,7 +66,7 @@ public class Contest {
             selected = tournaments.size() - 1;
 
             //create new and empty tournament
-            newTournament(environment.getOpponentNames());
+            newTournament();
 
             opponentsInfo.addMissing(environment.getCompetitors());
 
@@ -83,16 +80,12 @@ public class Contest {
         }
     }
 
-    public void newTournament(List<String> colonies) throws TournamentException {
+    public void newTournament() throws TournamentException {
         String newT = getNextName();
 
         try {
             Tournament t = new Tournament(config, newT);
             t.setEnabled(true);
-
-            for (String c : colonies) {
-                t.addColony(c);
-            }
 
             if (selected >= 0)
                 tournaments.get(selected).setEnabled(false);
@@ -171,6 +164,7 @@ public class Contest {
 
         return list;
     }
+
     public List<NutrientDistribution> getAllNutrients() {
         List<NutrientDistribution> list = new ArrayList<>();
 

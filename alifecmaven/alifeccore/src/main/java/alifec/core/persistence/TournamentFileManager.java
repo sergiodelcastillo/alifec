@@ -29,17 +29,27 @@ public class TournamentFileManager {
     static org.apache.logging.log4j.Logger logger = LogManager.getLogger(TournamentFileManager.class);
     private static final String TEMP_SUFFIX = ".tmp";
 
-    public static List<String> listTournaments(String path) throws IOException {
-        List<String> result = new ArrayList<>();
 
-        Files.list(Paths.get(path))
-                .filter(new TournamentFilter())
-                .forEach(path1 -> {
-                    result.add(path1.getFileName().toString());
-                });
+    private final Path path;
+    private final String file;
 
-        return result;
+    public TournamentFileManager(String battleFIle, boolean createFiles) throws IOException {
+        this.file = battleFIle;
+        this.path = Paths.get(battleFIle);
+
+        if (createFiles) {
+            //create the tournament folder if it does not exists.
+            if (Files.notExists(path.getParent())) {
+                Files.createDirectory(path.getParent());
+            }
+
+            //create the battle file if it does not exists.
+            if (Files.notExists(path)) {
+                Files.createFile(path);
+            }
+        }
     }
+
 
     /**
      * Find the mode is competition and the Alifec software was closed unsuccessful then
@@ -57,7 +67,8 @@ public class TournamentFileManager {
 
         List<String> tournaments = null;
         try {
-            tournaments = TournamentFileManager.listTournaments(config.getContestPath());
+            //todo: improve it
+            tournaments = ContestFileManager.listTournaments(config.getContestPath());
         } catch (IOException e) {
             throw new TournamentCorruptedException("The tournament list can not be loaded.", e);
         }
@@ -149,28 +160,8 @@ public class TournamentFileManager {
         }
     }
 
-    public static void deleteBattleBackupFile(ContestConfig config, UnsuccessfulColonies unsuccessful) {
-        Path backupFile = Paths.get(config.getBattlesTargetRunFile(unsuccessful.getTournament()));
-
-        try {
-            Files.deleteIfExists(backupFile);
-            logger.info("Delete back up file [OK]");
-        } catch (IOException e) {
-            logger.info("Delete back up file [FAIL]");
-            logger.error(e.getMessage(), e);
-        }
-
-        /*TODO: ver porque esto estaba acá, mepa que está al dope
-        try {
-            tournaments.newTournament(environment.getColonyNames());
-            logger.info("Creating new Tournament [OK]");
-        } catch (TournamentException ex) {
-            logger.info("Creating new Tournament [FAIL]");
-        }*/
-    }
-
-    public void append(String path, Battle battle) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path),
+    public void append(Battle battle) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(path,
                 StandardOpenOption.APPEND,
                 StandardOpenOption.CREATE)) {
             writer.write(battle.toCsv() + '\n');
@@ -180,15 +171,13 @@ public class TournamentFileManager {
     /**
      * Delete the battles list from battles.csv file
      *
-     * @param path of battle.csv file
      * @throws IOException
      */
-    public void delete(String path, List<Battle> battles) throws IOException {
-        Path tempFile = Paths.get(path + TEMP_SUFFIX);
-        Path originalFile = Paths.get(path);
+    public void deleteFromBattlesFile(List<Battle> battles) throws IOException {
+        Path tempFile = Paths.get(file + TEMP_SUFFIX);
 
         //rename the file
-        Files.move(originalFile, tempFile);
+        Files.move(path, tempFile);
         List<String> filteredList;
 
         try (Stream<String> stream = Files.lines(tempFile)) {
@@ -201,23 +190,21 @@ public class TournamentFileManager {
             throw e;
         }
 
-        saveAll(originalFile, filteredList);
+        saveAll(path, filteredList);
 
         //clean temporal file
         Files.delete(tempFile);
     }
 
-    public void saveAll(String pathToFile, List<Battle> battles) throws IOException {
-        Path path = Paths.get(pathToFile);
+    public void saveAll(String path, List<?> battles) throws IOException {
+        saveAll(Paths.get(path), battles);
+    }
 
+    public void saveAll(List<?> battles) throws IOException {
         saveAll(path, battles);
     }
 
-    private void saveAll(Path path, List<?> battles) throws IOException {
-        if (Files.notExists(path.getParent())) {
-            Files.createDirectory(path.getParent());
-        }
-
+    public void saveAll(Path path, List<?> battles) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : battles) {
                 if (line instanceof Battle)
@@ -228,10 +215,12 @@ public class TournamentFileManager {
         }
     }
 
-    public List<Battle> readAll(String file) throws IOException {
-        Path path = Paths.get(file);
-
+    public List<Battle> readAll() throws IOException {
         return Files.lines(path).collect(new BattlesCollector());
+    }
+
+    public List<Battle> readAll(String path) throws IOException {
+        return Files.lines(Paths.get(path)).collect(new BattlesCollector());
     }
 
     public void deleteFile(String file) throws IOException {
@@ -242,18 +231,5 @@ public class TournamentFileManager {
         return Files.exists(Paths.get(file));
     }
 
-    public void createFileAndPathIfNotExists(String file) throws IOException {
-        Path path = Paths.get(file);
-
-        //create the tournament folder if it does not exists.
-        if (Files.notExists(path.getParent())) {
-            Files.createDirectory(path.getParent());
-        }
-
-        //create the battle file if it does not exists.
-        if (Files.notExists(path)) {
-            Files.createFile(path);
-        }
-    }
 
 }

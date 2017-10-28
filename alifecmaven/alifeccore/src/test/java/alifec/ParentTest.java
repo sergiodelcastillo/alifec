@@ -62,7 +62,7 @@ public class ParentTest {
             //          after the including subdirectories and files
             //.map - map the Path to File
             //.peek - is there only to show which entry is processed
-            //.forEach - calls the .delete() method on every File object
+            //.forEach - calls the .deleteFromBattlesFile() method on every File object
         }
     }
 

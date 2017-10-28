@@ -35,13 +35,11 @@ public class TournamentTest extends ParentTest {
         Assert.assertFalse(result.haveErrors());
 
         Contest contest = new Contest(config);
-
-        //create the environment
-        Environment environment = new Environment(config);
+        Environment environment = contest.getEnvironment();
 
         List<String> colonies = environment.getOpponentNames();
-        contest.newTournament(colonies);
-        Assert.assertTrue("Colonies list must have at least 3", colonies.size() > 2);
+        contest.newTournament();
+        Assert.assertEquals("Colonies list must have 6", 6, colonies.size());
 
         List<Battle> battles = new ArrayList<>();
         FamineFunction famineFunction = new FamineFunction();
@@ -83,16 +81,18 @@ public class TournamentTest extends ParentTest {
                 famineFunction.getName());
         battle1.setWinner(0, 50f);
 
-        contest.lastTournament().addResult(battle1);
-        contest.lastTournament().addResult(battle2);
-        contest.lastTournament().addResult(battle3);
-        contest.lastTournament().addResult(battle4);
+        contest.lastTournament().addBattle(battle1);
+        contest.lastTournament().addBattle(battle2);
+        contest.lastTournament().addBattle(battle3);
+        contest.lastTournament().addBattle(battle4);
 
 
         contest.lastTournament().delete(colonies.get(2));
 
-        Assert.assertTrue(contest.lastTournament().size() == 2);
-        contest.lastTournament().load();
+        Assert.assertEquals(contest.lastTournament().getBattles().size(), 2);
+        Assert.assertEquals(contest.lastTournament().getColonyNames().size(), 2);
+
+        //   Assert.assertTrue(contest.lastTournament().size() == 2);
 
         List<String> names = contest.lastTournament().getColonyNames();
         List<String> target = new ArrayList<>();

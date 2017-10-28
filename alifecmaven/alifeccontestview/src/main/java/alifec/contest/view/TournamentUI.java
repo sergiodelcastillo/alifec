@@ -150,7 +150,7 @@ public class TournamentUI extends JPanel implements ActionListener {
                 try {
                     father.getBattleUI().setEnabled(true);
                     remove(tScroll.get(contest.getSelectedID()));
-                    contest.newTournament(father.getContest().getEnvironment().getOpponentNames());
+                    contest.newTournament();
 
                     addTournament(contest.getSelected());
                     father.getBattleUI().clear();

@@ -38,11 +38,6 @@ public class UnsuccessfulColoniesSolverUI extends JDialog {
     }
 
 
-    public static void main(String[] args) {
-        new UnsuccessfulColoniesSolverUI(null, "aa", "bb").setVisible(true);
-        System.out.println("sigue");
-    }
-
     public JComboBox<String> createNorth() {
         String txt = "The last run didn't finish successfully, please select an option";
 

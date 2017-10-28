@@ -1,10 +1,10 @@
 package alifec.core.persistence;
 
-import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
-import alifec.core.persistence.custom.ContestNameFunction;
+import alifec.core.persistence.custom.FileNameFunction;
 import alifec.core.persistence.filter.ContestFolderFilter;
+import alifec.core.persistence.filter.TournamentFilter;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -23,19 +23,33 @@ import java.util.stream.Collectors;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ContestFileManager {
+    private static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestFileManager.class);
+    private final Path path;
 
-    static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestFileManager.class);
+    public ContestFileManager(String file) {
+        this.path = Paths.get(file);
+    }
 
     public static List<String> listContest(String path) {
         try {
             return Files.list(Paths.get(path))
                     .filter(new ContestFolderFilter())
-                    .map(new ContestNameFunction()).collect(Collectors.toList());
+                    .map(new FileNameFunction()).collect(Collectors.toList());
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
 
         return new ArrayList<>();
+    }
+
+    public static List<String> listTournaments(Path path) throws IOException {
+        return Files.list(path)
+                .filter(new TournamentFilter())
+                .map(new FileNameFunction()).collect(Collectors.toList());
+    }
+
+    public static List<String> listTournaments(String path) throws IOException {
+        return listTournaments(Paths.get(path));
     }
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {

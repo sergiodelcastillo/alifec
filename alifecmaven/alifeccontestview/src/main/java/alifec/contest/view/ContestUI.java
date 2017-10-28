@@ -213,9 +213,9 @@ public class ContestUI extends JFrame implements ActionListener {
                 UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, uColonies.getColonyA(), uColonies.getColonyB());
                 solver.setVisible(true);
 
-                for (String c : contest.getEnvironment().getOpponentNames()) {
+                /*for (String c : contest.getEnvironment().getOpponentNames()) {
                     contest.lastTournament().addColony(c);
-                }
+                }*/
             }
             //create an instance of the contest
             contest = new Contest(config);
@@ -225,8 +225,10 @@ public class ContestUI extends JFrame implements ActionListener {
                 contest.getEnvironment().delete(excludedColony);
             }
 
-            //delete backup file
-            TournamentFileManager.deleteBattleBackupFile(config, uColonies);
+            //deleteFromBattlesFile backup file
+
+            //TODO: it seems that it is not necesary:
+            // todo TournamentFileManager.deleteBattleBackupFile(config, uColonies);
 
         } catch (TournamentCorruptedException e) {
             //TODO: ver que mostrar acá.

@@ -298,14 +298,6 @@ public class Environment {
         return tmp;
     }
 
-    public Hashtable<String, Integer> getOps() {
-        Hashtable<String, Integer> r = new Hashtable<>();
-        for (Colony c : colonies) {
-            r.put(c.getName(), c.id);
-        }
-
-        return r;
-    }
 
 
     public List<Competitor> getCompetitors() {

@@ -23,19 +23,20 @@ public class Opponent {
 
     public Opponent(ContestConfig config) throws OpponentException {
         this.config = config;
-        this.persistence = new OpponentFileManager();
 
         try {
+            this.persistence = new OpponentFileManager(config.getCompetitorsFile(), config.isCompetitionMode());
+
             if (config.isCompetitionMode()) {
                 load();
             }
         } catch (Throwable t) {
-            throw  new OpponentException("Opponent's list can not be loaded.", t);
+            throw new OpponentException("Opponent's list can not be loaded.", t);
         }
     }
 
     private void load() throws IOException {
-        opponents.addAll(persistence.readAll(config.getCompetitorsFile()));
+        opponents.addAll(persistence.readAll());
     }
 
     public List<OpponentInfo> getOpponents() {
@@ -43,13 +44,13 @@ public class Opponent {
     }
 
     public void addMissing(List<Competitor> list) {
-        for(Competitor comp: list){
-            if(!opponents.contains(comp.getInfo()))
+        for (Competitor comp : list) {
+            if (!opponents.contains(comp.getInfo()))
                 opponents.add(comp.getInfo());
         }
 
-        if(config.isCompetitionMode()){
-            persistence.saveAll(config.getCompetitorsFile(), opponents);
+        if (config.isCompetitionMode()) {
+            persistence.saveAll(opponents);
         }
     }
 }

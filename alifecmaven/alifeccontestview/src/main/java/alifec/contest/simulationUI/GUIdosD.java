@@ -104,7 +104,5 @@ public class GUIdosD extends JDialog {
 
         southPanel.get().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         southPanel.get().add(text);
-
     }
-
 }

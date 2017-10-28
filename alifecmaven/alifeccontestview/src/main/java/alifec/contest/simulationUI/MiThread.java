@@ -160,7 +160,7 @@ public class MiThread extends Thread {
 
                     // update the results !!
                     Battle r = environment.getResults();
-                    lastTournament.addResult(r);
+                    lastTournament.addBattle(r);
                     cui.getTournamentUI().updateLast();
 
                     panel.repaint();
