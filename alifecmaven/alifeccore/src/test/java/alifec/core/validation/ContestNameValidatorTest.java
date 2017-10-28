@@ -1,5 +1,6 @@
 package alifec.core.validation;
 
+import alifec.core.exception.ValidationException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,24 +15,80 @@ public class ContestNameValidatorTest {
         ContestNameValidator contestNameValidator = new ContestNameValidator();
 
         //false contest names.
-        Assert.assertFalse(contestNameValidator.validate(null));
-        Assert.assertFalse(contestNameValidator.validate(""));
-        Assert.assertFalse(contestNameValidator.validate("asdñfjlaskdfjalñksdfjlakjsdfñlk"));
-        Assert.assertFalse(contestNameValidator.validate("contest-"));
-        Assert.assertFalse(contestNameValidator.validate("contest-*"));
-        Assert.assertFalse(contestNameValidator.validate("contest-a*"));
-        Assert.assertFalse(contestNameValidator.validate("contest-b+"));
-        Assert.assertFalse(contestNameValidator.validate("contest-+"));
-        Assert.assertFalse(contestNameValidator.validate("1contest-0"));
-        Assert.assertFalse(contestNameValidator.validate("ccontest-01"));
-        Assert.assertFalse(contestNameValidator.validate("_contest-01"));
-        Assert.assertFalse(contestNameValidator.validate("contest-1111122222111112222211111a"));
+        try {
+            contestNameValidator.validate(null);
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("asdñfjlaskdfjalñksdfjlakjsdfñlk");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("contest-");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("contest-*");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("contest-a*");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("contest-b+");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("contest-+");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
 
-        Assert.assertTrue(contestNameValidator.validate("CONTEST-01"));
-        Assert.assertTrue(contestNameValidator.validate("Contest-01"));
-        Assert.assertTrue(contestNameValidator.validate("cOntEsT-01"));
-        Assert.assertTrue(contestNameValidator.validate("contest-1"));
-        Assert.assertTrue(contestNameValidator.validate("contest-1111122222111112222211111"));
-        Assert.assertTrue(contestNameValidator.validate("contest-abc1234DEF"));
+        try {
+            contestNameValidator.validate("1contest-0");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("ccontest-01");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("_contest-01");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            contestNameValidator.validate("contest-1111122222111112222211111a");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+
+
+        //valid
+        try {
+            contestNameValidator.validate("CONTEST-01");
+            contestNameValidator.validate("Contest-01");
+            contestNameValidator.validate("cOntEsT-01");
+            contestNameValidator.validate("contest-1");
+            contestNameValidator.validate("contest-1111122222111112222211111");
+            contestNameValidator.validate("contest-abc1234DEF");
+        } catch (ValidationException ex) {
+            Assert.fail("It should be valid.");
+        }
+
     }
 }

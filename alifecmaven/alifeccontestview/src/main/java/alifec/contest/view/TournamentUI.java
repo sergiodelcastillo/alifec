@@ -5,7 +5,7 @@ package alifec.contest.view;
 
 import alifec.core.contest.Contest;
 import alifec.core.contest.Tournament;
-import alifec.core.exception.CreateTournamentException;
+import alifec.core.exception.TournamentException;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -157,7 +157,7 @@ public class TournamentUI extends JPanel implements ActionListener {
                     border.setTitle(contest.getSelected().getName());
                     add(tScroll.get(contest.getSelectedID()));
                     updateUI();
-                } catch (CreateTournamentException ex) {
+                } catch (TournamentException ex) {
                     Message.printErr(father, "Can't create a new Tournament");
                 }
             }

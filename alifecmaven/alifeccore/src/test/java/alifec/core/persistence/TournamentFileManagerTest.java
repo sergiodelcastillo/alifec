@@ -2,7 +2,7 @@ package alifec.core.persistence;
 
 import alifec.ParentTest;
 import alifec.core.contest.Battle;
-import alifec.core.exception.CreateBattleException;
+import alifec.core.exception.BattleException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class TournamentFileManagerTest extends ParentTest {
 
     @Test
-    public void testAppend() throws CreateBattleException, IOException {
+    public void testAppend() throws BattleException, IOException {
         List<Battle> list = battleDataSet();
 
         TournamentFileManager manager = new TournamentFileManager();
@@ -45,7 +45,7 @@ public class TournamentFileManagerTest extends ParentTest {
     }
 
     @Test
-    public void testSave() throws CreateBattleException, IOException {
+    public void testSave() throws BattleException, IOException {
         List<Battle> list = battleDataSet();
 
         TournamentFileManager manager = new TournamentFileManager();
@@ -66,7 +66,7 @@ public class TournamentFileManagerTest extends ParentTest {
     }
 
     @Test
-    public void testDelete() throws CreateBattleException, IOException {
+    public void testDelete() throws BattleException, IOException {
         List<Battle> list = battleDataSet();
 
         TournamentFileManager manager = new TournamentFileManager();

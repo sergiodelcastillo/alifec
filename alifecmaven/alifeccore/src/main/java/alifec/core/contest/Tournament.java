@@ -1,18 +1,17 @@
 
 package alifec.core.contest;
 
-import alifec.core.exception.CreateBattleException;
+import alifec.core.exception.BattleException;
 import alifec.core.exception.CreateRankingException;
+import alifec.core.exception.TournamentException;
 import alifec.core.persistence.TournamentFileManager;
-import alifec.core.persistence.collector.BattlesCollector;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.simulation.Competitor;
+import alifec.core.simulation.NutrientDistribution;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import static java.util.Collections.max;
@@ -36,23 +35,19 @@ public class Tournament implements Comparable<Tournament> {
 
     private ContestConfig config;
 
-    public Tournament(ContestConfig config, String name) throws CreateBattleException {
+    public Tournament(ContestConfig config, String name) throws TournamentException {
         this.config = config;
         this.name = name;
 
-        battles = new ArrayList<>();
-        colonies = new ArrayList<>();
+        this.battles = new ArrayList<>();
+        this.colonies = new ArrayList<>();
         this.persistence = new TournamentFileManager();
 
         if (config.isCompetitionMode()) {
-            Path path = Paths.get(config.getBattlesFile(this.name));
-
-            if (Files.notExists(path)) {
-                try {
-                    Files.createFile(path);
-                } catch (IOException e) {
-                    throw new CreateBattleException("Can not create the file: " + path.toString(), this.name);
-                }
+            try {
+                persistence.createFileAndPathIfNotExists(config.getBattlesFile(this.name));
+            } catch (IOException e) {
+                throw new TournamentException("Can not create the file: " + name, e);
             }
         }
     }
@@ -67,7 +62,7 @@ public class Tournament implements Comparable<Tournament> {
     }
 
     public int size() {
-        return getNames().size();
+        return battles.size();
     }
 
     public void addColony(String c) {
@@ -191,7 +186,7 @@ public class Tournament implements Comparable<Tournament> {
     }
 
 
-    public List<String> getNames() {
+    public List<String> getColonyNames() {
         List<String> names = new ArrayList<>();
 
         //add from battles
@@ -259,29 +254,26 @@ public class Tournament implements Comparable<Tournament> {
         return persistence.existsFile(config.getBattlesTargetRunFile(name));
     }
 
-    public List<Battle> generateAllBattles(Hashtable<String, Integer> opponents, Hashtable<String, Integer> nutrients, boolean duplicate) {
+    public List<Battle> generateAllBattles(List<Competitor> competitos, List<NutrientDistribution> nutrients, boolean duplicate) {
         //todo: create tests.
         List<Battle> list = new ArrayList<>();
 
-        for (Enumeration<String> op_a = opponents.keys(); op_a.hasMoreElements(); ) {
-            String firstName = op_a.nextElement();
-            Integer firstId = opponents.get(firstName);
-
-            for (Enumeration<String> op_b = opponents.keys(); op_b.hasMoreElements(); ) {
-                String secondName = op_b.nextElement();
-                Integer secondId = opponents.get(secondName);
-
-                for (Enumeration<String> nut = nutrients.keys(); nut.hasMoreElements(); ) {
-                    String nutrientName = nut.nextElement();
-                    Integer nutrientId = nutrients.get(nutrientName);
-
+        for (Competitor c1 : competitos) {
+            for (Competitor c2 : competitos) {
+                for (NutrientDistribution n : nutrients) {
                     try {
-                        Battle battle = new Battle(firstId, secondId, nutrientId, firstName, secondName, nutrientName);
+                        Battle battle = new Battle(
+                                c1.getId(),
+                                c2.getId(),
+                                n.getId(),
+                                c1.getColonyName(),
+                                c2.getColonyName(),
+                                n.getNutrientName());
 
                         if (!list.contains(battle))
                             list.add(battle);
 
-                    } catch (CreateBattleException ex) {
+                    } catch (BattleException ex) {
                         logger.error(ex.getMessage(), ex);
                     }
                 }
@@ -317,7 +309,7 @@ public class Tournament implements Comparable<Tournament> {
 
         List<Battle> toDelete = new ArrayList<>();
 
-        for (Battle battle: battles){
+        for (Battle battle : battles) {
             if (!allowedNutrients.contains(battle.getNutrientId())) {
                 toDelete.add(battle); //currently the nutrient is not available
             }

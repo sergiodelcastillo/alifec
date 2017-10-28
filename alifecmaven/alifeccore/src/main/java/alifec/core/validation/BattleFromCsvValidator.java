@@ -1,5 +1,6 @@
 package alifec.core.validation;
 
+import alifec.core.exception.ValidationException;
 import alifec.core.simulation.Agar;
 
 /**
@@ -11,38 +12,44 @@ public class BattleFromCsvValidator implements Validator<String> {
 
     //todo: create test
     @Override
-    public boolean validate(String line) {
+    public void validate(String line) throws ValidationException {
         if (line == null || line.isEmpty())
-            return false;
+            throw new ValidationException("The battle line is empty.");
 
         String[] tmp = line.split(",");
 
         //5 elements: name1, name2, nutrient, energy1, energy2
         if (tmp.length != 5)
-            return false;
+            throw new ValidationException("The battle line does not have the pattern: <name1>,<name2>,<nutrient>,<energy1>,<energy2>");
 
 
-        return checkColonyName(tmp[0]) &&
-                checkColonyName(tmp[1]) &&
-                checkNutrientName(tmp[2]) &&
-                checkPositiveFloat(tmp[3]) &&
-                checkPositiveFloat(tmp[4]);
+        checkColonyName(tmp[0]);
+        checkColonyName(tmp[1]);
+        checkNutrientName(tmp[2]);
+        checkPositiveFloat(tmp[3]);
+        checkPositiveFloat(tmp[4]);
     }
 
-    private boolean checkNutrientName(String nutri) {
-        if(nutri == null || nutri.isEmpty() ) return false;
+    private void checkNutrientName(String nutri) throws ValidationException {
+        if (nutri == null || nutri.isEmpty())
+            throw new ValidationException("The battle line is invalid. Nutrient is empty.");
 
-        return Agar.getNutrientByName(nutri) != null;
+        if (Agar.getNutrientByName(nutri) == null)
+            throw new ValidationException("The battle line is invalid. The nutrient distribution " + nutri + " is unknown.");
     }
 
-    private boolean checkColonyName(String name){
-        return name != null && name.trim().length() > 0;
+    private void checkColonyName(String name) throws ValidationException {
+        if (name == null || name.trim().length() == 0)
+            throw new ValidationException("The battle line is invalid. Colony name is empty");
     }
-    private boolean checkPositiveFloat(String s) {
+
+    private void checkPositiveFloat(String s) throws ValidationException {
         try {
-            return Float.parseFloat(s) >= 0.0f;
+            if (Float.parseFloat(s) < 0.0f)
+                throw new ValidationException("The battle line is invalid. MO energy can not be negative.");
+
         } catch (Throwable t) {
-            return false;
+            throw new ValidationException("The battle line is invalid. Energy must be a float value.");
         }
     }
 }

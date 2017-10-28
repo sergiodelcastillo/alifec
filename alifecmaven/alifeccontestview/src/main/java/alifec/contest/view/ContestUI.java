@@ -150,7 +150,7 @@ public class ContestUI extends JFrame implements ActionListener {
                 }
             }
             createContest(config);
-        } catch (CreateTournamentException | CreateContestException | ConfigFileException ex) {
+        } catch (TournamentException | CreateContestException | ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
             Message.printErr(null, ex.getMessage());
             return false;
@@ -188,7 +188,7 @@ public class ContestUI extends JFrame implements ActionListener {
         return config;
     }
 
-    public void createContest(ContestConfig config) throws CreateTournamentException, CreateContestException {
+    public void createContest(ContestConfig config) throws TournamentException, CreateContestException {
         if (config == null)
             throw new CreateContestException("The config file is null");
 

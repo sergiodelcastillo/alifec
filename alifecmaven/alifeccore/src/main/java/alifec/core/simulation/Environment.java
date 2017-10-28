@@ -1,6 +1,7 @@
 package alifec.core.simulation;
 
 import alifec.core.contest.Battle;
+import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.NutrientException;
 import alifec.core.persistence.config.ContestConfig;
@@ -105,7 +106,7 @@ public class Environment {
 
     public boolean delete(String name) {
         for (Colony c : colonies) {
-            if (name.equalsIgnoreCase(c.getName())) {
+            if (name.equals(c.getName())) {
                 return colonies.remove(c);
             }
         }
@@ -118,7 +119,7 @@ public class Environment {
      * @param b is a battle to run
      * @return if was successful
      */
-    public boolean createBattle(Battle  b) {
+    public boolean createBattle(Battle b) {
         opponents = b;
 
         try {
@@ -306,6 +307,18 @@ public class Environment {
         return r;
     }
 
+
+    public List<Competitor> getCompetitors() {
+        List<Competitor> list = new ArrayList<>();
+
+        for (int i = 0, coloniesSize = colonies.size(); i < coloniesSize; i++) {
+            Colony c = colonies.get(i);
+            list.add(new Competitor(i, c.getName(), c.getAuthor(), c.getAffiliation()));
+        }
+
+        return list;
+    }
+
     public String getName(int id) {
         for (Colony c : colonies)
             if (c.id == id) return c.getName();
@@ -313,19 +326,6 @@ public class Environment {
         throw new ArrayIndexOutOfBoundsException("cant find id: " + id);
     }
 
-    public String getAuthor(int id) {
-        for (Colony c : colonies)
-            if (c.id == id) return c.getAuthor();
-
-        throw new ArrayIndexOutOfBoundsException("cant find id: " + id);
-    }
-
-    public String getAffiliation(int id) {
-        for (Colony c : colonies)
-            if (c.id == id) return c.getAffiliation();
-
-        throw new ArrayIndexOutOfBoundsException("cant find id: " + id);
-    }
 
     public int getColonyIdByName(String col) {
         for (Colony c : colonies) {

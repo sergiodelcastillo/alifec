@@ -2,7 +2,9 @@ package alifec.contest.view;
 
 import alifec.core.contest.Contest;
 import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.ValidationException;
 import alifec.core.simulation.Agar;
+import alifec.core.simulation.NutrientDistribution;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.validation.ContestNameValidator;
 import alifec.core.validation.ContestPathValidator;
@@ -17,7 +19,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Hashtable;
 
 import static java.lang.Integer.parseInt;
 
@@ -212,8 +213,9 @@ public class DialogPreferences extends JDialog implements ActionListener {
     private Component createNutrientsPanel() throws IOException {
         JPanel nutrientPanel = new JPanel();
         GroupLayout layout = new GroupLayout(nutrientPanel);
-        Hashtable<String, Integer> selNutrients = father.getContest().getNutrients();
-        Collection<Nutrient> allNutrients = Agar.getAllNutrient().values();
+        java.util.List<NutrientDistribution> currentNutrients = father.getContest().getCurrentNutrients();
+        java.util.List<NutrientDistribution> allNutrients = father.getContest().getAllNutrients();
+
         this.nutrients = new JCheckBox[allNutrients.size()];
 
         nutrientPanel.setLayout(layout);
@@ -225,10 +227,10 @@ public class DialogPreferences extends JDialog implements ActionListener {
 
         int i = 0;
 
-        for(Nutrient nutrient: allNutrients){
+        for (NutrientDistribution nutrient : allNutrients) {
             nutrients[i] = new JCheckBox(nutrient.toString());
 
-            if (selNutrients.containsKey(nutrient.toString()))
+            if (currentNutrients.contains(nutrient))
                 nutrients[i].setSelected(true);
 
             sequentialGroup.addComponent(nutrients[i]);
@@ -250,33 +252,25 @@ public class DialogPreferences extends JDialog implements ActionListener {
             dispose();
         }
         if (ev.getSource().equals(accept)) {
-            if (!ContestNameValidator.checkPrefix(nameOfContest.getText())) {
-                Message.printErr(this, "The Contest's name must start with Contest-");
-                return;
-            }
-            if (!contestNameValidator.validate(nameOfContest.getText())) {
-                Message.printErr(this, "The Contest's name must contain only numbers or letters and \"-\" or \"_\"");
-                return;
-            }
-            String path = defaultPath.getText();
+            try {
+                contestNameValidator.validate(nameOfContest.getText());
+                contestPathValidator.validate(defaultPath.getText());
 
-            if (!contestPathValidator.validate(path)) {
-                Message.printErr(this, "The Contest path is not valid. Please input a right one.");
-                return;
-            }
-
-            if (updateConfig()) {
-                logger.info("Update Config [OK]");
-                try {
+                if (updateConfig()) {
                     father.reloadConfig();
-                } catch (Exception ex) {
-                    logger.error("Cant reload contest: " + ex.getMessage(), ex);
+                    logger.info("Update Config [OK]");
                 }
+                if (updateNutrient()) {
+                    father.getBattleUI().updateNutrients();
+                }
+
+                dispose();
+            } catch (ValidationException ex) {
+                logger.warn(ex.getMessage(), ex);
+                Message.printErr(this, ex.getMessage());
+            } catch (Exception ex) {
+                logger.error("Cant reload contest: " + ex.getMessage(), ex);
             }
-            if (updateNutrient()) {
-                father.getBattleUI().updateNutrients();
-            }
-            dispose();
         }
     }
 
@@ -303,7 +297,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
             }
 
             contest.updateNutrient(contest.getConfig(), nutrientsIds);
-        } catch (ConfigFileException  ex) {
+        } catch (ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
             return false;
         }

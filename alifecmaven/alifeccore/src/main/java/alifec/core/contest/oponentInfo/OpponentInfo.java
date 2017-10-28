@@ -1,21 +1,16 @@
 package alifec.core.contest.oponentInfo;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.Objects;
 
 public class OpponentInfo {
-    private String name = "";
-    private String author = "";
-    private String affiliation = "";
+    private final String name;
+    private final String author;
+    private final String affiliation;
 
     public OpponentInfo(String n, String au, String af) {
         this.name = n;
         this.author = au;
-        this.affiliation = af.toUpperCase();
+        this.affiliation = af;
     }
 
     public OpponentInfo(String line) {
@@ -29,34 +24,11 @@ public class OpponentInfo {
 
         name = info[0];
         author = info[1];
-        affiliation = info[2].toUpperCase();
-    }
-
-    public void write(String path) throws IOException {
-        FileWriter f = new FileWriter(path, true);
-        BufferedWriter bw = new BufferedWriter(f);
-        bw.append(toString()).append("\n");
-        bw.close();
-        f.close();
-    }
-
-    public void del(String path) throws IOException {
-        //TODO: revisar  ... mepa que la extensión está mal.
-        new File(path).renameTo(new File(path + "_backup"));
-
-        BufferedReader in = new BufferedReader(new FileReader(path + "_backup"));
-        BufferedWriter out = new BufferedWriter(new FileWriter(path));
-
-        String line, miLine = toString();
-        do {
-            line = in.readLine();
-            if (!miLine.equalsIgnoreCase(line))
-                out.append(line).append("\n");
-        } while (line != null);
+        affiliation = info[2];
     }
 
     public String getAffiliation() {
-        return affiliation.toUpperCase();
+        return affiliation;
     }
 
     public String getAuthor() {
@@ -69,30 +41,28 @@ public class OpponentInfo {
 
     @Override
     public String toString() {
-        return name + "," + author + "," + affiliation.toUpperCase() + ",";
+        StringBuilder builder = new StringBuilder();
+        builder.append(name)
+                .append(',')
+                .append(author)
+                .append(',')
+                .append(affiliation);
+
+        return builder.toString();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj != null && obj instanceof OpponentInfo) {
-            OpponentInfo o = (OpponentInfo) obj;
-            return name.equalsIgnoreCase(o.name) &&
-                    author.equalsIgnoreCase(o.author) &&
-                    affiliation.equalsIgnoreCase(o.affiliation);
-        }
-        return false;
-    }
-
-    public boolean contain(String name) {
-        return this.name.equalsIgnoreCase(name);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OpponentInfo)) return false;
+        OpponentInfo that = (OpponentInfo) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(author, that.author) &&
+                Objects.equals(affiliation, that.affiliation);
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 67 * hash + (this.author != null ? this.author.hashCode() : 0);
-        hash = 67 * hash + (this.affiliation != null ? this.affiliation.hashCode() : 0);
-        return hash;
+        return Objects.hash(name, author, affiliation);
     }
 }

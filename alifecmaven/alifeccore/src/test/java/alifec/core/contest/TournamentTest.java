@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class TournamentTest extends ParentTest {
     @Test
-    public void testDelete() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, CreateContestException, CreateTournamentException, CreateBattleException {
+    public void testDelete() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, CreateContestException, TournamentException, BattleException {
         ContestConfig config = createContest("Contest-01");
         //ensure the competition mode
         config.setMode(ContestConfig.COMPETITION_MODE);
@@ -94,7 +94,7 @@ public class TournamentTest extends ParentTest {
         Assert.assertTrue(contest.lastTournament().size() == 2);
         contest.lastTournament().load();
 
-        List<String> names = contest.lastTournament().getNames();
+        List<String> names = contest.lastTournament().getColonyNames();
         List<String> target = new ArrayList<>();
         target.add(colonies.get(0));
         target.add(colonies.get(1));

@@ -1,5 +1,7 @@
 package alifec.core.validation;
 
+;import alifec.core.exception.ValidationException;
+
 /**
  * Created by Sergio Del Castillo on 15/08/17.
  *
@@ -7,5 +9,5 @@ package alifec.core.validation;
  */
 public interface Validator<T> {
 
-    boolean validate(T object);
+    void validate(T object) throws ValidationException;
 }

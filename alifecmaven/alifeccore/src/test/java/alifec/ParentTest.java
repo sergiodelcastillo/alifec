@@ -1,9 +1,8 @@
 package alifec;
 
 import alifec.core.contest.Battle;
-import alifec.core.contest.Battle;
 import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.CreateBattleException;
+import alifec.core.exception.BattleException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.ContestFileManager;
@@ -102,7 +101,7 @@ public class ParentTest {
         }
     }
 
-    protected Battle createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws CreateBattleException {
+    protected Battle createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws BattleException {
         Colony c1 = env.getColonyById(colony1);
         Colony c2 = env.getColonyById(colony2);
 
@@ -112,7 +111,7 @@ public class ParentTest {
         return battle;
     }
 
-    public List<Battle> battleDataSet() throws CreateBattleException {
+    public List<Battle> battleDataSet() throws BattleException {
         List<Battle> list = new ArrayList<>();
 
         Battle battle1 = new Battle(1,2, 1, "col1", "col2", "Famine");

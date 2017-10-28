@@ -1,5 +1,6 @@
 package alifec.contest.view;
 
+import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.validation.NewContestFolderValidator;
 import org.apache.logging.log4j.LogManager;
@@ -135,19 +136,19 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
 
     public void actionPerformed(ActionEvent ev) {
         if (ev.getSource().equals(this.buttonOK)) {
-            String contestFolderName = ContestConfig.CONTEST_NAME_PREFIX+ textName.getText();
+            String contestFolderName = ContestConfig.CONTEST_NAME_PREFIX + textName.getText();
             String contestFolderRoot = textPath.getText();
             String contestPath = ContestConfig.getContestPath(contestFolderRoot, contestFolderName);
-
-            if (newContestFolderValidator.validate(contestPath)) {
+            try {
+                newContestFolderValidator.validate(contestPath);
                 config = ContestConfig.buildNewConfigFile(contestFolderRoot, contestFolderName);
                 createExamples = examples.isSelected() ? Boolean.TRUE : Boolean.FALSE;
                 makeDefault = checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE;
 
                 dispose();
-            } else {
-                logger.warn("The contest [" + contestPath + "] already exists or is not valid. Please select another one.");
-                Message.printErr(this, "The contest [" + contestPath + "] already exists or is not valid. Please select another one.");
+            } catch (ValidationException ex) {
+                logger.warn(ex.getMessage(), ex);
+                Message.printErr(this, ex.getMessage());
             }
 
         } else if (ev.getSource().equals(this.buttonBrowse)) {
@@ -158,7 +159,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
                 textPath.setText(fc.getSelectedFile().getAbsolutePath());
 
-        } else if (ev.getSource().equals(this.buttonCancel)){
+        } else if (ev.getSource().equals(this.buttonCancel)) {
             logger.info("Canceled by user.");
             cleanResult();
             this.dispose();
@@ -198,10 +199,6 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
 
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escape, "ESCAPE");
         getRootPane().getActionMap().put("ESCAPE", escapeAction);
-    }
-
-    public ContestConfig getContestConfig() {
-        return config;
     }
 
     public boolean isCreateExamples() {

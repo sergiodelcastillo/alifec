@@ -2,23 +2,21 @@
 package alifec.core.contest;
 
 import alifec.core.contest.oponentInfo.OpponentInfo;
-import alifec.core.contest.oponentInfo.OpponentInfoManager;
-import alifec.core.contest.oponentInfo.OpponentReportLine;
+import alifec.core.contest.oponentInfo.Opponent;
+import alifec.core.contest.oponentInfo.OpponentStatistics;
 import alifec.core.exception.*;
+import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.ZipHelper;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
+import alifec.core.simulation.NutrientDistribution;
 import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -42,16 +40,21 @@ public class Contest {
     /**
      * info of all opponents
      */
-    private OpponentInfoManager opponentsInfo;
+    private Opponent opponentsInfo;
 
     private ContestConfig config;
+
+    private ContestFileManager persistence;
 
     public Contest(ContestConfig config) throws CreateContestException {
         try {
             this.config = config;
-            opponentsInfo = new OpponentInfoManager(config);
-            environment = new Environment(config);
-            tournaments = new ArrayList<>();
+            this.persistence = new ContestFileManager();
+
+            this.environment = new Environment(config);
+            this.opponentsInfo = new Opponent(config);
+
+            this.tournaments = new ArrayList<>();
 
             for (String name : TournamentFileManager.listTournaments(config.getContestPath())) {
                 Tournament t = new Tournament(config, name);
@@ -68,29 +71,20 @@ public class Contest {
             //create new and empty tournament
             newTournament(environment.getOpponentNames());
 
-            opponentsInfo.read();
+            opponentsInfo.addMissing(environment.getCompetitors());
 
-            Enumeration<Integer> ids = environment.getOps().elements();
-            while (ids.hasMoreElements()) {
-                Integer i = ids.nextElement();
-                opponentsInfo.add(environment.getName(i), environment.getAuthor(i), environment.getAffiliation(i));
-            }
             //TODO: evaluate the messages
-        } catch (CreateTournamentException | CreateBattleException e) {
+        } catch (TournamentException e) {
             throw new CreateContestException("Error creating the contest: " + e.getMessage(), e);
         } catch (IOException e) {
             throw new CreateContestException("Error creating the contest: Can load opponents information, please check the log for further details.", e);
+        } catch (OpponentException e) {
+            throw new CreateContestException("Can not load opponents information.", e);
         }
     }
 
-    public void newTournament(List<String> colonies) throws CreateTournamentException {
+    public void newTournament(List<String> colonies) throws TournamentException {
         String newT = getNextName();
-
-        if (config.isCompetitionMode()) {
-            String tournamentPath = config.getTournamentPath(newT);
-            if (!new File(tournamentPath).mkdir())
-                throw new CreateTournamentException("Can not create the new tournament folder: " + tournamentPath);
-        }
 
         try {
             Tournament t = new Tournament(config, newT);
@@ -105,9 +99,9 @@ public class Contest {
 
             tournaments.add(t);
             selected = tournaments.indexOf(t);
-        } catch (CreateBattleException ex) {
+        } catch (TournamentException ex) {
             logger.error(ex.getMessage(), ex);
-            throw new CreateTournamentException("Cannot load the tournament: " + ex.getTournamentName());
+            throw new TournamentException("Cannot load the tournament: " + newT);
         }
     }
 
@@ -118,22 +112,13 @@ public class Contest {
      */
     public boolean removeSelected() {
         try {
-            Path file = Paths.get(config.getBattlesFile(getSelected().getName()));
-            if (Files.exists(file)) {
-                Files.delete(file);
-                if (config.isCompetitionMode()) return false;
+            if (config.isCompetitionMode()) {
+                persistence.delete(config.getBattlesFile(getSelected().getName()));
+                tournaments.remove(selected);
+
+                if (selected >= tournaments.size())
+                    selected = tournaments.size() - 1;
             }
-
-            if (Files.exists(file.getParent())) {
-                Files.delete(file.getParent());
-                if (config.isCompetitionMode()) return false;
-            }
-
-            tournaments.remove(selected);
-
-            if (selected >= tournaments.size())
-                selected = tournaments.size() - 1;
-
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             return false;
@@ -173,16 +158,29 @@ public class Contest {
         return ContestConfig.getTournamentFilename(tournamentNumber);
     }
 
-    public Hashtable<String, Integer> getNutrients() {
-        Hashtable<String, Integer> result = new Hashtable<>();
+    public List<NutrientDistribution> getCurrentNutrients() {
+        List<NutrientDistribution> list = new ArrayList<>();
+
         List<Integer> current = config.getNutrients();
         Hashtable<Integer, Nutrient> allNutrients = Agar.getAllNutrient();
 
         for (int nutrientId : current) {
-            result.put(allNutrients.get(nutrientId).toString(), nutrientId);
+            list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
+
         }
 
-        return result;
+        return list;
+    }
+    public List<NutrientDistribution> getAllNutrients() {
+        List<NutrientDistribution> list = new ArrayList<>();
+
+        Hashtable<Integer, Nutrient> allNutrients = Agar.getAllNutrient();
+
+        for (Integer nutrientId : allNutrients.keySet()) {
+            list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
+        }
+
+        return list;
     }
 
 
@@ -192,7 +190,6 @@ public class Contest {
      * @return
      * @throws IOException
      */
-
     public boolean reloadConfig() throws IOException {
         try {
             config = ContestConfig.buildFromFile(config.getPath());
@@ -273,9 +270,9 @@ public class Contest {
      * @return information
      * @throws CreateRankingException if can not create the ranking
      */
-    public List<OpponentReportLine> getInfo() throws CreateRankingException {
+    public List<OpponentStatistics> getInfo() throws CreateRankingException {
         Hashtable<String, Integer> ranking = getRanking();
-        List<OpponentReportLine> info = new ArrayList<>();
+        List<OpponentStatistics> info = new ArrayList<>();
 
         Tournament t = lastTournament();
         Hashtable<String, Float> accumulated = t.getAccumulatedEnergy();
@@ -284,7 +281,7 @@ public class Contest {
             boolean hasRanking = ranking.containsKey(oi.getName());
             boolean hasAccumulated = accumulated.containsKey(oi.getName());
 
-            info.add(new OpponentReportLine(oi.getName(),
+            info.add(new OpponentStatistics(oi.getName(),
                     oi.getAuthor(),
                     oi.getAffiliation(),
                     hasRanking ? ranking.get(oi.getName()) : 0,
@@ -324,7 +321,8 @@ public class Contest {
      */
     public boolean createBackUp() {
 
-        //generate the back up...
+        //todo: it should be used in persistence
+        // generate the back up...
         try {
             ZipHelper.zipContest(config);
             return true;

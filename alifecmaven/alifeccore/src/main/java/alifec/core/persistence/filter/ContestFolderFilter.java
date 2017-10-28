@@ -1,5 +1,6 @@
 package alifec.core.persistence.filter;
 
+import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.validation.ContestNameValidator;
 
@@ -46,9 +47,12 @@ public class ContestFolderFilter implements Predicate<Path> {
     public boolean test(Path path) {
         String folderName = path.getFileName().toString();
 
-        return validator.validate(folderName) &&
-                (!checkExistence || checkContestFolder(path.getParent().toString(), folderName));
-
+        try {
+            validator.validate(folderName);
+        } catch (ValidationException e) {
+            return false;
+        }
+        return (!checkExistence || checkContestFolder(path.getParent().toString(), folderName));
     }
 
     private static boolean checkContestFolder(String path, String name) {

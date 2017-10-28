@@ -2,7 +2,7 @@ package alifec.contest.view;
 
 
 import alifec.core.contest.Contest;
-import alifec.core.contest.oponentInfo.OpponentReportLine;
+import alifec.core.contest.oponentInfo.OpponentStatistics;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
@@ -116,7 +116,7 @@ public class ContestReportUI extends JDialog implements ActionListener {
                     "POINTS",
                     "ENERGY"));
 
-            for (OpponentReportLine line : contest.getInfo()) {
+            for (OpponentStatistics line : contest.getInfo()) {
                 pw.println(String.format(ContestConfig.REPORT_CSV_FORMAT,
                         line.getName(),
                         line.getAuthor(),
@@ -153,7 +153,7 @@ public class ContestReportUI extends JDialog implements ActionListener {
                     "AFFILIATION",
                     "POINTS"));
 
-            for (OpponentReportLine line : contest.getInfo()) {
+            for (OpponentStatistics line : contest.getInfo()) {
                 builder.append(String.format(ContestConfig.REPORT_TXT_FORMAT,
                         line.getName(),
                         line.getAuthor(),

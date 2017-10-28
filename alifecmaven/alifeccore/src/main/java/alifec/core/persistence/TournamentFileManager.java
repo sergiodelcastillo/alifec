@@ -3,16 +3,13 @@ package alifec.core.persistence;
 import alifec.core.contest.Battle;
 import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.TournamentCorruptedException;
-import alifec.core.persistence.collector.BattlesCollector;
+import alifec.core.persistence.custom.BattlesCollector;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.filter.TournamentFilter;
-import alifec.core.persistence.predicate.ExcludeBattlesPredicate;
+import alifec.core.persistence.custom.ExcludeBattlesPredicate;
 import org.apache.logging.log4j.LogManager;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -155,20 +152,19 @@ public class TournamentFileManager {
     public static void deleteBattleBackupFile(ContestConfig config, UnsuccessfulColonies unsuccessful) {
         Path backupFile = Paths.get(config.getBattlesTargetRunFile(unsuccessful.getTournament()));
 
-        if (Files.exists(backupFile)) {
-            try {
-                Files.delete(backupFile);
-                logger.info("Delete back up file [OK]");
-            } catch (IOException e) {
-                logger.info("Delete back up file [FAIL]");
-                logger.error(e.getMessage(), e);
-            }
+        try {
+            Files.deleteIfExists(backupFile);
+            logger.info("Delete back up file [OK]");
+        } catch (IOException e) {
+            logger.info("Delete back up file [FAIL]");
+            logger.error(e.getMessage(), e);
         }
+
         /*TODO: ver porque esto estaba acá, mepa que está al dope
         try {
-            tournaments.newTournament(environment.getNames());
+            tournaments.newTournament(environment.getColonyNames());
             logger.info("Creating new Tournament [OK]");
-        } catch (CreateTournamentException ex) {
+        } catch (TournamentException ex) {
             logger.info("Creating new Tournament [FAIL]");
         }*/
     }
@@ -225,7 +221,7 @@ public class TournamentFileManager {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : battles) {
                 if (line instanceof Battle)
-                    writer.write(((Battle)line).toCsv() + '\n');
+                    writer.write(((Battle) line).toCsv() + '\n');
                 else
                     writer.write(line.toString() + '\n');
             }
@@ -245,4 +241,19 @@ public class TournamentFileManager {
     public boolean existsFile(String file) {
         return Files.exists(Paths.get(file));
     }
+
+    public void createFileAndPathIfNotExists(String file) throws IOException {
+        Path path = Paths.get(file);
+
+        //create the tournament folder if it does not exists.
+        if (Files.notExists(path.getParent())) {
+            Files.createDirectory(path.getParent());
+        }
+
+        //create the battle file if it does not exists.
+        if (Files.notExists(path)) {
+            Files.createFile(path);
+        }
+    }
+
 }

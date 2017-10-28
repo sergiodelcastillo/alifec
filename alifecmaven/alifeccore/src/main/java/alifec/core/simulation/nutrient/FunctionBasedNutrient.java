@@ -29,6 +29,11 @@ public class FunctionBasedNutrient implements Nutrient {
     }
 
     @Override
+    public String getName() {
+        return function.getName();
+    }
+
+    @Override
     public int getId() {
         return function.getId();
     }

@@ -5,9 +5,11 @@ import alifec.contest.simulationUI.GUIdosD;
 import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
 import alifec.core.contest.Tournament;
-import alifec.core.exception.CreateBattleException;
+import alifec.core.exception.BattleException;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.simulation.Competitor;
 import alifec.core.simulation.Environment;
+import alifec.core.simulation.NutrientDistribution;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +20,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
 
 public class BattleUI extends JPanel implements ActionListener {
@@ -48,7 +49,9 @@ public class BattleUI extends JPanel implements ActionListener {
     private JButton addSelected;
     private JButton addAll;
 
-    private Hashtable<String, Integer> opponents, nutrients;
+    private List<NutrientDistribution> nutrients;
+    private List<Competitor> opponents;
+
 
     private final Contest contest;
     private final ContestConfig config;
@@ -80,12 +83,12 @@ public class BattleUI extends JPanel implements ActionListener {
         JLabel labelOp2 = new JLabel("Op.2");
         JLabel labelDist = new JLabel("Nutrients");
 
-        opponents = environment.getOps();
-        nutrients = father.getContest().getNutrients();
+        opponents = environment.getCompetitors();
+        nutrients = father.getContest().getCurrentNutrients();
 
-        opponent1 = new JComboBox<>(new MiComboboxModel(opponents));
-        opponent2 = new JComboBox<>(new MiComboboxModel(opponents));
-        nutrient = new JComboBox<>(new MiComboboxModel(nutrients));
+        opponent1 = new JComboBox<>(new ColonyComboboxModel(opponents));
+        opponent2 = new JComboBox<>(new ColonyComboboxModel(opponents));
+        nutrient = new JComboBox<>(new NutrientComboboxModel(nutrients));
 
         opponent1.setMinimumSize(new Dimension(100, 20));
         opponent2.setMinimumSize(new Dimension(100, 20));
@@ -200,23 +203,26 @@ public class BattleUI extends JPanel implements ActionListener {
             }
 
         } else if (e.getSource().equals(addSelected)) {
-            if (environment.getOps().isEmpty()) {
+            if (environment.getCompetitors().isEmpty()) {
                 Message.printErr(father, "You can´t create battles, there are not opponents");
                 return;
             }
             try {
-                int index1 = opponents.get(opponent1.getSelectedItem());
-                int index2 = opponents.get(opponent2.getSelectedItem());
-                int indexNut = nutrients.get(nutrient.getSelectedItem());
-                String name1 = opponent1.getSelectedItem().toString();
-                String name2 = opponent2.getSelectedItem().toString();
-                String nameNut = nutrient.getSelectedItem().toString();
+                Competitor c1 = ((Competitor)opponent1.getSelectedItem());
+                Competitor c2 = ((Competitor)opponent2.getSelectedItem());
+                NutrientDistribution n = (NutrientDistribution) nutrient.getSelectedItem();
 
-                Battle battle = new Battle(index1, index2, indexNut, name1, name2, nameNut);
+                Battle battle = new Battle(
+                        c1.getId(),
+                        c2.getId(),
+                        n.getId(),
+                        c1.getColonyName(),
+                        c2.getColonyName(),
+                        n.getNutrientName());
 
                 if (!addBattle(battle, father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE))
                     Message.printErr(this, "Existing battle: " + battle.toString());
-            } catch (CreateBattleException ex) {
+            } catch (BattleException ex) {
                 logger.error(ex.getMessage(), ex);
                 Message.printErr(father, ex.getMessage());
             } catch (NullPointerException ex) {
@@ -225,7 +231,7 @@ public class BattleUI extends JPanel implements ActionListener {
             }
 
         } else if (e.getSource().equals(addAll)) {
-            if (environment.getOps().isEmpty())
+            if (environment.getCompetitors().isEmpty())
                 Message.printErr(father, "You can´t create battles, there are not oponentes");
 
             else
@@ -305,9 +311,9 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public void updateNutrients() {
-        nutrients = father.getContest().getNutrients();
+        nutrients = father.getContest().getCurrentNutrients();
 
-        nutrient.setModel(new MiComboboxModel(nutrients));
+        nutrient.setModel(new NutrientComboboxModel(nutrients));
         nutrient.updateUI();
     }
 
@@ -317,23 +323,23 @@ public class BattleUI extends JPanel implements ActionListener {
         for (int i = 0; i < getBattles().size(); i++) {
             Battle b = getBattles().elementAt(i);
 
-            if (b.getFirstColony().equals(colonyName) || b.getSecondColony().equals(colonyName))
+            if (b.contain(colonyName))
                 indexes.add(b);
         }
 
         for (Battle b : indexes)
             getBattles().removeElement(b);
 
-        return ((MiComboboxModel) opponent1.getModel()).remove(colonyName) &&
-                ((MiComboboxModel) opponent2.getModel()).remove(colonyName);
+        return ((ColonyComboboxModel) opponent1.getModel()).remove(colonyName) &&
+                ((ColonyComboboxModel) opponent2.getModel()).remove(colonyName);
     }
 
     public void clear() {
-        opponents = environment.getOps();
-        nutrients = father.getContest().getNutrients();
-        opponent1.setModel(new MiComboboxModel(opponents));
-        opponent2.setModel(new MiComboboxModel(opponents));
-        nutrient.setModel(new MiComboboxModel(nutrients));
+        opponents = environment.getCompetitors();
+        nutrients = father.getContest().getCurrentNutrients();
+        opponent1.setModel(new ColonyComboboxModel(opponents));
+        opponent2.setModel(new ColonyComboboxModel(opponents));
+        nutrient.setModel(new NutrientComboboxModel(nutrients));
 
         model.clear();
         battlesList.updateUI();
@@ -363,9 +369,7 @@ public class BattleUI extends JPanel implements ActionListener {
             logger.error("Creating back up [FAIL]");
             logger.error(ex.getMessage(), ex);
         }
-
     }
-
 
     private void deleteTargetRunFile() {
         try {
@@ -378,7 +382,6 @@ public class BattleUI extends JPanel implements ActionListener {
             logger.error(t.getMessage(), t);
         }
     }
-
 
     public void setEnabled(boolean b) {
         battlesList.setEnabled(b);

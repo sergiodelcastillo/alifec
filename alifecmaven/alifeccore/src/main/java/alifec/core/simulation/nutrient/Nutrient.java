@@ -38,4 +38,6 @@ public interface Nutrient {
     void eat(int x, int y, float ene);
 
     void init();
+
+    String getName();
 }

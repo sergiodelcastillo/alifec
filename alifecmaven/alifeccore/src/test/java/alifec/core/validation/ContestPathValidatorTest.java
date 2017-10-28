@@ -3,6 +3,7 @@ package alifec.core.validation;
 import alifec.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
+import alifec.core.exception.ValidationException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,18 +15,23 @@ import java.net.URISyntaxException;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestPathValidatorTest extends ParentTest{
+public class ContestPathValidatorTest extends ParentTest {
 
     @Test
     public void testValidate() throws CreateContestFolderException, IOException, URISyntaxException, ConfigFileException {
         ContestPathValidator validator = new ContestPathValidator();
 
-        Assert.assertFalse(validator.validate(TEST_ROOT_PATH));
+        try {
+            validator.validate(TEST_ROOT_PATH);
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
 
         createContest("contest-01");
-
-
-        Assert.assertTrue(validator.validate(TEST_ROOT_PATH));
-
+        try {
+            validator.validate(TEST_ROOT_PATH);
+        } catch (ValidationException ex) {
+            Assert.fail("It should be valid.");
+        }
     }
 }

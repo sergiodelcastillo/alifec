@@ -5,14 +5,14 @@ package alifec.core.contest.oponentInfo;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class OpponentReportLine implements Comparable<OpponentReportLine> {
+public class OpponentStatistics implements Comparable<OpponentStatistics> {
     private String name;
     private String author;
     private String affiliation;
     private int ranking;
     private float accumulated;
 
-    public OpponentReportLine(String name, String author, String affiliation, int ranking, float accumulated) {
+    public OpponentStatistics(String name, String author, String affiliation, int ranking, float accumulated) {
         this.name = name;
         this.author = author;
         this.affiliation = affiliation;
@@ -41,7 +41,7 @@ public class OpponentReportLine implements Comparable<OpponentReportLine> {
     }
 
     @Override
-    public int compareTo(OpponentReportLine o) {
+    public int compareTo(OpponentStatistics o) {
         return Integer.compare(ranking, o.ranking);
     }
 

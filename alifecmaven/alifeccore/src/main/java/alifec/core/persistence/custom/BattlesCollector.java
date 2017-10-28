@@ -1,4 +1,4 @@
-package alifec.core.persistence.collector;
+package alifec.core.persistence.custom;
 
 import alifec.core.contest.Battle;
 import org.apache.logging.log4j.LogManager;

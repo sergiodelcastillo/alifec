@@ -1,6 +1,7 @@
 package alifec.core.validation;
 
 import alifec.ParentTest;
+import alifec.core.exception.ValidationException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,33 +23,81 @@ public class NewContestFolderValidatorTest extends ParentTest {
         NewContestFolderValidator validator = new NewContestFolderValidator();
 
         //empty string
-        Assert.assertFalse(validator.validate(null));
-        Assert.assertFalse(validator.validate(""));
-        Assert.assertFalse(validator.validate(" "));
-        Assert.assertFalse(validator.validate("     "));
-        Assert.assertFalse(validator.validate('\t'+""));
+        try {
+            validator.validate(null);
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            validator.validate("");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            validator.validate(" ");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            validator.validate("     ");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+        try {
+            validator.validate('\t' + "");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+
 
         //Non valid names
-        Assert.assertFalse(validator.validate(TEST_ROOT_PATH+ File.separator+""));
-        Assert.assertFalse(validator.validate(TEST_ROOT_PATH+ File.separator+"Contes-"));
-        Assert.assertFalse(validator.validate(TEST_ROOT_PATH+ File.separator+"Context-asdf"));
+        try {
+            validator.validate(TEST_ROOT_PATH + File.separator + "");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+
+        try {
+            validator.validate(TEST_ROOT_PATH + File.separator + "Contes-");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
+
+        try {
+            validator.validate(TEST_ROOT_PATH + File.separator + "Context-asdf");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
 
         //name too long
-        Assert.assertFalse(validator.validate(TEST_ROOT_PATH+ File.separator+"contest-00000000001111111111111111"));
+        try {
+            validator.validate(TEST_ROOT_PATH + File.separator + "contest-00000000001111111111111111");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
 
         //existing folder
-        Path file = Paths.get(TEST_ROOT_PATH + File.separator +  "contest-01");
-        Files.createDirectory(file);
-        Assert.assertFalse(validator.validate(TEST_ROOT_PATH+ File.separator+"contest-01"));
+        try {
+
+            Path file = Paths.get(TEST_ROOT_PATH + File.separator + "contest-01");
+            Files.createDirectory(file);
+            validator.validate(TEST_ROOT_PATH + File.separator + "contest-01");
+            Assert.fail("It should be non valid.");
+        } catch (ValidationException ex) {
+        }
     }
 
     @Test
-    public void testValidContestFolder(){
+    public void testValidContestFolder() {
         NewContestFolderValidator validator = new NewContestFolderValidator();
 
-        Assert.assertTrue(validator.validate(TEST_ROOT_PATH+ File.separator+"contest-01"));
-        Assert.assertTrue(validator.validate(TEST_ROOT_PATH+ File.separator+"contest-1"));
-        Assert.assertTrue(validator.validate(TEST_ROOT_PATH+ File.separator+"Contest-1"));
-        Assert.assertTrue(validator.validate(TEST_ROOT_PATH+ File.separator+"Contest-0000000000111111111111111"));
+        try {
+            validator.validate(TEST_ROOT_PATH + File.separator + "contest-01");
+            validator.validate(TEST_ROOT_PATH + File.separator + "contest-1");
+            validator.validate(TEST_ROOT_PATH + File.separator + "Contest-1");
+            validator.validate(TEST_ROOT_PATH + File.separator + "Contest-0000000000111111111111111");
+        } catch (ValidationException ex) {
+            Assert.fail("It should be valid.");
+        }
     }
 }

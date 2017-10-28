@@ -126,4 +126,12 @@ public class ContestFileManager {
             return false;
         }
     }
+
+    public void delete(String file) throws IOException {
+        Path path = Paths.get(file);
+
+        //remove the file and its folder.
+        Files.deleteIfExists(path);
+        Files.deleteIfExists(path.getParent());
+    }
 }

@@ -1,5 +1,7 @@
 package alifec.core.validation;
 
+import alifec.core.exception.ValidationException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,17 +21,19 @@ public class NewContestFolderValidator implements Validator<String> {
     }
 
     @Override
-    public boolean validate(String folder) {
+    public void validate(String folder) throws ValidationException {
 
-        if (folder == null || folder.isEmpty()) return false;
+        if (folder == null || folder.isEmpty())
+            throw new ValidationException("The new contest folder is not a valid contest name: name is empty.");
 
         Path file = Paths.get(folder);
 
-        if (Files.exists(file)) return false;
+        if (Files.exists(file))
+            throw new ValidationException("The contest folder already exists.");
 
         String[] names = file.toFile().getAbsolutePath().split("/");
         String name = names[names.length - 1];
 
-        return contestNameValidator.validate(name);
+        contestNameValidator.validate(name);
     }
 }

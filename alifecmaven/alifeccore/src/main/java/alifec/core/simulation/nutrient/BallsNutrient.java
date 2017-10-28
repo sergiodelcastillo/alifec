@@ -101,12 +101,18 @@ public class BallsNutrient implements Nutrient {
     }
 
     @Override
+    public String getName() {
+        return "Balls";
+    }
+
+    @Override
     public int getId() {
         return ID;
     }
 
     @Override
     public String toString() {
-        return "Balls";
+        return getName();
     }
+
 }

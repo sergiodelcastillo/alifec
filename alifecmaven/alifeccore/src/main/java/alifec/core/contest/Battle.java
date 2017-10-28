@@ -1,7 +1,7 @@
 package alifec.core.contest;
 
 
-import alifec.core.exception.CreateBattleException;
+import alifec.core.exception.BattleException;
 import alifec.core.validation.BattleFromCsvValidator;
 import alifec.core.validation.BattleRuntimeValidator;
 
@@ -23,7 +23,7 @@ public class Battle implements Comparable<Battle> {
     private String nutrient;
     private int nutrientId = -1;
 
-    public Battle(String line) throws CreateBattleException {
+    public Battle(String line) throws BattleException {
         checkLineFromCSV(line);
 
         String[] tmp = line.split(",");
@@ -36,7 +36,7 @@ public class Battle implements Comparable<Battle> {
     }
 
     public Battle(int op1, int op2, int nutri, String name1, String name2, String n)
-            throws CreateBattleException {
+            throws BattleException {
 
         this.firstId = op1;
         this.firstName = name1;
@@ -50,19 +50,24 @@ public class Battle implements Comparable<Battle> {
         checkRuntime();
     }
 
-    private void checkLineFromCSV(String line) throws CreateBattleException {
+    private void checkLineFromCSV(String line) throws BattleException {
         BattleFromCsvValidator validator = new BattleFromCsvValidator();
 
-        if (!validator.validate(line)) {
-            throw new CreateBattleException("Invalid battle: (" + this.toCsv() + ")");
+        try {
+            validator.validate(line);
+        } catch (Throwable ex) {
+            throw new BattleException("Invalid battle: (" + this.toCsv() + ")", ex);
         }
     }
 
-    private void checkRuntime() throws CreateBattleException {
+    private void checkRuntime() throws BattleException {
         BattleRuntimeValidator runtimeValidator = new BattleRuntimeValidator();
 
-        if (!runtimeValidator.validate(this))
-            throw new CreateBattleException("Invalid battle: (" + this.toCsv() + ")");
+        try {
+            runtimeValidator.validate(this);
+        } catch (Throwable t) {
+            throw new BattleException("Invalid battle: (" + this.toCsv() + ")", t);
+        }
     }
 
     /**
