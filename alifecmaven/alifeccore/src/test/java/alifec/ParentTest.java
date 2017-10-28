@@ -1,6 +1,7 @@
 package alifec;
 
-import alifec.core.contest.BattleResult;
+import alifec.core.contest.Battle;
+import alifec.core.contest.Battle;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.exception.CreateContestFolderException;
@@ -101,38 +102,38 @@ public class ParentTest {
         }
     }
 
-    protected BattleResult createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws CreateBattleException {
+    protected Battle createBattle(Environment env, int colony1, int colony2, int nutrientId, String nutrientName) throws CreateBattleException {
         Colony c1 = env.getColonyById(colony1);
         Colony c2 = env.getColonyById(colony2);
 
-        BattleResult battle = new BattleResult(c1.getId(), c2.getId(), nutrientId, c1.getName(), c2.getName(), nutrientName);
+        Battle battle = new Battle(c1.getId(), c2.getId(), nutrientId, c1.getName(), c2.getName(), nutrientName);
         env.createBattle(battle);
 
         return battle;
     }
 
-    public List<BattleResult> battleResultDataSet() throws CreateBattleException {
-        List<BattleResult> list = new ArrayList<>();
+    public List<Battle> battleDataSet() throws CreateBattleException {
+        List<Battle> list = new ArrayList<>();
 
-        BattleResult battle1 = new BattleResult(1,2, 1, "col1", "col2", "Famine");
+        Battle battle1 = new Battle(1,2, 1, "col1", "col2", "Famine");
         battle1.setWinner(1, 100f);
-        BattleResult battle2 = new BattleResult(1,3, 1, "col1", "col3", "Famine");
+        Battle battle2 = new Battle(1,3, 1, "col1", "col3", "Famine");
         battle2.setWinner(3, 140f);
-        BattleResult battle3 = new BattleResult(1,4, 1, "col1", "col4", "Famine");
+        Battle battle3 = new Battle(1,4, 1, "col1", "col4", "Famine");
         battle3.setWinner(1, 130f);
-        BattleResult battle4 = new BattleResult(1,2, 2, "col1", "col2", "Balls");
+        Battle battle4 = new Battle(1,2, 2, "col1", "col2", "Balls");
         battle4.setWinner(2, 200f);
-        BattleResult battle5 = new BattleResult(1,3, 2, "col1", "col3", "Balls");
+        Battle battle5 = new Battle(1,3, 2, "col1", "col3", "Balls");
         battle5.setWinner(1, 10f);
-        BattleResult battle6 = new BattleResult(1,4, 2, "col1", "col4", "Balls");
+        Battle battle6 = new Battle(1,4, 2, "col1", "col4", "Balls");
         battle6.setWinner(4, 1000f);
-        BattleResult battle7 = new BattleResult(2,3, 1, "col2", "col3", "Famine");
+        Battle battle7 = new Battle(2,3, 1, "col2", "col3", "Famine");
         battle7.setWinner(2, 2000f);
-        BattleResult battle8 = new BattleResult(2,4, 1, "col2", "col4", "Famine");
+        Battle battle8 = new Battle(2,4, 1, "col2", "col4", "Famine");
         battle8.setWinner(4, 500f);
-        BattleResult battle9 = new BattleResult(3,4, 1, "col3", "col4", "Famine");
+        Battle battle9 = new Battle(3,4, 1, "col3", "col4", "Famine");
         battle9.setWinner(3, 750f);
-        BattleResult battle10 = new BattleResult(1,4, 2, "col1", "col4", "Balls");
+        Battle battle10 = new Battle(1,4, 2, "col1", "col4", "Balls");
         battle10.setWinner(4, 1000f);
 
         list.add(battle1);

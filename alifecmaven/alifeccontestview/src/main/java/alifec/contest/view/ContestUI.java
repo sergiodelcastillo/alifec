@@ -213,7 +213,7 @@ public class ContestUI extends JFrame implements ActionListener {
                 UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, uColonies.getColonyA(), uColonies.getColonyB());
                 solver.setVisible(true);
 
-                for (String c : contest.getEnvironment().getNames()) {
+                for (String c : contest.getEnvironment().getOpponentNames()) {
                     contest.lastTournament().addColony(c);
                 }
             }

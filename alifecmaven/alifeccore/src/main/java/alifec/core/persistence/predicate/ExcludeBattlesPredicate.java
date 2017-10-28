@@ -25,7 +25,7 @@ public class ExcludeBattlesPredicate implements Predicate<String> {
     public boolean test(String s) {
         try {
             return !battles.contains(new Battle(s));
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
             return false;
         }

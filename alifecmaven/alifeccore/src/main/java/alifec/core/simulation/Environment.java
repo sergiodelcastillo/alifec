@@ -1,6 +1,6 @@
 package alifec.core.simulation;
 
-import alifec.core.contest.BattleResult;
+import alifec.core.contest.Battle;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.NutrientException;
 import alifec.core.persistence.config.ContestConfig;
@@ -9,11 +9,7 @@ import alifec.core.simulation.rules.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class Environment {
@@ -52,7 +48,7 @@ public class Environment {
     /**
      * Information of current battle .. temporal reference !!
      */
-    private BattleResult opponents;
+    private Battle opponents;
 
     private ColonyRule[] rules = {
             new LifeRule(),
@@ -122,22 +118,22 @@ public class Environment {
      * @param b is a battle to run
      * @return if was successful
      */
-    public boolean createBattle(BattleResult b) {
+    public boolean createBattle(Battle  b) {
         opponents = b;
 
         try {
-            agar.setNutrient(b.nutrientID);
+            agar.setNutrient(b.getNutrientId());
         } catch (NutrientException e) {
             logger.error(e.getMessage(), e);
             return false;
         }
 
 
-        if ((c1 = getColonyById(b.ID1)) == null) {
+        if ((c1 = getColonyById(b.getFirstColonyId())) == null) {
             return false;
         }
 
-        if ((c2 = getColonyById(b.ID2)) == null) {
+        if ((c2 = getColonyById(b.getSecondColonyId())) == null) {
             return false;
         }
 
@@ -217,16 +213,12 @@ public class Environment {
         }
 
         if (c1.isDied()) {
-            opponents.setWinner(opponents.ID2, c2.getEnergy());
-            //opponents.winnerID = opponents.ID2;
-            //opponents.winner_energy = c2.getEnergy();
+            opponents.setWinner(opponents.getSecondColonyId(), c2.getEnergy());
             return true;
         }
 
         if (c2.isDied()) {
-            opponents.setWinner(opponents.ID1, c1.getEnergy());
-            //opponents.winnerID = opponents.ID1;
-            //opponents.winner_energy = c1.getEnergy();
+            opponents.setWinner(opponents.getFirstColonyId(), c1.getEnergy());
             return true;
         }
 
@@ -292,11 +284,11 @@ public class Environment {
         return c2;
     }
 
-    public BattleResult getResults() {
+    public Battle getResults() {
         return opponents;
     }
 
-    public List<String> getNames() {
+    public List<String> getOpponentNames() {
         List<String> tmp = new ArrayList<>();
 
         for (Colony c : colonies)

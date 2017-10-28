@@ -66,7 +66,7 @@ public class Contest {
             selected = tournaments.size() - 1;
 
             //create new and empty tournament
-            newTournament(environment.getNames());
+            newTournament(environment.getOpponentNames());
 
             opponentsInfo.read();
 
@@ -110,6 +110,7 @@ public class Contest {
             throw new CreateTournamentException("Cannot load the tournament: " + ex.getTournamentName());
         }
     }
+
     /**
      * Remove the selected tournament
      *
@@ -251,7 +252,6 @@ public class Contest {
     }
 
 
-
     public Environment getEnvironment() {
         return environment;
     }
@@ -299,6 +299,7 @@ public class Contest {
 
         return info;
     }
+
     public Hashtable<String, Integer> getRanking() throws CreateRankingException {
         Hashtable<String, Integer> ranking = new Hashtable<>();
 
@@ -387,5 +388,22 @@ public class Contest {
         config.save();
     }
 
+    public List<Battle> getMissingRunBattles() throws IOException {
+        List<Battle> list = lastTournament().getMissingRunBattles();
+        List<Battle> toDelete = new ArrayList<>();
+        List<String> opponentNames = environment.getOpponentNames();
+
+        // remove battles which have unavailable colonies
+        for (Battle battle : list) {
+            if (!opponentNames.contains(battle.getFirstColony()) ||
+                    !opponentNames.contains(battle.getSecondColony())) {
+                toDelete.add(battle);
+            }
+        }
+
+        list.removeAll(toDelete);
+
+        return list;
+    }
 }
 

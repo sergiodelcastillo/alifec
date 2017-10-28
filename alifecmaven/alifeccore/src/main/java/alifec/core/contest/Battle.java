@@ -1,6 +1,10 @@
 package alifec.core.contest;
 
 
+import alifec.core.exception.CreateBattleException;
+import alifec.core.validation.BattleFromCsvValidator;
+import alifec.core.validation.BattleRuntimeValidator;
+
 /**
  * @author Sergio Del Castillo
  *         mail@: sergio.jose.delcastillo@gmail.com
@@ -8,49 +12,71 @@ package alifec.core.contest;
  *         Contains de history of battles.
  */
 public class Battle implements Comparable<Battle> {
-    private float energy_1;
-    private float energy_2;
-    private String name_1;
-    private String name_2;
-    private String nutrient;
+    private float firstEnergy;
+    private String firstName;
+    private int firstId = -1;
 
-    public Battle(String line) {
-        if (line == null || line.isEmpty())
-            throw new IllegalArgumentException("The line (" + line + ") is empty");
+    private float secondEnergy;
+    private String secondName;
+    private int secondId = -1;
+
+    private String nutrient;
+    private int nutrientId = -1;
+
+    public Battle(String line) throws CreateBattleException {
+        checkLineFromCSV(line);
 
         String[] tmp = line.split(",");
 
-        if (tmp.length != 5)
-            throw new IllegalArgumentException("The line (" + line + ") should have 5 columns");
-
-        name_1 = tmp[0];
-        name_2 = tmp[1];
+        firstName = tmp[0];
+        secondName = tmp[1];
         nutrient = tmp[2];
-        energy_1 = Float.parseFloat(tmp[3]);
-        energy_2 = Float.parseFloat(tmp[4]);
+        firstEnergy = Float.parseFloat(tmp[3]);
+        secondEnergy = Float.parseFloat(tmp[4]);
     }
 
-    public Battle(BattleResult b) {
-        this.name_1 = b.name1;
-        this.name_2 = b.name2;
-        this.nutrient = b.nutrient;
-        this.energy_1 = b.energy1();
-        this.energy_2 = b.energy2();
+    public Battle(int op1, int op2, int nutri, String name1, String name2, String n)
+            throws CreateBattleException {
+
+        this.firstId = op1;
+        this.firstName = name1;
+
+        this.secondId = op2;
+        this.secondName = name2;
+
+        this.nutrientId = nutri;
+        this.nutrient = n;
+
+        checkRuntime();
     }
 
+    private void checkLineFromCSV(String line) throws CreateBattleException {
+        BattleFromCsvValidator validator = new BattleFromCsvValidator();
+
+        if (!validator.validate(line)) {
+            throw new CreateBattleException("Invalid battle: (" + this.toCsv() + ")");
+        }
+    }
+
+    private void checkRuntime() throws CreateBattleException {
+        BattleRuntimeValidator runtimeValidator = new BattleRuntimeValidator();
+
+        if (!runtimeValidator.validate(this))
+            throw new CreateBattleException("Invalid battle: (" + this.toCsv() + ")");
+    }
 
     /**
      * @return name of first colony
      */
     public String getFirstColony() {
-        return name_1;
+        return firstName;
     }
 
     /**
      * @return name of second colony
      */
     public String getSecondColony() {
-        return name_2;
+        return secondName;
     }
 
     /**
@@ -61,11 +87,11 @@ public class Battle implements Comparable<Battle> {
     }
 
     public Float getWinnerEnergy() {
-        return (energy_1 > 0) ? new Float(energy_1) : new Float(energy_2);
+        return (firstEnergy > 0) ? new Float(firstEnergy) : new Float(secondEnergy);
     }
 
     public String getWinnerName() {
-        return (energy_1 > 0) ? name_1 : name_2;
+        return (firstEnergy > 0) ? firstName : secondName;
     }
 
     @Override
@@ -73,44 +99,86 @@ public class Battle implements Comparable<Battle> {
         if (o != null && o instanceof Battle) {
             Battle b = (Battle) o;
 
-            return ((name_1.equals(b.name_1) && name_2.equals(b.name_2)) ||
-                    (name_1.equals(b.name_2) && name_2.equals(b.name_1))) &&
+            return ((firstName.equals(b.firstName) && secondName.equals(b.secondName)) ||
+                    (firstName.equals(b.secondName) && secondName.equals(b.firstName))) &&
                     nutrient.equals(b.nutrient);
         }
         return false;
     }
 
     public boolean contain(String name) {
-        return name_1.equals(name) || name_2.equals(name);
+        return firstName.equals(name) || secondName.equals(name);
     }
 
     @Override
     public String toString() {
-        return name_1 + "," + name_2 + "," + nutrient + "," +
-                energy_1 + "," + energy_2 + ",";
+        StringBuilder builder = new StringBuilder(100);
+        builder.append(firstName)
+                .append(" vs ")
+                .append(secondName)
+                .append(" in ")
+                .append(nutrient);
+
+        return builder.toString();
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 23 * hash + Float.floatToIntBits(this.energy_1);
-        hash = 23 * hash + Float.floatToIntBits(this.energy_2);
-        hash = 23 * hash + (this.name_1 != null ? this.name_1.hashCode() : 0);
-        hash = 23 * hash + (this.name_2 != null ? this.name_2.hashCode() : 0);
+        hash = 23 * hash + Float.floatToIntBits(this.firstEnergy);
+        hash = 23 * hash + Float.floatToIntBits(this.secondEnergy);
+        hash = 23 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
+        hash = 23 * hash + (this.secondName != null ? this.secondName.hashCode() : 0);
         hash = 23 * hash + (this.nutrient != null ? this.nutrient.hashCode() : 0);
         return hash;
     }
 
     @Override
     public int compareTo(Battle o) {
-        int result = name_1.compareTo(o.name_1);
+        int result = firstName.compareTo(o.firstName);
 
         if (result != 0) return result;
 
-        result = name_2.compareTo(o.name_2);
+        result = secondName.compareTo(o.secondName);
 
         if (result != 0) return result;
 
         return nutrient.compareTo(o.nutrient);
+    }
+
+    public int getNutrientId() {
+        return nutrientId;
+    }
+
+    public int getFirstColonyId() {
+        return firstId;
+    }
+
+    public int getSecondColonyId() {
+        return secondId;
+    }
+
+    public String toCsv() {
+        StringBuilder builder = new StringBuilder(100);
+        builder.append(firstName)
+                .append(',')
+                .append(secondName)
+                .append(',')
+                .append(nutrient)
+                .append(',')
+                .append(firstEnergy)
+                .append(',')
+                .append(secondEnergy);
+
+        return builder.toString();
+    }
+
+    public void setWinner(int id, float energy) {
+        if (firstId == id)
+            this.firstEnergy = energy;
+
+        if (secondId == id)
+            this.secondEnergy = energy;
+
     }
 }

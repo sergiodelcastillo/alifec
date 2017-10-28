@@ -1,7 +1,6 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
-import alifec.core.contest.BattleResult;
 import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.TournamentCorruptedException;
 import alifec.core.persistence.collector.BattlesCollector;
@@ -10,8 +9,14 @@ import alifec.core.persistence.filter.TournamentFilter;
 import alifec.core.persistence.predicate.ExcludeBattlesPredicate;
 import org.apache.logging.log4j.LogManager;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -169,7 +174,7 @@ public class TournamentFileManager {
 
     public void append(String path, Battle battle) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
-            writer.write(battle.toString() + '\n');
+            writer.write(battle.toCsv() + '\n');
         }
     }
 
@@ -203,7 +208,7 @@ public class TournamentFileManager {
         Files.delete(tempFile);
     }
 
-    public void saveAll(String pathToFile, List<?> battles) throws IOException {
+    public void saveAll(String pathToFile, List<Battle> battles) throws IOException {
         Path path = Paths.get(pathToFile);
 
         saveAll(path, battles);
@@ -216,8 +221,8 @@ public class TournamentFileManager {
 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : battles) {
-                if (line instanceof BattleResult)
-                    writer.write(((BattleResult) line).toCsv() + '\n');
+                if (line instanceof Battle)
+                    writer.write(((Battle)line).toCsv() + '\n');
                 else
                     writer.write(line.toString() + '\n');
             }

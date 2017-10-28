@@ -4,6 +4,7 @@ package alifec.core.contest;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.persistence.TournamentFileManager;
+import alifec.core.persistence.collector.BattlesCollector;
 import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,10 +75,8 @@ public class Tournament implements Comparable<Tournament> {
             colonies.add(c);
     }
 
-    public boolean addResult(BattleResult battleResult) {
+    public boolean addResult(Battle battle) {
         try {
-            Battle battle = battleResult.toBattle();
-
             if (config.isCompetitionMode()) {
                 persistence.append(config.getBattlesFile(name), battle);
             }
@@ -240,13 +239,9 @@ public class Tournament implements Comparable<Tournament> {
     }
 
 
-    public boolean contains(BattleResult br) {
+    public boolean contains(Battle br) {
         for (Battle b : this.battles) {
-            if (b.getNutrient().equalsIgnoreCase(br.nutrient) &&
-                    ((b.getFirstColony().equalsIgnoreCase(br.name1) &&
-                            b.getSecondColony().equalsIgnoreCase(br.name2)) ||
-                            (b.getFirstColony().equalsIgnoreCase(br.name2) &&
-                                    b.getSecondColony().equalsIgnoreCase(br.name1))))
+            if (b.equals(br))
                 return true;
         }
         return false;
@@ -256,11 +251,80 @@ public class Tournament implements Comparable<Tournament> {
         persistence.deleteFile(config.getBattlesTargetRunFile(name));
     }
 
-    public void saveTargetRun(List<BattleResult> battles) throws IOException {
+    public void saveTargetRun(List<Battle> battles) throws IOException {
         persistence.saveAll(config.getBattlesTargetRunFile(name), battles);
     }
 
     public boolean existsTargetRunFile() {
         return persistence.existsFile(config.getBattlesTargetRunFile(name));
+    }
+
+    public List<Battle> generateAllBattles(Hashtable<String, Integer> opponents, Hashtable<String, Integer> nutrients, boolean duplicate) {
+        //todo: create tests.
+        List<Battle> list = new ArrayList<>();
+
+        for (Enumeration<String> op_a = opponents.keys(); op_a.hasMoreElements(); ) {
+            String firstName = op_a.nextElement();
+            Integer firstId = opponents.get(firstName);
+
+            for (Enumeration<String> op_b = opponents.keys(); op_b.hasMoreElements(); ) {
+                String secondName = op_b.nextElement();
+                Integer secondId = opponents.get(secondName);
+
+                for (Enumeration<String> nut = nutrients.keys(); nut.hasMoreElements(); ) {
+                    String nutrientName = nut.nextElement();
+                    Integer nutrientId = nutrients.get(nutrientName);
+
+                    try {
+                        Battle battle = new Battle(firstId, secondId, nutrientId, firstName, secondName, nutrientName);
+
+                        if (!list.contains(battle))
+                            list.add(battle);
+
+                    } catch (CreateBattleException ex) {
+                        logger.error(ex.getMessage(), ex);
+                    }
+                }
+            }
+        }
+
+        //remove already run
+        if (!duplicate) {
+            for (Battle finished : battles) {
+                if (list.contains(finished)) {
+                    logger.warn("Battle already run: (" + battles.toString() + ")");
+                    list.remove(finished);
+                }
+            }
+        }
+
+        return list;
+
+    }
+
+    public List<Battle> getMissingRunBattles() throws IOException {
+        //todo: test
+        List<Battle> list = persistence.readAll(config.getBattlesTargetRunFile(this.name));
+
+        if (list.isEmpty()) return list;
+
+        List<Battle> alreadyRun = persistence.readAll(config.getBattlesFile(this.name));
+
+        //remove already run
+        list.removeAll(alreadyRun);
+
+        List<Integer> allowedNutrients = config.getNutrients();
+
+        List<Battle> toDelete = new ArrayList<>();
+
+        for (Battle battle: battles){
+            if (!allowedNutrients.contains(battle.getNutrientId())) {
+                toDelete.add(battle); //currently the nutrient is not available
+            }
+        }
+        //remove battles containing a distribution of nutrient which is not available at the moment.
+        list.removeAll(toDelete);
+
+        return list;
     }
 }

@@ -3,8 +3,8 @@ package alifec.contest.simulationUI;
 
 import alifec.contest.view.ContestUI;
 import alifec.contest.view.Message;
+import alifec.core.contest.Battle;
 import alifec.core.contest.Tournament;
-import alifec.core.contest.BattleResult;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Colony;
@@ -70,8 +70,8 @@ public class MiThread extends Thread {
     private int[] h1_yPoints;
     private int[] h2_yPoints;
 
-    private Colony firstOponent;
-    private Colony secondOponent;
+    private Colony firstOpponent;
+    private Colony secondOpponent;
 
     private final Environment environment;
     private final Tournament lastTournament;
@@ -118,12 +118,12 @@ public class MiThread extends Thread {
 
             while (battles.size() > 0) {
 
-                BattleResult b = (BattleResult) battles.firstElement();
+                Battle b = (Battle) battles.firstElement();
                 battles.removeElement(battles.firstElement());
                 cui.setMessage(b.toString());
                 environment.createBattle(b);
-                firstOponent = environment.getFirstOpponent();
-                secondOponent = environment.getSecondOpponent();
+                firstOpponent = environment.getFirstOpponent();
+                secondOpponent = environment.getSecondOpponent();
                 updateNames(b);
 
                 try {
@@ -159,7 +159,7 @@ public class MiThread extends Thread {
 
 
                     // update the results !!
-                    BattleResult r = environment.getResults();
+                    Battle r = environment.getResults();
                     lastTournament.addResult(r);
                     cui.getTournamentUI().updateLast();
 
@@ -184,18 +184,17 @@ public class MiThread extends Thread {
 
         cui.getTournamentUI().penalize(colonyName);
 
-        List<BattleResult> indexs = new ArrayList<>();
+        List<Battle> indexs = new ArrayList<>();
 
         for (int i = 0; i < battles.size(); i++) {
-            BattleResult b = (BattleResult) battles.elementAt(i);
+            Battle b = (Battle) battles.elementAt(i);
 
-            if (b.name1.equals(colonyName) || b.name2.equals(colonyName))
+            if (b.contain(colonyName))
                 indexs.add(b);
         }
 
-        for (BattleResult b : indexs) {
-            battles.removeElement(b);
-        }
+
+        for (Battle b : indexs) battles.removeElement(b);
     }
 
     private void resetHistory() {
@@ -330,9 +329,9 @@ public class MiThread extends Thread {
                 }
             }
 
-            for (int i = 0; i < firstOponent.size(); i++) {
-                Cell mo = firstOponent.getMO(i);
-                float ene = firstOponent.getMO(i).ene;
+            for (int i = 0; i < firstOpponent.size(); i++) {
+                Cell mo = firstOpponent.getMO(i);
+                float ene = firstOpponent.getMO(i).ene;
 
                 float a = ene / (Defs.E_INITIAL * 2);
                 if (a > 1) a = 1;
@@ -346,9 +345,9 @@ public class MiThread extends Thread {
                         GUIdosD.K, GUIdosD.K);
             }
 
-            for (int i = 0; i < secondOponent.size(); i++) {
-                Cell mo = secondOponent.getMO(i);
-                float ene = secondOponent.getMO(i).ene;
+            for (int i = 0; i < secondOpponent.size(); i++) {
+                Cell mo = secondOpponent.getMO(i);
+                float ene = secondOpponent.getMO(i).ene;
                 float a = ene / (Defs.E_INITIAL * 2);
                 if (a > 1) a = 1;
 
@@ -393,10 +392,10 @@ public class MiThread extends Thread {
             updateHistory();
 
             graphics.setColor(color1);
-            graphics.drawString("" + (long) firstOponent.getEnergy(), textPosition.x, textPosition.y);
+            graphics.drawString("" + (long) firstOpponent.getEnergy(), textPosition.x, textPosition.y);
             graphics.drawPolyline(h_xPoints, h1_yPoints, historyCount);
             graphics.setColor(color2);
-            graphics.drawString("" + (long) secondOponent.getEnergy(), textPosition.x + anchoText + anchoNum, textPosition.y);
+            graphics.drawString("" + (long) secondOpponent.getEnergy(), textPosition.x + anchoText + anchoNum, textPosition.y);
             graphics.drawPolyline(h_xPoints, h2_yPoints, historyCount);
 
             graphics.setColor(Color.GRAY);
@@ -412,8 +411,8 @@ public class MiThread extends Thread {
 
     private void updateHistory() {
         // update the energy of the colonies
-        history1[historyIndex] = round(firstOponent.getEnergy());
-        history2[historyIndex] = round(secondOponent.getEnergy());
+        history1[historyIndex] = round(firstOpponent.getEnergy());
+        history2[historyIndex] = round(secondOpponent.getEnergy());
 
         energyMax = max(getMax(history1), getMax(history2));
 
@@ -456,9 +455,9 @@ public class MiThread extends Thread {
                 ((radio) * (radio));
     }
 
-    private void updateNames(BattleResult b) {
+    private void updateNames(Battle b) {
         anchoNum = graphics.getFontMetrics().stringWidth("0000000");
-        textOponent = environment.getName(b.ID1) + " vs " + environment.getName(b.ID2);
+        textOponent = environment.getName(b.getFirstColonyId()) + " vs " + environment.getName(b.getSecondColonyId());
         anchoText = graphics.getFontMetrics().stringWidth(textOponent + "   ");
         textPosition = new Point((panel.getWidth() - 2 * anchoNum - anchoText) / 2,
                 GUIdosD.K * (GUIdosD.rel.y + Defs.DIAMETER + 10));

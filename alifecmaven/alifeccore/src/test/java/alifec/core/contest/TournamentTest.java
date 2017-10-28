@@ -39,15 +39,15 @@ public class TournamentTest extends ParentTest {
         //create the environment
         Environment environment = new Environment(config);
 
-        List<String> colonies = environment.getNames();
+        List<String> colonies = environment.getOpponentNames();
         contest.newTournament(colonies);
         Assert.assertTrue("Colonies list must have at least 3", colonies.size() > 2);
 
-        List<BattleResult> battles = new ArrayList<>();
+        List<Battle> battles = new ArrayList<>();
         FamineFunction famineFunction = new FamineFunction();
         BallsNutrient ballsNutrient = new BallsNutrient();
 
-        BattleResult battle1 = new BattleResult(
+        Battle battle1 = new Battle(
                 environment.getColonyIdByName(colonies.get(0)),
                 environment.getColonyIdByName(colonies.get(1)),
                 famineFunction.getId(),
@@ -56,7 +56,7 @@ public class TournamentTest extends ParentTest {
                 famineFunction.getName());
         battle1.setWinner(0, 100f);
 
-        BattleResult battle2 = new BattleResult(
+        Battle battle2 = new Battle(
                 environment.getColonyIdByName(colonies.get(0)),
                 environment.getColonyIdByName(colonies.get(1)),
                 ballsNutrient.getId(),
@@ -65,7 +65,7 @@ public class TournamentTest extends ParentTest {
                 ballsNutrient.toString());
         battle1.setWinner(0, 10f);
 
-        BattleResult battle3 = new BattleResult(
+        Battle battle3 = new Battle(
                 environment.getColonyIdByName(colonies.get(0)),
                 environment.getColonyIdByName(colonies.get(2)),
                 ballsNutrient.getId(),
@@ -74,7 +74,7 @@ public class TournamentTest extends ParentTest {
                 ballsNutrient.toString());
         battle1.setWinner(2, 150f);
 
-        BattleResult battle4 = new BattleResult(
+        Battle battle4 = new Battle(
                 environment.getColonyIdByName(colonies.get(0)),
                 environment.getColonyIdByName(colonies.get(2)),
                 famineFunction.getId(),

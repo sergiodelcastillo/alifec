@@ -2,13 +2,12 @@ package alifec.contest.view;
 
 
 import alifec.contest.simulationUI.GUIdosD;
+import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
 import alifec.core.contest.Tournament;
-import alifec.core.contest.BattleResult;
 import alifec.core.exception.CreateBattleException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Environment;
-import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,8 +15,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 
 public class BattleUI extends JPanel implements ActionListener {
@@ -33,8 +34,8 @@ public class BattleUI extends JPanel implements ActionListener {
     private final ContestUI father;
 
     private final Environment environment;
-    private final DefaultListModel<BattleResult> model = new DefaultListModel<>();
-    private final JList<BattleResult> battlesList = new JList<>(model);
+    private final DefaultListModel<Battle> model = new DefaultListModel<>();
+    private final JList<Battle> battlesList = new JList<>(model);
     private JScrollPane battlesSP;
     private JComboBox<String> opponent1;
     private JComboBox<String> opponent2;
@@ -52,7 +53,7 @@ public class BattleUI extends JPanel implements ActionListener {
     private final Contest contest;
     private final ContestConfig config;
 
-    public BattleUI(ContestUI contestUI, boolean restore) throws IOException {
+    public BattleUI(ContestUI contestUI, boolean restoreMissingRun) throws IOException {
         this.father = contestUI;
         this.environment = father.getContest().getEnvironment();
         this.contest = contestUI.getContest();
@@ -64,118 +65,13 @@ public class BattleUI extends JPanel implements ActionListener {
         add(BorderLayout.CENTER, createCenterPanel());
         add(BorderLayout.SOUTH, createSouthPanel());
 
-        if (restore) {
-            String lastTournament = getLastTournamentName();
-            List<String[]> battles = readBattles(config.getBattlesFile(lastTournament));
-            List<String[]> backup = readBattles(config.getBattlesTargetRunFile(lastTournament));
+        if (restoreMissingRun) {
 
-            validate(battles, backup);
-            restoreBattles(backup, config.getBattlesTargetRunFile(lastTournament));
-        }
-    }
-
-    private void restoreBattles(List<String[]> backup, String file) {
-        if (backup.size() == 0) {
-            new File(file).delete();
-            return;
-        }
-        for (String[] line : backup) {
-            try {
-                String name1 = line[0], name2 = line[1], nameNut = line[2];
-                int index1 = environment.getColonyIdByName(name1);
-                int index2 = environment.getColonyIdByName(name2);
-                Nutrient nutri = environment.getAgar().getNutrientByName(nameNut);
-                int indexNut = nutri == null ? -1 : nutri.getId();
-
-                BattleResult battle = new BattleResult(index1, index2, indexNut, name1, name2, nameNut);
-
+            for(Battle battle: contest.getMissingRunBattles()){
                 addBattle(battle, config.isProgrammerMode());
-            } catch (CreateBattleException ex) {
-                logger.error(ex.getMessage(), ex);
-                Message.printErr(father, ex.getMessage());
             }
-        }// end for!!
+        }
     }
-
-    // 0: oponente 1;
-    //	1: oponente 2;
-    // 2: distribucion de nutrientes
-
-    private void validate(List<String[]> battles, List<String[]> backup) {
-        // Eliminar las batallas que ya se corrieron
-        List<String[]> todelete = new ArrayList<>();
-        for (String[] line : battles) {
-            for (String[] line_backup : backup) {
-                if ((line[0].toLowerCase().equals(line_backup[0].toLowerCase()) &&
-                        line[1].toLowerCase().equals(line_backup[1].toLowerCase()) &&
-                        line[2].toLowerCase().equals(line_backup[2].toLowerCase())) ||
-                        (line[0].toLowerCase().equals(line_backup[1].toLowerCase()) &&
-                                line[1].toLowerCase().equals(line_backup[0].toLowerCase()) &&
-                                line[2].toLowerCase().equals(line_backup[2].toLowerCase()))) {
-                    todelete.add(line_backup);
-                }
-            }
-        }
-        // Eliminar las batallas con distribuciones de nutrientes que no están disponibles.
-        List<String> nutrients = environment.getAgar().getNutrientsName();
-
-        for (String[] l : backup) {
-            boolean b = false;
-            for (String n : nutrients) {
-                if (l[2].toLowerCase().equals(n.toLowerCase())) {
-                    b = true;
-                }
-            }
-            if (!b) {
-                todelete.add(l);
-            }
-        }
-
-        // eliminar las batallas con Colonias que no estan disponibles.
-        List<String> colonies = environment.getNames();
-
-        for (String[] l : backup) {
-            int b = 0;
-            for (String c : colonies) {
-                if (l[0].toLowerCase().equals(c.toLowerCase()))
-                    b++;
-                else if (l[1].toLowerCase().equals(c.toLowerCase()))
-                    b++;
-            }
-            if (b != 2) {
-                todelete.add(l);
-            }
-        }
-
-        backup.removeAll(todelete);
-    }
-
-    private List<String[]> readBattles(String path) {
-        List<String[]> res = new ArrayList<>();
-
-        try {
-            FileReader fr = new FileReader(path);
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                String[] s = line.split(",");
-
-                if (3 <= s.length) {
-                    res.add(new String[]{s[0], s[1], s[2]});
-                }
-            }
-
-            br.close();
-
-        } catch (IOException ignored) {
-            logger.trace(ignored.getMessage());
-            res.clear();
-        }
-
-        return res;
-    }
-
 
     private JPanel createNorthPanel() {
         JPanel northPanel = new JPanel();
@@ -275,7 +171,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 Message.printErr(father, "You must select a battle.");
             } else {
                 father.setMessage("Running Selected Battle");
-                final DefaultListModel<BattleResult> model_tmp = new DefaultListModel<>();
+                final DefaultListModel<Battle> model_tmp = new DefaultListModel<>();
                 model_tmp.addElement(battlesList.getSelectedValue());
 
                 createTargetRunFile(RunOption.SELECTED);
@@ -316,7 +212,7 @@ public class BattleUI extends JPanel implements ActionListener {
                 String name2 = opponent2.getSelectedItem().toString();
                 String nameNut = nutrient.getSelectedItem().toString();
 
-                BattleResult battle = new BattleResult(index1, index2, indexNut, name1, name2, nameNut);
+                Battle battle = new Battle(index1, index2, indexNut, name1, name2, nameNut);
 
                 if (!addBattle(battle, father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE))
                     Message.printErr(this, "Existing battle: " + battle.toString());
@@ -350,7 +246,7 @@ public class BattleUI extends JPanel implements ActionListener {
      * @param programmerMode mode of contest, can be PROGRAMMER or COMPETITION
      * @return true if is successfully
      */
-    private boolean addBattle(BattleResult b, boolean programmerMode) {
+    private boolean addBattle(Battle b, boolean programmerMode) {
         Tournament last = father.getContest().lastTournament();
 
         boolean addOK = last.isEnabled(); // to be sure
@@ -361,9 +257,6 @@ public class BattleUI extends JPanel implements ActionListener {
             }
         } else {
             if (model.contains(b)) { // battle existing
-                addOK = false;
-            }
-            if (last.contains(b)) { // battle was run
                 addOK = false;
             }
 
@@ -379,38 +272,20 @@ public class BattleUI extends JPanel implements ActionListener {
 
     private void generateAllBattle() {
         boolean existingBattle = false;
+        boolean option = father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE;
+        List<Battle> list = contest.lastTournament().generateAllBattles(opponents, nutrients, option);
 
-        for (Enumeration<String> op_a = opponents.keys(); op_a.hasMoreElements(); ) {
-            String n_a = op_a.nextElement(); // name_oponent_a
-            Integer i_a = opponents.get(n_a); // index_oponent_a
-
-            for (Enumeration<String> op_b = opponents.keys(); op_b.hasMoreElements(); ) {
-                String n_b = op_b.nextElement(); // name_oponent_b
-                Integer i_b = opponents.get(n_b); // index_oponent_b
-
-                if (i_a >= i_b) continue;
-
-                for (Enumeration<String> nut = nutrients.keys(); nut.hasMoreElements(); ) {
-                    String n_n = nut.nextElement();      // name_nutrient
-                    Integer i_n = nutrients.get(n_n);    // index_nutrient
-
-                    try {
-                        boolean option = father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE;
-
-                        if (!addBattle(new BattleResult(i_a, i_b, i_n, n_a, n_b, n_n), option)) {
-                            existingBattle = true;
-                        }
-                    } catch (CreateBattleException ex) {
-                        logger.error(ex.getMessage(), ex);
-                    }
-                }
-            }
+        for(Battle battle: list){
+        if (!addBattle(battle, option)) {
+            existingBattle = true;
         }
-        if (existingBattle)
-            Message.printErr(this, "There are existing battles.");
+
+        if(list.size() == 0 && existingBattle)
+            Message.printErr(this, "Battle/s already run.");
+        }
     }
 
-    public DefaultListModel<BattleResult> getBattles() {
+    public DefaultListModel<Battle> getBattles() {
         return model;
     }
 
@@ -437,16 +312,16 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public boolean delete(String colonyName) {
-        List<BattleResult> indexes = new ArrayList<>();
+        List<Battle> indexes = new ArrayList<>();
 
         for (int i = 0; i < getBattles().size(); i++) {
-            BattleResult b = getBattles().elementAt(i);
+            Battle b = getBattles().elementAt(i);
 
-            if (b.name1.equals(colonyName) || b.name2.equals(colonyName))
+            if (b.getFirstColony().equals(colonyName) || b.getSecondColony().equals(colonyName))
                 indexes.add(b);
         }
 
-        for (BattleResult b : indexes)
+        for (Battle b : indexes)
             getBattles().removeElement(b);
 
         return ((MiComboboxModel) opponent1.getModel()).remove(colonyName) &&
@@ -464,7 +339,7 @@ public class BattleUI extends JPanel implements ActionListener {
         battlesList.updateUI();
     }
 
-    private void remove(BattleResult b) {
+    private void remove(Battle b) {
         model.removeElement(b);
         battlesSP.updateUI();
     }
@@ -473,12 +348,12 @@ public class BattleUI extends JPanel implements ActionListener {
         if (config.isProgrammerMode()) return;
 
         try {
-            switch (mode){
+            switch (mode) {
                 case ALL:
-                contest.lastTournament().saveTargetRun(Collections.list(model.elements()));
+                    contest.lastTournament().saveTargetRun(Collections.list(model.elements()));
                     break;
                 case SELECTED:
-                contest.lastTournament().saveTargetRun(battlesList.getSelectedValuesList());
+                    contest.lastTournament().saveTargetRun(battlesList.getSelectedValuesList());
                     break;
             }
 
@@ -491,13 +366,6 @@ public class BattleUI extends JPanel implements ActionListener {
 
     }
 
-    private String getLastTournamentTargetRunFile() {
-        return config.getBattlesTargetRunFile(getLastTournamentName());
-    }
-
-    private String getLastTournamentName() {
-        return contest.lastTournament().getName();
-    }
 
     private void deleteTargetRunFile() {
         try {
