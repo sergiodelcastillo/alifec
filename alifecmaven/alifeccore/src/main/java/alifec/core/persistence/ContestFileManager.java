@@ -3,6 +3,7 @@ package alifec.core.persistence;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.persistence.custom.ContestNameFunction;
 import alifec.core.persistence.filter.ContestFolderFilter;
 import org.apache.logging.log4j.Logger;
 
@@ -13,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by Sergio Del Castillo on 06/08/17.
@@ -24,18 +27,15 @@ public class ContestFileManager {
     static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestFileManager.class);
 
     public static List<String> listContest(String path) {
-        List<String> result = new ArrayList<>();
         try {
-            Files.list(Paths.get(path))
+            return Files.list(Paths.get(path))
                     .filter(new ContestFolderFilter())
-                    .forEach(path1 -> {
-                        result.add(path1.getFileName().toString());
-                    });
+                    .map(new ContestNameFunction()).collect(Collectors.toList());
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
 
-        return result;
+        return new ArrayList<>();
     }
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {

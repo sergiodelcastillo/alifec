@@ -380,7 +380,7 @@ public class Contest {
         return tournaments.get(selected);
     }
 
-    public static void updateNutrient(ContestConfig config, List<Integer> nutrients) throws ConfigFileException {
+    public void updateNutrient(ContestConfig config, List<Integer> nutrients) throws ConfigFileException {
         config.setNutrients(nutrients);
 
         config.save();

@@ -254,12 +254,14 @@ public class Tournament implements Comparable<Tournament> {
         return persistence.existsFile(config.getBattlesTargetRunFile(name));
     }
 
-    public List<Battle> generateAllBattles(List<Competitor> competitos, List<NutrientDistribution> nutrients, boolean duplicate) {
+    public List<Battle> generateAllBattles(List<Competitor> competitors, List<NutrientDistribution> nutrients, boolean duplicate) {
         //todo: create tests.
         List<Battle> list = new ArrayList<>();
 
-        for (Competitor c1 : competitos) {
-            for (Competitor c2 : competitos) {
+        for (int i = 0, competitorsSize = competitors.size(); i < competitorsSize; i++) {
+            Competitor c1 = competitors.get(i);
+            for (int i1 = i+1, competitorsSize1 = competitors.size(); i1 < competitorsSize1; i1++) {
+                Competitor c2 = competitors.get(i1);
                 for (NutrientDistribution n : nutrients) {
                     try {
                         Battle battle = new Battle(
