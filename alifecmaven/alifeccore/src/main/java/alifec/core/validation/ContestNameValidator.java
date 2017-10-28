@@ -28,10 +28,6 @@ public class ContestNameValidator implements Validator<String> {
         if (name == null || name.trim().isEmpty())
             throw new ValidationException("The contest name must not be null");
 
-        if (!name.startsWith(ContestConfig.CONTEST_NAME_PREFIX)) {
-            throw new ValidationException("The contest name does not start with " + ContestConfig.CONTEST_NAME_PREFIX);
-        }
-
         Matcher matcher = pattern.matcher(name);
 
         if (!matcher.matches()) {

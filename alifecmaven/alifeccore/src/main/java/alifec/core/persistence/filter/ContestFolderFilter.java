@@ -52,14 +52,14 @@ public class ContestFolderFilter implements Predicate<Path> {
         } catch (ValidationException e) {
             return false;
         }
-        return (!checkExistence || checkContestFolder(path.getParent().toString(), folderName));
+        return !checkExistence || checkContestFolder(path.getParent().toString(), folderName);
     }
 
     private static boolean checkContestFolder(String path, String name) {
-        if (path == null || path.equals("")) {
+        if (path == null || path.trim().isEmpty()) {
             return false;
         }
-        if (name == null || name.equals("")) {
+        if (name == null || path.trim().isEmpty()) {
             return false;
         }
 
