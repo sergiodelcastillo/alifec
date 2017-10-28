@@ -102,12 +102,10 @@ public class ContestFileManager {
 
     private static boolean createCppApi(Path source, String targetFolder) {
         try {
-
             final boolean[] isOK = {true};
 
             Files.walk(source).forEach(path -> {
                 try {
-
                     Path target = Paths.get(targetFolder + File.separator + path.getFileName());
 
                     if (Files.isRegularFile(path)) {

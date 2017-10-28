@@ -67,7 +67,7 @@ public class DialogAbout extends JDialog {
         appVendorLabel1.setText("Del Castillo, Sergio");
         appVendorLabel2.setText("Stegmayer, Georgina");
 
-        jLabel1.setIcon(new ImageIcon("icons/about.png"));
+        jLabel1.setIcon(new ImageIcon(getClass().getResource("/icons/about.png")));
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
