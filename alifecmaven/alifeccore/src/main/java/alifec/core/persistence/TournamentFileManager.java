@@ -82,6 +82,7 @@ public class TournamentFileManager {
         List<String[]> battles = new ArrayList<>();
         List<String[]> backup = new ArrayList<>();
 
+        //todo : improve it... the best way is to use the Battle class.
         loadBattleFile(battlesFilePath, battles);
         loadBattleFile(backupFilePath, backup);
 
@@ -173,7 +174,9 @@ public class TournamentFileManager {
     }
 
     public void append(String path, Battle battle) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path),
+                StandardOpenOption.APPEND,
+                StandardOpenOption.CREATE)) {
             writer.write(battle.toCsv() + '\n');
         }
     }

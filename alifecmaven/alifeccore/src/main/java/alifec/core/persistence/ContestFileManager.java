@@ -126,6 +126,4 @@ public class ContestFileManager {
             return false;
         }
     }
-
-
 }
