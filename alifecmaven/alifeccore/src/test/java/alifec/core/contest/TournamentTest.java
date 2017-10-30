@@ -90,7 +90,7 @@ public class TournamentTest extends ParentTest {
         contest.lastTournament().delete(colonies.get(2));
 
         Assert.assertEquals(contest.lastTournament().getBattles().size(), 2);
-        Assert.assertEquals(contest.lastTournament().getColonyNames().size(), 2);
+        Assert.assertEquals(contest.lastTournament().getColonyNames().size(), 5);
 
         //   Assert.assertTrue(contest.lastTournament().size() == 2);
 
@@ -98,11 +98,15 @@ public class TournamentTest extends ParentTest {
         List<String> target = new ArrayList<>();
         target.add(colonies.get(0));
         target.add(colonies.get(1));
+        target.add(colonies.get(3));
+        target.add(colonies.get(4));
+        target.add(colonies.get(5));
+        
 
         Collections.sort(target);
         Collections.sort(names);
 
-        Assert.assertEquals(2, names.size());
+        Assert.assertEquals(5, names.size());
 
         Assert.assertEquals(names, target);
     }
