@@ -3,6 +3,7 @@ package alifec.core.persistence;
 import alifec.core.contest.Battle;
 import alifec.core.persistence.custom.BattlesFunction;
 import alifec.core.persistence.custom.ExcludeBattlesPredicate;
+import alifec.core.persistence.custom.NotNullPredicate;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.BufferedWriter;
@@ -12,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,23 +104,17 @@ public class TournamentFileManager {
     }
 
     public List<Battle> readAll() throws IOException {
-        List<Battle> list = Files.lines(path).map(new BattlesFunction()).collect(Collectors.toList());
-
-        //remove empty values. it means invalid lines in the file
-        while (list.contains(null))
-            list.remove(null);
-
-        return list;
+        return Files.lines(path)
+                .map(new BattlesFunction())
+                .filter(new NotNullPredicate())
+                .collect(Collectors.toList());
     }
 
     public List<Battle> readAll(String path) throws IOException {
-        List<Battle> list = Files.lines(Paths.get(path)).map(new BattlesFunction()).collect(Collectors.toList());
-
-        //remove empty values. it means invalid lines in the file
-        while (list.contains(null))
-            list.remove(null);
-
-        return list;
+        return Files.lines(Paths.get(path))
+                .map(new BattlesFunction())
+                .filter(new NotNullPredicate())
+                .collect(Collectors.toList());
     }
 
     public void deleteFile(String file) throws IOException {

@@ -66,7 +66,7 @@ public class CompileHelper {
                     }
                 }
             }
-        } catch (CompilerException ex) {
+        } catch (CompilerException | IOException ex) {
             logger.error(ex.getMessage(), ex);
             result.logJavaError(ex.getMessage());
         }
@@ -94,23 +94,28 @@ public class CompileHelper {
     public static CompilationResult compileOneMO(ContestConfig config, String mo) {
         cleanupCompilationTarget(config.getCompilationTarget());
 
-        List<String> javaMOs = SourceCodeFilter.listJavaMOs(config.getMOsPath());
-        List<String> cppMos = SourceCodeFilter.listCppMOs(config.getMOsPath());
-
         CompilationResult compilationResult = new CompilationResult();
+        try {
+            List<String> javaMOs = SourceCodeFilter.listJavaMOs(config.getMOsPath());
+            List<String> cppMos = SourceCodeFilter.listCppMOs(config.getMOsPath());
 
-        if (javaMOs.contains(mo)) {
-            compileJavaFiles(config, mo, compilationResult);
-            return compilationResult;
-        }
 
-        if (cppMos.contains(mo)) {
-            compileAllCppFiles(config, compilationResult);
-            return compilationResult;
+            if (javaMOs.contains(mo)) {
+                compileJavaFiles(config, mo, compilationResult);
+                return compilationResult;
+            }
+
+            if (cppMos.contains(mo)) {
+                compileAllCppFiles(config, compilationResult);
+                return compilationResult;
+            }
+            //the mo was not found.
+            compilationResult.logJavaError(mo + " was not found in java files.");
+            compilationResult.logCppError(mo + " was not found in c++ files.");
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            compilationResult.logJavaError(e.getMessage());
         }
-        //the mo was not found.
-        compilationResult.logJavaError(mo + " was not found in java files.");
-        compilationResult.logCppError (mo + " was not found in c++ files.");
         return compilationResult;
     }
 
@@ -183,7 +188,7 @@ public class CompileHelper {
      */
     static private boolean cppCompilationAllSourceCodes(ContestConfig config) {
         try {
-        CompileConfig compileConfig = new CompileConfig(config);
+            CompileConfig compileConfig = new CompileConfig(config);
 
             String[] console = {""};
             String compileCommand = null;
@@ -264,9 +269,10 @@ public class CompileHelper {
      * @return true if is successfully
      */
     static boolean updateTournamentCpp(ContestConfig config) {
-        List<String> names = SourceCodeFilter.listCppMOs(config.getMOsPath());
-        Path env = Paths.get(config.getCppApiFolder() + File.separator + "Environment.cpp");
         try {
+            List<String> names = SourceCodeFilter.listCppMOs(config.getMOsPath());
+            Path env = Paths.get(config.getCppApiFolder() + File.separator + "Environment.cpp");
+
             if (Files.notExists(env)) {
                 Files.createFile(env);
             }
@@ -307,10 +313,9 @@ public class CompileHelper {
      * @return true if  is successfully
      */
     static boolean updateIncludes(ContestConfig config) {
-        List<String> files = SourceCodeFilter.listFilenameCpp(config.getMOsPath());
-
-        Path includes = Paths.get(config.getCppApiFolder() + File.separator + "includemos.h");
         try {
+            List<String> files = SourceCodeFilter.listFilenameCpp(config.getMOsPath());
+            Path includes = Paths.get(config.getCppApiFolder() + File.separator + "includemos.h");
 
             if (Files.notExists(includes)) {
                 Files.createFile(includes);

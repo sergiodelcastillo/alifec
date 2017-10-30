@@ -3,6 +3,7 @@ package alifec.core.persistence;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.custom.FileNameFunction;
+import alifec.core.persistence.custom.NotNullPredicate;
 import alifec.core.persistence.filter.ContestFolderFilter;
 import alifec.core.persistence.filter.TournamentFilter;
 import org.apache.logging.log4j.Logger;
@@ -31,14 +32,11 @@ public class ContestFileManager {
 
     public static List<String> listContest(String path) {
         try {
-            List<String> list = Files.list(Paths.get(path))
+            return Files.list(Paths.get(path))
                     .filter(new ContestFolderFilter())
-                    .map(new FileNameFunction()).collect(Collectors.toList());
-
-            while (list.contains(null))
-                list.remove(null);
-
-            return list;
+                    .map(new FileNameFunction())
+                    .filter(new NotNullPredicate())
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
@@ -48,15 +46,13 @@ public class ContestFileManager {
 
 
     public List<String> listTournaments(String file) throws IOException {
-       Path path = Paths.get(file);
-        List<String> list = Files.list(path)
+        Path path = Paths.get(file);
+
+        return Files.list(path)
                 .filter(new TournamentFilter())
-                .map(new FileNameFunction()).collect(Collectors.toList());
-
-        while (list.contains(null))
-            list.remove(null);
-
-        return list;
+                .map(new FileNameFunction())
+                .filter(new NotNullPredicate())
+                .collect(Collectors.toList());
     }
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {

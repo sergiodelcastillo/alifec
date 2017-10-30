@@ -71,36 +71,41 @@ public class Environment {
         logger.info("Loading Java Colonies");
 
         //todo: decide if list java files should use the .java or .class
-        for (String name : SourceCodeFilter.listJavaMOs(config.getMOsPath())) {
-            try {
-                JavaColony.addClassPath(config.getCompilationTarget());
-                colonies.add(new JavaColony(colonies.size(), "MOs." + name));
-                logger.info(name + " [OK]");
-            } catch (Exception ex) {
-                logger.warn(name + " [FAIL]");
-                logger.warn(ex.getMessage(), ex);
+        try {
+            for (String name : SourceCodeFilter.listJavaMOs(config.getMOsPath())) {
+                try {
+                    JavaColony.addClassPath(config.getCompilationTarget());
+                    colonies.add(new JavaColony(colonies.size(), "MOs." + name));
+                    logger.info(name + " [OK]");
+                } catch (ClassNotFoundException ex) {
+                    logger.warn(ex.getMessage(), ex);
+                }
             }
+        } catch (Exception ex) {
+            logger.warn(ex.getMessage(), ex);
         }
 
         // loading library
         logger.info("Loading C++ Colonies ");
+        try {
+            if (CppColony.loadLibrary(config.getCompilationTarget())) {
+                logger.info("Loading C++ Library [OK]");
 
-        if (CppColony.loadLibrary(config.getCompilationTarget())) {
-            logger.info("Loading C++ Library [OK]");
-
-            for (String name : SourceCodeFilter.listCppMOs(config.getMOsPath())) {
-                try {
-                    // to initialise the name of colony
-                    colonies.add(new CppColony(colonies.size(), name));
-                    logger.info(name + " [OK]");
-                } catch (ClassNotFoundException ex) {
-                    logger.warn(name + " [FAIL]");
+                for (String name : SourceCodeFilter.listCppMOs(config.getMOsPath())) {
+                    try {
+                        // to initialise the name of colony
+                        colonies.add(new CppColony(colonies.size(), name));
+                        logger.info(name + " [OK]");
+                    } catch (ClassNotFoundException ex) {
+                        logger.warn(name + " [FAIL]");
+                    }
                 }
+            } else {
+                logger.warn("Loading C++ Library [FAIL]");
             }
-        } else {
-            logger.warn("Loading C++ Library [FAIL]");
+        } catch (Exception ex) {
+            logger.warn(ex.getMessage(), ex);
         }
-
         // set the environment !!
         Petri.getInstance().setEnvironment(this);
     }

@@ -39,14 +39,18 @@ public class Opponent {
         return this.opponents;
     }
 
-    public void addMissing(List<Competitor> list) {
-        for (Competitor comp : list) {
-            if (!opponents.contains(comp.getInfo()))
-                opponents.add(comp.getInfo());
-        }
+    public void addMissing(List<Competitor> list) throws OpponentException {
+        try {
+            for (Competitor comp : list) {
+                if (!opponents.contains(comp.getInfo()))
+                    opponents.add(comp.getInfo());
+            }
 
-        if (config.isCompetitionMode()) {
-            persistence.saveAll(opponents);
+            if (config.isCompetitionMode()) {
+                persistence.saveAll(opponents);
+            }
+        }catch (Throwable t){
+            throw  new OpponentException("Opponent's list can not be saved.", t);
         }
     }
 }

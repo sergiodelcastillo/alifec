@@ -2,6 +2,7 @@ package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
 import alifec.core.contest.oponentInfo.OpponentInfo;
+import alifec.core.persistence.custom.NotNullPredicate;
 import alifec.core.persistence.custom.OpponentFunction;
 import org.apache.logging.log4j.Logger;
 
@@ -33,22 +34,18 @@ public class OpponentFileManager {
         }
     }
 
-
     public List<OpponentInfo> readAll() throws IOException {
-        List<OpponentInfo> list = Files.lines(path).map(new OpponentFunction()).collect(Collectors.toList());
-        while (list.contains(null))
-            list.remove(null);
-        return list;
+        return Files.lines(path)
+                .map(new OpponentFunction())
+                .filter(new NotNullPredicate())
+                .collect(Collectors.toList());
     }
 
-    public void saveAll(List<OpponentInfo> opponents) {
+    public void saveAll(List<OpponentInfo> opponents) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : opponents) {
                 writer.write(line.toString() + '\n');
             }
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            //todo: lanzar una exception
         }
     }
 }

@@ -1,5 +1,6 @@
 package alifec.core.persistence.filter;
 
+import alifec.core.persistence.custom.CppMOPredicate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 public class SourceCodeFilterTest {
     @Test
     public void testGetNameOfMOCpp() {
+        CppMOPredicate predicate = new CppMOPredicate();
         //basic test cases
         String[][] lines = {
                 {"\nclass Movx:  public Microorganism{", "Movx"},
@@ -70,13 +72,14 @@ public class SourceCodeFilterTest {
         };
 
         for (String[] line : lines) {
-            Assert.assertEquals(line[1], SourceCodeFilter.getNameOfMOCpp(line[0]));
+            Assert.assertEquals(line[1], predicate.getNameOfMOCpp(line[0]));
 
         }
     }
 
     @Test
     public void testInvalidGetNameOfMOCpp() {
+        CppMOPredicate predicate = new CppMOPredicate();
         //basic test cases
         String[][] lines = {
                 {"\nclass Movx:  public Microorganism{", "Movx"},
@@ -134,13 +137,14 @@ public class SourceCodeFilterTest {
 
 
         for (String[] line : lines) {
-            Assert.assertEquals(line[1], SourceCodeFilter.getNameOfMOCpp(line[0]));
+            Assert.assertEquals(line[1], predicate.getNameOfMOCpp(line[0]));
 
         }
     }
 
     @Test
     public void testRemoveLineComments() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String[][] lines = {
                 {"//class\n Movx:  public Microorganism{", "\n Movx:  public Microorganism{"},
                 {"//aa\nasfasf \n//bbb\n", "\nasfasf \n\n"},
@@ -232,12 +236,13 @@ public class SourceCodeFilterTest {
         };
 
         for (String[] line : lines) {
-            Assert.assertEquals(line[1], SourceCodeFilter.removeComments(line[0]));
+            Assert.assertEquals(line[1], predicate.removeComments(line[0]));
         }
     }
 
     @Test
     public void testRemoveComments1() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String[][] lines = {
                 {"/*first test*/\n" +
                         "/* =======================================================\n" +
@@ -332,7 +337,7 @@ public class SourceCodeFilterTest {
         };
 
         for (String[] line : lines) {
-            String out = SourceCodeFilter.removeComments(line[0]);
+            String out = predicate.removeComments(line[0]);
 
             Assert.assertEquals(line[1], out);
         }
@@ -343,54 +348,61 @@ public class SourceCodeFilterTest {
     // @Test
     //The current implementation does not covers this option
     public void testUnsupportedWrongComment() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String lineSource = "someString = \"An example comment: /* example */";
         String lineExpected = "someString = \"An example comment: /* example */";
 
-        Assert.assertEquals(lineExpected, SourceCodeFilter.removeComments(lineSource));
+        Assert.assertEquals(lineExpected, predicate.removeComments(lineSource));
 
     }
 
     @Test
     public void testMixed() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String source = "// /* \nsome_code();\n// */";
         String target = "\nsome_code();\n";
 
-        Assert.assertEquals(target, SourceCodeFilter.removeComments(source));
+        Assert.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
     public void commentBlock1() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String source = "/* First comment\nfirst comment—line two*/";
         String target = "";
-        Assert.assertEquals(target, SourceCodeFilter.removeComments(source));
+        Assert.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
     public void commentBlock2() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String source = "/* Second comment */";
         String target = "";
-        Assert.assertEquals(target, SourceCodeFilter.removeComments(source));
+        Assert.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
     public void commentBlock3() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String source = "start_code();\n/* First comment */\nmore_code();\n/* Second comment */\nend_code();";
         String target = "start_code();\n\nmore_code();\n\nend_code();";
-        Assert.assertEquals(target, SourceCodeFilter.removeComments(source));
+        Assert.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
     public void commentBlock4() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String source = "/*\n* Common multi-line comment style.\n*/\n/* Second comment */\n";
         String target = "\n\n";
-        Assert.assertEquals(target, SourceCodeFilter.removeComments(source));
+        Assert.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
     public void commentBlock5() {
+        CppMOPredicate predicate = new CppMOPredicate();
         String source = "start_code();\n/****\n * Common multi-line comment style.\n ****/\n        more_code();\n/*\n * Another common multi-line comment style.\n */\n        end_code();";
         String target = "start_code();\n\n        more_code();\n\n        end_code();";
-        Assert.assertEquals(target, SourceCodeFilter.removeComments(source));
+        Assert.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
