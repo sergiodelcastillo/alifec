@@ -3,6 +3,8 @@ package alifec.contest.view;
 
 import alifec.core.contest.Contest;
 import alifec.core.contest.Tournament;
+import alifec.core.contest.oponentInfo.ColonyStatistics;
+import alifec.core.contest.oponentInfo.TournamentStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -95,14 +97,13 @@ public class TournamentPanel extends JList {
 
     private DefaultListModel<TournamentPanelOpponentData> addComponents() {
         DefaultListModel<TournamentPanelOpponentData> model = new DefaultListModel<>();
-        Hashtable<String, Float> h = current.getAccumulatedEnergy();
+        TournamentStatistics ts = current.getTournamentStatistics();
         int index = 0;
 
-        for (Iterator<String> i = h.keySet().iterator(); i.hasNext(); index++) {
-            String key = i.next();
-            int value = h.get(key).intValue();
+        for(ColonyStatistics cs: ts.getColonyStatistics()){
             long max = (long) current.getMaxEnergy();
-            model.addElement(new TournamentPanelOpponentData(index + ". " + key, value, max));
+            model.addElement(new TournamentPanelOpponentData(index + ". " + cs.getName(), (int)cs.getAccumulated(), max));
+            index++;
         }
 
         return model;

@@ -1,8 +1,8 @@
 
 package alifec.core.contest;
 
+import alifec.core.contest.oponentInfo.TournamentStatistics;
 import alifec.core.exception.BattleException;
-import alifec.core.exception.CreateRankingException;
 import alifec.core.exception.TournamentException;
 import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -10,11 +10,9 @@ import alifec.core.simulation.Competitor;
 import alifec.core.simulation.NutrientDistribution;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
 
 
@@ -53,13 +51,16 @@ public class Tournament implements Comparable<Tournament> {
         }
     }
 
+    public Tournament(ContestConfig config, String name, List<String> colonies) throws TournamentException {
+        this(config, name);
+        this.colonies.addAll(colonies);
+    }
+
     /**
      * @return the maximum accumulated energy
      */
     public float getMaxEnergy() {
-        Collection<Float> values = getAccumulatedEnergy().values();
-
-        return values.isEmpty() ? 0f : Collections.max(values);
+        return getTournamentStatistics().getMaxEnergy();
     }
 
     public List<Battle> getBattles() {
@@ -113,79 +114,34 @@ public class Tournament implements Comparable<Tournament> {
         return name.compareTo(o.name);
     }
 
-    public Hashtable<String, Integer> getRanking() throws CreateRankingException {
-        Hashtable<String, Integer> h = new Hashtable<>();
-        Hashtable<String, Float> accumulated = getAccumulatedEnergy();
-        int MAX = 3;
-        int size = MAX > accumulated.size() ? accumulated.size() : MAX;
-
-        // add colonies which already earn points.
-        for (int index = 0; index < size; index++) {
-            Float max = Collections.max(accumulated.values());
-            List<String> winTemp = new ArrayList<>();
-
-            for (String s : accumulated.keySet()) {
-                if (accumulated.get(s).equals(max))
-                    winTemp.add(s);
-            }
-            String keyWin = "";
-            int maxBattlesWin = 0; // no puede ser !!
-
-            for (String tmp : winTemp) {
-                int battlesWon = getBattlesWon(tmp);
-                if (maxBattlesWin != 0 && maxBattlesWin == battlesWon) {
-                    String s = "Ranking can't be created because there are two " +
-                            "opponents with the same energy and the same number" +
-                            " of battles won in the " + name;
-                    throw new CreateRankingException(s);
-                }
-                if (battlesWon > maxBattlesWin) {
-                    maxBattlesWin = battlesWon;
-                    keyWin = tmp;
-                }
-            }
-
-            accumulated.remove(keyWin);
-            h.put(keyWin, MAX - index);
-        }
-        // add the colonies that do not have points !
-        for (String name : accumulated.keySet()) {
-            if (!h.containsKey(name)) {
-                h.put(name, 0);
-            }
-        }
-
-        return h;
-    }
-
-    private int getBattlesWon(String name) {
-        int count = 0;
+    public TournamentStatistics getTournamentStatistics() {
+        TournamentStatistics tStats = new TournamentStatistics();
 
         for (Battle b : battles) {
-            if (b.getWinnerName().equals(name))
-                ++count;
-        }
-        return count;
-    }
-
-    public Hashtable<String, Float> getAccumulatedEnergy() {
-        Hashtable<String, Float> results = new Hashtable<>();
-
-        for (Battle b : battles) {
-            if (results.containsKey(b.getWinnerName())) {
-                Float f = results.remove(b.getWinnerName());
-                results.put(b.getWinnerName(), f + b.getWinnerEnergy());
-            } else {
-                results.put(b.getWinnerName(), b.getWinnerEnergy());
-            }
+            tStats.addWinner(b.getWinnerName(), null, null, b.getWinnerEnergy());
         }
 
         for (String c : colonies) {
-            if (!results.containsKey(c))
-                results.put(c, 0.0f);
+            tStats.addWinner(c, null, null, 0.0f);
         }
 
-        return results;
+        tStats.calculate();
+
+        return tStats;
+    }
+
+    public TournamentStatistics getAccumulatedEnergy() {
+        TournamentStatistics tournamentStatistics = new TournamentStatistics();
+
+        for (Battle b : battles) {
+            tournamentStatistics.addWinner(b.getWinnerName(), null, null, b.getWinnerEnergy());
+        }
+
+        for (String c : colonies) {
+            tournamentStatistics.addWinner(c, null, null, 0.0f);
+        }
+
+        return tournamentStatistics;
     }
 
 
@@ -322,7 +278,7 @@ public class Tournament implements Comparable<Tournament> {
     public Battle getUnsuccessfulBattle() throws TournamentException {
         //todo: test it
         //if the contest mode is programmer then it does not matters.
-        if(config.isProgrammerMode()) return null;
+        if (config.isProgrammerMode()) return null;
 
         List<Battle> missingRun = getMissingRunBattles(false);
         if (missingRun.isEmpty()) {

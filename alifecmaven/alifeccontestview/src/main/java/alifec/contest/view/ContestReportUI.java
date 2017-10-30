@@ -2,7 +2,7 @@ package alifec.contest.view;
 
 
 import alifec.core.contest.Contest;
-import alifec.core.contest.oponentInfo.OpponentStatistics;
+import alifec.core.contest.oponentInfo.ColonyStatistics;
 import alifec.core.exception.CreateRankingException;
 import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
@@ -116,12 +116,12 @@ public class ContestReportUI extends JDialog implements ActionListener {
                     "POINTS",
                     "ENERGY"));
 
-            for (OpponentStatistics line : contest.getInfo()) {
+            for (ColonyStatistics line : contest.getRanking().getCalculated()) {
                 pw.println(String.format(ContestConfig.REPORT_CSV_FORMAT,
                         line.getName(),
                         line.getAuthor(),
                         line.getAffiliation(),
-                        line.getRanking(),
+                        line.getPoints(),
                         line.getAccumulated()));
             }
 
@@ -153,12 +153,12 @@ public class ContestReportUI extends JDialog implements ActionListener {
                     "AFFILIATION",
                     "POINTS"));
 
-            for (OpponentStatistics line : contest.getInfo()) {
+            for (ColonyStatistics line : contest.getRanking().getCalculated()) {
                 builder.append(String.format(ContestConfig.REPORT_TXT_FORMAT,
                         line.getName(),
                         line.getAuthor(),
                         line.getAffiliation(),
-                        line.getRanking()));
+                        line.getPoints()));
             }
 
             txt.setDisabledTextColor(Color.BLACK);

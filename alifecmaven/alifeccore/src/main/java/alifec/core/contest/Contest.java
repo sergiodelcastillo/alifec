@@ -1,12 +1,9 @@
 
 package alifec.core.contest;
 
-import alifec.core.contest.oponentInfo.OpponentInfo;
-import alifec.core.contest.oponentInfo.Opponent;
-import alifec.core.contest.oponentInfo.OpponentStatistics;
+import alifec.core.contest.oponentInfo.*;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestFileManager;
-import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.ZipHelper;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Agar;
@@ -84,7 +81,8 @@ public class Contest {
         String newT = getNextName();
 
         try {
-            Tournament t = new Tournament(config, newT);
+            Tournament t = new Tournament(config, newT, environment.getOpponentNames());
+
             t.setEnabled(true);
 
             if (selected >= 0)
@@ -148,7 +146,7 @@ public class Contest {
             tournamentNumber = Integer.valueOf(name) + 1;
         }
 
-        return ContestConfig.getTournamentFilename(tournamentNumber);
+        return config.getTournamentFilename(tournamentNumber);
     }
 
     public List<NutrientDistribution> getCurrentNutrients() {
@@ -176,7 +174,6 @@ public class Contest {
 
         return list;
     }
-
 
     /**
      * Reload the configuration. If the config is not valid then it is discarded.
@@ -260,48 +257,21 @@ public class Contest {
         return config.getPauseBetweenBattles();
     }
 
-    /**
-     * @return information
-     * @throws CreateRankingException if can not create the ranking
-     */
-    public List<OpponentStatistics> getInfo() throws CreateRankingException {
-        Hashtable<String, Integer> ranking = getRanking();
-        List<OpponentStatistics> info = new ArrayList<>();
 
-        Tournament t = lastTournament();
-        Hashtable<String, Float> accumulated = t.getAccumulatedEnergy();
-
-        for (OpponentInfo oi : opponentsInfo.getOpponents()) {
-            boolean hasRanking = ranking.containsKey(oi.getName());
-            boolean hasAccumulated = accumulated.containsKey(oi.getName());
-
-            info.add(new OpponentStatistics(oi.getName(),
-                    oi.getAuthor(),
-                    oi.getAffiliation(),
-                    hasRanking ? ranking.get(oi.getName()) : 0,
-                    hasAccumulated ? accumulated.get(oi.getName()) : 0.0f));
-        }
-
-        // sort by accumulated points
-        Collections.sort(info);
-
-        //The biggest first
-        Collections.reverse(info);
-
-        return info;
-    }
-
-    public Hashtable<String, Integer> getRanking() throws CreateRankingException {
-        Hashtable<String, Integer> ranking = new Hashtable<>();
+    public Ranking getRanking() throws CreateRankingException {
+        Ranking ranking = new Ranking();
 
         for (Tournament t : tournaments) {
-            Hashtable<String, Integer> tRanking = t.getRanking();
+            TournamentStatistics ts = t.getTournamentStatistics();
 
-            for (String name : tRanking.keySet()) {
-                Integer point = ranking.containsKey(name) ? ranking.remove(name) : new Integer(0);
-                ranking.put(name, point + tRanking.get(name));
+            for(OpponentInfo op: opponentsInfo.getOpponents()){
+                ts.addOpponentInfo(op.getName(), op.getAuthor(), op.getAffiliation());
             }
+
+            ranking.addTournamentStats(ts);
         }
+
+        ranking.calculate();
 
         return ranking;
     }

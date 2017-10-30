@@ -46,7 +46,9 @@ public class ContestFileManager {
         return new ArrayList<>();
     }
 
-    public static List<String> listTournaments(Path path) throws IOException {
+
+    public List<String> listTournaments(String file) throws IOException {
+       Path path = Paths.get(file);
         List<String> list = Files.list(path)
                 .filter(new TournamentFilter())
                 .map(new FileNameFunction()).collect(Collectors.toList());
@@ -55,10 +57,6 @@ public class ContestFileManager {
             list.remove(null);
 
         return list;
-    }
-
-    public static List<String> listTournaments(String path) throws IOException {
-        return listTournaments(Paths.get(path));
     }
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
