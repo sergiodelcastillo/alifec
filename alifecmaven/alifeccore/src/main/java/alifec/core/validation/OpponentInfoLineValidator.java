@@ -8,6 +8,8 @@ import alifec.core.exception.ValidationException;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class OpponentInfoLineValidator implements Validator<String> {
+
+    //TODO: TEST
     @Override
     public void validate(String line) throws ValidationException {
         if (line == null || line.isEmpty())

@@ -5,6 +5,8 @@ import alifec.core.exception.BattleException;
 import alifec.core.validation.BattleFromCsvValidator;
 import alifec.core.validation.BattleRuntimeValidator;
 
+import java.util.Objects;
+
 /**
  * @author Sergio Del Castillo
  *         mail@: sergio.jose.delcastillo@gmail.com
@@ -129,13 +131,7 @@ public class Battle implements Comparable<Battle> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + Float.floatToIntBits(this.firstEnergy);
-        hash = 23 * hash + Float.floatToIntBits(this.secondEnergy);
-        hash = 23 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
-        hash = 23 * hash + (this.secondName != null ? this.secondName.hashCode() : 0);
-        hash = 23 * hash + (this.nutrient != null ? this.nutrient.hashCode() : 0);
-        return hash;
+        return Objects.hash(firstName, secondName, nutrient);
     }
 
     @Override

@@ -28,15 +28,11 @@ public class Opponent {
             this.persistence = new OpponentFileManager(config.getCompetitorsFile(), config.isCompetitionMode());
 
             if (config.isCompetitionMode()) {
-                load();
+                opponents.addAll(persistence.readAll());
             }
         } catch (Throwable t) {
             throw new OpponentException("Opponent's list can not be loaded.", t);
         }
-    }
-
-    private void load() throws IOException {
-        opponents.addAll(persistence.readAll());
     }
 
     public List<OpponentInfo> getOpponents() {

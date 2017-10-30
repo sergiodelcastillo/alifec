@@ -10,7 +10,6 @@ import alifec.core.simulation.Agar;
  */
 public class BattleFromCsvValidator implements Validator<String> {
 
-    //todo: create test
     @Override
     public void validate(String line) throws ValidationException {
         if (line == null || line.isEmpty())

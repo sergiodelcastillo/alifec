@@ -10,6 +10,8 @@ import alifec.core.exception.ValidationException;
  */
 public class OpponentInfoValidator implements Validator<OpponentInfo> {
 
+    //TODO: TEST
+
     @Override
     public void validate(OpponentInfo info) throws ValidationException {
         if (info.getName() == null || info.getName().trim().isEmpty())

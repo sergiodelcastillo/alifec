@@ -18,7 +18,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import static java.lang.Integer.parseInt;
 
@@ -292,7 +291,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
             for (JCheckBox nutrient : nutrients) {
                 if (nutrient.isSelected()) {
                     Nutrient nutri = Agar.getNutrientByName(nutrient.getText());
-                    nutrientsIds.add(nutri.getId());
+                    if(nutri != null) nutrientsIds.add(nutri.getId());
                 }
             }
 

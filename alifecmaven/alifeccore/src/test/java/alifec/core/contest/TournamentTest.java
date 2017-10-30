@@ -101,7 +101,7 @@ public class TournamentTest extends ParentTest {
         target.add(colonies.get(3));
         target.add(colonies.get(4));
         target.add(colonies.get(5));
-        
+
 
         Collections.sort(target);
         Collections.sort(names);

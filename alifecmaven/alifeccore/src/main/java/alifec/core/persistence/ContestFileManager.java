@@ -25,8 +25,8 @@ public class ContestFileManager {
     private static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestFileManager.class);
     private final Path path;
 
-    public ContestFileManager(String file) {
-        this.path = Paths.get(file);
+    public ContestFileManager(String folder) {
+        this.path = Paths.get(folder);
     }
 
     public static List<String> listContest(String path) {
