@@ -86,12 +86,7 @@ public class Util {
     }
 
     private static ContestConfig loadConfiguration() throws IOException, ConfigFileException {
-        String path = new File(System.getProperty("user.dir")).getCanonicalPath();
-        //logger.info("Loading contest: " + path);
-
-        ContestConfig config = ContestConfig.buildFromFile(path);
-
-        return config;
+        return new ContestConfig(ContestConfig.getDefaultPath());
 
     }
 

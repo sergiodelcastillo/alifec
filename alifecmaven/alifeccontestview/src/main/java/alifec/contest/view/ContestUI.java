@@ -3,12 +3,11 @@ package alifec.contest.view;
 
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
+import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
-import alifec.core.contest.UnsuccessfulColonies;
 import alifec.core.exception.*;
-import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.ContestFileManager;
-import alifec.core.persistence.TournamentFileManager;
+import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -100,27 +99,23 @@ public class ContestUI extends JFrame implements ActionListener {
     }
 
     private boolean loadContest() {
-        String path;
+        String path = ContestConfig.getDefaultPath();
+
+        if(path == null) return false;
+
         ContestConfig config = null;
 
         try {
-            path = new File(System.getProperty("user.dir")).getCanonicalPath();
-            logger.info("Loading contest: " + path);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-            return false;
-        }
-
-        try {
             //Perform the best effort to load a contest.
-            if (ContestConfig.existsConfigFile(path)) {
-                config = ContestConfig.buildFromFile(path);
-            }
+            config = new ContestConfig(path);
+
         } catch (ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
-            if (!Message.printYesNoCancel(null, ex.getMessage() +
-                    ". Select 'Yes' to overwrite the existing config file.")) {
-                return false;
+            if (!(ex.getCause() instanceof ValidationException)) {
+                if (!Message.printYesNoCancel(null, ex.getMessage() +
+                        ". Select 'Yes' to overwrite the existing config file.")) {
+                    return false;
+                }
             }
         }
 
@@ -145,7 +140,7 @@ public class ContestUI extends JFrame implements ActionListener {
                         }
                     }
 
-                    config = ContestConfig.buildNewConfigFile(path, name);
+                    config = new ContestConfig(path, name);
                     config.save();
                 }
             }
@@ -205,51 +200,39 @@ public class ContestUI extends JFrame implements ActionListener {
             }
         }
 
-        try {
-            //load everything
-            UnsuccessfulColonies uColonies = TournamentFileManager.findFinishedUnsuccessful(config);
+        //create an instance of the contest
+        contest = new Contest(config);
 
-            if (uColonies.isUnsuccessful()) {
-                UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, uColonies.getColonyA(), uColonies.getColonyB());
-                solver.setVisible(true);
+        Battle failed = contest.getUnsuccessfulBattle();
 
-                /*for (String c : contest.getEnvironment().getOpponentNames()) {
-                    contest.lastTournament().addColony(c);
-                }*/
-            }
-            //create an instance of the contest
-            contest = new Contest(config);
+        if(failed != null){
+            UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, failed.getFirstColony(), failed.getSecondColony());
+            solver.setVisible(true);
 
             //remove the colony which was excluded from the Dialog "UnsuccessfulColoniesSolverUI".
             for (String excludedColony : excluded) {
                 contest.getEnvironment().delete(excludedColony);
             }
-
-            //deleteFromBattlesFile backup file
-
-            //TODO: it seems that it is not necesary:
-            // todo TournamentFileManager.deleteBattleBackupFile(config, uColonies);
-
-        } catch (TournamentCorruptedException e) {
-            //TODO: ver que mostrar acá.
-            logger.error(e.getMessage(), e);
-            Message.printErr(null, e.getMessage());
-            System.exit(0);
         }
+
+
+        //deleteFromBattlesFile backup file
+
+        //TODO: it seems that it is not necesary:
+        // todo TournamentFileManager.deleteBattleBackupFile(config, uColonies);
 
 
     }
 
     private boolean setDefaultContest(String path, String name) {
-
         // The new contest file will be saved but it will be loaded after the restart of the application.
         // Now the application will continue without any changes at runtime.
-        ContestConfig config = ContestConfig.buildNewConfigFile(path, name);
+        ContestConfig config = new ContestConfig(path, name);
 
         try {
             config.validate();
 
-        } catch (ConfigFileException ex) {
+        } catch (ValidationException ex) {
             logger.error(ex.getMessage(), ex);
             logger.error(config.toString());
             Message.printErr(this, ex.getMessage());

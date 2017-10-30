@@ -186,7 +186,7 @@ public class Contest {
      */
     public boolean reloadConfig() throws IOException {
         try {
-            config = ContestConfig.buildFromFile(config.getPath());
+            config = new ContestConfig(config.getPath());
             return true;
         } catch (ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
@@ -380,22 +380,28 @@ public class Contest {
         config.save();
     }
 
-    public List<Battle> getMissingRunBattles() throws IOException {
-        List<Battle> list = lastTournament().getMissingRunBattles();
-        List<Battle> toDelete = new ArrayList<>();
+    public List<Battle> getMissingRunBattles(boolean removeUnavailable) throws TournamentException {
+        List<Battle> list = lastTournament().getMissingRunBattles(removeUnavailable);
         List<String> opponentNames = environment.getOpponentNames();
 
         // remove battles which have unavailable colonies
-        for (Battle battle : list) {
-            if (!opponentNames.contains(battle.getFirstColony()) ||
-                    !opponentNames.contains(battle.getSecondColony())) {
-                toDelete.add(battle);
+        if (removeUnavailable) {
+            List<Battle> toDelete = new ArrayList<>();
+            for (Battle battle : list) {
+                if (!opponentNames.contains(battle.getFirstColony()) ||
+                        !opponentNames.contains(battle.getSecondColony())) {
+                    toDelete.add(battle);
+                }
             }
+
+            list.removeAll(toDelete);
         }
 
-        list.removeAll(toDelete);
-
         return list;
+    }
+
+    public Battle getUnsuccessfulBattle() throws TournamentException {
+        return lastTournament().getUnsuccessfulBattle();
     }
 }
 

@@ -1,5 +1,10 @@
 package alifec.core.persistence.custom;
 
+import alifec.core.contest.Battle;
+import alifec.core.exception.BattleException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.nio.file.Path;
 import java.util.function.Function;
 
@@ -8,9 +13,16 @@ import java.util.function.Function;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class FileNameFunction implements Function<Path, String> {
+public class BattlesFunction implements Function<String, Battle> {
+    Logger logger = LogManager.getLogger(getClass());
+
     @Override
-    public String apply(Path path) {
-        return path.getFileName().toString();
+    public Battle apply(String path) {
+        try {
+            return new Battle(path);
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
+        return null;
     }
 }

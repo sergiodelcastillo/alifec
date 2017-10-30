@@ -3,7 +3,9 @@ package alifec.core.validation;
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 
+import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -16,12 +18,14 @@ import java.nio.file.Paths;
  */
 public class ContestPathValidator implements Validator<String> {
     @Override
-    public void validate(String path) throws ValidationException {
+    public void validate(String rootFolder) throws ValidationException {
 
-        if (!Files.isDirectory(Paths.get(path)))
+        Path path = Paths.get(rootFolder);
+        if (!Files.isDirectory(path))
             throw new ValidationException("The contest path is not a directory or not exists.");
 
-        if (!ContestConfig.existsConfigFile(path))
+        Path configFile = path.resolve(ContestConfig.BASE_APP_FOLDER+ File.separator+ContestConfig.CONFIG_FILE);
+        if (!Files.isRegularFile(configFile))
             throw new ValidationException("The contest does not have a valid config file.");
     }
 }

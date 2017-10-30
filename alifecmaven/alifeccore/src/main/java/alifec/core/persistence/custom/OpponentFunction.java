@@ -22,7 +22,9 @@ public class OpponentFunction implements Function<String, OpponentInfo> {
         } catch (OpponentException e) {
             logger.error(e.getMessage(), e);
         }
-        //shouldn't happen.
+
+        //The null value will be added to the result list but then i will delete the null values
+        //so invalid values are ignored.
         return null;
     }
 }

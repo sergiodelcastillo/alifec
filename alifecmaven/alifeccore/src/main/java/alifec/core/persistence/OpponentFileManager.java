@@ -35,7 +35,10 @@ public class OpponentFileManager {
 
 
     public List<OpponentInfo> readAll() throws IOException {
-        return Files.lines(path).map(new OpponentFunction()).collect(Collectors.toList());
+        List<OpponentInfo> list = Files.lines(path).map(new OpponentFunction()).collect(Collectors.toList());
+        while (list.contains(null))
+            list.remove(null);
+        return list;
     }
 
     public void saveAll(List<OpponentInfo> opponents) {

@@ -10,11 +10,12 @@ import alifec.core.simulation.Competitor;
 import alifec.core.simulation.NutrientDistribution;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
-import java.util.*;
-
-import static java.util.Collections.max;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
 
 
 public class Tournament implements Comparable<Tournament> {
@@ -41,7 +42,7 @@ public class Tournament implements Comparable<Tournament> {
         this.colonies = new ArrayList<>();
 
         try {
-            this.persistence = new TournamentFileManager(config.getBattlesFile(name),config.isCompetitionMode());
+            this.persistence = new TournamentFileManager(config.getBattlesFile(name), config.isCompetitionMode());
 
             if (config.isCompetitionMode()) {
                 //load battles
@@ -284,29 +285,56 @@ public class Tournament implements Comparable<Tournament> {
 
     }
 
-    public List<Battle> getMissingRunBattles() throws IOException {
+    public List<Battle> getMissingRunBattles(boolean deleteUnavailable) throws TournamentException {
         //todo: test
-        List<Battle> list = persistence.readAll(config.getBattlesTargetRunFile(this.name));
+        try {
+            String targetRunFile = config.getBattlesTargetRunFile(this.name);
 
-        if (list.isEmpty()) return list;
+            if (!persistence.existsFile(targetRunFile)) return new ArrayList<>();
 
-        List<Battle> alreadyRun = persistence.readAll(config.getBattlesFile(this.name));
+            List<Battle> list = persistence.readAll(targetRunFile);
 
-        //remove already run
-        list.removeAll(alreadyRun);
+            if (list.isEmpty()) return list;
 
-        List<Integer> allowedNutrients = config.getNutrients();
+            //remove already run
+            list.removeAll(battles);
 
-        List<Battle> toDelete = new ArrayList<>();
+            //remove battles containing a distribution of nutrient which is not available at the moment.
+            if (deleteUnavailable) {
+                List<Integer> allowedNutrients = config.getNutrients();
+                List<Battle> toDelete = new ArrayList<>();
 
-        for (Battle battle : battles) {
-            if (!allowedNutrients.contains(battle.getNutrientId())) {
-                toDelete.add(battle); //currently the nutrient is not available
+                for (Battle battle : battles) {
+                    if (!allowedNutrients.contains(battle.getNutrientId())) {
+                        toDelete.add(battle); //currently the nutrient is not available
+                    }
+                }
+
+                list.removeAll(toDelete);
             }
-        }
-        //remove battles containing a distribution of nutrient which is not available at the moment.
-        list.removeAll(toDelete);
 
-        return list;
+            return list;
+        } catch (IOException e) {
+            throw new TournamentException("Cant not read target run file.", e);
+        }
+    }
+
+    public Battle getUnsuccessfulBattle() throws TournamentException {
+        //todo: test it
+        //if the contest mode is programmer then it does not matters.
+        if(config.isProgrammerMode()) return null;
+
+        List<Battle> missingRun = getMissingRunBattles(false);
+        if (missingRun.isEmpty()) {
+            try {
+                persistence.deleteFile(config.getBattlesTargetRunFile(this.name));
+            } catch (IOException ignored) {
+                logger.error("Failed to remove target run file.", ignored);
+            }
+            return null;
+        }
+
+        //the first battle it the one which didn't finish successful
+        return missingRun.get(0);
     }
 }

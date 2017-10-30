@@ -62,12 +62,13 @@ public class ContestFolderFilter implements Predicate<Path> {
         if (name == null || path.trim().isEmpty()) {
             return false;
         }
+        ContestConfig config = new ContestConfig(path, name);
 
-        Path contestName = Paths.get(ContestConfig.getContestPath(path, name));
-        Path MOsFolder = Paths.get(ContestConfig.getMOsPath(path, name));
-        Path ReportFolder = Paths.get(ContestConfig.getReportPath(path, name));
-        Path CppFolder = Paths.get(ContestConfig.getCppApiFolder(path, name));
-        Path BackupFolder = Paths.get(ContestConfig.getBackupFolder(path, name));
+        Path contestName = Paths.get(config.getContestPath());
+        Path MOsFolder = Paths.get(config.getMOsPath());
+        Path ReportFolder = Paths.get(config.getReportPath());
+        Path CppFolder = Paths.get(config.getCppApiFolder());
+        Path BackupFolder = Paths.get(config.getBackupFolder());
 
         return Files.isDirectory(contestName) &&
                 Files.isDirectory(MOsFolder) &&

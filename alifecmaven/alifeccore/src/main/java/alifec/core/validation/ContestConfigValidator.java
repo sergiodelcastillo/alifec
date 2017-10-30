@@ -1,5 +1,6 @@
 package alifec.core.validation;
 
+import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 
@@ -16,17 +17,35 @@ import java.nio.file.Paths;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestPathValidator implements Validator<String> {
+public class ContestConfigValidator implements Validator<ContestConfig> {
+
     @Override
-    public void validate(String rootFolder) throws ValidationException {
+    public void validate(ContestConfig config) throws ValidationException {
 
-        Path path = Paths.get(rootFolder);
-        if (!Files.isDirectory(path))
-            throw new ValidationException("The contest path is not a directory or not exists.");
+        if (config.getPauseBetweenBattles() < 0) {
+            throw new ValidationException("property pause_between_battles must have a positive integer.");
+        }
 
-        path.resolve(ContestConfig.BASE_APP_FOLDER+ File.separator+ContestConfig.CONFIG_FILE);
+        if (config.getMode() < 0 || config.getMode() > 1) {
+            throw new ValidationException("property mode must have values 0 or 1.");
+        }
 
-        if (!Files.isRegularFile(path))
-            throw new ValidationException("The contest does not have a valid config file.");
+        if (config.getPath().isEmpty()) {
+            throw new ValidationException("The contest path is an empty string.");
+        }
+
+        if (config.getContestName().isEmpty()) {
+            throw new ValidationException("The contest name is an empty string.");
+        }
+
+        if (!Files.isDirectory(Paths.get(config.getPath())))
+            throw new ValidationException("The contest path folder does not exists: " + config.getPath());
+
+        if (!Files.isDirectory(Paths.get(config.getContestPath())))
+            throw new ValidationException("The contest name folder does not exists: " + config.getContestPath());
+
+        if (config.getNutrients().isEmpty()) {
+            throw new ValidationException("Please specify one or more distribution of nutrients.");
+        }
     }
 }

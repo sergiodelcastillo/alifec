@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -32,9 +31,14 @@ public class ContestFileManager {
 
     public static List<String> listContest(String path) {
         try {
-            return Files.list(Paths.get(path))
+            List<String> list = Files.list(Paths.get(path))
                     .filter(new ContestFolderFilter())
                     .map(new FileNameFunction()).collect(Collectors.toList());
+
+            while (list.contains(null))
+                list.remove(null);
+
+            return list;
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
@@ -43,9 +47,14 @@ public class ContestFileManager {
     }
 
     public static List<String> listTournaments(Path path) throws IOException {
-        return Files.list(path)
+        List<String> list = Files.list(path)
                 .filter(new TournamentFilter())
                 .map(new FileNameFunction()).collect(Collectors.toList());
+
+        while (list.contains(null))
+            list.remove(null);
+
+        return list;
     }
 
     public static List<String> listTournaments(String path) throws IOException {

@@ -69,9 +69,12 @@ public class BattleUI extends JPanel implements ActionListener {
         add(BorderLayout.SOUTH, createSouthPanel());
 
         if (restoreMissingRun) {
-
-            for(Battle battle: contest.getMissingRunBattles()){
-                addBattle(battle, config.isProgrammerMode());
+            try {
+                for (Battle battle : contest.getMissingRunBattles(true)) {
+                    addBattle(battle, config.isProgrammerMode());
+                }
+            } catch (Throwable t) {
+                logger.error(t.getMessage(), t);
             }
         }
     }
@@ -208,8 +211,8 @@ public class BattleUI extends JPanel implements ActionListener {
                 return;
             }
             try {
-                Competitor c1 = ((Competitor)opponent1.getSelectedItem());
-                Competitor c2 = ((Competitor)opponent2.getSelectedItem());
+                Competitor c1 = ((Competitor) opponent1.getSelectedItem());
+                Competitor c2 = ((Competitor) opponent2.getSelectedItem());
                 NutrientDistribution n = (NutrientDistribution) nutrient.getSelectedItem();
 
                 Battle battle = new Battle(
@@ -281,13 +284,13 @@ public class BattleUI extends JPanel implements ActionListener {
         boolean option = father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE;
         List<Battle> list = contest.lastTournament().generateAllBattles(opponents, nutrients, option);
 
-        for(Battle battle: list){
-        if (!addBattle(battle, option)) {
-            existingBattle = true;
-        }
+        for (Battle battle : list) {
+            if (!addBattle(battle, option)) {
+                existingBattle = true;
+            }
 
-        if(list.size() == 0 && existingBattle)
-            Message.printErr(this, "Battle/s already run.");
+            if (list.size() == 0 && existingBattle)
+                Message.printErr(this, "Battle/s already run.");
         }
     }
 

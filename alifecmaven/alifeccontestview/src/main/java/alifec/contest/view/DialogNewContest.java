@@ -138,10 +138,9 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
         if (ev.getSource().equals(this.buttonOK)) {
             String contestFolderName = ContestConfig.CONTEST_NAME_PREFIX + textName.getText();
             String contestFolderRoot = textPath.getText();
-            String contestPath = ContestConfig.getContestPath(contestFolderRoot, contestFolderName);
             try {
-                newContestFolderValidator.validate(contestPath);
-                config = ContestConfig.buildNewConfigFile(contestFolderRoot, contestFolderName);
+                config = new ContestConfig(contestFolderRoot, contestFolderName);
+                newContestFolderValidator.validate(config.getContestPath());
                 createExamples = examples.isSelected() ? Boolean.TRUE : Boolean.FALSE;
                 makeDefault = checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE;
 
