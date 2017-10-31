@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class SourceCodeFilterTest {
+public class SuffixPredicateTest {
     @Test
     public void testGetNameOfMOCpp() {
         CppMOPredicate predicate = new CppMOPredicate();

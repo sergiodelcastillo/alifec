@@ -4,6 +4,7 @@ import alifec.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.persistence.custom.ContestFolderPredicate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,13 +21,13 @@ import java.util.List;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestFolderFilterTest extends ParentTest {
+public class ContestFolderPredicateTest extends ParentTest {
 
     @Test
     public void testListEmpty() throws IOException {
 
         Assert.assertEquals(Files.list(Paths.get(TEST_ROOT_PATH))
-                .filter(new ContestFolderFilter()).count(), 0);
+                .filter(new ContestFolderPredicate()).count(), 0);
     }
 
     @Test
@@ -35,21 +36,21 @@ public class ContestFolderFilterTest extends ParentTest {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("contest-");
 
-        ContestFolderFilter contestFolderFilter = new ContestFolderFilter(false);
-        Assert.assertFalse(contestFolderFilter.test(folder.resolve(stringBuilder.toString())));
-        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-|")));
-        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-|")));
-        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-1|")));
-        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-|1")));
-        Assert.assertFalse(contestFolderFilter.test(folder.resolve("contest-11111111111111111111111111")));
+        ContestFolderPredicate contestFolderPredicate = new ContestFolderPredicate(false);
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve(stringBuilder.toString())));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-|")));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-|")));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-1|")));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-|1")));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-11111111111111111111111111")));
 
         for (int i = 0; i < 25; i++) {
             stringBuilder.append("c");
-            Assert.assertTrue(contestFolderFilter.test(folder.resolve(stringBuilder.toString())));
+            Assert.assertTrue(contestFolderPredicate.test(folder.resolve(stringBuilder.toString())));
         }
 
         stringBuilder.append("c");
-        Assert.assertFalse(contestFolderFilter.test(folder.resolve(stringBuilder.toString())));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve(stringBuilder.toString())));
     }
 
     @Test
@@ -59,7 +60,7 @@ public class ContestFolderFilterTest extends ParentTest {
 
 
         Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH))
-                .filter(new ContestFolderFilter())
+                .filter(new ContestFolderPredicate())
                 .allMatch(path -> path.getFileName().toString().equals(contestName)));
     }
 
@@ -76,7 +77,7 @@ public class ContestFolderFilterTest extends ParentTest {
         }
 
 
-        Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH)).filter(new ContestFolderFilter()).allMatch(path -> {
+        Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH)).filter(new ContestFolderPredicate()).allMatch(path -> {
             String file = path.getFileName().toString();
             if (target.contains(file)) {
                 target.remove(file);
@@ -118,7 +119,7 @@ public class ContestFolderFilterTest extends ParentTest {
 
 
         Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH))
-                .filter(new ContestFolderFilter())
+                .filter(new ContestFolderPredicate())
                 .allMatch(path -> {
                     String file = path.getFileName().toString();
                     if (contestListTarget.contains(file)) {

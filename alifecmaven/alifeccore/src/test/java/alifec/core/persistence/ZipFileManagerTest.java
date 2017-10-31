@@ -18,15 +18,15 @@ import java.util.List;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ZipHelperTest extends ParentTest {
+public class ZipFileManagerTest extends ParentTest {
 
     @Test
     public void testCreateZip() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         String contestName = "contest-01";
 
         ContestConfig config = createContest(contestName);
-
-        String zipFile = ZipHelper.zipContest(config);
+        ZipFileManager zipFileManager = new ZipFileManager(config);
+        String zipFile = zipFileManager.zipContest();
 
         Assert.assertEquals(1, new File(config.getBackupFolder()).list((dir, name) -> {
             return name.equals(zipFile);
@@ -57,10 +57,10 @@ public class ZipHelperTest extends ParentTest {
         String contestName = "contest-01";
 
         ContestConfig config = createContest(contestName);
+        ZipFileManager zipFileManager = new ZipFileManager(config);
+        String zipfile = zipFileManager.zipContest();
 
-        String zipfile = ZipHelper.zipContest(config);
-
-        List<String> entries = ZipHelper.listEntries(config.getBackupFolder()+ File.separator+zipfile);
+        List<String> entries = zipFileManager.listEntries(config.getBackupFolder()+ File.separator+zipfile);
 
         Assert.assertThat(entries, Matchers.containsInAnyOrder(target));
     }
@@ -88,14 +88,14 @@ public class ZipHelperTest extends ParentTest {
         String contestName = "contest-01";
 
         ContestConfig config = createContest(contestName);
-
-        String zipFile = ZipHelper.zipContest(config);
+        ZipFileManager zipFileManager = new ZipFileManager(config);
+        String zipFile = zipFileManager.zipContest();
 
         String outputFolder = TEST_ROOT_PATH + File.separator + "restore";
 
         Assert.assertTrue(new File(outputFolder).mkdir());
 
-        ZipHelper.unzip(config.getBackupFolder() + File.separator + zipFile, outputFolder);
+        zipFileManager.unzip(config.getBackupFolder() + File.separator + zipFile, outputFolder);
 
         for (String file : target) {
             Assert.assertTrue(new File(outputFolder + File.separator + file).exists());

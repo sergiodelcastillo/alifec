@@ -2,9 +2,9 @@ package alifec.core.compilation;
 
 import alifec.core.exception.CompileConfigException;
 import alifec.core.exception.CompilerException;
+import alifec.core.persistence.SourceCodeFileManager;
 import alifec.core.persistence.config.CompileConfig;
 import alifec.core.persistence.config.ContestConfig;
-import alifec.core.persistence.filter.SourceCodeFilter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,39 +26,45 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class CompileHelper {
+    private static Logger logger = LogManager.getLogger(CompileHelper.class);
 
-    static Logger logger = LogManager.getLogger(CompileHelper.class);
+    private static Logger moLogger = LogManager.getLogger("alifec.mo.compilation");
+    private static LogOutputStream out = new LogOutputStream(moLogger, Level.INFO);
+    private static LogOutputStream err = new LogOutputStream(moLogger, Level.ERROR);
 
-    static Logger moLogger = LogManager.getLogger("alifec.mo.compilation");
-    static LogOutputStream out = new LogOutputStream(moLogger, Level.INFO);
-    static LogOutputStream err = new LogOutputStream(moLogger, Level.ERROR);
+    private ContestConfig config;
+    private SourceCodeFileManager persistence;
+
+    public CompileHelper(ContestConfig config) {
+        this.config = config;
+        this.persistence = new SourceCodeFileManager(config.getMOsPath());
+    }
 
     /**
      * Compile .java and .cpp files
      * java files: are compiled and saved in folder "contest-name"/compiled
      * C/Cpp files: are built in an unique library(libcppcolonies.so/.dll) and saved in folder "contest-name"/compiled.
      *
-     * @param config
      * @return true if successfully
      */
-    public static CompilationResult compileMOs(ContestConfig config) {
+    public CompilationResult compileMOs() {
         cleanupCompilationTarget(config.getCompilationTarget());
 
         CompilationResult result = new CompilationResult();
 
-        compileJavaFiles(config, null, result);
-        compileAllCppFiles(config, result);
+        compileJavaFiles( null, result);
+        compileAllCppFiles(result);
 
         return result;
     }
 
-    private static void compileJavaFiles(ContestConfig config, String mo, CompilationResult result) {
+    private void compileJavaFiles(String mo, CompilationResult result) {
         logger.info("Compile JAVA Files");
 
         try {
-            for (Path f : SourceCodeFilter.listJavaFiles(config.getMOsPath())) {
+            for (Path f : persistence.listJavaFiles()) {
                 if (mo == null || f.getFileName().toString().equals(mo + ".java")) {
-                    if (javaSourceCodeCompilation(config, f.getParent().toString(), f.getFileName().toString())) {
+                    if (javaSourceCodeCompilation(f.getParent().toString(), f.getFileName().toString())) {
                         logger.info(f.toString() + " [OK]");
                     } else {
                         logger.error(f.toString() + " [FAIL]");
@@ -72,13 +78,13 @@ public class CompileHelper {
         }
     }
 
-    private static void compileAllCppFiles(ContestConfig config, CompilationResult result) {
+    private void compileAllCppFiles(CompilationResult result) {
         logger.info("Compile C++ Files");
 
-        if (updateTournamentCpp(config) && updateIncludes(config)) {
+        if (updateTournamentCpp() && updateIncludes()) {
             logger.info("Update C++ Files: [OK]");
 
-            if (cppCompilationAllSourceCodes(config)) {
+            if (cppCompilationAllSourceCodes()) {
                 logger.info("Create libcppcolonies: [OK]");
             } else {
                 logger.info("Create libcppcolonies: [FAIL]");
@@ -91,22 +97,22 @@ public class CompileHelper {
         }
     }
 
-    public static CompilationResult compileOneMO(ContestConfig config, String mo) {
+    public CompilationResult compileOneMO(String mo) {
         cleanupCompilationTarget(config.getCompilationTarget());
 
         CompilationResult compilationResult = new CompilationResult();
         try {
-            List<String> javaMOs = SourceCodeFilter.listJavaMOs(config.getMOsPath());
-            List<String> cppMos = SourceCodeFilter.listCppMOs(config.getMOsPath());
+            List<String> javaMOs = persistence.listJavaMOs();
+            List<String> cppMos = persistence.listCppMOs();
 
 
             if (javaMOs.contains(mo)) {
-                compileJavaFiles(config, mo, compilationResult);
+                compileJavaFiles(mo, compilationResult);
                 return compilationResult;
             }
 
             if (cppMos.contains(mo)) {
-                compileAllCppFiles(config, compilationResult);
+                compileAllCppFiles(compilationResult);
                 return compilationResult;
             }
             //the mo was not found.
@@ -125,7 +131,7 @@ public class CompileHelper {
      * @param targetFolder
      * @throws IOException
      */
-    private static void cleanupCompilationTarget(String targetFolder) {
+    private void cleanupCompilationTarget(String targetFolder) {
         logger.info("Cleaning up files in directory: " + targetFolder);
 
         try {
@@ -154,12 +160,11 @@ public class CompileHelper {
      * This method use the native compiler(Javac) to compile the java source codes.
      * The compiled codes are stored in folder <b>"contest name"/compiled/</b>
      *
-     * @param config       the config file
      * @param javaFileName the source code .java
      * @return true if the compilation is successfully
      * @throws CompilerException if can not find the C/C++ compiler
      */
-    static boolean javaSourceCodeCompilation(ContestConfig config, String javaFileFolder, String javaFileName) throws CompilerException {
+    boolean javaSourceCodeCompilation(String javaFileFolder, String javaFileName) throws CompilerException {
         try {
             JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 
@@ -183,10 +188,9 @@ public class CompileHelper {
      * "libcppcolonies.dll/libcppcolonies.so according on which Operating System is running.
      * The library is stored in folder <b>"contest name"/compiled</b>.
      *
-     * @param config Configuration of the Contest
      * @return true if is successfully
      */
-    static private boolean cppCompilationAllSourceCodes(ContestConfig config) {
+    private boolean cppCompilationAllSourceCodes() {
         try {
             CompileConfig compileConfig = new CompileConfig(config);
 
@@ -257,7 +261,7 @@ public class CompileHelper {
         }
     }
 
-    private static void configureLogFile(String fileName, ContestConfig config) {
+    private void configureLogFile(String fileName, ContestConfig config) {
         System.setProperty("moFilename", config.getLogFileName(fileName));
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
@@ -268,36 +272,31 @@ public class CompileHelper {
      *
      * @return true if is successfully
      */
-    static boolean updateTournamentCpp(ContestConfig config) {
+    boolean updateTournamentCpp() {
         try {
-            List<String> names = SourceCodeFilter.listCppMOs(config.getMOsPath());
+            List<String> names = persistence.listCppMOs();
             Path env = Paths.get(config.getCppApiFolder() + File.separator + "Environment.cpp");
 
             if (Files.notExists(env)) {
                 Files.createFile(env);
             }
 
-            PrintWriter pw = new PrintWriter(env.toFile());
+            try (BufferedWriter pw = Files.newBufferedWriter(env)) {
+                pw.write("\nbool Environment::addColony(string name, int id){\n");
+                pw.write("	CppColony<Microorganism> *mo = NULL;\n\n");
 
-            pw.println("");
-            pw.println("bool Environment::addColony(string name, int id){");
-            pw.println("	CppColony<Microorganism> *mo = NULL;");
-            pw.println("");
+                for (String name : names) {
+                    pw.write("	if(name == \"" + name + "\"){\n");
+                    pw.write("	   mo = (CppColony < Microorganism > *) new CppColony< " + name + " >(id);\n");
+                    pw.write("   }\n");
+                    logger.trace("Updating Tournament CPP for MO: " + name);
+                }
 
-            for (String name : names) {
-                pw.println("	if(name == \"" + name + "\"){");
-                pw.println("	   mo = (CppColony < Microorganism > *) new CppColony< " + name + " >(id);");
-                pw.println("   }");
-                logger.trace("Updating Tournament CPP for MO: " + name);
+                pw.write("\n	colonies.push_back(mo);\n\n");
+                pw.write("   return mo != NULL;\n");
+                pw.write("}\n\n");
             }
 
-            pw.println("");
-            pw.println("	colonies.push_back(mo);");
-            pw.println("");
-            pw.println("   return mo != NULL;");
-            pw.println("}");
-            pw.println("");
-            pw.close();
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             return false;
@@ -312,22 +311,21 @@ public class CompileHelper {
      *
      * @return true if  is successfully
      */
-    static boolean updateIncludes(ContestConfig config) {
+    boolean updateIncludes() {
         try {
-            List<String> files = SourceCodeFilter.listFilenameCpp(config.getMOsPath());
+            List<String> files = persistence.listFilenameCpp();
             Path includes = Paths.get(config.getCppApiFolder() + File.separator + "includemos.h");
 
             if (Files.notExists(includes)) {
                 Files.createFile(includes);
             }
 
-            PrintWriter pw = new PrintWriter(includes.toFile());
-
-            for (String n : files) {
-                pw.println("#include \"" + n + "\"");
-                logger.trace("Updating include for MO: " + n);
+            try (BufferedWriter pw = Files.newBufferedWriter(includes)) {
+                for (String n : files) {
+                    pw.write("#include \"" + n + "\"\n");
+                    logger.trace("Updating include for MO: " + n);
+                }
             }
-            pw.close();
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             return false;

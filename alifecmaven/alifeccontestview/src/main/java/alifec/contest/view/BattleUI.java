@@ -70,7 +70,7 @@ public class BattleUI extends JPanel implements ActionListener {
 
         if (restoreMissingRun) {
             try {
-                for (Battle battle : contest.getMissingRunBattles(true)) {
+                for (Battle battle : contest.getMissingRunBattles()) {
                     addBattle(battle, config.isProgrammerMode());
                 }
             } catch (Throwable t) {

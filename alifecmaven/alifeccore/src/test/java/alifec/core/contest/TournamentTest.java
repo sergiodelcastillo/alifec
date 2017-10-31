@@ -29,9 +29,9 @@ public class TournamentTest extends ParentTest {
         //ensure the competition mode
         config.setMode(ContestConfig.COMPETITION_MODE);
         config.save();
-
+        CompileHelper compiler = new CompileHelper(config);
         //compile MOs
-        CompilationResult result = CompileHelper.compileMOs(config);
+        CompilationResult result = compiler.compileMOs();
         Assert.assertFalse(result.haveErrors());
 
         Contest contest = new Contest(config);

@@ -1,12 +1,11 @@
 package alifec.core.simulation;
 
 import alifec.core.contest.Battle;
-import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.NutrientException;
 import alifec.core.exception.OpponentException;
+import alifec.core.persistence.SourceCodeFileManager;
 import alifec.core.persistence.config.ContestConfig;
-import alifec.core.persistence.filter.SourceCodeFilter;
 import alifec.core.simulation.rules.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,13 +65,13 @@ public class Environment {
     public Environment(ContestConfig config) {
         agar = new Agar();
         colonies = new ArrayList<>();
+        SourceCodeFileManager helper = new SourceCodeFileManager(config.getMOsPath());
 
         logger.info("Loading Colonies");
         logger.info("Loading Java Colonies");
 
-        //todo: decide if list java files should use the .java or .class
         try {
-            for (String name : SourceCodeFilter.listJavaMOs(config.getMOsPath())) {
+            for (String name : helper.listJavaMOs()) {
                 try {
                     JavaColony.addClassPath(config.getCompilationTarget());
                     colonies.add(new JavaColony(colonies.size(), "MOs." + name));
@@ -91,7 +90,7 @@ public class Environment {
             if (CppColony.loadLibrary(config.getCompilationTarget())) {
                 logger.info("Loading C++ Library [OK]");
 
-                for (String name : SourceCodeFilter.listCppMOs(config.getMOsPath())) {
+                for (String name : helper.listCppMOs()) {
                     try {
                         // to initialise the name of colony
                         colonies.add(new CppColony(colonies.size(), name));

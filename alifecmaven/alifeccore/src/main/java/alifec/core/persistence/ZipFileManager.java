@@ -2,6 +2,7 @@ package alifec.core.persistence;
 
 import alifec.core.exception.ZipParsingException;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.persistence.custom.FileNameFunction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -24,9 +26,16 @@ import java.util.zip.ZipOutputStream;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ZipHelper {
-    private final static Logger logger = LogManager.getLogger(ZipHelper.class);
+public class ZipFileManager {
+    private final static Logger logger = LogManager.getLogger(ZipFileManager.class);
     private static int BUFFER = 2048;
+    private final ContestConfig config;
+
+    public ZipFileManager(ContestConfig config) {
+        //todo: remove the config and use string
+        //todo improve use of path
+        this.config = config;
+    }
 
     /**
      * This method creates the zip archive and then goes through
@@ -36,7 +45,7 @@ public class ZipHelper {
      * <p>
      * The zip file will be generated in backup folder of the contest
      */
-    public static String zipContest(ContestConfig config) throws IOException {
+    public String zipContest() throws IOException {
         // the directory to be zipped
         String backupFile = config.getBackupFile();
         Path directory = Paths.get(config.getContestPath());
@@ -78,7 +87,7 @@ public class ZipHelper {
         return getName(backupFile);
     }
 
-    private static String getName(String backupFile) {
+    private String getName(String backupFile) {
         String[] tmp1 = backupFile.split(File.separator);
 
         return tmp1.length == 1 ? backupFile : tmp1[tmp1.length - 1];
@@ -91,7 +100,7 @@ public class ZipHelper {
      * @param file      file to be archived
      * @param zipStream archive to contain the file.
      */
-    private static void addToZipFile(Path file, ZipOutputStream zipStream, String root) {
+    private void addToZipFile(Path file, ZipOutputStream zipStream, String root) {
         //Ignore folders
         if (file.toFile().isDirectory()) {
             logger.trace("Ignoring: " + file.toAbsolutePath());
@@ -133,7 +142,7 @@ public class ZipHelper {
         }
     }
 
-    public static void unzip(String source, String out) throws IOException {
+    public void unzip(String source, String out) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(source))) {
 
             ZipEntry entry = zis.getNextEntry();
@@ -174,19 +183,11 @@ public class ZipHelper {
      * @return a list of string which represents the content of the zip
      * @throws IOException
      */
-    public static List<String> listEntries(String zip) throws IOException {
-        List<String> result = new ArrayList<>();
-
+    public List<String> listEntries(String zip) throws IOException {
         try (ZipFile zipFile = new ZipFile(zip)) {
-            zipFile.stream()
-                    .forEach((Consumer<ZipEntry>) zipEntry -> {
-                        result.add(zipEntry.getName());
-                    });
-        } catch (IOException e) {
-            // error while opening a ZIP file
-            logger.error(e);
-            throw e;
+            return zipFile.stream()
+                    .map(new FileNameFunction())
+                    .collect(Collectors.toList());
         }
-        return result;
     }
 }

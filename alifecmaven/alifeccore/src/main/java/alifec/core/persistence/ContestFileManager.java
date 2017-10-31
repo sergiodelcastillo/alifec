@@ -4,8 +4,8 @@ import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.custom.FileNameFunction;
 import alifec.core.persistence.custom.NotNullPredicate;
-import alifec.core.persistence.filter.ContestFolderFilter;
-import alifec.core.persistence.filter.TournamentFilter;
+import alifec.core.persistence.custom.ContestFolderPredicate;
+import alifec.core.persistence.custom.TournamentPredicate;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class ContestFileManager {
     public static List<String> listContest(String path) {
         try {
             return Files.list(Paths.get(path))
-                    .filter(new ContestFolderFilter())
+                    .filter(new ContestFolderPredicate())
                     .map(new FileNameFunction())
                     .filter(new NotNullPredicate())
                     .collect(Collectors.toList());
@@ -49,7 +49,7 @@ public class ContestFileManager {
         Path path = Paths.get(file);
 
         return Files.list(path)
-                .filter(new TournamentFilter())
+                .filter(new TournamentPredicate())
                 .map(new FileNameFunction())
                 .filter(new NotNullPredicate())
                 .collect(Collectors.toList());

@@ -1,15 +1,14 @@
 package alifec.core.simulation;
 
 import alifec.core.exception.NutrientException;
-import alifec.core.simulation.nutrient.*;
+import alifec.core.simulation.nutrient.BallsNutrient;
+import alifec.core.simulation.nutrient.FunctionBasedNutrient;
+import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.nutrient.function.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Hashtable;
-import java.util.List;
 
 
 /**
@@ -105,17 +104,5 @@ public class Agar {
         return nutrients;
     }
 
-    /**
-     * @return a list of all nutrients.
-     */
-    public List<String> getNutrientsName() {
-        Collection<Nutrient> nutrient = nutrients.values();
-        List<String> res = new ArrayList<>(nutrient.size());
 
-        for (Nutrient n : nutrient) {
-            res.add(n.toString());
-        }
-
-        return res;
-    }
 }

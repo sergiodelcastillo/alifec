@@ -4,7 +4,7 @@ package alifec.core.contest;
 import alifec.core.contest.oponentInfo.*;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestFileManager;
-import alifec.core.persistence.ZipHelper;
+import alifec.core.persistence.ZipFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
@@ -42,11 +42,13 @@ public class Contest {
     private ContestConfig config;
 
     private ContestFileManager persistence;
+    private ZipFileManager zipPersistence;
 
     public Contest(ContestConfig config) throws CreateContestException {
         try {
             this.config = config;
             this.persistence = new ContestFileManager(config.getContestPath());
+            this.zipPersistence = new ZipFileManager(config);
 
             this.environment = new Environment(config);
             this.opponentsInfo = new Opponent(config);
@@ -264,7 +266,7 @@ public class Contest {
         for (Tournament t : tournaments) {
             TournamentStatistics ts = t.getTournamentStatistics();
 
-            for(OpponentInfo op: opponentsInfo.getOpponents()){
+            for (OpponentInfo op : opponentsInfo.getOpponents()) {
                 ts.addOpponentInfo(op.getName(), op.getAuthor(), op.getAffiliation());
             }
 
@@ -285,10 +287,10 @@ public class Contest {
      */
     public boolean createBackUp() {
 
-        //todo: it should be used in persistence
+        //todo: improve the use of exceptions
         // generate the back up...
         try {
-            ZipHelper.zipContest(config);
+            zipPersistence.zipContest();
             return true;
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
@@ -350,22 +352,21 @@ public class Contest {
         config.save();
     }
 
-    public List<Battle> getMissingRunBattles(boolean removeUnavailable) throws TournamentException {
-        List<Battle> list = lastTournament().getMissingRunBattles(removeUnavailable);
+    public List<Battle> getMissingRunBattles() throws TournamentException {
+        List<Battle> list = lastTournament().getMissingRunBattles(true);
         List<String> opponentNames = environment.getOpponentNames();
 
         // remove battles which have unavailable colonies
-        if (removeUnavailable) {
-            List<Battle> toDelete = new ArrayList<>();
-            for (Battle battle : list) {
-                if (!opponentNames.contains(battle.getFirstColony()) ||
-                        !opponentNames.contains(battle.getSecondColony())) {
-                    toDelete.add(battle);
-                }
+        List<Battle> toDelete = new ArrayList<>();
+        for (Battle battle : list) {
+            if (!opponentNames.contains(battle.getFirstColony()) ||
+                    !opponentNames.contains(battle.getSecondColony())) {
+                toDelete.add(battle);
             }
-
-            list.removeAll(toDelete);
         }
+
+        list.removeAll(toDelete);
+
 
         return list;
     }

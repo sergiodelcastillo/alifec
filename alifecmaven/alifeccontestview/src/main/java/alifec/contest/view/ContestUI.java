@@ -101,7 +101,7 @@ public class ContestUI extends JFrame implements ActionListener {
     private boolean loadContest() {
         String path = ContestConfig.getDefaultPath();
 
-        if(path == null) return false;
+        if (path == null) return false;
 
         ContestConfig config = null;
 
@@ -188,7 +188,8 @@ public class ContestUI extends JFrame implements ActionListener {
             throw new CreateContestException("The config file is null");
 
 
-        CompilationResult result = CompileHelper.compileMOs(config);
+        CompileHelper compiler = new CompileHelper(config);
+        CompilationResult result = compiler.compileMOs();
 
         //todo: improve it .. it will show as dialogs windows as errors it have but it should show one dialog with all errors.
         if (result.haveErrors()) {
@@ -205,7 +206,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
         Battle failed = contest.getUnsuccessfulBattle();
 
-        if(failed != null){
+        if (failed != null) {
             UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, failed.getFirstColony(), failed.getSecondColony());
             solver.setVisible(true);
 

@@ -21,9 +21,9 @@ public class EatRuleTest extends ParentTest {
     public void testApply() throws Exception {
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");
-
+        CompileHelper compileHelper = new CompileHelper(config );
         //compile MOs
-        CompilationResult result = CompileHelper.compileMOs(config);
+        CompilationResult result = compileHelper.compileMOs();
         Assert.assertFalse(result.haveErrors());
 
         //create the environment

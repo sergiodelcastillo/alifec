@@ -1,4 +1,4 @@
-package alifec.core.persistence.filter;
+package alifec.core.persistence.custom;
 
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 
 
 /**
- * <n>ContestFolderFilter class was designated to filter only valid contest' names which
+ * <n>ContestFolderPredicate class was designated to filter only valid contest' names which
  * follows the below rule:
  * <ol>
  * <li> Starts with the prefix <b>"contest-"</b> (case insensitive).</li>
@@ -20,16 +20,16 @@ import java.util.function.Predicate;
  * <p>
  * <n> For example, a valid name is "contest-01" but "contesto" is not valid. </n>
  */
-public class ContestFolderFilter implements Predicate<Path> {
+public class ContestFolderPredicate implements Predicate<Path> {
 
     //private Logger logger = LogManager.getLogger(getClass());
 
-    private ContestNameValidator validator;
+    private final ContestNameValidator validator;
 
     private final boolean checkExistence;
 
 
-    public ContestFolderFilter() {
+    public ContestFolderPredicate() {
         this(true);
     }
 
@@ -37,7 +37,7 @@ public class ContestFolderFilter implements Predicate<Path> {
      * @param checkExistence if the parameter is set to <b>true</b> then the existence of the folder will be checked.
      *                       This parameter was designated to use within test purposes.
      */
-    public ContestFolderFilter(boolean checkExistence) {
+    public ContestFolderPredicate(boolean checkExistence) {
         this.checkExistence = checkExistence;
         this.validator = new ContestNameValidator();
 
@@ -55,7 +55,7 @@ public class ContestFolderFilter implements Predicate<Path> {
         return !checkExistence || checkContestFolder(path.getParent().toString(), folderName);
     }
 
-    private static boolean checkContestFolder(String path, String name) {
+    private boolean checkContestFolder(String path, String name) {
         if (path == null || path.trim().isEmpty()) {
             return false;
         }
