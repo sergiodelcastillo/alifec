@@ -44,6 +44,8 @@ public class DialogPreferences extends JDialog implements ActionListener {
 
     public DialogPreferences(ContestUI father) throws IOException {
         super(father, "Preferences ", true);
+        //todo: fix issue to save nutrients and load them
+        //todo: after update then the batlle ui does not update the battles.
         this.father = father;
         this.contestNameValidator = new ContestNameValidator();
         this.contestPathValidator = new ContestPathValidator();
@@ -228,10 +230,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
 
         for (NutrientDistribution nutrient : allNutrients) {
             nutrients[i] = new JCheckBox(nutrient.toString());
-
-            if (currentNutrients.contains(nutrient))
-                nutrients[i].setSelected(true);
-
+            nutrients[i].setSelected(currentNutrients.contains(nutrient));
             sequentialGroup.addComponent(nutrients[i]);
             parallelGroup.addComponent(nutrients[i]);
             i++;
@@ -257,10 +256,8 @@ public class DialogPreferences extends JDialog implements ActionListener {
 
                 if (updateConfig()) {
                     father.reloadConfig();
-                    logger.info("Update Config [OK]");
-                }
-                if (updateNutrient()) {
                     father.getBattleUI().updateNutrients();
+                    logger.info("Update Config [OK]");
                 }
 
                 dispose();
@@ -280,27 +277,16 @@ public class DialogPreferences extends JDialog implements ActionListener {
         int mode = this.modeOfContest.getSelectedIndex();
         int pause = parseInt(defaultPause.getSelectedItem().toString());
 
-        return contest.updateConfigFile(path, name, mode, pause);
-    }
+        ArrayList<Integer> nutrientsIds = new ArrayList<>();
 
-    private boolean updateNutrient() {
-        try {
-            Contest contest = father.getContest();
-            ArrayList<Integer> nutrientsIds = new ArrayList<>();
-
-            for (JCheckBox nutrient : nutrients) {
-                if (nutrient.isSelected()) {
-                    Nutrient nutri = Agar.getNutrientByName(nutrient.getText());
-                    if(nutri != null) nutrientsIds.add(nutri.getId());
-                }
+        for (JCheckBox nutrient : nutrients) {
+            if (nutrient.isSelected()) {
+                Nutrient nutri = Agar.getNutrientByName(nutrient.getText());
+                if (nutri != null) nutrientsIds.add(nutri.getId());
             }
-
-            contest.updateNutrient(contest.getConfig(), nutrientsIds);
-        } catch (ConfigFileException ex) {
-            logger.error(ex.getMessage(), ex);
-            return false;
         }
 
-        return true;
+        return contest.updateConfigFile(path, name, mode, pause, nutrientsIds);
     }
+
 }

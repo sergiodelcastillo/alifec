@@ -203,11 +203,12 @@ public class Contest {
      * @param pause default pause between battles
      * @return true if is successfully
      */
-    public boolean updateConfigFile(String path, String name, int mode, int pause) {
+    public boolean updateConfigFile(String path, String name, int mode, int pause, List<Integer> nutrients) {
         config.setPath(path);
         config.setContestName(name);
         config.setMode(mode);
         config.setPauseBetweenBattles(pause);
+        config.setNutrients(nutrients);
 
         try {
             config.save();
@@ -344,12 +345,6 @@ public class Contest {
             selected--;
 
         return tournaments.get(selected);
-    }
-
-    public void updateNutrient(ContestConfig config, List<Integer> nutrients) throws ConfigFileException {
-        config.setNutrients(nutrients);
-
-        config.save();
     }
 
     public List<Battle> getMissingRunBattles() throws TournamentException {
