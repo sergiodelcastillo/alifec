@@ -12,6 +12,7 @@
         <module>alifeccontestview</module>
         <module>alifecutil</module>
         <module>alifecdistribution</module>
+        <module>alifecsimulationview</module>
     </modules>
     <packaging>pom</packaging>
 
