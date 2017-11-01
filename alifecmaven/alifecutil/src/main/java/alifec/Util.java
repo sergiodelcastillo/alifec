@@ -65,10 +65,9 @@ public class Util {
     private static void compileOne(String mo) {
         logger.info("Compile one " + mo);
 
-        ContestConfig config = null;
         try {
-            config = loadConfiguration();
-            CompileHelper.compileOneMO(config, mo);
+            CompileHelper compiler = new CompileHelper(loadConfiguration());
+            compiler.compileOneMO(mo);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,8 +77,8 @@ public class Util {
         logger.info("Compile all mos");
 
         try {
-            ContestConfig config = loadConfiguration();
-            CompileHelper.compileMOs(config);
+            CompileHelper compiler = new CompileHelper(loadConfiguration());
+            compiler.compileMOs();
         } catch (Exception e) {
             e.printStackTrace();
         }
