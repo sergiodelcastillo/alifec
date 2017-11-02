@@ -46,8 +46,7 @@ public class TournamentTest extends ParentTest {
         BallsNutrient ballsNutrient = new BallsNutrient();
 
         Battle battle1 = new Battle(
-                environment.getColonyIdByName(colonies.get(0)),
-                environment.getColonyIdByName(colonies.get(1)),
+                0,1,
                 famineFunction.getId(),
                 colonies.get(0),
                 colonies.get(1),
@@ -55,8 +54,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(0, 100f);
 
         Battle battle2 = new Battle(
-                environment.getColonyIdByName(colonies.get(0)),
-                environment.getColonyIdByName(colonies.get(1)),
+                0,1,
                 ballsNutrient.getId(),
                 colonies.get(0),
                 colonies.get(1),
@@ -64,8 +62,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(0, 10f);
 
         Battle battle3 = new Battle(
-                environment.getColonyIdByName(colonies.get(0)),
-                environment.getColonyIdByName(colonies.get(2)),
+                0,2,
                 ballsNutrient.getId(),
                 colonies.get(0),
                 colonies.get(2),
@@ -73,8 +70,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(2, 150f);
 
         Battle battle4 = new Battle(
-                environment.getColonyIdByName(colonies.get(0)),
-                environment.getColonyIdByName(colonies.get(2)),
+                0,2,
                 famineFunction.getId(),
                 colonies.get(0),
                 colonies.get(2),

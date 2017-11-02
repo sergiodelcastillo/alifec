@@ -2,8 +2,14 @@
 package alifec.core.contest;
 
 import alifec.core.contest.oponentInfo.TournamentStatistics;
+import alifec.core.event.Event;
+import alifec.core.event.Listener;
+import alifec.core.event.impl.BattleFinishEvent;
+import alifec.core.event.impl.BattleMovementEvent;
+import alifec.core.event.impl.BattleStartsEvent;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.TournamentException;
+import alifec.core.persistence.SimulationFileManager;
 import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
@@ -16,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Tournament implements Comparable<Tournament> {
+public class Tournament implements Comparable<Tournament>, Listener {
 
     private Logger logger = LogManager.getLogger(getClass());
 
@@ -27,6 +33,7 @@ public class Tournament implements Comparable<Tournament> {
     private final String name;
 
     private TournamentFileManager persistence;
+    private SimulationFileManager sPersistence;
 
     private boolean isEnabled = false;
 
@@ -46,6 +53,9 @@ public class Tournament implements Comparable<Tournament> {
                 //load battles
                 loadAllBattles();
             }
+
+            this.sPersistence = new SimulationFileManager(config.getSimulationRunFile(name));
+
         } catch (IOException e) {
             throw new TournamentException("Can not create the file: " + name, e);
         }
@@ -292,5 +302,18 @@ public class Tournament implements Comparable<Tournament> {
 
         //the first battle it the one which didn't finish successful
         return missingRun.get(0);
+    }
+
+    @Override
+    public void handle(Event event) {
+        if (event instanceof BattleStartsEvent) {
+            BattleStartsEvent tmp = (BattleStartsEvent) event;
+            sPersistence.appendInit(tmp.getCells(), tmp.getBattle());
+        } else if (event instanceof BattleMovementEvent) {
+            sPersistence.append(((BattleMovementEvent) event).getCells());
+        } else if (event instanceof BattleFinishEvent) {
+            BattleFinishEvent tmp = (BattleFinishEvent) event;
+            sPersistence.appendFinish(tmp.getCells(), tmp.getBattle());
+        }
     }
 }

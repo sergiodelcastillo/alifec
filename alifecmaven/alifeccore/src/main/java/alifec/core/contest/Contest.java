@@ -2,6 +2,10 @@
 package alifec.core.contest;
 
 import alifec.core.contest.oponentInfo.*;
+import alifec.core.event.Event;
+import alifec.core.event.EventBus;
+import alifec.core.event.Listener;
+import alifec.core.event.impl.BattleStartsEvent;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.ZipFileManager;
@@ -17,7 +21,7 @@ import java.io.IOException;
 import java.util.*;
 
 
-public class Contest {
+public class Contest implements Listener {
 
     private Logger logger = LogManager.getLogger(getClass());
 
@@ -68,6 +72,9 @@ public class Contest {
             newTournament();
 
             opponentsInfo.addMissing(environment.getCompetitors());
+
+            //register to listen battle events
+            EventBus.get().register(this);
 
             //TODO: evaluate the messages
         } catch (TournamentException e) {
@@ -368,6 +375,11 @@ public class Contest {
 
     public Battle getUnsuccessfulBattle() throws TournamentException {
         return lastTournament().getUnsuccessfulBattle();
+    }
+
+    @Override
+    public void handle(Event event) {
+        lastTournament().handle(event);
     }
 }
 

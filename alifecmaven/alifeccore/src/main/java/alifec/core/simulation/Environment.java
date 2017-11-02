@@ -1,6 +1,10 @@
 package alifec.core.simulation;
 
 import alifec.core.contest.Battle;
+import alifec.core.event.EventBus;
+import alifec.core.event.impl.BattleFinishEvent;
+import alifec.core.event.impl.BattleMovementEvent;
+import alifec.core.event.impl.BattleStartsEvent;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.NutrientException;
 import alifec.core.exception.OpponentException;
@@ -49,7 +53,7 @@ public class Environment {
     /**
      * Information of current battle .. temporal reference !!
      */
-    private Battle opponents;
+    private Battle battle;
 
     private ColonyRule[] rules = {
             new LifeRule(),
@@ -62,6 +66,7 @@ public class Environment {
     /**
      * @param config is the Contest configuration
      */
+
     public Environment(ContestConfig config) {
         agar = new Agar();
         colonies = new ArrayList<>();
@@ -125,7 +130,7 @@ public class Environment {
      * @return if was successful
      */
     public boolean createBattle(Battle b) {
-        opponents = b;
+        battle = b;
 
         try {
             agar.setNutrient(b.getNutrientId());
@@ -148,17 +153,18 @@ public class Environment {
         init(c2);
 
         liveTime = 0;
+        EventBus.get().post(new BattleStartsEvent(microorganism, b));
         return true;
 
     }
 
-    public final void init(Colony c) {
+    private void init(Colony c) {
         Random r = new Random();
 
         c.clear();
 
         for (int index = 0; index < Defs.MO_INITIAL; ) {
-            if (createInstance(r.nextInt(Defs.DIAMETER), r.nextInt(Defs.DIAMETER), Defs.E_INITIAL, c.id))
+            if (createMOInstance(r.nextInt(Defs.DIAMETER), r.nextInt(Defs.DIAMETER), Defs.E_INITIAL, c.id))
                 ++index;
         }
     }
@@ -214,20 +220,20 @@ public class Environment {
      * @return true if the battles was finished, false otherwise.
      */
     private boolean updateStatus() {
-        if (c1 == null || c2 == null) {
-            return true;
-        }
 
         if (c1.isDied()) {
-            opponents.setWinner(opponents.getSecondColonyId(), c2.getEnergy());
+            battle.setWinner(battle.getSecondColonyId(), c2.getEnergy());
+            EventBus.get().post(new BattleFinishEvent(microorganism, battle));
             return true;
         }
 
         if (c2.isDied()) {
-            opponents.setWinner(opponents.getFirstColonyId(), c1.getEnergy());
+            battle.setWinner(battle.getFirstColonyId(), c1.getEnergy());
+            EventBus.get().post(new BattleFinishEvent(microorganism, battle));
             return true;
         }
 
+        EventBus.get().post(new BattleMovementEvent(microorganism));
         return false;
     }
 
@@ -262,21 +268,7 @@ public class Environment {
         return mo != null && ((mo.id == c1.id) ? c1.kill(mo) : c2.kill(mo));
     }
 
-    public boolean createInstance(int px, int py, float ene, int id) {
-        if (!inDish(px, py) ||
-                ene <= 0 || ene > Defs.E_INITIAL ||
-                microorganism[px][py] != null)
-            return false;
 
-        Cell mo = new Cell(id);
-        mo.x = px;
-        mo.y = py;
-        mo.ene = ene;
-
-        microorganism[px][py] = mo;
-
-        return id == c1.id ? c1.createInstance(mo) : c2.createInstance(mo);
-    }
 
     public Agar getAgar() {
         return agar;
@@ -291,7 +283,7 @@ public class Environment {
     }
 
     public Battle getResults() {
-        return opponents;
+        return battle;
     }
 
     public List<String> getOpponentNames() {
@@ -310,7 +302,7 @@ public class Environment {
         for (int i = 0, coloniesSize = colonies.size(); i < coloniesSize; i++) {
             Colony c = colonies.get(i);
             try {
-                list.add(new Competitor(i, c.getName(), c.getAuthor(), c.getAffiliation()));
+                list.add(new Competitor(c.getId(), c.getName(), c.getAuthor(), c.getAffiliation()));
             } catch (OpponentException e) {
                 logger.error(e.getMessage(), e);
             }
@@ -324,16 +316,6 @@ public class Environment {
             if (c.id == id) return c.getName();
 
         throw new ArrayIndexOutOfBoundsException("cant find id: " + id);
-    }
-
-
-    public int getColonyIdByName(String col) {
-        for (Colony c : colonies) {
-            if (c.getName().toLowerCase().equals(col.toLowerCase())) {
-                return c.id;
-            }
-        }
-        return -1;
     }
 
     /**
@@ -358,23 +340,24 @@ public class Environment {
     /**
      * create a instance of MO in the position (x,y) with the energy = ene and id = id
      *
-     * @param x
-     * @param y
+     * @param px
+     * @param py
      * @param ene
      * @param id
      * @return the if can create the mo.
      */
-    public boolean createMO(int x, int y, float ene, int id) {
-        if (!inDish(x, y) || ene <= 0 || microorganism[x][y] != null) {
+    public boolean createMOInstance(int px, int py, float ene, int id) {
+        if (!inDish(px, py) ||
+                ene <= 0 || ene > Defs.E_INITIAL ||
+                microorganism[px][py] != null)
             return false;
-        }
 
         Cell mo = new Cell(id);
-        mo.x = x;
-        mo.y = y;
+        mo.x = px;
+        mo.y = py;
         mo.ene = ene;
 
-        microorganism[x][y] = mo;
+        microorganism[px][py] = mo;
 
         return id == c1.id ? c1.createInstance(mo) : c2.createInstance(mo);
     }
