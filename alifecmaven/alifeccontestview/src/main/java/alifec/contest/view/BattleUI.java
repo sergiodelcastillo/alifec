@@ -235,7 +235,7 @@ public class BattleUI extends JPanel implements ActionListener {
 
         } else if (e.getSource().equals(addAll)) {
             if (environment.getCompetitors().isEmpty())
-                Message.printErr(father, "You can´t create battles, there are not oponentes");
+                Message.printErr(father, "You can´t create battles, there are no opponents.");
 
             else
                 generateAllBattle();
