@@ -31,8 +31,7 @@ public class NewContestFolderValidator implements Validator<String> {
         if (Files.exists(file))
             throw new ValidationException("The contest folder already exists.");
 
-        String[] names = file.toFile().getAbsolutePath().split("/");
-        String name = names[names.length - 1];
+        String name = file.normalize().getFileName().toString();
 
         contestNameValidator.validate(name);
     }

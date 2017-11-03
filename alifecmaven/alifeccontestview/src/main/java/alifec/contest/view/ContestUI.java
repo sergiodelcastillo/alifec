@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -55,7 +55,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
     private static void configLogging() {
         if (System.getProperty("log4j.configurationFile") == null) {
-            System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log4j2.xml");
+            System.setProperty("log4j.configurationFile", "file:app/log4j2.xml");
         }
     }
 
@@ -110,8 +110,9 @@ public class ContestUI extends JFrame implements ActionListener {
             config = new ContestConfig(path);
 
         } catch (ConfigFileException ex) {
-            logger.error(ex.getMessage(), ex);
-            if (!(ex.getCause() instanceof ValidationException)) {
+            if (!(ex.getCause() instanceof FileNotFoundException) &&
+                    !(ex.getCause() instanceof ValidationException)) {
+                logger.error(ex.getMessage(), ex);
                 if (!Message.printYesNoCancel(null, ex.getMessage() +
                         ". Select 'Yes' to overwrite the existing config file.")) {
                     return false;

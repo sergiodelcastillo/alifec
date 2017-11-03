@@ -1,11 +1,9 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
-import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Cell;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -19,10 +17,10 @@ public class SimulationFileManager {
 
     public SimulationFileManager( String path) throws IOException {
         file = Paths.get(path);
-
+/*
         if(Files.notExists(file)){
             Files.createFile(file);
-        }
+        }*/
     }
 
     public void appendFinish(Cell[][] env, Battle b) {
