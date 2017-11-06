@@ -11,7 +11,7 @@ public class BallsNutrient implements Nutrient {
     int dx1, dx2, dy1, dy2;
     int rx1, rx2, ry1, ry2;
 
-    int d = 7;
+    int d = 8;
     float d2 = d * d;
     private static Random random = new Random();
     private static Random random2 = new Random();

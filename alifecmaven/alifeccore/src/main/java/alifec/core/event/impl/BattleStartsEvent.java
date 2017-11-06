@@ -3,7 +3,6 @@ package alifec.core.event.impl;
 import alifec.core.contest.Battle;
 import alifec.core.event.Event;
 import alifec.core.simulation.Cell;
-import javafx.event.EventTarget;
 
 /**
  * Created by Sergio Del Castillo on 01/11/17.

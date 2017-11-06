@@ -308,12 +308,15 @@ public class Tournament implements Comparable<Tournament>, Listener {
     public void handle(Event event) {
         if (event instanceof BattleStartsEvent) {
             BattleStartsEvent tmp = (BattleStartsEvent) event;
+            logger.info("Starting battle: " + tmp.getBattle().toString());
             sPersistence.appendInit(tmp.getCells(), tmp.getBattle());
         } else if (event instanceof BattleMovementEvent) {
             sPersistence.append(((BattleMovementEvent) event).getCells());
         } else if (event instanceof BattleFinishEvent) {
             BattleFinishEvent tmp = (BattleFinishEvent) event;
-            sPersistence.appendFinish(tmp.getCells(), tmp.getBattle());
+            Battle battle = tmp.getBattle();
+            logger.info("End of the battle. Winner " + battle.getWinnerName() + " with energy " + battle.getWinnerEnergy());
+            sPersistence.appendFinish(tmp.getCells(), battle);
         }
     }
 }

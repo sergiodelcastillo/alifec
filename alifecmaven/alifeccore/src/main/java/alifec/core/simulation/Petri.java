@@ -12,19 +12,6 @@ public class Petri {
      */
     private Environment env;
 
-    /*
-     * First opponent into the current battle..
-     */
-    // Colony firstOpponent;
-    /*
-     * Second opponent into the current battle
-     */
-    //Colony secondOpponent;
-    /*
-     * this class contains the nutrients in the battle.
-     */
-    // Agar agar;
-
     /**
      * The Petri Class use the Singleton pattern.
      */

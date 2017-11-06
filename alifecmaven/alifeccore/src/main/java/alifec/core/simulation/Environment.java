@@ -139,7 +139,6 @@ public class Environment {
             return false;
         }
 
-
         if ((c1 = getColonyById(b.getFirstColonyId())) == null) {
             return false;
         }
@@ -153,6 +152,7 @@ public class Environment {
         init(c2);
 
         liveTime = 0;
+
         EventBus.get().post(new BattleStartsEvent(microorganism, b));
         return true;
 

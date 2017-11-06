@@ -2,6 +2,7 @@ package alifec.core.event;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,9 @@ import java.util.concurrent.Executors;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class EventBus {
-    private List<Listener> listeners = new ArrayList<>();
     private Logger logger = LogManager.getLogger(getClass());
+    private List<Listener> listeners = new ArrayList<>();
+    private ExecutorService executor;
 
     private static EventBus instance;
 
@@ -26,17 +28,19 @@ public class EventBus {
         return instance;
     }
 
-    public void register(Listener event) {
-        listeners.add(event);
+    public EventBus() {
+        executor = Executors.newFixedThreadPool(1);
     }
 
-    public void unregister(Event event) {
-        listeners.remove(event);
+    public void register(Listener listener) {
+        listeners.add(listener);
+    }
+
+    public void unregister(Listener listener) {
+        listeners.remove(listener);
     }
 
     public void post(Event event) {
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-
         executor.submit(new CallableImpl(listeners, event));
     }
 
