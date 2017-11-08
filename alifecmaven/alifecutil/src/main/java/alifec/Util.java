@@ -6,8 +6,8 @@ import alifec.core.persistence.config.ContestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -17,7 +17,9 @@ import java.io.IOException;
  */
 public class Util {
 
-    static Logger logger;
+    private static final String USAGE_FILE = "usage.txt";
+
+    private static final Logger logger;
 
     static {
         //load the configuration first
@@ -27,17 +29,6 @@ public class Util {
 
         logger = LogManager.getLogger(Util.class);
     }
-
-    private static String USAGE = "Artificial Life Contest Command Line Utility.\n" +
-            "It reads the contest configuration and compile according the parameters.\n" +
-            "Usage: java -jar util-<version>.jar [OPTION] [PARAMETER]\n\n" +
-            "The following options are available:\n" +
-            "\t-c, --compile <mo name>\t\t\tCompile a specific MO.\n" +
-            "\t-ca, --compile-all\t\t\tCompile all MOs.\n\n" +
-            "Examples:\n" +
-            "\tjava -jar util-01.jar -c myMo\t\t Compiles myMo, it could be java code or c++ code. " +
-            "In case of c++ code all mos will be compiled.\n" +
-            "\tjava -jar util-01.jar --compile-all\t It will compile all MOs java and c++.\n";
 
     public static void main(String[] args) {
         logger.trace("Starting Artificial Life Contest Command Line Utility.");
@@ -58,8 +49,33 @@ public class Util {
             }
         }
 
-        logger.info(USAGE);
+        showUsage();
         exit();
+    }
+
+    private static void showUsage() {
+        String usage = loadUsage();
+        logger.info(usage);
+    }
+
+    private static String loadUsage() {
+        try {
+            InputStream usage = Util.class.getClassLoader().getResourceAsStream(USAGE_FILE);
+            if (usage != null) {
+                return read(usage);
+            }
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
+
+        logger.error("Could not load " + USAGE_FILE + " file");
+        return null;
+    }
+
+    public static String read(InputStream input) throws IOException {
+        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(input))) {
+            return buffer.lines().collect(Collectors.joining("\n"));
+        }
     }
 
     private static void compileOne(String mo) {

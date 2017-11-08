@@ -1,0 +1,10 @@
+Artificial Life Contest Command Line Utility.
+It reads the contest configuration and compile according the parameters.
+Usage: java -jar util-<version>.jar [OPTION] [PARAMETER]
+The following options are available:
+    -c, --compile <mo name>                 Compile a specific MO.
+    -ca, --compile-all                      Compile all MOs.
+Examples:
+    java -jar util-01.jar -c myMo           Compiles myMo, it could be java code or c++ code.
+In case of c++ code all mos will be compiled.
+    java -jar util-01.jar --compile-all     It will compile all MOs java and c++.
