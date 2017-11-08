@@ -10,9 +10,10 @@ import alifec.core.validation.NewContestFolderValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -21,8 +22,6 @@ import java.util.stream.Collectors;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class Util {
-
-    private static final String USAGE_FILE = "usage.txt";
 
     private static final Logger logger;
 
@@ -72,35 +71,8 @@ public class Util {
             }
         }
 
-        showUsage();
+        new Usage().show();
         exit();
-    }
-
-    private static void showUsage() {
-        String usage = loadUsage();
-        logger.info(usage,
-                ContestConfig.CONTEST_NAME_PREFIX,
-                ContestConfig.CONTEST_NAME_PREFIX);
-    }
-
-    private static String loadUsage() {
-        try {
-            InputStream usage = Util.class.getClassLoader().getResourceAsStream(USAGE_FILE);
-            if (usage != null) {
-                return read(usage);
-            }
-        } catch (Throwable t) {
-            logger.error(t.getMessage(), t);
-        }
-
-        logger.error("Could not load " + USAGE_FILE + " file");
-        return null;
-    }
-
-    public static String read(InputStream input) throws IOException {
-        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(input))) {
-            return buffer.lines().collect(Collectors.joining("\n"));
-        }
     }
 
     private static void compileOne(String mo) {
