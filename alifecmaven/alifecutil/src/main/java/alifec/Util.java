@@ -80,13 +80,12 @@ public class Util {
             CompileHelper compiler = new CompileHelper(loadConfiguration());
             compiler.compileMOs();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
     private static ContestConfig loadConfiguration() throws IOException, ConfigFileException {
         return new ContestConfig(ContestConfig.getDefaultPath());
-
     }
 
 
