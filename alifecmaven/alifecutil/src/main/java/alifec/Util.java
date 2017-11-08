@@ -61,6 +61,15 @@ public class Util {
                     logger.error("-nc option requires one parameter.");
                 }
             }
+
+            if ("-sc".equals(args[0]) || "--set-contest".equals(args[0])) {
+                if (args.length == 2) {
+                    setContest(args[1]);
+                    exit();
+                } else {
+                    logger.error("-sc option requires one parameter.");
+                }
+            }
         }
 
         showUsage();
@@ -69,7 +78,9 @@ public class Util {
 
     private static void showUsage() {
         String usage = loadUsage();
-        logger.info(usage, ContestConfig.CONTEST_NAME_PREFIX);
+        logger.info(usage,
+                ContestConfig.CONTEST_NAME_PREFIX,
+                ContestConfig.CONTEST_NAME_PREFIX);
     }
 
     private static String loadUsage() {
@@ -100,7 +111,8 @@ public class Util {
             compiler.compileOneMO(mo);
         } catch (ConfigFileException e) {
             logger.error(e.getMessage());
-            logger.info("Use the -nc <name> option to create a new contest");
+            logger.info("Use the -sc option to set an existing contest as default or " +
+                    "the -nc option to create a new one");
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);
         }
@@ -114,7 +126,8 @@ public class Util {
             compiler.compileMOs();
         } catch (ConfigFileException e) {
             logger.error(e.getMessage());
-            logger.info("Use the -nc <name> option to create a new contest");
+            logger.info("Use the -sc option to set an existing contest as default or " +
+                    "the -nc option to create a new one");
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);
         }
@@ -130,6 +143,22 @@ public class Util {
             ContestFileManager.buildNewContestFolder(config, Boolean.TRUE);
             saveConfigFile(config);
         } catch (CreateContestFolderException | ConfigFileException | ValidationException e) {
+            logger.error(e.getMessage());
+            logger.info("Use the -sc option to set an existing contest as default or " +
+                    "the -nc option to create a new one");
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
+    }
+
+    private static void setContest(String name) {
+        logger.info("Set default contest");
+
+        try {
+            ContestConfig config = new ContestConfig(ContestConfig.getDefaultPath(),
+                    ContestConfig.CONTEST_NAME_PREFIX + name);
+            saveConfigFile(config);
+        } catch (ConfigFileException e) {
             logger.error(e.getMessage());
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);

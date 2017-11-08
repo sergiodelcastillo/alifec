@@ -5,6 +5,7 @@ The following options are available:
     -c, --compile <mo name>                 Compile a specific MO.
     -ca, --compile-all                      Compile all MOs.
     -nc, --new-contest <name>               Create New Contest named {}<name> in current path
+    -sc, --set-contest <name>               Set the contest named {}<name> as default contest
 Examples:
     java -jar util-01.jar -c myMo           Compiles myMo, it could be java code or c++ code.
 In case of c++ code all mos will be compiled.
