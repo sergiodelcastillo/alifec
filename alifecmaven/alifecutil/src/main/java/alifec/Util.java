@@ -2,7 +2,11 @@ package alifec;
 
 import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.CreateContestFolderException;
+import alifec.core.exception.ValidationException;
+import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.validation.NewContestFolderValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +51,15 @@ public class Util {
                 compileAll();
                 exit();
             }
+
+            if ("-nc".equals(args[0]) || "--new-contest".equals(args[0])) {
+                if (args.length == 2) {
+                    newContest(args[1]);
+                    exit();
+                } else {
+                    logger.error("-nc option requires one parameter.");
+                }
+            }
         }
 
         showUsage();
@@ -55,7 +68,7 @@ public class Util {
 
     private static void showUsage() {
         String usage = loadUsage();
-        logger.info(usage);
+        logger.info(usage, ContestConfig.CONTEST_NAME_PREFIX);
     }
 
     private static String loadUsage() {
@@ -84,8 +97,11 @@ public class Util {
         try {
             CompileHelper compiler = new CompileHelper(loadConfiguration());
             compiler.compileOneMO(mo);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ConfigFileException e) {
+            logger.error(e.getMessage());
+            logger.info("Use the -nc <name> option to create a new contest");
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
         }
     }
 
@@ -95,8 +111,27 @@ public class Util {
         try {
             CompileHelper compiler = new CompileHelper(loadConfiguration());
             compiler.compileMOs();
-        } catch (Exception e) {
+        } catch (ConfigFileException e) {
             logger.error(e.getMessage());
+            logger.info("Use the -nc <name> option to create a new contest");
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
+    }
+
+    private static void newContest(String name) {
+        logger.info("Create new contest");
+
+        try {
+            ContestConfig config = new ContestConfig(".", ContestConfig.CONTEST_NAME_PREFIX + name);
+            new NewContestFolderValidator().validate(config.getContestPath());
+            ContestFileManager.buildNewContestFolder(config, Boolean.TRUE);
+            config.save();
+            logger.info("The contest file was updated as follows: " + config.toString());
+        } catch (CreateContestFolderException | ConfigFileException | ValidationException e) {
+            logger.error(e.getMessage());
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
         }
     }
 
