@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -123,11 +124,11 @@ public class Util {
         logger.info("Create new contest");
 
         try {
-            ContestConfig config = new ContestConfig(".", ContestConfig.CONTEST_NAME_PREFIX + name);
+            ContestConfig config = new ContestConfig(ContestConfig.getDefaultPath(),
+                    ContestConfig.CONTEST_NAME_PREFIX + name);
             new NewContestFolderValidator().validate(config.getContestPath());
             ContestFileManager.buildNewContestFolder(config, Boolean.TRUE);
-            config.save();
-            logger.info("The contest file was updated as follows: " + config.toString());
+            saveConfigFile(config);
         } catch (CreateContestFolderException | ConfigFileException | ValidationException e) {
             logger.error(e.getMessage());
         } catch (Throwable t) {
@@ -136,7 +137,34 @@ public class Util {
     }
 
     private static ContestConfig loadConfiguration() throws IOException, ConfigFileException {
-        return new ContestConfig(ContestConfig.getDefaultPath());
+        try {
+            return new ContestConfig(ContestConfig.getDefaultPath());
+        } catch (ConfigFileException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                ContestConfig config = tryToLoadContest();
+                if (config != null) {
+                    return config;
+                }
+            }
+            throw e;
+        }
+    }
+
+    private static ContestConfig tryToLoadContest() throws ConfigFileException {
+        String defaultPath = ContestConfig.getDefaultPath();
+        List<String> list = ContestFileManager.listContest(defaultPath);
+        if (list.size() == 1) {
+            String name = list.get(0);
+            ContestConfig config = new ContestConfig(defaultPath, name);
+            saveConfigFile(config);
+            return config;
+        }
+        return null;
+    }
+
+    private static void saveConfigFile(ContestConfig config) throws ConfigFileException {
+        config.save();
+        logger.info("The contest file was updated as follows: " + config.toString());
     }
 
 
