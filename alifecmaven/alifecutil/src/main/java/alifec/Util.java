@@ -2,12 +2,18 @@ package alifec;
 
 import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.CreateContestFolderException;
+import alifec.core.exception.ValidationException;
+import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.validation.NewContestFolderValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -17,7 +23,7 @@ import java.io.IOException;
  */
 public class Util {
 
-    static Logger logger;
+    private static final Logger logger;
 
     static {
         //load the configuration first
@@ -27,17 +33,6 @@ public class Util {
 
         logger = LogManager.getLogger(Util.class);
     }
-
-    private static String USAGE = "Artificial Life Contest Command Line Utility.\n" +
-            "It reads the contest configuration and compile according the parameters.\n" +
-            "Usage: java -jar util-<version>.jar [OPTION] [PARAMETER]\n\n" +
-            "The following options are available:\n" +
-            "\t-c, --compile <mo name>\t\t\tCompile a specific MO.\n" +
-            "\t-ca, --compile-all\t\t\tCompile all MOs.\n\n" +
-            "Examples:\n" +
-            "\tjava -jar util-01.jar -c myMo\t\t Compiles myMo, it could be java code or c++ code. " +
-            "In case of c++ code all mos will be compiled.\n" +
-            "\tjava -jar util-01.jar --compile-all\t It will compile all MOs java and c++.\n";
 
     public static void main(String[] args) {
         logger.trace("Starting Artificial Life Contest Command Line Utility.");
@@ -56,9 +51,27 @@ public class Util {
                 compileAll();
                 exit();
             }
+
+            if ("-nc".equals(args[0]) || "--new-contest".equals(args[0])) {
+                if (args.length == 2) {
+                    newContest(args[1]);
+                    exit();
+                } else {
+                    logger.error("-nc option requires one parameter.");
+                }
+            }
+
+            if ("-sc".equals(args[0]) || "--set-contest".equals(args[0])) {
+                if (args.length == 2) {
+                    setContest(args[1]);
+                    exit();
+                } else {
+                    logger.error("-sc option requires one parameter.");
+                }
+            }
         }
 
-        logger.info(USAGE);
+        new Usage().show();
         exit();
     }
 
@@ -68,8 +81,12 @@ public class Util {
         try {
             CompileHelper compiler = new CompileHelper(loadConfiguration());
             compiler.compileOneMO(mo);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ConfigFileException e) {
+            logger.error(e.getMessage());
+            logger.info("Use the -sc option to set an existing contest as default or " +
+                    "the -nc option to create a new one");
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
         }
     }
 
@@ -79,14 +96,76 @@ public class Util {
         try {
             CompileHelper compiler = new CompileHelper(loadConfiguration());
             compiler.compileMOs();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ConfigFileException e) {
+            logger.error(e.getMessage());
+            logger.info("Use the -sc option to set an existing contest as default or " +
+                    "the -nc option to create a new one");
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
+    }
+
+    private static void newContest(String name) {
+        logger.info("Create new contest");
+
+        try {
+            ContestConfig config = new ContestConfig(ContestConfig.getDefaultPath(),
+                    ContestConfig.CONTEST_NAME_PREFIX + name);
+            new NewContestFolderValidator().validate(config.getContestPath());
+            ContestFileManager.buildNewContestFolder(config, Boolean.TRUE);
+            saveConfigFile(config);
+        } catch (CreateContestFolderException | ConfigFileException | ValidationException e) {
+            logger.error(e.getMessage());
+            logger.info("Use the -sc option to set an existing contest as default or " +
+                    "the -nc option to create a new one");
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
+    }
+
+    private static void setContest(String name) {
+        logger.info("Set default contest");
+
+        try {
+            ContestConfig config = new ContestConfig(ContestConfig.getDefaultPath(),
+                    ContestConfig.CONTEST_NAME_PREFIX + name);
+            saveConfigFile(config);
+        } catch (ConfigFileException e) {
+            logger.error(e.getMessage());
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
         }
     }
 
     private static ContestConfig loadConfiguration() throws IOException, ConfigFileException {
-        return new ContestConfig(ContestConfig.getDefaultPath());
+        try {
+            return new ContestConfig(ContestConfig.getDefaultPath());
+        } catch (ConfigFileException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                ContestConfig config = tryToLoadContest();
+                if (config != null) {
+                    return config;
+                }
+            }
+            throw e;
+        }
+    }
 
+    private static ContestConfig tryToLoadContest() throws ConfigFileException {
+        String defaultPath = ContestConfig.getDefaultPath();
+        List<String> list = ContestFileManager.listContest(defaultPath);
+        if (list.size() == 1) {
+            String name = list.get(0);
+            ContestConfig config = new ContestConfig(defaultPath, name);
+            saveConfigFile(config);
+            return config;
+        }
+        return null;
+    }
+
+    private static void saveConfigFile(ContestConfig config) throws ConfigFileException {
+        config.save();
+        logger.info("The contest file was updated as follows: " + config.toString());
     }
 
 
