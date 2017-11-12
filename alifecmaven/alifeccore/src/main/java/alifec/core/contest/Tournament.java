@@ -306,17 +306,22 @@ public class Tournament implements Comparable<Tournament>, Listener {
 
     @Override
     public void handle(Event event) {
-        if (event instanceof BattleStartsEvent) {
-            BattleStartsEvent tmp = (BattleStartsEvent) event;
-            logger.info("Starting battle: " + tmp.getBattle().toString());
-            sPersistence.appendInit(tmp.getCells(), tmp.getBattle());
-        } else if (event instanceof BattleMovementEvent) {
-            sPersistence.append(((BattleMovementEvent) event).getCells());
-        } else if (event instanceof BattleFinishEvent) {
-            BattleFinishEvent tmp = (BattleFinishEvent) event;
-            Battle battle = tmp.getBattle();
-            logger.info("End of the battle. Winner " + battle.getWinnerName() + " with energy " + battle.getWinnerEnergy());
-            sPersistence.appendFinish(tmp.getCells(), battle);
+        try {
+            if (event instanceof BattleStartsEvent) {
+                BattleStartsEvent tmp = (BattleStartsEvent) event;
+                logger.info("Starting battle: " + tmp.getBattle().toString());
+                sPersistence.appendInit(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs(), tmp.getBattle());
+            } else if (event instanceof BattleMovementEvent) {
+                BattleMovementEvent tmp = (BattleMovementEvent) event;
+                sPersistence.append(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs());
+            } else if (event instanceof BattleFinishEvent) {
+                BattleFinishEvent tmp = (BattleFinishEvent) event;
+                Battle battle = tmp.getBattle();
+                logger.info("End of the battle. Winner " + battle.getWinnerName() + " with energy " + battle.getWinnerEnergy());
+                sPersistence.appendFinish(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs(), battle);
+            }
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
         }
     }
 }

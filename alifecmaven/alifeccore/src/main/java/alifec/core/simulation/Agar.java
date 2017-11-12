@@ -104,5 +104,8 @@ public class Agar {
         return nutrients;
     }
 
+    public Nutrient getCurrent(){
+        return current;
+    }
 
 }

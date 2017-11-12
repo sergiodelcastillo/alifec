@@ -10,11 +10,15 @@ import alifec.core.exception.NutrientException;
 import alifec.core.exception.OpponentException;
 import alifec.core.persistence.SourceCodeFileManager;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.rules.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 
 public class Environment {
@@ -33,7 +37,7 @@ public class Environment {
     /**
      * Reference to position of MOs.
      */
-    private Cell microorganism[][] = new Cell[Defs.DIAMETER][Defs.DIAMETER];
+    private Cell microorganism[][];
 
     /**
      * First Opponent .. temporal reference !!
@@ -70,6 +74,7 @@ public class Environment {
     public Environment(ContestConfig config) {
         agar = new Agar();
         colonies = new ArrayList<>();
+        microorganism = new Cell[Defs.DIAMETER][Defs.DIAMETER];
         SourceCodeFileManager helper = new SourceCodeFileManager(config.getMOsPath());
 
         logger.info("Loading Colonies");
@@ -147,13 +152,18 @@ public class Environment {
             return false;
         }
 
-        microorganism = new Cell[Defs.DIAMETER][Defs.DIAMETER];
+
+        for (int i = 0; i < microorganism.length; i++) {
+            for (int j = 0; j < microorganism[i].length; j++) {
+                microorganism[i][j] = null;
+            }
+        }
         init(c1);
         init(c2);
 
         liveTime = 0;
 
-        EventBus.get().post(new BattleStartsEvent(microorganism, b));
+        EventBus.get().post(new BattleStartsEvent(this, b));
         return true;
 
     }
@@ -170,10 +180,7 @@ public class Environment {
     }
 
     public boolean moveColonies() throws MoveMicroorganismException {
-        List<Cell> allOps = new ArrayList<>();
-
-        allOps.addAll(c1.getMOs());
-        allOps.addAll(c2.getMOs());
+        List<Cell> allOps = getMOs();
 
         // randomize list!
         Collections.shuffle(allOps);
@@ -214,6 +221,14 @@ public class Environment {
         return updateStatus();
     }
 
+    public List<Cell> getMOs() {
+        List<Cell> allOps = new ArrayList<>();
+
+        allOps.addAll(c1.getMOs());
+        allOps.addAll(c2.getMOs());
+        return allOps;
+    }
+
     /**
      * Update the status of the current battle.
      *
@@ -223,17 +238,17 @@ public class Environment {
 
         if (c1.isDied()) {
             battle.setWinner(battle.getSecondColonyId(), c2.getEnergy());
-            EventBus.get().post(new BattleFinishEvent(microorganism, battle));
+            EventBus.get().post(new BattleFinishEvent(this, battle));
             return true;
         }
 
         if (c2.isDied()) {
             battle.setWinner(battle.getFirstColonyId(), c1.getEnergy());
-            EventBus.get().post(new BattleFinishEvent(microorganism, battle));
+            EventBus.get().post(new BattleFinishEvent(this, battle));
             return true;
         }
 
-        EventBus.get().post(new BattleMovementEvent(microorganism));
+        EventBus.get().post(new BattleMovementEvent(this));
         return false;
     }
 
@@ -267,7 +282,6 @@ public class Environment {
         microorganism[x][y] = null;
         return mo != null && ((mo.id == c1.id) ? c1.kill(mo) : c2.kill(mo));
     }
-
 
 
     public Agar getAgar() {
@@ -364,5 +378,9 @@ public class Environment {
 
     public int getLiveTime() {
         return liveTime;
+    }
+
+    public Nutrient getNutrient() {
+        return agar.getCurrent();
     }
 }

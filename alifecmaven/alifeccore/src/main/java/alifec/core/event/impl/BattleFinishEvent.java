@@ -2,7 +2,7 @@ package alifec.core.event.impl;
 
 import alifec.core.contest.Battle;
 import alifec.core.event.Event;
-import alifec.core.simulation.Cell;
+import alifec.core.simulation.Environment;
 
 /**
  * Created by Sergio Del Castillo on 01/11/17.
@@ -11,10 +11,10 @@ import alifec.core.simulation.Cell;
  */
 public class BattleFinishEvent implements Event {
     private final Battle battle;
-    private Cell[][] cells;
+    private final Environment environment;
 
-    public BattleFinishEvent(Cell[][] cells, Battle battle) {
-        this.cells = cells;
+    public BattleFinishEvent(Environment environment, Battle battle) {
+        this.environment = environment;
         this.battle = battle;
     }
 
@@ -22,7 +22,7 @@ public class BattleFinishEvent implements Event {
         return battle;
     }
 
-    public Cell[][] getCells() {
-        return cells;
+    public Environment getEnvironment() {
+        return environment;
     }
 }

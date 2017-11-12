@@ -1,11 +1,13 @@
 
 package alifec.core.contest;
 
-import alifec.core.contest.oponentInfo.*;
+import alifec.core.contest.oponentInfo.Opponent;
+import alifec.core.contest.oponentInfo.OpponentInfo;
+import alifec.core.contest.oponentInfo.Ranking;
+import alifec.core.contest.oponentInfo.TournamentStatistics;
 import alifec.core.event.Event;
 import alifec.core.event.EventBus;
 import alifec.core.event.Listener;
-import alifec.core.event.impl.BattleStartsEvent;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.ZipFileManager;
@@ -18,7 +20,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
 
 
 public class Contest implements Listener {
@@ -379,6 +384,8 @@ public class Contest implements Listener {
 
     @Override
     public void handle(Event event) {
+        boolean saveBattles = false;
+        if(saveBattles)
         lastTournament().handle(event);
     }
 }

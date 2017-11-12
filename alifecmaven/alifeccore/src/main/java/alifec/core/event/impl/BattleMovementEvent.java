@@ -1,7 +1,7 @@
 package alifec.core.event.impl;
 
 import alifec.core.event.Event;
-import alifec.core.simulation.Cell;
+import alifec.core.simulation.Environment;
 
 /**
  * Created by Sergio Del Castillo on 01/11/17.
@@ -9,13 +9,14 @@ import alifec.core.simulation.Cell;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class BattleMovementEvent implements Event {
-    private final Cell[][] cell;
 
-    public BattleMovementEvent(Cell[][] microorganism) {
-        this.cell = microorganism;
+    private final Environment environment;
+
+    public BattleMovementEvent(Environment environment) {
+        this.environment = environment;
     }
 
-    public Cell[][] getCells() {
-        return cell;
+    public Environment getEnvironment() {
+        return environment;
     }
 }
