@@ -1,6 +1,7 @@
 package alifec;
 
 import alifec.core.contest.Battle;
+import alifec.core.event.EventBus;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.CreateContestFolderException;
@@ -35,11 +36,14 @@ public class ParentTest {
 
     @Before
     public void init() throws IOException {
+        EventBus.setSingleThread();
+        EventBus.reset();
+
         Path rootDir = Paths.get(TEST_ROOT_PATH);
 
         //ensure that the root dir exists
         if (Files.notExists(rootDir)) {
-            Files.createDirectory(rootDir);
+            Files.createDirectories(rootDir);
         }
     }
 

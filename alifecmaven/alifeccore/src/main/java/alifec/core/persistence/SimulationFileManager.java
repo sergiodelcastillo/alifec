@@ -12,10 +12,10 @@ import java.util.List;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public interface ISimulationFileManager {
+public interface SimulationFileManager {
     void appendInit(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException;
 
-    void append(Nutrient nutri, List<Cell> mos);
+    void append(Nutrient nutri, List<Cell> mos) throws IOException;
 
-    void appendFinish(Nutrient nutri, List<Cell> mos, Battle b);
+    void appendFinish(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException;
 }

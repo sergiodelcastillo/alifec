@@ -14,34 +14,50 @@ import java.util.concurrent.Executors;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class EventBus {
-    private Logger logger = LogManager.getLogger(getClass());
+public enum EventBus {
+
+    instance;
+
+    private static Logger logger = LogManager.getLogger(EventBus.class);
     private List<Listener> listeners = new ArrayList<>();
     private ExecutorService executor;
+    private boolean singleThread;
 
-    private static EventBus instance;
-
-    public static EventBus get() {
-        if (instance == null)
-            instance = new EventBus();
-
-        return instance;
+    public static void register(Listener listener) {
+        instance.listeners.add(listener);
     }
 
-    public EventBus() {
-        executor = Executors.newFixedThreadPool(1);
+    public static void unregister(Listener listener) {
+        instance.listeners.remove(listener);
     }
 
-    public void register(Listener listener) {
-        listeners.add(listener);
+    public static void post(Event event) {
+        for (Listener listener : instance.listeners) {
+            try {
+                if (instance.singleThread) {
+                    listener.handle(event);
+                } else {
+                    instance.getExecutor().submit(() -> listener.handle(event));
+                }
+            } catch (Throwable ex) {
+                logger.error(ex);
+            }
+        }
     }
 
-    public void unregister(Listener listener) {
-        listeners.remove(listener);
+    private ExecutorService getExecutor() {
+        if (executor == null) {
+            executor = Executors.newSingleThreadExecutor();
+        }
+        return executor;
     }
 
-    public void post(Event event) {
-        executor.submit(new CallableImpl(listeners, event));
+    public static void setSingleThread() {
+        if (instance.executor == null)
+            instance.singleThread = true;
     }
 
+    public static void reset() {
+        instance.listeners.clear();
+    }
 }

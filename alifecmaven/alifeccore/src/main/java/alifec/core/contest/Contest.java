@@ -79,7 +79,7 @@ public class Contest implements Listener {
             opponentsInfo.addMissing(environment.getCompetitors());
 
             //register to listen battle events
-            EventBus.get().register(this);
+            EventBus.register(this);
 
             //TODO: evaluate the messages
         } catch (TournamentException e) {

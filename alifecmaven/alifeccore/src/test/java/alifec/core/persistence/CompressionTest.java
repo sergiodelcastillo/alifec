@@ -4,6 +4,7 @@ import alifec.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.contest.Battle;
+import alifec.core.event.EventBus;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
@@ -11,6 +12,7 @@ import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
 import alifec.core.simulation.Environment;
+import alifec.core.simulation.nutrient.BallsNutrient;
 import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.nutrient.function.*;
@@ -53,10 +55,12 @@ public class CompressionTest extends ParentTest {
     * */
 
     public static void main(String[] args) throws IOException, MoveMicroorganismException, BattleException, ConfigFileException, CreateContestFolderException, URISyntaxException {
-        new CompressionTest().test1();
-        new CompressionTest().test1b();
+      //  new CompressionTest().test1();
+        //new CompressionTest().test1b();
+        EventBus.setSingleThread();
+        new CompressionTest().test2();
 
-        //new CompressionTest().test2();
+        System.out.println("Fin");
     }
 
     public void test1() throws IOException {
@@ -115,7 +119,8 @@ public class CompressionTest extends ParentTest {
 
     public Nutrient[] getNutrients() {
         return new Nutrient[]{
-                //todo: ver porque no anda con el balls new BallsNutrient(),
+                //todo: ver porque no anda con el balls
+                new BallsNutrient(),
                 new FunctionBasedNutrient(new InclinedPlaneFunction()),
                 new FunctionBasedNutrient(new FamineFunction()),
                 new FunctionBasedNutrient(new LatticeFunction()),
@@ -127,6 +132,8 @@ public class CompressionTest extends ParentTest {
 
 
     public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException {
+        cleanup();
+        init();
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");
         CompileHelper compileHelper = new CompileHelper(config);
@@ -182,7 +189,7 @@ public class CompressionTest extends ParentTest {
 
     public CompressResult testCompress1(Nutrient nutri) throws IOException {
 
-        nutri.init();
+//        nutri.init();
 
         long date1 = new Date().getTime();
 
@@ -221,10 +228,9 @@ public class CompressionTest extends ParentTest {
         Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
         byte[] data = toByteArray(nutri.getNutrients());
         deflater.setInput(data);
-
+        deflater.finish();
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        deflater.finish();
         byte[] buffer = new byte[data.length];
         while (!deflater.finished()) {
             int count = deflater.deflate(buffer); // returns the generated code... index

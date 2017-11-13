@@ -10,6 +10,8 @@ import alifec.core.event.impl.BattleStartsEvent;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.TournamentException;
 import alifec.core.persistence.SimulationFileManager;
+import alifec.core.persistence.SimulationFileManagerImpl1;
+import alifec.core.persistence.SimulationFileManagerList;
 import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
@@ -54,7 +56,7 @@ public class Tournament implements Comparable<Tournament>, Listener {
                 loadAllBattles();
             }
 
-            this.sPersistence = new SimulationFileManager(config.getSimulationRunFile(name));
+            this.sPersistence = new SimulationFileManagerList(config.getSimulationRunFile(name));
 
         } catch (IOException e) {
             throw new TournamentException("Can not create the file: " + name, e);

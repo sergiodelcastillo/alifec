@@ -163,7 +163,7 @@ public class Environment {
 
         liveTime = 0;
 
-        EventBus.get().post(new BattleStartsEvent(this, b));
+        EventBus.post(new BattleStartsEvent(this, b));
         return true;
 
     }
@@ -238,17 +238,17 @@ public class Environment {
 
         if (c1.isDied()) {
             battle.setWinner(battle.getSecondColonyId(), c2.getEnergy());
-            EventBus.get().post(new BattleFinishEvent(this, battle));
+            EventBus.post(new BattleFinishEvent(this, battle));
             return true;
         }
 
         if (c2.isDied()) {
             battle.setWinner(battle.getFirstColonyId(), c1.getEnergy());
-            EventBus.get().post(new BattleFinishEvent(this, battle));
+            EventBus.post(new BattleFinishEvent(this, battle));
             return true;
         }
 
-        EventBus.get().post(new BattleMovementEvent(this));
+        EventBus.post(new BattleMovementEvent(this));
         return false;
     }
 

@@ -18,12 +18,12 @@ import java.util.zip.Deflater;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class SimulationFileManager {
+public class SimulationFileManagerImpl1 implements SimulationFileManager {
 
     private Path file;
 
 
-    public SimulationFileManager(String path) throws IOException {
+    public SimulationFileManagerImpl1(String path) throws IOException {
         file = Paths.get(path);
 /*
         if(Files.notExists(file)){
@@ -31,33 +31,66 @@ public class SimulationFileManager {
         }*/
     }
 
+    @Override
     public void appendInit(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException {
-        //todo: complete it
-        Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
-        byte[] data = toByteArray(nutri.getNutrients());
 
-        deflater.setInput(data);
-        deflater.finish();
+        StringBuilder battleBuilder = new StringBuilder();
 
-        byte[] buffer = new byte[data.length];
+        battleBuilder.append("b,")
+                .append(battle.getFirstColonyId()).append(",")
+                .append(battle.getFirstColony()).append(",")
+                .append(battle.getSecondColonyId()).append(",")
+                .append(battle.getSecondColony()).append(",")
+                .append(battle.getNutrientId()).append(",")
+                .append(battle.getNutrient()).append(System.lineSeparator());
 
-        Files.write(file, "n,".getBytes(), StandardOpenOption.APPEND);
+        Files.write(file, battleBuilder.toString().getBytes(), StandardOpenOption.APPEND);
 
-        while (!deflater.finished()) {
-            deflater.deflate(buffer);
-            Files.write(file, buffer, StandardOpenOption.APPEND);
+        append(nutri, mos);
+    }
+
+    private void saveCompressed(String code, byte[] nutrientsData) throws IOException {
+        Deflater deflaterNutrients = new Deflater(Deflater.BEST_COMPRESSION);
+        deflaterNutrients.setInput(nutrientsData);
+        deflaterNutrients.finish();
+
+        byte[] bufferNutrients = new byte[nutrientsData.length];
+
+        Files.write(file, (code + ",").getBytes(), StandardOpenOption.APPEND);
+
+        while (!deflaterNutrients.finished()) {
+            deflaterNutrients.deflate(bufferNutrients);
+            Files.write(file, bufferNutrients, StandardOpenOption.APPEND);
         }
 
-        Files.write(file, "\n".getBytes(), StandardOpenOption.APPEND);
+        Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
+
     }
 
-    public void append(Nutrient nutri, List<Cell> mos) {
-        //store only and update.
-    }
-    public void appendFinish(Nutrient nutri, List<Cell> mos, Battle b) {
-        //save the env
+    @Override
+    public void append(Nutrient nutri, List<Cell> mos) throws IOException {
+        saveCompressed("n", toByteArray(nutri.getNutrients()));
+
+        StringBuilder mosBuilder = new StringBuilder();
+        for (Cell mo : mos) {
+            mosBuilder.append(mo.x).append(',').append(mo.y).append(',').append(mo.ene).append(',');
+        }
+
+        saveCompressed("m", mosBuilder.toString().getBytes());
+
+        Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
     }
 
+    @Override
+    public void appendFinish(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException {
+        StringBuilder battleBuilder = new StringBuilder();
+        battleBuilder.append("e,")
+                .append(battle.getWinnerId()).append(",")
+                .append(battle.getWinnerName()).append(",")
+                .append(battle.getWinnerEnergy()).append(System.lineSeparator());
+
+        Files.write(file, battleBuilder.toString().getBytes(), StandardOpenOption.APPEND);
+    }
 
 
     private byte[] toByteArray(float[][] values) {

@@ -18,12 +18,12 @@ import java.util.zip.Deflater;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class SimulationFileManagerImpl1 implements ISimulationFileManager {
+public class SimulationFileManagerImpl2 implements SimulationFileManager {
 
     private Path file;
 
 
-    public SimulationFileManagerImpl1(String path) throws IOException {
+    public SimulationFileManagerImpl2(String path) throws IOException {
         file = Paths.get(path);
 /*
         if(Files.notExists(file)){
@@ -34,7 +34,7 @@ public class SimulationFileManagerImpl1 implements ISimulationFileManager {
     @Override
     public void appendInit(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException {
         //todo: complete it
-        Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
+      /*  Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
         byte[] data = toByteArray(nutri.getNutrients());
 
         deflater.setInput(data);
@@ -49,7 +49,7 @@ public class SimulationFileManagerImpl1 implements ISimulationFileManager {
             Files.write(file, buffer, StandardOpenOption.APPEND);
         }
 
-        Files.write(file, "\n".getBytes(), StandardOpenOption.APPEND);
+        Files.write(file, "\n".getBytes(), StandardOpenOption.APPEND);*/
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SimulationFileManagerImpl1 implements ISimulationFileManager {
 
 
     private byte[] toByteArray(float[][] values) {
-        ByteBuffer buffer = ByteBuffer.allocate(+4 * values.length * values[0].length);
+     /*   ByteBuffer buffer = ByteBuffer.allocate(+4 * values.length * values[0].length);
 
         for (float[] values1 : values) {
             for (float value : values1) {
@@ -72,7 +72,8 @@ public class SimulationFileManagerImpl1 implements ISimulationFileManager {
             }
         }
 
-        return buffer.array();
+        return buffer.array();*/
+     return null;
     }
 
 }
