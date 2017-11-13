@@ -3,12 +3,8 @@ package alifec.core.persistence;
 import alifec.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
-import alifec.core.contest.Battle;
-import alifec.core.event.EventBus;
-import alifec.core.exception.BattleException;
-import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.CreateContestFolderException;
-import alifec.core.exception.MoveMicroorganismException;
+import alifec.core.contest.Contest;
+import alifec.core.exception.*;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
 import alifec.core.simulation.Environment;
@@ -17,14 +13,14 @@ import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.nutrient.function.*;
 import org.junit.Assert;
+import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
-import java.util.Date;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.zip.Deflater;
 
 /**
  * Created by Sergio Del Castillo on 05/11/17.
@@ -32,7 +28,6 @@ import java.util.zip.Deflater;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class CompressionTest extends ParentTest {
-    private boolean debug = false;
 
     class CompressResult {
         private int liveTime;
@@ -46,75 +41,6 @@ public class CompressionTest extends ParentTest {
             this.compressTime = 0;
             this.liveTime = 0;
         }
-    }
-    /*
-    * todo: test alternatives
-    * 1. salve the status after all movements and compress it.
-    * 2. save a  difference and compress it
-    * 3. save only movements .. check if it is possible
-    * */
-
-    public static void main(String[] args) throws IOException, MoveMicroorganismException, BattleException, ConfigFileException, CreateContestFolderException, URISyntaxException {
-      //  new CompressionTest().test1();
-        //new CompressionTest().test1b();
-        EventBus.setSingleThread();
-        new CompressionTest().test2();
-
-        System.out.println("Fin");
-    }
-
-    public void test1() throws IOException {
-        Nutrient[] list = getNutrients();
-
-        CompressResult r1 = new CompressResult(0, 0), r2 = new CompressResult(0, 0);
-        System.out.println("Option 1");
-        for (Nutrient f : list) {
-            CompressResult tmp = testCompress1(f);
-            r1.originalSize += tmp.originalSize;
-            r1.compressedSize += tmp.compressedSize;
-            r1.compressTime += tmp.compressTime;
-        }
-        System.out.println("Original: " + r1.originalSize);
-        System.out.println("Compressed: " + r1.compressedSize);
-        System.out.println("CompressTime: " + r1.compressTime);
-
-        System.out.println("Option 2");
-        for (Nutrient f : list) {
-            CompressResult tmp = testCompress1(f);
-            r2.originalSize += tmp.originalSize;
-            r2.compressedSize += tmp.compressedSize;
-            r2.compressTime += tmp.compressTime;
-        }
-        System.out.println("Original: " + r2.originalSize);
-        System.out.println("Compressed: " + r2.compressedSize);
-        System.out.println("CompressTime: " + r2.compressTime);
-    }
-
-    public void test1b() throws IOException {
-        Nutrient[] list = getNutrients();
-
-        CompressResult r1 = new CompressResult(0, 0), r2 = new CompressResult(0, 0);
-        System.out.println("Option 1");
-        for (Nutrient f : list) {
-            CompressResult tmp = testCompress1(f);
-            r1.originalSize += tmp.originalSize;
-            r1.compressedSize += tmp.compressedSize;
-            r1.compressTime += tmp.compressTime;
-        }
-        System.out.println("Original: " + r1.originalSize);
-        System.out.println("Compressed: " + r1.compressedSize);
-        System.out.println("CompressTime: " + r1.compressTime);
-
-        System.out.println("Option 2");
-        for (Nutrient f : list) {
-            CompressResult tmp = testCompress1b(f);
-            r2.originalSize += tmp.originalSize;
-            r2.compressedSize += tmp.compressedSize;
-            r2.compressTime += tmp.compressTime;
-        }
-        System.out.println("Original: " + r2.originalSize);
-        System.out.println("Compressed: " + r2.compressedSize);
-        System.out.println("CompressTime: " + r2.compressTime);
     }
 
     public Nutrient[] getNutrients() {
@@ -131,219 +57,60 @@ public class CompressionTest extends ParentTest {
     }
 
 
-    public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException {
-        cleanup();
-        init();
+    @Test
+    public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException, CreateContestException {
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");
+        config.setMode(ContestConfig.COMPETITION_MODE);
         CompileHelper compileHelper = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compileHelper.compileMOs();
         Assert.assertFalse(result.haveErrors());
 
         //create the environment
-        Environment environment = new Environment(config);
+        Contest contest = new Contest(config);
+        Environment environment = contest.getEnvironment();
 
         //create a battle: 0= first colony, 1= second colony, famine= uniform nutrient distribution
         List<Competitor> competitors = environment.getCompetitors();
         Nutrient[] nutrients = getNutrients();
 
         CompressResult finalStats = new CompressResult(0, 0);
-        for (int i = 0; i < competitors.size(); i++) {
-            for (int j = i + 1; j < competitors.size(); j++) {
-                for (Nutrient n : nutrients) {
-                    Battle battle = createBattle(environment, i, j, n.getId(), n.getName());
-                    System.out.println(battle.toString());
+        int numberOfBattles = 10;
 
-                    CompressResult battleStats = new CompressResult(0, 0);
+        for (int i = 0, nBattles = 0; i < competitors.size() && nBattles < numberOfBattles; i++) {
+            for (int j = i + 1; j < competitors.size() && nBattles < numberOfBattles; j++) {
+                for (int index = 0; index < nutrients.length && nBattles++ < numberOfBattles; index++) {
+                    Nutrient n = nutrients[index];
+                    createBattle(environment, i, j, n.getId(), n.getName());
 
                     while (!environment.moveColonies()) {
-                        Nutrient nutri = environment.getNutrient();
+/*                        Nutrient nutri = environment.getNutrient();
                         CompressResult tmp = testCompress1(nutri);
                         battleStats.originalSize += tmp.originalSize;
                         battleStats.compressedSize += tmp.compressedSize;
-                        battleStats.compressTime += tmp.compressTime;
+                        battleStats.compressTime += tmp.compressTime;*/
                     }
-                    battleStats.liveTime = environment.getLiveTime();
 
-                    finalStats.compressedSize += battleStats.compressedSize;
-                    finalStats.compressTime += battleStats.compressTime;
-                    finalStats.originalSize += battleStats.originalSize;
-                    finalStats.liveTime += battleStats.liveTime;
+                    finalStats.liveTime += environment.getLiveTime();
 
-                    System.out.println("Original: " + battleStats.originalSize);
-                    System.out.println("Compressed: " + battleStats.compressedSize);
-                    System.out.println("CompressTime: " + battleStats.compressTime);
-                    System.out.println("Livetime: " + battleStats.liveTime);
                 }
             }
         }
-
+        long size = Files.size(Paths.get(config.getSimulationRunFile(contest.lastTournament().getName())));
+        long size2 = Files.size(Paths.get(config.getSimulationRunFile(contest.lastTournament().getName()) + "2"));
+        long size3 = Files.size(Paths.get(config.getSimulationRunFile(contest.lastTournament().getName()) + "3"));
         System.out.println("Final status:");
-        System.out.println("Original: " + finalStats.originalSize);
-        System.out.println("Compressed: " + finalStats.compressedSize);
-        System.out.println("CompressTime: " + finalStats.compressTime);
-        System.out.println("Livetime: " + finalStats.liveTime);
+        System.out.println("size impl1: " + size / 1024 + "k");
+        System.out.println("size impl2: " + size2 / 1024 + "k");
+        System.out.println("size impl3: " + size3 / 1024 + "k");
+
+        System.out.println("Livetime = " + finalStats.liveTime);
 
     }
 
-    public CompressResult testCompress1(Nutrient nutri) throws IOException {
 
-//        nutri.init();
-
-        long date1 = new Date().getTime();
-
-        Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
-        byte[] data = toByteArray(nutri.getNutrients());
-        deflater.setInput(data);
-
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        deflater.finish();
-        byte[] buffer = new byte[1024];
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer); // returns the generated code... index
-            outputStream.write(buffer, 0, count);
-        }
-        outputStream.close();
-        byte[] output = outputStream.toByteArray();
-        long date2 = new Date().getTime();
-
-        CompressResult result = new CompressResult(output.length / 1024, data.length / 1024);
-        result.compressTime = date2 - date1;
-
-        if (debug) {
-            System.out.println("Original " + nutri.getName() + ": " + result.originalSize + " Kb");
-            System.out.println("Compressed " + nutri.getName() + ": " + result.compressedSize + " Kb");
-        }
-
-        return result;
-    }
-
-    public CompressResult testCompress1b(Nutrient nutri) throws IOException {
-        nutri.init();
-
-        long date1 = new Date().getTime();
-
-        Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
-        byte[] data = toByteArray(nutri.getNutrients());
-        deflater.setInput(data);
-        deflater.finish();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[data.length];
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer); // returns the generated code... index
-            outputStream.write(buffer, 0, count);
-        }
-        outputStream.close();
-        byte[] output = outputStream.toByteArray();
-        long date2 = new Date().getTime();
-
-        CompressResult result = new CompressResult(output.length / 1024, data.length / 1024);
-        result.compressTime = date2 - date1;
-
-        if (debug) {
-            System.out.println("Original " + nutri.getName() + ": " + result.originalSize + " Kb");
-            System.out.println("Compressed " + nutri.getName() + ": " + result.compressedSize + " Kb");
-        }
-
-        return result;
-    }
-
-
-    public CompressResult testCompress2(Nutrient nutri) throws IOException {
-        nutri.init();
-
-        long date1 = new Date().getTime();
-        Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
-        byte[] data = toByteArray2(nutri.getNutrients());
-        deflater.setInput(data);
-
-        deflater.finish();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer); // returns the generated code... index
-            outputStream.write(buffer, 0, count);
-        }
-        outputStream.close();
-        byte[] output = outputStream.toByteArray();
-
-        long date2 = new Date().getTime();
-        CompressResult result = new CompressResult(output.length / 1024, data.length / 1024);
-        result.compressTime = date2 - date1;
-
-        if (debug) {
-            System.out.println("Original " + nutri.getName() + ": " + result.originalSize + " Kb");
-            System.out.println("Compressed " + nutri.getName() + ": " + result.compressedSize + " Kb");
-        }
-        return result;
-    }
-
-    public CompressResult testCompress3(Nutrient nutri) throws IOException {
-        nutri.init();
-
-        long date1 = new Date().getTime();
-        Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
-        byte[] data = toByteArray2(nutri.getNutrients());
-        deflater.setInput(data);
-
-        deflater.finish();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer); // returns the generated code... index
-            outputStream.write(buffer, 0, count);
-        }
-        outputStream.close();
-        byte[] output = outputStream.toByteArray();
-
-        long date2 = new Date().getTime();
-        CompressResult result = new CompressResult(output.length / 1024, data.length / 1024);
-        result.compressTime = date2 - date1;
-
-        if (debug) {
-            System.out.println("Original " + nutri.getName() + ": " + result.originalSize + " Kb");
-            System.out.println("Compressed " + nutri.getName() + ": " + result.compressedSize + " Kb");
-        }
-        return result;
-    }
-
-    private byte[] toByteArray(float[][] values) {
-        byte[] code = "n,".getBytes();
-        byte[] end = " \n".getBytes();
-
-        ByteBuffer buffer = ByteBuffer.allocate(code.length + end.length + 4 * values.length * values[0].length);
-
-        buffer.put(code);
-        for (float[] values1 : values) {
-            for (float value : values1) {
-                buffer.putFloat(value);
-            }
-        }
-        buffer.put(end);
-
-        return buffer.array();
-    }
-
-    private byte[] toByteArray2(float[][] values) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("n,");
-
-        for (int i = 0; i < values.length; i++) {
-            for (int j = 0; j < values[i].length; j++) {
-                if (values[i][j] > 0.0f)
-                    builder.append(50 * i + j).append(values[i][j]).append(",");
-            }
-        }
-        return builder.toString().getBytes();
-
-    }
-
-/*
+    /*
 Tactica2_java vs Tactica1_java in InclinedPlane
 Original: 2682
 Compressed: 1192

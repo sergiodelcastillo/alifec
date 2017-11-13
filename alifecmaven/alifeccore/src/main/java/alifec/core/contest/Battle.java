@@ -25,6 +25,8 @@ public class Battle implements Comparable<Battle> {
     private String nutrient;
     private int nutrientId = -1;
 
+    private StringBuilder builder;
+
     public Battle(String line) throws BattleException {
         checkLineFromCSV(line);
 
@@ -35,6 +37,8 @@ public class Battle implements Comparable<Battle> {
         nutrient = tmp[2];
         firstEnergy = Float.parseFloat(tmp[3]);
         secondEnergy = Float.parseFloat(tmp[4]);
+
+        init();
     }
 
     public Battle(int op1, int op2, int nutri, String name1, String name2, String n)
@@ -49,8 +53,16 @@ public class Battle implements Comparable<Battle> {
         this.nutrientId = nutri;
         this.nutrient = n;
 
+        init();
+
         checkRuntime();
+
     }
+
+    private void init() {
+        this.builder = new StringBuilder(100);
+    }
+
 
     private void checkLineFromCSV(String line) throws BattleException {
         BattleFromCsvValidator validator = new BattleFromCsvValidator();
@@ -123,7 +135,8 @@ public class Battle implements Comparable<Battle> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(100);
+        builder.delete(0, builder.length());
+
         builder.append(firstName)
                 .append(" vs ")
                 .append(secondName)
@@ -164,7 +177,8 @@ public class Battle implements Comparable<Battle> {
     }
 
     public String toCsv() {
-        StringBuilder builder = new StringBuilder(100);
+        builder.delete(0, builder.length());
+
         builder.append(firstName)
                 .append(',')
                 .append(secondName)

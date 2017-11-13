@@ -52,7 +52,7 @@ public class TournamentFileManager {
         try (BufferedWriter writer = Files.newBufferedWriter(path,
                 StandardOpenOption.APPEND,
                 StandardOpenOption.CREATE)) {
-            writer.write(battle.toCsv() + '\n');
+            writer.write(battle.toCsv() + System.lineSeparator());
         }
     }
 
@@ -96,9 +96,9 @@ public class TournamentFileManager {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : battles) {
                 if (line instanceof Battle)
-                    writer.write(((Battle) line).toCsv() + '\n');
+                    writer.write(((Battle) line).toCsv() + System.lineSeparator());
                 else
-                    writer.write(line.toString() + '\n');
+                    writer.write(line.toString() + System.lineSeparator());
             }
         }
     }

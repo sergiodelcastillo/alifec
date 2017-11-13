@@ -56,7 +56,7 @@ public class Tournament implements Comparable<Tournament>, Listener {
                 loadAllBattles();
             }
 
-            this.sPersistence = new SimulationFileManagerList(config.getSimulationRunFile(name));
+            this.sPersistence = new SimulationFileManagerList(config.getSimulationRunFile(name), config.isCompetitionMode());
 
         } catch (IOException e) {
             throw new TournamentException("Can not create the file: " + name, e);
@@ -312,15 +312,21 @@ public class Tournament implements Comparable<Tournament>, Listener {
             if (event instanceof BattleStartsEvent) {
                 BattleStartsEvent tmp = (BattleStartsEvent) event;
                 logger.info("Starting battle: " + tmp.getBattle().toString());
-                sPersistence.appendInit(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs(), tmp.getBattle());
+
+                if (config.isCompetitionMode())
+                    sPersistence.appendInit(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs(), tmp.getBattle());
             } else if (event instanceof BattleMovementEvent) {
-                BattleMovementEvent tmp = (BattleMovementEvent) event;
-                sPersistence.append(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs());
+                if (config.isCompetitionMode()) {
+                    BattleMovementEvent tmp = (BattleMovementEvent) event;
+                    sPersistence.append(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs());
+                }
             } else if (event instanceof BattleFinishEvent) {
                 BattleFinishEvent tmp = (BattleFinishEvent) event;
                 Battle battle = tmp.getBattle();
                 logger.info("End of the battle. Winner " + battle.getWinnerName() + " with energy " + battle.getWinnerEnergy());
-                sPersistence.appendFinish(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs(), battle);
+
+                if (config.isCompetitionMode())
+                    sPersistence.appendFinish(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs(), battle);
             }
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);

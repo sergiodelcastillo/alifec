@@ -19,17 +19,21 @@ import java.util.zip.Deflater;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class SimulationFileManagerImpl2 implements SimulationFileManager {
+public class SimulationFileManagerImpl3 implements SimulationFileManager {
 
     private Path file;
     private StringBuilder builder;
     private ByteBuffer byteBuffer;
+    private float[][] nutrients;
+    private float[][] difference;
 
-    public SimulationFileManagerImpl2(String path, boolean createFile) throws IOException {
+    public SimulationFileManagerImpl3(String path, boolean createFile) throws IOException {
         //first improvement: save only one number to represent mo position: x, y = x*50+y. it saves about 6 or 7 %
         file = Paths.get(path);
         builder = new StringBuilder();
         byteBuffer = ByteBuffer.allocate(4 * Defs.DIAMETER * Defs.DIAMETER);
+        nutrients = new float[Defs.DIAMETER][Defs.DIAMETER];
+        difference = new float[Defs.DIAMETER][Defs.DIAMETER];
 
         if (createFile) {
             if (Files.notExists(file)) {
@@ -75,7 +79,9 @@ public class SimulationFileManagerImpl2 implements SimulationFileManager {
 
     @Override
     public void append(Nutrient nutri, List<Cell> mos) throws IOException {
-        saveCompressed("n", toByteArray(nutri.getNutrients()));
+        calculateDiff(nutri.getNutrients());
+        saveCompressed("n", toByteArray(difference));
+
         builder.delete(0, builder.length());
 
 
@@ -87,6 +93,17 @@ public class SimulationFileManagerImpl2 implements SimulationFileManager {
         saveCompressed("m", builder.toString().getBytes());
 
         Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
+    }
+
+    private void calculateDiff(float[][] newNutri) {
+        for (int x = 0; x < Defs.DIAMETER; x++) {
+            for (int y = 0; y < Defs.DIAMETER; y++) {
+                difference[x][y] = nutrients[x][y] - newNutri[x][y];
+                if (0.0001f < difference[x][y] && difference[x][y] > -0.001f)
+                    difference[x][y] = 0f;
+                nutrients[x][y] = newNutri[x][y];
+            }
+        }
     }
 
     @Override

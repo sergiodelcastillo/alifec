@@ -4,7 +4,6 @@ import alifec.core.contest.Battle;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.nutrient.Nutrient;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +17,12 @@ public class SimulationFileManagerList implements SimulationFileManager {
 
     private List<SimulationFileManager> list;
 
-    public SimulationFileManagerList(String path) throws IOException {
+    public SimulationFileManagerList(String path, boolean createFile) throws IOException {
         list = new ArrayList<>();
-        list.add(new SimulationFileManagerImpl1(path));
-        list.add(new SimulationFileManagerImpl2(path + "2"));
+
+        list.add(new SimulationFileManagerImpl1(path, createFile));
+        list.add(new SimulationFileManagerImpl2(path + "2", createFile));
+        list.add(new SimulationFileManagerImpl3(path + "3", createFile));
     }
 
     @Override

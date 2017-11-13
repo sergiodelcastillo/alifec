@@ -46,7 +46,7 @@ public class ContestConfig {
     public static final String REPORT_FILENAME_TXT = "report-%s.txt";
     public static final String REPORT_FILENAME_CSV = "report-%s.csv";
 
-    public static final String REPORT_TXT_FORMAT = "%-20s%-20s%-20s%-20s\n";
+    public static final String REPORT_TXT_FORMAT = "%-20s%-20s%-20s%-20s" + System.lineSeparator();
     public static final String REPORT_CSV_FORMAT = "%s,%s,%s,%s,%s";
 
     public static final String COMPETITORS_FILE = "competitors";
@@ -121,6 +121,8 @@ public class ContestConfig {
 
     private ContestConfigValidator validator = new ContestConfigValidator();
 
+    private StringBuilder builder;
+
     /**
      * Read the config File in the project.
      *
@@ -143,17 +145,29 @@ public class ContestConfig {
                     logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
                 }
             }
+
+            validate();
+
+            init();
+
         } catch (IOException ex) {
             throw new ConfigFileException("Error loading the config file in path: " + path, ex, this);
-        }
-
-        try {
-            //validate if the configuration is Ok.
-            validate();
         } catch (ValidationException e) {
             logger.warn(this.toString());
             throw new ConfigFileException(e.getMessage(), e, this);
         }
+    }
+
+    public ContestConfig(String path, String contestName) {
+        setDefaults();
+
+        setPath(path);
+        setContestName(contestName);
+        init();
+    }
+
+    private void init() {
+        builder = new StringBuilder();
     }
 
     public static String getDefaultPath() {
@@ -163,13 +177,6 @@ public class ContestConfig {
             logger.error(t.getMessage(), t);
             return null;
         }
-    }
-
-    public ContestConfig(String path, String contestName) {
-        setDefaults();
-
-        setPath(path);
-        setContestName(contestName);
     }
 
     public void setDefaults() {
@@ -202,7 +209,7 @@ public class ContestConfig {
     }
 
     private String nutrientsToString() {
-        StringBuilder builder = new StringBuilder();
+        builder.delete(0, builder.length());
 
         for (Integer nutrient : nutrients) {
             builder.append(nutrient);

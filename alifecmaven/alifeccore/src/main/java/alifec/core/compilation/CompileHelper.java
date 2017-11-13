@@ -282,19 +282,32 @@ public class CompileHelper {
             }
 
             try (BufferedWriter pw = Files.newBufferedWriter(env)) {
-                pw.write("\nbool Environment::addColony(string name, int id){\n");
-                pw.write("	CppColony<Microorganism> *mo = NULL;\n\n");
+                pw.newLine();
+                pw.write("bool Environment::addColony(string name, int id){");
+                pw.newLine();
+                pw.write("	CppColony<Microorganism> *mo = NULL;");
+                pw.newLine();
+                pw.newLine();
 
                 for (String name : names) {
-                    pw.write("	if(name == \"" + name + "\"){\n");
-                    pw.write("	   mo = (CppColony < Microorganism > *) new CppColony< " + name + " >(id);\n");
-                    pw.write("   }\n");
+                    pw.write("	if(name == \"" + name + "\"){");
+                    pw.newLine();
+                    pw.write("	   mo = (CppColony < Microorganism > *) new CppColony< " + name + " >(id);");
+                    pw.newLine();
+                    pw.write("   }");
+                    pw.newLine();
                     logger.trace("Updating Tournament CPP for MO: " + name);
                 }
 
-                pw.write("\n	colonies.push_back(mo);\n\n");
-                pw.write("   return mo != NULL;\n");
-                pw.write("}\n\n");
+                pw.newLine();
+                pw.write("	colonies.push_back(mo);");
+                pw.newLine();
+                pw.newLine();
+                pw.write("   return mo != NULL;");
+                pw.newLine();
+                pw.write("}");
+                pw.newLine();
+                pw.newLine();
             }
 
         } catch (IOException e) {
@@ -322,7 +335,8 @@ public class CompileHelper {
 
             try (BufferedWriter pw = Files.newBufferedWriter(includes)) {
                 for (String n : files) {
-                    pw.write("#include \"" + n + "\"\n");
+                    pw.write("#include \"" + n + "\"");
+                    pw.newLine();
                     logger.trace("Updating include for MO: " + n);
                 }
             }

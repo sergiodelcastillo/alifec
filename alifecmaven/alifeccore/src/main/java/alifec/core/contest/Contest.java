@@ -384,8 +384,6 @@ public class Contest implements Listener {
 
     @Override
     public void handle(Event event) {
-        boolean saveBattles = false;
-        if(saveBattles)
         lastTournament().handle(event);
     }
 }

@@ -44,7 +44,7 @@ public class OpponentFileManager {
     public void saveAll(List<OpponentInfo> opponents) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : opponents) {
-                writer.write(line.toString() + '\n');
+                writer.write(line.toString() + System.lineSeparator());
             }
         }
     }

@@ -2,6 +2,7 @@ package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
 import alifec.core.simulation.Cell;
+import alifec.core.simulation.Defs;
 import alifec.core.simulation.nutrient.Nutrient;
 
 import java.io.IOException;
@@ -21,22 +22,26 @@ import java.util.zip.Deflater;
 public class SimulationFileManagerImpl1 implements SimulationFileManager {
 
     private Path file;
+    private StringBuilder builder;
+    private ByteBuffer byteBuffer;
 
-
-    public SimulationFileManagerImpl1(String path) throws IOException {
+    public SimulationFileManagerImpl1(String path, boolean createFile) throws IOException {
         file = Paths.get(path);
-/*
-        if(Files.notExists(file)){
-            Files.createFile(file);
-        }*/
+        builder = new StringBuilder();
+        byteBuffer = ByteBuffer.allocate(4 * Defs.DIAMETER * Defs.DIAMETER);
+
+        if (createFile) {
+            if (Files.notExists(file)) {
+                Files.createFile(file);
+            }
+        }
     }
 
     @Override
     public void appendInit(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException {
+        builder.delete(0, builder.length());
 
-        StringBuilder battleBuilder = new StringBuilder();
-
-        battleBuilder.append("b,")
+        builder.append("b,")
                 .append(battle.getFirstColonyId()).append(",")
                 .append(battle.getFirstColony()).append(",")
                 .append(battle.getSecondColonyId()).append(",")
@@ -44,7 +49,7 @@ public class SimulationFileManagerImpl1 implements SimulationFileManager {
                 .append(battle.getNutrientId()).append(",")
                 .append(battle.getNutrient()).append(System.lineSeparator());
 
-        Files.write(file, battleBuilder.toString().getBytes(), StandardOpenOption.APPEND);
+        Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
 
         append(nutri, mos);
     }
@@ -70,39 +75,39 @@ public class SimulationFileManagerImpl1 implements SimulationFileManager {
     @Override
     public void append(Nutrient nutri, List<Cell> mos) throws IOException {
         saveCompressed("n", toByteArray(nutri.getNutrients()));
+        builder.delete(0, builder.length());
 
-        StringBuilder mosBuilder = new StringBuilder();
         for (Cell mo : mos) {
-            mosBuilder.append(mo.x).append(',').append(mo.y).append(',').append(mo.ene).append(',');
+            builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.id).append(',').append(mo.ene).append(',');
         }
 
-        saveCompressed("m", mosBuilder.toString().getBytes());
+        saveCompressed("m", builder.toString().getBytes());
 
         Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
     }
 
     @Override
     public void appendFinish(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException {
-        StringBuilder battleBuilder = new StringBuilder();
-        battleBuilder.append("e,")
+        builder.delete(0, builder.length());
+        builder.append("e,")
                 .append(battle.getWinnerId()).append(",")
                 .append(battle.getWinnerName()).append(",")
                 .append(battle.getWinnerEnergy()).append(System.lineSeparator());
 
-        Files.write(file, battleBuilder.toString().getBytes(), StandardOpenOption.APPEND);
+        Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
     }
 
 
     private byte[] toByteArray(float[][] values) {
-        ByteBuffer buffer = ByteBuffer.allocate(+4 * values.length * values[0].length);
+        byteBuffer.clear();
 
         for (float[] values1 : values) {
             for (float value : values1) {
-                buffer.putFloat(value);
+                byteBuffer.putFloat(value);
             }
         }
 
-        return buffer.array();
+        return byteBuffer.array();
     }
 
 }
