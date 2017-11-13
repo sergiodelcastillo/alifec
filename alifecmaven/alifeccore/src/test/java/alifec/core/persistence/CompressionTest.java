@@ -76,12 +76,13 @@ public class CompressionTest extends ParentTest {
         Nutrient[] nutrients = getNutrients();
 
         CompressResult finalStats = new CompressResult(0, 0);
-        int numberOfBattles = 10;
+        int numberOfBattles = 100;
 
         for (int i = 0, nBattles = 0; i < competitors.size() && nBattles < numberOfBattles; i++) {
             for (int j = i + 1; j < competitors.size() && nBattles < numberOfBattles; j++) {
                 for (int index = 0; index < nutrients.length && nBattles++ < numberOfBattles; index++) {
                     Nutrient n = nutrients[index];
+                    if(n.getId() != TwoGaussiansFunction.ID ) continue;
                     createBattle(environment, i, j, n.getId(), n.getName());
 
                     while (!environment.moveColonies()) {
@@ -100,10 +101,14 @@ public class CompressionTest extends ParentTest {
         long size = Files.size(Paths.get(config.getSimulationRunFile(contest.lastTournament().getName())));
         long size2 = Files.size(Paths.get(config.getSimulationRunFile(contest.lastTournament().getName()) + "2"));
         long size3 = Files.size(Paths.get(config.getSimulationRunFile(contest.lastTournament().getName()) + "3"));
+        long size4 = Files.size(Paths.get(config.getSimulationRunFile(contest.lastTournament().getName()) + "4"));
+        long size5 = Files.size(Paths.get(config.getSimulationRunFile(contest.lastTournament().getName()) + "5"));
         System.out.println("Final status:");
         System.out.println("size impl1: " + size / 1024 + "k");
         System.out.println("size impl2: " + size2 / 1024 + "k");
         System.out.println("size impl3: " + size3 / 1024 + "k");
+        System.out.println("size impl4: " + size4 / 1024 + "k");
+        System.out.println("size impl5: " + size5 / 1024 + "k");
 
         System.out.println("Livetime = " + finalStats.liveTime);
 

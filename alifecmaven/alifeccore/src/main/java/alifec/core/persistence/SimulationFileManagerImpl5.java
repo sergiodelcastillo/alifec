@@ -4,6 +4,7 @@ import alifec.core.contest.Battle;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Defs;
 import alifec.core.simulation.nutrient.Nutrient;
+import alifec.core.simulation.nutrient.function.TwoGaussiansFunction;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,7 +20,7 @@ import java.util.zip.Deflater;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class SimulationFileManagerImpl3 implements SimulationFileManager {
+public class SimulationFileManagerImpl5 implements SimulationFileManager {
 
     private Path file;
     private StringBuilder builder;
@@ -27,7 +28,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     private float[][] nutrients;
     private short[][] difference;
 
-    public SimulationFileManagerImpl3(String path, boolean createFile) throws IOException {
+    public SimulationFileManagerImpl5(String path, boolean createFile) throws IOException {
         //first improvement: save only one number to represent mo position: x, y = x*50+y. it saves about 6 or 7 %
         file = Paths.get(path);
         builder = new StringBuilder();
@@ -79,7 +80,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
 
     @Override
     public void append(Nutrient nutri, List<Cell> mos) throws IOException {
-        calculateDiff(nutri.getNutrients());
+        calculateDiff(nutri);
         saveCompressed("n", toByteArray(difference));
 
         builder.delete(0, builder.length());
@@ -95,15 +96,27 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
         Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
     }
 
-    private void calculateDiff(float[][] newNutri) {
-        for (int x = 0; x < Defs.DIAMETER; x++) {
-            for (int y = 0; y < Defs.DIAMETER; y++) {
-                difference[x][y] = (short)(nutrients[x][y] - newNutri[x][y]);
+    private void calculateDiff(Nutrient nutri) {
+        float[][] ntmp = nutri.getNutrients();
+        if (nutri.getId() == TwoGaussiansFunction.ID) {
+            for (int x = 0; x < Defs.DIAMETER; x++) {
+                for (int y = 0; y < Defs.DIAMETER; y++) {
+                    difference[x][y] = (short) (nutrients[x][y] - ntmp[x][y]);
                 /*if (0.0001f < difference[x][y] && difference[x][y] > -0.001f)
                     difference[x][y] = 0f;*/
-                nutrients[x][y] = newNutri[x][y];
+                    nutrients[x][y] = ntmp[x][y];
+                }
             }
-        }
+
+        } else
+            for (int x = 0; x < Defs.DIAMETER; x++) {
+                for (int y = 0; y < Defs.DIAMETER; y++) {
+                    difference[x][y] = (short) (nutrients[x][y] - ntmp[x][y]);
+                /*if (0.0001f < difference[x][y] && difference[x][y] > -0.001f)
+                    difference[x][y] = 0f;*/
+                    nutrients[x][y] = ntmp[x][y];
+                }
+            }
     }
 
     @Override
@@ -128,7 +141,9 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
         }
 
         return byteBuffer.array();
-    }private byte[] toByteArray(short[][] values) {
+    }
+
+    private byte[] toByteArray(short[][] values) {
         byteBuffer.clear();
 
         for (short[] values1 : values) {

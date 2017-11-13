@@ -19,7 +19,7 @@ import java.util.zip.Deflater;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class SimulationFileManagerImpl3 implements SimulationFileManager {
+public class SimulationFileManagerImpl4 implements SimulationFileManager {
 
     private Path file;
     private StringBuilder builder;
@@ -27,7 +27,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     private float[][] nutrients;
     private short[][] difference;
 
-    public SimulationFileManagerImpl3(String path, boolean createFile) throws IOException {
+    public SimulationFileManagerImpl4(String path, boolean createFile) throws IOException {
         //first improvement: save only one number to represent mo position: x, y = x*50+y. it saves about 6 or 7 %
         file = Paths.get(path);
         builder = new StringBuilder();
@@ -98,7 +98,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     private void calculateDiff(float[][] newNutri) {
         for (int x = 0; x < Defs.DIAMETER; x++) {
             for (int y = 0; y < Defs.DIAMETER; y++) {
-                difference[x][y] = (short)(nutrients[x][y] - newNutri[x][y]);
+                difference[x][y] = (short) newNutri[x][y];
                 /*if (0.0001f < difference[x][y] && difference[x][y] > -0.001f)
                     difference[x][y] = 0f;*/
                 nutrients[x][y] = newNutri[x][y];

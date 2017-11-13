@@ -23,6 +23,8 @@ public class SimulationFileManagerList implements SimulationFileManager {
         list.add(new SimulationFileManagerImpl1(path, createFile));
         list.add(new SimulationFileManagerImpl2(path + "2", createFile));
         list.add(new SimulationFileManagerImpl3(path + "3", createFile));
+        list.add(new SimulationFileManagerImpl4(path + "4", createFile));
+        list.add(new SimulationFileManagerImpl5(path + "5", createFile));
     }
 
     @Override
