@@ -4,17 +4,23 @@ import alifec.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.contest.Contest;
+import alifec.core.contest.Tournament;
 import alifec.core.exception.*;
 import alifec.core.persistence.config.ContestConfig;
-import alifec.core.simulation.Competitor;
-import alifec.core.simulation.Environment;
+import alifec.core.simulation.*;
 import alifec.core.simulation.nutrient.BallsNutrient;
 import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.nutrient.function.*;
+import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile;
 import org.junit.Assert;
 import org.junit.Test;
+import sun.management.resources.agent;
+import sun.rmi.runtime.Log;
+import sun.tools.jar.resources.jar;
+import sun.util.logging.resources.logging;
 
+import javax.annotation.Generated;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -117,465 +123,195 @@ public class CompressionTest extends ParentTest {
 
     }
 
+/*
 
-    /*
-Tactica2_java vs Tactica1_java in InclinedPlane
-Original: 2682
-Compressed: 1192
-CompressTime: 275
-Livetime: 299
-Tactica2_java vs Tactica1_java in Famine
-Original: 18657
-Compressed: 0
-CompressTime: 348
-Livetime: 2074
-Tactica2_java vs Tactica1_java in Lattice
-Original: 2394
-Compressed: 532
-CompressTime: 513
-Livetime: 267
-Tactica2_java vs Tactica1_java in Rings
-Original: 4824
-Compressed: 0
-CompressTime: 198
-Livetime: 537
-Tactica2_java vs Tactica1_java in TwoGaussians
-Original: 14337
-Compressed: 6372
-CompressTime: 550
-Livetime: 1594
-Tactica2_java vs Tactica1_java in VerticalBar
-Original: 10251
-Compressed: 0
-CompressTime: 203
-Livetime: 1140
-Tactica2_java vs Random_java in InclinedPlane
-Original: 1224
-Compressed: 544
-CompressTime: 111
-Livetime: 137
-Tactica2_java vs Random_java in Famine
-Original: 972
-Compressed: 0
-CompressTime: 11
-Livetime: 109
-Tactica2_java vs Random_java in Lattice
-Original: 2502
-Compressed: 556
-CompressTime: 530
-Livetime: 279
-Tactica2_java vs Random_java in Rings
-Original: 774
-Compressed: 0
-CompressTime: 31
-Livetime: 87
-Tactica2_java vs Random_java in TwoGaussians
-Original: 1494
-Compressed: 664
-CompressTime: 61
-Livetime: 167
-Tactica2_java vs Random_java in VerticalBar
-Original: 1314
-Compressed: 0
-CompressTime: 21
-Livetime: 147
-Tactica2_java vs MovX_java in InclinedPlane
-Original: 1782
-Compressed: 792
-CompressTime: 162
-Livetime: 199
-Tactica2_java vs MovX_java in Famine
-Original: 1350
-Compressed: 0
-CompressTime: 19
-Livetime: 151
-Tactica2_java vs MovX_java in Lattice
-Original: 1782
-Compressed: 396
-CompressTime: 348
-Livetime: 199
-Tactica2_java vs MovX_java in Rings
-Original: 2088
-Compressed: 0
-CompressTime: 85
-Livetime: 233
-Tactica2_java vs MovX_java in TwoGaussians
-Original: 9477
-Compressed: 4212
-CompressTime: 403
-Livetime: 1054
-Tactica2_java vs MovX_java in VerticalBar
-Original: 1737
-Compressed: 0
-CompressTime: 30
-Livetime: 194
-Tactica2_java vs Movx_cpp in InclinedPlane
-Original: 2907
-Compressed: 1292
-CompressTime: 278
-Livetime: 324
-Tactica2_java vs Movx_cpp in Famine
-Original: 1449
-Compressed: 0
-CompressTime: 31
-Livetime: 162
-Tactica2_java vs Movx_cpp in Lattice
-Original: 1755
-Compressed: 390
-CompressTime: 385
-Livetime: 196
-Tactica2_java vs Movx_cpp in Rings
-Original: 3465
-Compressed: 0
-CompressTime: 194
-Livetime: 386
-Tactica2_java vs Movx_cpp in TwoGaussians
-Original: 2421
-Compressed: 1076
-CompressTime: 90
-Livetime: 270
-Tactica2_java vs Movx_cpp in VerticalBar
-Original: 4392
-Compressed: 0
-CompressTime: 72
-Livetime: 489
-Tactica2_java vs Advanced_cpp in InclinedPlane
-Original: 19017
-Compressed: 8452
-CompressTime: 1669
-Livetime: 2114
-Tactica2_java vs Advanced_cpp in Famine
-Original: 18657
-Compressed: 0
-CompressTime: 311
-Livetime: 2074
-Tactica2_java vs Advanced_cpp in Lattice
-Original: 6534
-Compressed: 1452
-CompressTime: 1254
-Livetime: 727
-Tactica2_java vs Advanced_cpp in Rings
-Original: 6930
-Compressed: 0
-CompressTime: 288
-Livetime: 771
-Tactica2_java vs Advanced_cpp in TwoGaussians
-Original: 1827
-Compressed: 812
-CompressTime: 68
-Livetime: 204
-Tactica2_java vs Advanced_cpp in VerticalBar
-Original: 34056
-Compressed: 0
-CompressTime: 553
-Livetime: 3785
-Tactica1_java vs Random_java in InclinedPlane
-Original: 1548
-Compressed: 688
-CompressTime: 143
-Livetime: 173
-Tactica1_java vs Random_java in Famine
-Original: 981
-Compressed: 0
-CompressTime: 17
-Livetime: 110
-Tactica1_java vs Random_java in Lattice
-Original: 1935
-Compressed: 430
-CompressTime: 388
-Livetime: 216
-Tactica1_java vs Random_java in Rings
-Original: 1449
-Compressed: 0
-CompressTime: 65
-Livetime: 162
-Tactica1_java vs Random_java in TwoGaussians
-Original: 1386
-Compressed: 616
-CompressTime: 51
-Livetime: 155
-Tactica1_java vs Random_java in VerticalBar
-Original: 954
-Compressed: 0
-CompressTime: 19
-Livetime: 107
-Tactica1_java vs MovX_java in InclinedPlane
-Original: 2916
-Compressed: 1296
-CompressTime: 267
-Livetime: 325
-Tactica1_java vs MovX_java in Famine
-Original: 1350
-Compressed: 0
-CompressTime: 22
-Livetime: 151
-Tactica1_java vs MovX_java in Lattice
-Original: 1746
-Compressed: 388
-CompressTime: 352
-Livetime: 195
-Tactica1_java vs MovX_java in Rings
-Original: 2475
-Compressed: 0
-CompressTime: 110
-Livetime: 276
-Tactica1_java vs MovX_java in TwoGaussians
-Original: 2097
-Compressed: 932
-CompressTime: 85
-Livetime: 234
-Tactica1_java vs MovX_java in VerticalBar
-Original: 3537
-Compressed: 0
-CompressTime: 69
-Livetime: 394
-Tactica1_java vs Movx_cpp in InclinedPlane
-Original: 1593
-Compressed: 708
-CompressTime: 136
-Livetime: 178
-Tactica1_java vs Movx_cpp in Famine
-Original: 1458
-Compressed: 0
-CompressTime: 30
-Livetime: 163
-Tactica1_java vs Movx_cpp in Lattice
-Original: 5535
-Compressed: 1230
-CompressTime: 1097
-Livetime: 616
-Tactica1_java vs Movx_cpp in Rings
-Original: 3852
-Compressed: 0
-CompressTime: 166
-Livetime: 429
-Tactica1_java vs Movx_cpp in TwoGaussians
-Original: 4365
-Compressed: 1940
-CompressTime: 318
-Livetime: 486
-Tactica1_java vs Movx_cpp in VerticalBar
-Original: 2511
-Compressed: 0
-CompressTime: 40
-Livetime: 280
-Tactica1_java vs Advanced_cpp in InclinedPlane
-Original: 2466
-Compressed: 1096
-CompressTime: 225
-Livetime: 275
-Tactica1_java vs Advanced_cpp in Famine
-Original: 18657
-Compressed: 0
-CompressTime: 277
-Livetime: 2074
-Tactica1_java vs Advanced_cpp in Lattice
-Original: 8307
-Compressed: 1846
-CompressTime: 1631
-Livetime: 924
-Tactica1_java vs Advanced_cpp in Rings
-Original: 2232
-Compressed: 0
-CompressTime: 80
-Livetime: 249
-Tactica1_java vs Advanced_cpp in TwoGaussians
-Original: 972
-Compressed: 432
-CompressTime: 41
-Livetime: 109
-Tactica1_java vs Advanced_cpp in VerticalBar
-Original: 9351
-Compressed: 0
-CompressTime: 154
-Livetime: 1040
-Random_java vs MovX_java in InclinedPlane
-Original: 2313
-Compressed: 1028
-CompressTime: 203
-Livetime: 258
-Random_java vs MovX_java in Famine
-Original: 990
-Compressed: 0
-CompressTime: 15
-Livetime: 111
-Random_java vs MovX_java in Lattice
-Original: 2421
-Compressed: 538
-CompressTime: 486
-Livetime: 270
-Random_java vs MovX_java in Rings
-Original: 2736
-Compressed: 0
-CompressTime: 118
-Livetime: 305
-Random_java vs MovX_java in TwoGaussians
-Original: 3987
-Compressed: 1772
-CompressTime: 151
-Livetime: 444
-Random_java vs MovX_java in VerticalBar
-Original: 2214
-Compressed: 0
-CompressTime: 36
-Livetime: 247
-Random_java vs Movx_cpp in InclinedPlane
-Original: 1206
-Compressed: 536
-CompressTime: 103
-Livetime: 135
-Random_java vs Movx_cpp in Famine
-Original: 954
-Compressed: 0
-CompressTime: 15
-Livetime: 107
-Random_java vs Movx_cpp in Lattice
-Original: 1683
-Compressed: 374
-CompressTime: 330
-Livetime: 188
-Random_java vs Movx_cpp in Rings
-Original: 3600
-Compressed: 0
-CompressTime: 156
-Livetime: 401
-Random_java vs Movx_cpp in TwoGaussians
-Original: 1701
-Compressed: 756
-CompressTime: 68
-Livetime: 190
-Random_java vs Movx_cpp in VerticalBar
-Original: 3186
-Compressed: 0
-CompressTime: 49
-Livetime: 355
-Random_java vs Advanced_cpp in InclinedPlane
-Original: 1152
-Compressed: 512
-CompressTime: 100
-Livetime: 129
-Random_java vs Advanced_cpp in Famine
-Original: 1053
-Compressed: 0
-CompressTime: 16
-Livetime: 118
-Random_java vs Advanced_cpp in Lattice
-Original: 585
-Compressed: 130
-CompressTime: 117
-Livetime: 66
-Random_java vs Advanced_cpp in Rings
-Original: 792
-Compressed: 0
-CompressTime: 42
-Livetime: 89
-Random_java vs Advanced_cpp in TwoGaussians
-Original: 1233
-Compressed: 548
-CompressTime: 54
-Livetime: 138
-Random_java vs Advanced_cpp in VerticalBar
-Original: 1089
-Compressed: 0
-CompressTime: 18
-Livetime: 122
-MovX_java vs Movx_cpp in InclinedPlane
-Original: 2331
-Compressed: 1036
-CompressTime: 254
-Livetime: 260
-MovX_java vs Movx_cpp in Famine
-Original: 1386
-Compressed: 0
-CompressTime: 19
-Livetime: 155
-MovX_java vs Movx_cpp in Lattice
-Original: 4878
-Compressed: 1084
-CompressTime: 953
-Livetime: 543
-MovX_java vs Movx_cpp in Rings
-Original: 3807
-Compressed: 0
-CompressTime: 151
-Livetime: 424
-MovX_java vs Movx_cpp in TwoGaussians
-Original: 5436
-Compressed: 2416
-CompressTime: 200
-Livetime: 605
-MovX_java vs Movx_cpp in VerticalBar
-Original: 4716
-Compressed: 0
-CompressTime: 75
-Livetime: 525
-MovX_java vs Advanced_cpp in InclinedPlane
-Original: 1224
-Compressed: 544
-CompressTime: 103
-Livetime: 137
-MovX_java vs Advanced_cpp in Famine
-Original: 1368
-Compressed: 0
-CompressTime: 31
-Livetime: 153
-MovX_java vs Advanced_cpp in Lattice
-Original: 1026
-Compressed: 228
-CompressTime: 189
-Livetime: 115
-MovX_java vs Advanced_cpp in Rings
-Original: 828
-Compressed: 0
-CompressTime: 41
-Livetime: 93
-MovX_java vs Advanced_cpp in TwoGaussians
-Original: 1359
-Compressed: 604
-CompressTime: 54
-Livetime: 152
-MovX_java vs Advanced_cpp in VerticalBar
-Original: 1341
-Compressed: 0
-CompressTime: 23
-Livetime: 150
-Movx_cpp vs Advanced_cpp in InclinedPlane
-Original: 1755
-Compressed: 780
-CompressTime: 157
-Livetime: 196
-Movx_cpp vs Advanced_cpp in Famine
-Original: 1368
-Compressed: 0
-CompressTime: 26
-Livetime: 153
-Movx_cpp vs Advanced_cpp in Lattice
-Original: 2538
-Compressed: 564
-CompressTime: 501
-Livetime: 283
-Movx_cpp vs Advanced_cpp in Rings
-Original: 810
-Compressed: 0
-CompressTime: 36
-Livetime: 91
-Movx_cpp vs Advanced_cpp in TwoGaussians
-Original: 1116
-Compressed: 496
-CompressTime: 36
-Livetime: 125
-Movx_cpp vs Advanced_cpp in VerticalBar
-Original: 1665
-Compressed: 0
-CompressTime: 24
-Livetime: 186
-
-Final status:
-Original: 338571
-Compressed: 54282
-CompressTime: 19825
-Livetime: 37709
-
-Process finished with exit code 0
+    INFO  23:32:26 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in InclinedPlane
+    INFO  23:32:27 Tournament:326 - End of the battle. Winner Tactica2_java with energy 8082.642
+    INFO  23:32:27 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Famine
+    INFO  23:32:28 Tournament:326 - End of the battle. Winner Tactica2_java with energy 27106.373
+    INFO  23:32:28 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Lattice
+    INFO  23:32:31 Tournament:326 - End of the battle. Winner Tactica2_java with energy 15998.866
+    INFO  23:32:31 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Rings
+    INFO  23:32:33 Tournament:326 - End of the battle. Winner Tactica2_java with energy 37479.88
+    INFO  23:32:33 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in TwoGaussians
+    INFO  23:32:34 Tournament:326 - End of the battle. Winner Tactica2_java with energy 16650.23
+    INFO  23:32:34 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in VerticalBar
+    INFO  23:32:36 Tournament:326 - End of the battle. Winner Tactica2_java with energy 38345.53
+    INFO  23:32:36 Tournament:314 - Starting battle: Tactica2_java vs Random_java in InclinedPlane
+    INFO  23:32:36 Tournament:326 - End of the battle. Winner Tactica2_java with energy 13440.906
+    INFO  23:32:36 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Famine
+    INFO  23:32:37 Tournament:326 - End of the battle. Winner Tactica2_java with energy 34762.2
+    INFO  23:32:37 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Lattice
+    INFO  23:32:38 Tournament:326 - End of the battle. Winner Tactica2_java with energy 56356.97
+    INFO  23:32:38 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Rings
+    INFO  23:32:39 Tournament:326 - End of the battle. Winner Tactica2_java with energy 49335.066
+    INFO  23:32:39 Tournament:314 - Starting battle: Tactica2_java vs Random_java in TwoGaussians
+    INFO  23:32:40 Tournament:326 - End of the battle. Winner Tactica2_java with energy 23027.105
+    INFO  23:32:40 Tournament:314 - Starting battle: Tactica2_java vs Random_java in VerticalBar
+    INFO  23:32:41 Tournament:326 - End of the battle. Winner Tactica2_java with energy 31196.01
+    INFO  23:32:41 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in InclinedPlane
+    INFO  23:32:42 Tournament:326 - End of the battle. Winner Tactica2_java with energy 19898.738
+    INFO  23:32:42 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Famine
+    INFO  23:32:43 Tournament:326 - End of the battle. Winner Tactica2_java with energy 36351.58
+    INFO  23:32:43 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Lattice
+    INFO  23:32:45 Tournament:326 - End of the battle. Winner Tactica2_java with energy 42410.074
+    INFO  23:32:45 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Rings
+    INFO  23:32:46 Tournament:326 - End of the battle. Winner Tactica2_java with energy 71970.13
+    INFO  23:32:46 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in TwoGaussians
+    INFO  23:32:48 Tournament:326 - End of the battle. Winner Tactica2_java with energy 32574.086
+    INFO  23:32:48 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in VerticalBar
+    INFO  23:32:49 Tournament:326 - End of the battle. Winner Tactica2_java with energy 25998.455
+    INFO  23:32:49 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in InclinedPlane
+    INFO  23:32:50 Tournament:326 - End of the battle. Winner Tactica2_java with energy 8325.403
+    INFO  23:32:50 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Famine
+    INFO  23:32:51 Tournament:326 - End of the battle. Winner Tactica2_java with energy 34650.96
+    INFO  23:32:51 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Lattice
+    INFO  23:32:52 Tournament:326 - End of the battle. Winner Tactica2_java with energy 58570.176
+    INFO  23:32:52 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Rings
+    INFO  23:32:53 Tournament:326 - End of the battle. Winner Tactica2_java with energy 75383.19
+    INFO  23:32:53 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in TwoGaussians
+    INFO  23:32:54 Tournament:326 - End of the battle. Winner Tactica2_java with energy 17327.652
+    INFO  23:32:54 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in VerticalBar
+    INFO  23:32:56 Tournament:326 - End of the battle. Winner Tactica2_java with energy 63860.844
+    INFO  23:32:56 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in InclinedPlane
+    INFO  23:34:01 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 20315.451
+    INFO  23:34:01 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Famine
+    INFO  23:35:30 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 273.93213
+    INFO  23:35:30 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Lattice
+    INFO  23:35:54 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 98562.67
+    INFO  23:35:54 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Rings
+    INFO  23:36:22 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 217096.62
+    INFO  23:36:22 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in TwoGaussians
+    INFO  23:36:36 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 95712.34
+    INFO  23:36:36 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in VerticalBar
+    INFO  23:39:27 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36837.8
+    INFO  23:39:27 Tournament:314 - Starting battle: Tactica1_java vs Random_java in InclinedPlane
+    INFO  23:39:27 Tournament:326 - End of the battle. Winner Tactica1_java with energy 2563.106
+    INFO  23:39:27 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Famine
+    INFO  23:39:28 Tournament:326 - End of the battle. Winner Tactica1_java with energy 2875.8826
+    INFO  23:39:28 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Lattice
+    INFO  23:39:29 Tournament:326 - End of the battle. Winner Tactica1_java with energy 56963.86
+    INFO  23:39:29 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Rings
+    INFO  23:39:30 Tournament:326 - End of the battle. Winner Tactica1_java with energy 46358.742
+    INFO  23:39:30 Tournament:314 - Starting battle: Tactica1_java vs Random_java in TwoGaussians
+    INFO  23:39:30 Tournament:326 - End of the battle. Winner Tactica1_java with energy 37415.168
+    INFO  23:39:30 Tournament:314 - Starting battle: Tactica1_java vs Random_java in VerticalBar
+    INFO  23:39:31 Tournament:326 - End of the battle. Winner Tactica1_java with energy 6573.6313
+    INFO  23:39:31 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in InclinedPlane
+    INFO  23:39:32 Tournament:326 - End of the battle. Winner Tactica1_java with energy 108.03615
+    INFO  23:39:32 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Famine
+    INFO  23:39:33 Tournament:326 - End of the battle. Winner Tactica1_java with energy 22.889606
+    INFO  23:39:33 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Lattice
+    INFO  23:39:34 Tournament:326 - End of the battle. Winner Tactica1_java with energy 16470.904
+    INFO  23:39:34 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Rings
+    INFO  23:39:35 Tournament:326 - End of the battle. Winner Tactica1_java with energy 18502.049
+    INFO  23:39:35 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in TwoGaussians
+    INFO  23:39:39 Tournament:326 - End of the battle. Winner Tactica1_java with energy 19975.469
+    INFO  23:39:39 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in VerticalBar
+    INFO  23:39:40 Tournament:326 - End of the battle. Winner Tactica1_java with energy 8797.497
+    INFO  23:39:40 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in InclinedPlane
+    INFO  23:39:41 Tournament:326 - End of the battle. Winner Tactica1_java with energy 1311.37
+    INFO  23:39:41 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Famine
+    INFO  23:39:42 Tournament:326 - End of the battle. Winner Tactica1_java with energy 239.72731
+    INFO  23:39:42 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Lattice
+    INFO  23:39:45 Tournament:326 - End of the battle. Winner Tactica1_java with energy 17967.215
+    INFO  23:39:45 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Rings
+    INFO  23:39:46 Tournament:326 - End of the battle. Winner Tactica1_java with energy 17010.117
+    INFO  23:39:46 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in TwoGaussians
+    INFO  23:39:48 Tournament:326 - End of the battle. Winner Tactica1_java with energy 16919.686
+    INFO  23:39:48 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in VerticalBar
+    INFO  23:39:49 Tournament:326 - End of the battle. Winner Tactica1_java with energy 1616.6693
+    INFO  23:39:49 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in InclinedPlane
+    INFO  23:40:09 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 38718.28
+    INFO  23:40:09 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Famine
+    INFO  23:40:22 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 27886.12
+    INFO  23:40:22 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Lattice
+    INFO  23:40:36 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 93072.09
+    INFO  23:40:36 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Rings
+    INFO  23:40:48 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 128960.57
+    INFO  23:40:48 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in TwoGaussians
+    INFO  23:40:54 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 55498.312
+    INFO  23:40:54 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in VerticalBar
+    INFO  23:41:11 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 49936.99
+    INFO  23:41:11 Tournament:314 - Starting battle: Random_java vs MovX_java in InclinedPlane
+    INFO  23:41:12 Tournament:326 - End of the battle. Winner MovX_java with energy 2352.4736
+    INFO  23:41:12 Tournament:314 - Starting battle: Random_java vs MovX_java in Famine
+    INFO  23:41:13 Tournament:326 - End of the battle. Winner MovX_java with energy 4744.7505
+    INFO  23:41:13 Tournament:314 - Starting battle: Random_java vs MovX_java in Lattice
+    INFO  23:41:14 Tournament:326 - End of the battle. Winner MovX_java with energy 1661.9164
+    INFO  23:41:14 Tournament:314 - Starting battle: Random_java vs MovX_java in Rings
+    INFO  23:41:16 Tournament:326 - End of the battle. Winner MovX_java with energy 1431.0448
+    INFO  23:41:16 Tournament:314 - Starting battle: Random_java vs MovX_java in TwoGaussians
+    INFO  23:41:16 Tournament:326 - End of the battle. Winner MovX_java with energy 12846.63
+    INFO  23:41:16 Tournament:314 - Starting battle: Random_java vs MovX_java in VerticalBar
+    INFO  23:41:17 Tournament:326 - End of the battle. Winner MovX_java with energy 3836.0183
+    INFO  23:41:17 Tournament:314 - Starting battle: Random_java vs Movx_cpp in InclinedPlane
+    INFO  23:41:18 Tournament:326 - End of the battle. Winner Movx_cpp with energy 7326.7275
+    INFO  23:41:18 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Famine
+    INFO  23:41:18 Tournament:326 - End of the battle. Winner Movx_cpp with energy 4737.748
+    INFO  23:41:18 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Lattice
+    INFO  23:41:21 Tournament:326 - End of the battle. Winner Random_java with energy 730.6261
+    INFO  23:41:21 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Rings
+    INFO  23:41:21 Tournament:326 - End of the battle. Winner Random_java with energy 2350.1729
+    INFO  23:41:21 Tournament:314 - Starting battle: Random_java vs Movx_cpp in TwoGaussians
+    INFO  23:41:23 Tournament:326 - End of the battle. Winner Movx_cpp with energy 5817.504
+    INFO  23:41:23 Tournament:314 - Starting battle: Random_java vs Movx_cpp in VerticalBar
+    INFO  23:41:24 Tournament:326 - End of the battle. Winner Movx_cpp with energy 3587.4912
+    INFO  23:41:24 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in InclinedPlane
+    INFO  23:41:35 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 35702.3
+    INFO  23:41:35 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Famine
+    INFO  23:41:48 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36099.504
+    INFO  23:41:48 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Lattice
+    INFO  23:41:55 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 73247.8
+    INFO  23:41:55 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Rings
+    INFO  23:42:00 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 74136.39
+    INFO  23:42:00 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in TwoGaussians
+    INFO  23:42:06 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 103464.53
+    INFO  23:42:06 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in VerticalBar
+    INFO  23:42:13 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 35194.21
+    INFO  23:42:13 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in InclinedPlane
+    INFO  23:42:14 Tournament:326 - End of the battle. Winner MovX_java with energy 772.5632
+    INFO  23:42:14 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Famine
+    INFO  23:42:15 Tournament:326 - End of the battle. Winner Movx_cpp with energy 52.861515
+    INFO  23:42:15 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Lattice
+    INFO  23:42:16 Tournament:326 - End of the battle. Winner MovX_java with energy 9.044891
+    INFO  23:42:16 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Rings
+    INFO  23:42:18 Tournament:326 - End of the battle. Winner Movx_cpp with energy 824.41235
+    INFO  23:42:18 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in TwoGaussians
+    INFO  23:42:20 Tournament:326 - End of the battle. Winner Movx_cpp with energy 2897.3472
+    INFO  23:42:20 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in VerticalBar
+    INFO  23:42:21 Tournament:326 - End of the battle. Winner Movx_cpp with energy 56.709473
+    INFO  23:42:21 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in InclinedPlane
+    INFO  23:42:43 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36258.805
+    INFO  23:42:43 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Famine
+    INFO  23:43:00 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 37568.887
+    INFO  23:43:00 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Lattice
+    INFO  23:43:10 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 48729.605
+    INFO  23:43:10 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Rings
+    INFO  23:43:16 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 96370.625
+    INFO  23:43:16 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in TwoGaussians
+    INFO  23:43:27 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 148106.06
+    INFO  23:43:27 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in VerticalBar
+    INFO  23:43:46 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 53537.965
+    INFO  23:43:46 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in InclinedPlane
+    INFO  23:44:12 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 39780.953
+    INFO  23:44:12 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Famine
+    INFO  23:44:30 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36047.03
+    INFO  23:44:30 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Lattice
+    INFO  23:44:37 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 50430.555
+    INFO  23:44:37 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Rings
+    INFO  23:44:43 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 71529.56
+    INFO  23:44:43 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in TwoGaussians
+    INFO  23:44:49 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 114334.695
+    INFO  23:44:49 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in VerticalBar
+    INFO  23:45:14 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 71261.0
+    Final status:
+    size impl1: 96750k
+    size impl2: 96366k
+    size impl3: 12469k --> todo: esta es la implementación más sencilla y parece la más razonable
+    size impl4: 14194k
+    size impl5: 11748k
+    size impl6: 15946k
+    Livetime = 26405
 */
 }
