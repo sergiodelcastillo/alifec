@@ -3,6 +3,7 @@ package alifec.core.persistence;
 import alifec.core.contest.Battle;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Defs;
+import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.nutrient.function.TwoGaussiansFunction;
 
@@ -12,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.Deflater;
@@ -21,21 +23,22 @@ import java.util.zip.Deflater;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class SimulationFileManagerImpl5 implements SimulationFileManager {
+public class SimulationFileManagerImpl6 implements SimulationFileManager {
 
     private Path file;
     private StringBuilder builder;
-    private ByteBuffer byteBuffer;
-    private float[][] nutrients;
-    private short[][] difference;
 
-    public SimulationFileManagerImpl5(String path, boolean createFile) throws IOException {
+    private float[][] nutrients;
+    //  private short[][] difference;
+    //private List<Float> list;
+
+    public SimulationFileManagerImpl6(String path, boolean createFile) throws IOException {
         //first improvement: save only one number to represent mo position: x, y = x*50+y. it saves about 6 or 7 %
         file = Paths.get(path);
         builder = new StringBuilder();
-        byteBuffer = ByteBuffer.allocate(2 * Defs.DIAMETER * Defs.DIAMETER);
         nutrients = new float[Defs.DIAMETER][Defs.DIAMETER];
-        difference = new short[Defs.DIAMETER][Defs.DIAMETER];
+        // difference = new short[Defs.DIAMETER][Defs.DIAMETER];
+        // list = new ArrayList<>(Defs.DIAMETER * Defs.DIAMETER);
 
         if (createFile) {
             if (Files.notExists(file)) {
@@ -70,10 +73,8 @@ public class SimulationFileManagerImpl5 implements SimulationFileManager {
 
         Files.write(file, (code + ",").getBytes(), StandardOpenOption.APPEND);
 
-        /*while (!deflaterNutrients.finished()) {
-            deflaterNutrients.deflate(buffer);
-            Files.write(file, buffer, StandardOpenOption.APPEND);
-        }*/
+        if (data.length == 0) return;
+
         int seek;
         while (!deflaterNutrients.finished()) {
             seek = deflaterNutrients.deflate(buffer);
@@ -83,16 +84,16 @@ public class SimulationFileManagerImpl5 implements SimulationFileManager {
                 Files.write(file, buffer, StandardOpenOption.APPEND);
             }
         }
-
         Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
 
     }
 
     @Override
     public void append(Nutrient nutri, List<Cell> mos) throws IOException {
+        builder.delete(0, builder.length());
         calculateDiff(nutri);
-        saveCompressed("n", toByteArray(difference));
-
+        saveCompressed("n", builder.toString().getBytes());
+      
         builder.delete(0, builder.length());
 
 
@@ -108,17 +109,22 @@ public class SimulationFileManagerImpl5 implements SimulationFileManager {
 
     private void calculateDiff(Nutrient nutri) {
         float[][] ntmp = nutri.getNutrients();
+        //  int count = 0;
         for (int x = 0; x < Defs.DIAMETER; x++) {
             for (int y = 0; y < Defs.DIAMETER; y++) {
-                difference[x][y] = (short) (nutrients[x][y] - ntmp[x][y]);
-                /*if (difference[x][y] < 0.001f && difference[x][y] > -0.001f)
-                    difference[x][y] = 0;*/
+                float diff = nutrients[x][y] - ntmp[x][y];
+
+                if (diff > 0.001f || diff < -0.001f) {
+                    builder.append(x).append(',').append(y).append(',').append(diff).append(',');
+                    //                count++;
+                }
                 nutrients[x][y] = ntmp[x][y];
             }
         }
-
+        //      System.out.println(count);
 
     }
+
 
     @Override
     public void appendFinish(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException {
@@ -131,16 +137,5 @@ public class SimulationFileManagerImpl5 implements SimulationFileManager {
         Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
     }
 
-    private byte[] toByteArray(short[][] values) {
-        byteBuffer.clear();
-
-        for (short[] values1 : values) {
-            for (short value : values1) {
-                byteBuffer.putShort(value);
-            }
-        }
-
-        return byteBuffer.array();
-    }
 
 }

@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.Deflater;
 
@@ -60,14 +61,20 @@ public class SimulationFileManagerImpl2 implements SimulationFileManager {
         deflaterNutrients.setInput(nutrientsData);
         deflaterNutrients.finish();
 
-        byte[] bufferNutrients = new byte[nutrientsData.length];
+        byte[] buffer = new byte[1024];
 
         Files.write(file, (code + ",").getBytes(), StandardOpenOption.APPEND);
 
+        int seek;
         while (!deflaterNutrients.finished()) {
-            deflaterNutrients.deflate(bufferNutrients);
-            Files.write(file, bufferNutrients, StandardOpenOption.APPEND);
+            seek = deflaterNutrients.deflate(buffer);
+            if (seek < buffer.length) {
+                Files.write(file, Arrays.copyOf(buffer, seek), StandardOpenOption.APPEND);
+            } else {
+                Files.write(file, buffer, StandardOpenOption.APPEND);
+            }
         }
+
 
         Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
 

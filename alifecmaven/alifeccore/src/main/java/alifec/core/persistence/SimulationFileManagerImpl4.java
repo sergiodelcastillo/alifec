@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.Deflater;
 
@@ -25,15 +26,15 @@ public class SimulationFileManagerImpl4 implements SimulationFileManager {
     private StringBuilder builder;
     private ByteBuffer byteBuffer;
     private float[][] nutrients;
-    private short[][] difference;
+    private float[][] difference;
 
     public SimulationFileManagerImpl4(String path, boolean createFile) throws IOException {
         //first improvement: save only one number to represent mo position: x, y = x*50+y. it saves about 6 or 7 %
         file = Paths.get(path);
         builder = new StringBuilder();
-        byteBuffer = ByteBuffer.allocate(2 * Defs.DIAMETER * Defs.DIAMETER);
+        byteBuffer = ByteBuffer.allocate(4 * Defs.DIAMETER * Defs.DIAMETER);
         nutrients = new float[Defs.DIAMETER][Defs.DIAMETER];
-        difference = new short[Defs.DIAMETER][Defs.DIAMETER];
+        difference = new float[Defs.DIAMETER][Defs.DIAMETER];
 
         if (createFile) {
             if (Files.notExists(file)) {
@@ -64,14 +65,20 @@ public class SimulationFileManagerImpl4 implements SimulationFileManager {
         deflaterNutrients.setInput(nutrientsData);
         deflaterNutrients.finish();
 
-        byte[] bufferNutrients = new byte[nutrientsData.length];
+        byte[] buffer = new byte[1024];
 
         Files.write(file, (code + ",").getBytes(), StandardOpenOption.APPEND);
 
+        int seek;
         while (!deflaterNutrients.finished()) {
-            deflaterNutrients.deflate(bufferNutrients);
-            Files.write(file, bufferNutrients, StandardOpenOption.APPEND);
+            seek = deflaterNutrients.deflate(buffer);
+            if (seek < buffer.length) {
+                Files.write(file, Arrays.copyOf(buffer, seek), StandardOpenOption.APPEND);
+            } else {
+                Files.write(file, buffer, StandardOpenOption.APPEND);
+            }
         }
+
 
         Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
 
@@ -98,9 +105,9 @@ public class SimulationFileManagerImpl4 implements SimulationFileManager {
     private void calculateDiff(float[][] newNutri) {
         for (int x = 0; x < Defs.DIAMETER; x++) {
             for (int y = 0; y < Defs.DIAMETER; y++) {
-                difference[x][y] = (short) newNutri[x][y];
-                /*if (0.0001f < difference[x][y] && difference[x][y] > -0.001f)
-                    difference[x][y] = 0f;*/
+                difference[x][y] =  newNutri[x][y];
+                if (0.0001f < difference[x][y] && difference[x][y] > -0.001f)
+                    difference[x][y] = 0f;
                 nutrients[x][y] = newNutri[x][y];
             }
         }
