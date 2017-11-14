@@ -19,7 +19,7 @@ public class SimulationFileManagerList implements SimulationFileManager {
 
     public SimulationFileManagerList(String path, boolean createFile) throws IOException {
         list = new ArrayList<>();
-
+        //todo: add dx,dy to persistence
         list.add(new SimulationFileManagerImpl1(path, createFile));
        list.add(new SimulationFileManagerImpl2(path + "2", createFile));
         list.add(new SimulationFileManagerImpl3(path + "3", createFile));
