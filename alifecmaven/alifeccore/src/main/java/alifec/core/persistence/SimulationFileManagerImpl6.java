@@ -93,7 +93,7 @@ public class SimulationFileManagerImpl6 implements SimulationFileManager {
         builder.delete(0, builder.length());
         calculateDiff(nutri);
         saveCompressed("n", builder.toString().getBytes());
-      
+
         builder.delete(0, builder.length());
 
 
@@ -135,6 +135,11 @@ public class SimulationFileManagerImpl6 implements SimulationFileManager {
                 .append(battle.getWinnerEnergy()).append(System.lineSeparator());
 
         Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
+    }
+
+    @Override
+    public void iterateAll(Consumer consumer) {
+
     }
 
 

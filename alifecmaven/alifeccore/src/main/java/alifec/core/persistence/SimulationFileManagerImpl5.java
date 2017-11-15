@@ -131,6 +131,11 @@ public class SimulationFileManagerImpl5 implements SimulationFileManager {
         Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
     }
 
+    @Override
+    public void iterateAll(Consumer consumer) {
+
+    }
+
     private byte[] toByteArray(short[][] values) {
         byteBuffer.clear();
 

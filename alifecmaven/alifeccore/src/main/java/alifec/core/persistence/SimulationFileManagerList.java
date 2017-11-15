@@ -50,4 +50,9 @@ public class SimulationFileManagerList implements SimulationFileManager {
             sfm.appendInit(nutri, mos, battle);
         }
     }
+
+    @Override
+    public void iterateAll(Consumer consumer) {
+        //todo
+    }
 }

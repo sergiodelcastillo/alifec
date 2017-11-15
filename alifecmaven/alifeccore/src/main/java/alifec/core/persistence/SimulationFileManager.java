@@ -18,7 +18,6 @@ public interface SimulationFileManager {
         void consume(LiveInstance line);
     }
 
-
     void appendInit(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException;
 
     void append(Nutrient nutri, List<Cell> mos) throws IOException;
