@@ -5,6 +5,7 @@ import alifec.core.persistence.custom.BattlesFunction;
 import alifec.core.persistence.custom.ExcludeBattlesPredicate;
 import alifec.core.persistence.custom.NotNullPredicate;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class TournamentFileManager {
-    static org.apache.logging.log4j.Logger logger = LogManager.getLogger(TournamentFileManager.class);
+    Logger logger = LogManager.getLogger(getClass());
     private static final String TEMP_SUFFIX = ".tmp";
 
 

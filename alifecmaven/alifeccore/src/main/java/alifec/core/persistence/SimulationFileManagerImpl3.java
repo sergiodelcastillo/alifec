@@ -1,10 +1,14 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
+import alifec.core.persistence.dto.LiveInstance;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Defs;
 import alifec.core.simulation.nutrient.Nutrient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -21,20 +25,23 @@ import java.util.zip.Deflater;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class SimulationFileManagerImpl3 implements SimulationFileManager {
-
+    Logger logger = LogManager.getLogger(getClass());
+    private final int BUFFER_SIZE = 1024;
     private Path file;
     private StringBuilder builder;
     private ByteBuffer byteBuffer;
     private float[][] nutrients;
-    private float[][] difference;
+    private byte[] buffer;
+    private Deflater deflater;
 
     public SimulationFileManagerImpl3(String path, boolean createFile) throws IOException {
-        //first improvement: save only one number to represent mo position: x, y = x*50+y. it saves about 6 or 7 %
         file = Paths.get(path);
         builder = new StringBuilder();
         byteBuffer = ByteBuffer.allocate(4 * Defs.DIAMETER * Defs.DIAMETER);
         nutrients = new float[Defs.DIAMETER][Defs.DIAMETER];
-        difference = new float[Defs.DIAMETER][Defs.DIAMETER];
+
+        buffer = new byte[BUFFER_SIZE];
+        deflater = new Deflater(Deflater.BEST_COMPRESSION);
 
         if (createFile) {
             if (Files.notExists(file)) {
@@ -60,61 +67,68 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
         append(nutri, mos);
     }
 
-    private void saveCompressed(String code, byte[] nutrientsData) throws IOException {
-        Deflater deflaterNutrients = new Deflater(Deflater.BEST_COMPRESSION);
-        deflaterNutrients.setInput(nutrientsData);
-        deflaterNutrients.finish();
+    @Override
+    public void append(Nutrient nutri, List<Cell> mos) throws IOException {
+        saveNutrients(nutri);
 
-        byte[] buffer = new byte[1024];
+        builder.delete(0, builder.length());
 
-        Files.write(file, (code + ",").getBytes(), StandardOpenOption.APPEND);
+        for (Cell mo : mos) {
+            builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.id).append(',').append(mo.ene).append(',');
+        }
 
-        int seek;
-        while (!deflaterNutrients.finished()) {
-            seek = deflaterNutrients.deflate(buffer);
-            if (seek < buffer.length) {
-                Files.write(file, Arrays.copyOf(buffer, seek), StandardOpenOption.APPEND);
+        saveMOs(builder.toString().getBytes());
+
+        Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
+    }
+
+    private void saveNutrients(Nutrient nutri) throws IOException {
+
+        float[][] newNutri = nutri.getNutrients();
+        //calculate difference
+        byteBuffer.clear();
+
+        for (int x = 0; x < Defs.DIAMETER; x++) {
+            for (int y = 0; y < Defs.DIAMETER; y++) {
+                float diff = nutrients[x][y] - newNutri[x][y];
+
+                if (diff < 0.01f && diff > -0.01f) {
+                    diff = 0f;
+                }
+
+                byteBuffer.putFloat(diff);
+
+                nutrients[x][y] = newNutri[x][y];
+            }
+        }
+
+        Files.write(file, ("n," + nutri.getDx() + "," + nutri.getDy() + ",").getBytes(), StandardOpenOption.APPEND);
+
+        saveCompressedData(byteBuffer.array());
+    }
+
+    private void saveMOs(byte[] data) throws IOException {
+        Files.write(file, ("m,").getBytes(), StandardOpenOption.APPEND);
+
+        saveCompressedData(data);
+    }
+
+    private void saveCompressedData(byte[] data) throws IOException {
+        deflater.reset();
+        deflater.setInput(data);
+        deflater.finish();
+
+        int characters;
+        while (!deflater.finished()) {
+            characters = deflater.deflate(buffer);
+            if (characters < buffer.length) {
+                Files.write(file, Arrays.copyOf(buffer, characters), StandardOpenOption.APPEND);
             } else {
                 Files.write(file, buffer, StandardOpenOption.APPEND);
             }
         }
 
-
         Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
-
-    }
-
-    @Override
-    public void append(Nutrient nutri, List<Cell> mos) throws IOException {
-        calculateDiff(nutri.getNutrients());
-        saveCompressed("n", toByteArray(difference));
-
-        builder.delete(0, builder.length());
-
-
-        for (Cell mo : mos) {
-            //builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.id).append(',').append(mo.ene).append(',');
-            builder.append(mo.x * Defs.DIAMETER + mo.y).append(',').append(mo.id).append(',').append(mo.ene).append(',');
-        }
-
-        saveCompressed("m", builder.toString().getBytes());
-
-        Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
-    }
-
-    private void calculateDiff(float[][] newNutri) {
-        //int count = 0;
-        for (int x = 0; x < Defs.DIAMETER; x++) {
-            for (int y = 0; y < Defs.DIAMETER; y++) {
-                difference[x][y] = (short) (nutrients[x][y] - newNutri[x][y]);
-                if (difference[x][y] < 0.01f && difference[x][y] > -0.01f) {
-        //            count++;
-                    difference[x][y] = 0f;
-                }
-                nutrients[x][y] = newNutri[x][y];
-            }
-        }
-      //  System.out.println("cero diff=" + count);
     }
 
     @Override
@@ -128,16 +142,23 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
         Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
     }
 
+    @Override
+    public void iterateAll(Consumer consumer) {
+        try (BufferedReader reader = Files.newBufferedReader(file)) {
+            String line;
 
-    private byte[] toByteArray(float[][] values) {
-        byteBuffer.clear();
-
-        for (float[] values1 : values) {
-            for (float value : values1) {
-                byteBuffer.putFloat(value);
+            while ((line = reader.readLine()) != null) {
+                try {
+                    LiveInstance dto = new LiveInstance(line);
+                    consumer.consume(dto);
+                } catch (Throwable t) {
+                    logger.error(t.getMessage(), t);
+                }
             }
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
-
-        return byteBuffer.array();
     }
+
+
 }

@@ -1,6 +1,7 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
+import alifec.core.persistence.dto.LiveInstance;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.nutrient.Nutrient;
 
@@ -13,9 +14,16 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public interface SimulationFileManager {
+    interface Consumer {
+        void consume(LiveInstance line);
+    }
+
+
     void appendInit(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException;
 
     void append(Nutrient nutri, List<Cell> mos) throws IOException;
 
     void appendFinish(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException;
+
+    void iterateAll(Consumer consumer);
 }

@@ -42,4 +42,9 @@ public interface Nutrient {
     String getName();
 
     float [][] getNutrients();
+
+    int getDx();
+
+    int getDy();
+
 }

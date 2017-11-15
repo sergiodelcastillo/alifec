@@ -80,4 +80,12 @@ public class FunctionBasedNutrient implements Nutrient {
     public float [][] getNutrients(){
         return nutrients;
     }
+
+    public int getDx() {
+        return rx;
+    }
+
+    public int getDy() {
+        return ry;
+    }
 }

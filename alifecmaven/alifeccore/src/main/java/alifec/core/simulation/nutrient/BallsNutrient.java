@@ -138,6 +138,16 @@ public class BallsNutrient implements Nutrient {
     }
 
     @Override
+    public int getDx() {
+        return 0;
+    }
+
+    @Override
+    public int getDy() {
+        return 0;
+    }
+
+    @Override
     public int getId() {
         return ID;
     }
