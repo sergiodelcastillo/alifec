@@ -1,6 +1,7 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
+import alifec.core.exception.ValidationException;
 import alifec.core.persistence.dto.FinishedBattle;
 import alifec.core.persistence.dto.RunningBattle;
 import alifec.core.persistence.dto.StartBattle;
@@ -12,12 +13,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.Deflater;
@@ -79,7 +83,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
         builder.delete(0, builder.length());
 
         for (Cell mo : mos) {
-            builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.id).append(',').append(mo.ene).append(',');
+            builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.colonyId).append(',').append(mo.ene).append(',');
         }
 
         saveMOs(builder.toString().getBytes());
@@ -148,7 +152,8 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     }
 
     @Override
-    public void iterateAll(Consumer consumer) {
+    public void iterateAll(Consumer consumer) throws IOException {
+
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             String line;
 
@@ -158,7 +163,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
 
                     char firstCharacter = line.charAt(0);
 
-                    switch (firstCharacter){
+                    switch (firstCharacter) {
                         case 'b':
                             consumer.consume(parseBattle(line));
                             break;
@@ -169,13 +174,29 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
                             consumer.consume(parseEnd(line));
                             break;
                     }
-                } catch (Throwable t) {
-                    logger.error(t.getMessage(), t);
+                } catch (ValidationException e) {
+                    logger.warn(e.getMessage(), e);
                 }
             }
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+
         }
+    }
+
+    //@Override
+    public void iterateAll2(Consumer consumer) throws IOException {
+
+        try (InputStream is = Files.newInputStream(file)) {
+            int buffer;
+            ByteBuffer list = ByteBuffer.allocate(20000);
+
+            while ((buffer = is.read()) != -1 && buffer != 10) {
+                list.put((byte) buffer);
+            }
+            char firstCharacter = (char) list.get(0);
+            System.out.println(firstCharacter);
+        }
+
+
     }
 
     private StartBattle parseBattle(String line) {

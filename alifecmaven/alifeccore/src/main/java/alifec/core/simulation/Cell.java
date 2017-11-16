@@ -5,7 +5,7 @@ public final class Cell {
     /**
      * ID of colony
      */
-    public final int id;
+    public final int colonyId;
 
     /**
      * Energy of colony
@@ -18,8 +18,8 @@ public final class Cell {
 
     public int y;
 
-    public Cell(int id) {
-        this.id = id;
+    public Cell(int colonyId) {
+        this.colonyId = colonyId;
     }
 
     public boolean isDied() {

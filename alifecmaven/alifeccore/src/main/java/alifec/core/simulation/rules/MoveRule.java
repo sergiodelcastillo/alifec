@@ -35,7 +35,7 @@ public class MoveRule implements ColonyRule {
 
         Cell cell = env.getCell(newPos.x, newPos.y);
 
-        if (cell != null && cell.id != mo.id) {
+        if (cell != null && cell.colonyId != mo.colonyId) {
             // delegate to  attack rule
             return Status.NONE;
         }

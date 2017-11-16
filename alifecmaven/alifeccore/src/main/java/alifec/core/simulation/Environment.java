@@ -189,7 +189,7 @@ public class Environment {
         Movement mov;
 
         for (Cell mo : allOps) {
-            Colony current = (mo.id == c2.id) ? c2 : c1;
+            Colony current = (mo.colonyId == c2.id) ? c2 : c1;
 
             if (mo.isDied()) {
                 continue;
@@ -280,7 +280,7 @@ public class Environment {
         Cell mo = microorganism[x][y];
 
         microorganism[x][y] = null;
-        return mo != null && ((mo.id == c1.id) ? c1.kill(mo) : c2.kill(mo));
+        return mo != null && ((mo.colonyId == c1.id) ? c1.kill(mo) : c2.kill(mo));
     }
 
 

@@ -3,17 +3,13 @@ package alifec.core.persistence;
 import alifec.core.contest.Battle;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Defs;
-import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.Nutrient;
-import alifec.core.simulation.nutrient.function.TwoGaussiansFunction;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.Deflater;
@@ -99,7 +95,7 @@ public class SimulationFileManagerImpl6 implements SimulationFileManager {
 
         for (Cell mo : mos) {
             //builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.id).append(',').append(mo.ene).append(',');
-            builder.append(mo.x * Defs.DIAMETER + mo.y).append(',').append(mo.id).append(',').append(mo.ene).append(',');
+            builder.append(mo.x * Defs.DIAMETER + mo.y).append(',').append(mo.colonyId).append(',').append(mo.ene).append(',');
         }
 
         saveCompressed("m", builder.toString().getBytes());

@@ -42,7 +42,7 @@ public class LoveRule implements ColonyRule {
 
         // create new MO
         int index = random.nextInt(posRel.size());
-        env.createMOInstance(posRel.get(index).x, posRel.get(index).y, mo.ene, mo.id);
+        env.createMOInstance(posRel.get(index).x, posRel.get(index).y, mo.ene, mo.colonyId);
 
         return Status.NONE;
     }

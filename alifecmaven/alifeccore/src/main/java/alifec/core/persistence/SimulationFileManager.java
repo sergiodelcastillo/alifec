@@ -28,5 +28,5 @@ public interface SimulationFileManager {
 
     void appendFinish(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException;
 
-    void iterateAll(Consumer consumer);
+    void iterateAll(Consumer consumer) throws IOException;
 }

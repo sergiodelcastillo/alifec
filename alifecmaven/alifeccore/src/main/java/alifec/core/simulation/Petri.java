@@ -42,7 +42,7 @@ public class Petri {
         if (env.getCell(x, y) == null)
             return -1;  // cant
 
-        return env.getCell(x, y).id;
+        return env.getCell(x, y).colonyId;
     }
 
     /**

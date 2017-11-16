@@ -85,7 +85,7 @@ public class SimulationFileManagerImpl1 implements SimulationFileManager {
         builder.delete(0, builder.length());
 
         for (Cell mo : mos) {
-            builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.id).append(',').append(mo.ene).append(',');
+            builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.colonyId).append(',').append(mo.ene).append(',');
         }
 
         saveCompressed("m", builder.toString().getBytes());
