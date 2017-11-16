@@ -1,10 +1,13 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.Battle;
-import alifec.core.persistence.dto.LiveInstance;
+import alifec.core.persistence.dto.FinishedBattle;
+import alifec.core.persistence.dto.RunningBattle;
+import alifec.core.persistence.dto.StartBattle;
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Defs;
 import alifec.core.simulation.nutrient.Nutrient;
+import alifec.core.validation.LiveInstanceValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +36,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     private float[][] nutrients;
     private byte[] buffer;
     private Deflater deflater;
+    private final LiveInstanceValidator validator;
 
     public SimulationFileManagerImpl3(String path, boolean createFile) throws IOException {
         file = Paths.get(path);
@@ -48,6 +52,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
                 Files.createFile(file);
             }
         }
+        validator = new LiveInstanceValidator();
     }
 
     @Override
@@ -149,8 +154,21 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
 
             while ((line = reader.readLine()) != null) {
                 try {
-                    LiveInstance dto = new LiveInstance(line);
-                    consumer.consume(dto);
+                    validator.validate(line);
+
+                    char firstCharacter = line.charAt(0);
+
+                    switch (firstCharacter){
+                        case 'b':
+                            consumer.consume(parseBattle(line));
+                            break;
+                        case 'n':
+                            consumer.consume(parseRunning(line, reader.readLine()));
+                            break;
+                        case 'e':
+                            consumer.consume(parseEnd(line));
+                            break;
+                    }
                 } catch (Throwable t) {
                     logger.error(t.getMessage(), t);
                 }
@@ -160,5 +178,16 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
         }
     }
 
+    private StartBattle parseBattle(String line) {
+        return null;
+    }
+
+    private RunningBattle parseRunning(String nutrients, String mos) {
+        return null;
+    }
+
+    private FinishedBattle parseEnd(String line) {
+        return null;
+    }
 
 }

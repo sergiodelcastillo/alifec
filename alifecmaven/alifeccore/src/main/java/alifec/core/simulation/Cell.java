@@ -18,7 +18,7 @@ public final class Cell {
 
     public int y;
 
-    Cell(int id) {
+    public Cell(int id) {
         this.id = id;
     }
 
