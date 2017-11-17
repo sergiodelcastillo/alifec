@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.zip.Deflater;
 
@@ -32,8 +33,26 @@ import java.util.zip.Deflater;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class SimulationFileManagerImpl3 implements SimulationFileManager {
+    private static final String FIELD_SEPARATOR = ",";
+    private static final String OBJECT_SEPARATOR = ";";
+    private static final String LINE_SEPARATOR = "\n";
+    private static final String BATTLE_PREFIX = "b";
+    private static final String NUTRIENT_PREFIX = "n";
+    private static final String MICROORGANISM_PREFIX = "m";
+    private static final String END_PREFIX = "e";
+
+    private static final byte[] FIELD_SEPARATOR_BYTES = FIELD_SEPARATOR.getBytes();
+    private static final byte[] OBJECT_SEPARATOR_BYTES = OBJECT_SEPARATOR.getBytes();
+    private static final byte[] LINE_SEPARATOR_BYTES = LINE_SEPARATOR.getBytes();
+    private static final byte[] BATTLE_PREFIX_BYTES = BATTLE_PREFIX.getBytes();
+    private static final byte[] NUTRIENT_PREFIX_BYTES = NUTRIENT_PREFIX.getBytes();
+    private static final byte[] MICROORGANISM_PREFIX_BYTES = MICROORGANISM_PREFIX.getBytes();
+    private static final byte[] END_PREFIX_BYTES = END_PREFIX.getBytes();
+
     Logger logger = LogManager.getLogger(getClass());
-    private final int BUFFER_SIZE = 1024;
+    // assumed that the data size will never be higher than buffer size. The compressed data should be shorter than
+    //the size of the original size 4*50*50.
+    private final int BUFFER_SIZE = 4 * Defs.DIAMETER * Defs.DIAMETER;
     private Path file;
     private StringBuilder builder;
     private ByteBuffer byteBuffer;
@@ -41,15 +60,19 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     private byte[] buffer;
     private Deflater deflater;
     private final LiveInstanceValidator validator;
+    private Base64.Encoder encoder;
+    private Base64.Decoder decoder;
+
 
     public SimulationFileManagerImpl3(String path, boolean createFile) throws IOException {
         file = Paths.get(path);
         builder = new StringBuilder();
         byteBuffer = ByteBuffer.allocate(4 * Defs.DIAMETER * Defs.DIAMETER);
         nutrients = new float[Defs.DIAMETER][Defs.DIAMETER];
-
         buffer = new byte[BUFFER_SIZE];
         deflater = new Deflater(Deflater.BEST_COMPRESSION);
+        encoder = Base64.getEncoder();
+        decoder = Base64.getDecoder();
 
         if (createFile) {
             if (Files.notExists(file)) {
@@ -61,35 +84,35 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
 
     @Override
     public void appendInit(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException {
-        builder.delete(0, builder.length());
+        saveBattle(battle);
+        saveNutrients(nutri);
+        saveMOs(mos);
 
-        builder.append("b,")
-                .append(battle.getFirstColonyId()).append(",")
-                .append(battle.getFirstColony()).append(",")
-                .append(battle.getSecondColonyId()).append(",")
-                .append(battle.getSecondColony()).append(",")
-                .append(battle.getNutrientId()).append(",")
-                .append(battle.getNutrient()).append(System.lineSeparator());
-
-        Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
-
-        append(nutri, mos);
+        Files.write(file, LINE_SEPARATOR_BYTES, StandardOpenOption.APPEND);
     }
 
     @Override
     public void append(Nutrient nutri, List<Cell> mos) throws IOException {
         saveNutrients(nutri);
 
-        builder.delete(0, builder.length());
+        saveMOs(mos);
 
-        for (Cell mo : mos) {
-            builder.append(mo.x).append(',').append(mo.y).append(',').append(mo.colonyId).append(',').append(mo.ene).append(',');
-        }
-
-        saveMOs(builder.toString().getBytes());
-
-        Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
+        Files.write(file, LINE_SEPARATOR_BYTES, StandardOpenOption.APPEND);
     }
+
+    private void saveBattle(Battle battle) throws IOException {
+        builder.delete(0, builder.length());
+        builder.append(battle.getFirstColonyId()).append(FIELD_SEPARATOR)
+                .append(battle.getFirstColony()).append(FIELD_SEPARATOR)
+                .append(battle.getSecondColonyId()).append(FIELD_SEPARATOR)
+                .append(battle.getSecondColony()).append(FIELD_SEPARATOR)
+                .append(battle.getNutrientId()).append(FIELD_SEPARATOR)
+                .append(battle.getNutrient()).append(OBJECT_SEPARATOR);
+
+        Files.write(file, BATTLE_PREFIX_BYTES, StandardOpenOption.APPEND);
+        Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
+    }
+
 
     private void saveNutrients(Nutrient nutri) throws IOException {
 
@@ -110,16 +133,35 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
                 nutrients[x][y] = newNutri[x][y];
             }
         }
-
-        Files.write(file, ("n," + nutri.getDx() + "," + nutri.getDy() + ",").getBytes(), StandardOpenOption.APPEND);
+        builder.delete(0, builder.length());
+        builder.append(NUTRIENT_PREFIX)
+                .append(nutri.getDx())
+                .append(FIELD_SEPARATOR)
+                .append(nutri.getDy())
+                .append(FIELD_SEPARATOR);
+        Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
 
         saveCompressedData(byteBuffer.array());
+        Files.write(file, OBJECT_SEPARATOR_BYTES, StandardOpenOption.APPEND);
     }
 
-    private void saveMOs(byte[] data) throws IOException {
-        Files.write(file, ("m,").getBytes(), StandardOpenOption.APPEND);
+    private void saveMOs(List<Cell> mos) throws IOException {
+        builder.delete(0, builder.length());
 
-        saveCompressedData(data);
+        for (Cell mo : mos) {
+            builder.append(mo.x)
+                    .append(FIELD_SEPARATOR)
+                    .append(mo.y)
+                    .append(FIELD_SEPARATOR)
+                    .append(mo.colonyId)
+                    .append(FIELD_SEPARATOR)
+                    .append(mo.ene)
+                    .append(OBJECT_SEPARATOR);
+        }
+
+        Files.write(file, MICROORGANISM_PREFIX_BYTES, StandardOpenOption.APPEND);
+
+        saveCompressedData(builder.toString().getBytes());
     }
 
     private void saveCompressedData(byte[] data) throws IOException {
@@ -130,23 +172,28 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
         int characters;
         while (!deflater.finished()) {
             characters = deflater.deflate(buffer);
+
             if (characters < buffer.length) {
-                Files.write(file, Arrays.copyOf(buffer, characters), StandardOpenOption.APPEND);
+                saveCompressedDataToFile(Arrays.copyOf(buffer, characters));
             } else {
-                Files.write(file, buffer, StandardOpenOption.APPEND);
+                //todo: create a object that ensure the compressed list of byte.
+                System.out.println("ERROR!!!!!!!!!!");
+                saveCompressedDataToFile(buffer);
             }
         }
+    }
 
-        Files.write(file, System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
+    private void saveCompressedDataToFile(byte[] data) throws IOException {
+        Files.write(file, encoder.encode(data), StandardOpenOption.APPEND);
     }
 
     @Override
     public void appendFinish(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException {
         builder.delete(0, builder.length());
-        builder.append("e,")
-                .append(battle.getWinnerId()).append(",")
-                .append(battle.getWinnerName()).append(",")
-                .append(battle.getWinnerEnergy()).append(System.lineSeparator());
+        builder.append(END_PREFIX)
+                .append(battle.getWinnerId()).append(FIELD_SEPARATOR)
+                .append(battle.getWinnerName()).append(FIELD_SEPARATOR)
+                .append(battle.getWinnerEnergy()).append(LINE_SEPARATOR);
 
         Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
     }

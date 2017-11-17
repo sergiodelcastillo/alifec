@@ -17,11 +17,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 /**
  * Created by Sergio Del Castillo on 14/11/17.
@@ -85,11 +90,18 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
     public void testFiles() throws IOException {
         Path file = Paths.get(TEST_ROOT_PATH + File.separator + "battle3.run");
         try (OutputStream os = Files.newOutputStream(file)) {
-            String battle1 = "b,1,name1,2,name2,200,TestNutri\n";
-            String battle2 = "b,1,name1,2,name2,200,TestNutri";
+            String battle1 = "b,1,name1,2,name2,200,TestNutri";
+            Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
 
-            os.write(battle1.getBytes());
-            os.write(battle2.getBytes());
+            byte[] sbytes = battle1.getBytes(StandardCharsets.UTF_8);
+            deflater.setInput(sbytes);
+            deflater.finish();
+            byte[] buffer = new byte[sbytes.length];
+            int n = deflater.deflate(buffer);
+            byte[] bufferFinal = Arrays.copyOf(buffer, n);
+
+            os.write(Base64.getEncoder().encode(bufferFinal));
+            os.write('\n');
         }
 
 
@@ -100,11 +112,49 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
             while ((buffer = is.read()) != -1 && buffer != 10) {
                 list.put((byte) buffer);
             }
-            char firstCharacter  = (char) list.get(0);
+            byte [] uncompressed = Base64.getDecoder().decode(Arrays.copyOf(list.array(), list.position()));
+            Inflater inflater = new Inflater();
+            inflater.setInput(uncompressed);
+            byte [] result = new byte[10000];
+            int size = inflater.inflate(result, 0, result.length);
+            inflater.end();
+            byte [] rfinal = Arrays.copyOf(result, size);
+            char firstCharacter  = (char) rfinal[0];
             System.out.println(firstCharacter);
 
+        } catch (DataFormatException e) {
+            e.printStackTrace();
         }
 
 
+    }
+
+    public static String compress(String s) {
+        Deflater def = new Deflater(Deflater.BEST_COMPRESSION);
+        byte[] sbytes = s.getBytes(StandardCharsets.UTF_8);
+        def.setInput(sbytes);
+        def.finish();
+        byte[] buffer = new byte[sbytes.length];
+        int n = def.deflate(buffer);
+        return new String(buffer, 0, n, StandardCharsets.ISO_8859_1)
+                + "*" + sbytes.length;
+    }
+
+    public static String decompress(String s) {
+        int pos = s.lastIndexOf('*');
+        int len = Integer.parseInt(s.substring(pos + 1));
+        s = s.substring(0, pos);
+
+        Inflater inf = new Inflater();
+        byte[] buffer = s.getBytes(StandardCharsets.ISO_8859_1);
+        byte[] decomp = new byte[len];
+        inf.setInput(buffer);
+        try {
+            inf.inflate(decomp, 0, len);
+            inf.end();
+        } catch (DataFormatException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return new String(decomp, StandardCharsets.UTF_8);
     }
 }

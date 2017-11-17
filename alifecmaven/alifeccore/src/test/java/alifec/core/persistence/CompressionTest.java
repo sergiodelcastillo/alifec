@@ -124,194 +124,194 @@ public class CompressionTest extends ParentTest {
     }
 
 /*
+INFO  23:45:58 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in InclinedPlane
+INFO  23:46:00 Tournament:326 - End of the battle. Winner Tactica2_java with energy 5292.766
+INFO  23:46:00 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Famine
+INFO  23:46:00 Tournament:326 - End of the battle. Winner Tactica2_java with energy 24959.33
+INFO  23:46:00 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Lattice
+INFO  23:46:02 Tournament:326 - End of the battle. Winner Tactica2_java with energy 20557.912
+INFO  23:46:02 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Rings
+INFO  23:46:05 Tournament:326 - End of the battle. Winner Tactica2_java with energy 31431.322
+INFO  23:46:05 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in TwoGaussians
+INFO  23:46:06 Tournament:326 - End of the battle. Winner Tactica2_java with energy 19068.428
+INFO  23:46:06 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in VerticalBar
+INFO  23:46:07 Tournament:326 - End of the battle. Winner Tactica2_java with energy 15882.818
+INFO  23:46:07 Tournament:314 - Starting battle: Tactica2_java vs Random_java in InclinedPlane
+INFO  23:46:07 Tournament:326 - End of the battle. Winner Tactica2_java with energy 20085.043
+INFO  23:46:07 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Famine
+INFO  23:46:08 Tournament:326 - End of the battle. Winner Tactica2_java with energy 32310.229
+INFO  23:46:08 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Lattice
+INFO  23:46:09 Tournament:326 - End of the battle. Winner Tactica2_java with energy 35454.914
+INFO  23:46:09 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Rings
+INFO  23:46:10 Tournament:326 - End of the battle. Winner Tactica2_java with energy 49658.598
+INFO  23:46:10 Tournament:314 - Starting battle: Tactica2_java vs Random_java in TwoGaussians
+INFO  23:46:11 Tournament:326 - End of the battle. Winner Tactica2_java with energy 56291.08
+INFO  23:46:11 Tournament:314 - Starting battle: Tactica2_java vs Random_java in VerticalBar
+INFO  23:46:12 Tournament:326 - End of the battle. Winner Tactica2_java with energy 32264.574
+INFO  23:46:12 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in InclinedPlane
+INFO  23:46:13 Tournament:326 - End of the battle. Winner Tactica2_java with energy 25593.516
+INFO  23:46:13 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Famine
+INFO  23:46:14 Tournament:326 - End of the battle. Winner Tactica2_java with energy 37233.902
+INFO  23:46:14 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Lattice
+INFO  23:46:19 Tournament:326 - End of the battle. Winner Tactica2_java with energy 33027.387
+INFO  23:46:19 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Rings
+INFO  23:46:20 Tournament:326 - End of the battle. Winner Tactica2_java with energy 73990.23
+INFO  23:46:20 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in TwoGaussians
+INFO  23:46:22 Tournament:326 - End of the battle. Winner Tactica2_java with energy 39531.133
+INFO  23:46:22 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in VerticalBar
+INFO  23:46:22 Tournament:326 - End of the battle. Winner Tactica2_java with energy 37447.16
+INFO  23:46:22 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in InclinedPlane
+INFO  23:46:24 Tournament:326 - End of the battle. Winner Tactica2_java with energy 18555.94
+INFO  23:46:24 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Famine
+INFO  23:46:25 Tournament:326 - End of the battle. Winner Tactica2_java with energy 34131.582
+INFO  23:46:25 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Lattice
+INFO  23:46:27 Tournament:326 - End of the battle. Winner Tactica2_java with energy 64123.7
+INFO  23:46:27 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Rings
+INFO  23:46:29 Tournament:326 - End of the battle. Winner Tactica2_java with energy 62776.746
+INFO  23:46:29 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in TwoGaussians
+INFO  23:46:30 Tournament:326 - End of the battle. Winner Tactica2_java with energy 8666.966
+INFO  23:46:30 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in VerticalBar
+INFO  23:46:31 Tournament:326 - End of the battle. Winner Tactica2_java with energy 50103.484
+INFO  23:46:31 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in InclinedPlane
+INFO  23:47:25 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 41898.395
+INFO  23:47:25 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Famine
+INFO  23:48:47 Tournament:326 - End of the battle. Winner Tactica2_java with energy 2.360858
+INFO  23:48:47 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Lattice
+INFO  23:49:20 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 186994.45
+INFO  23:49:20 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Rings
+INFO  23:49:34 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 104806.57
+INFO  23:49:34 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in TwoGaussians
+INFO  23:49:49 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 38469.78
+INFO  23:49:49 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in VerticalBar
+INFO  23:52:01 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 60782.48
+INFO  23:52:01 Tournament:314 - Starting battle: Tactica1_java vs Random_java in InclinedPlane
+INFO  23:52:02 Tournament:326 - End of the battle. Winner Tactica1_java with energy 4136.691
+INFO  23:52:02 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Famine
+INFO  23:52:03 Tournament:326 - End of the battle. Winner Tactica1_java with energy 3606.0347
+INFO  23:52:03 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Lattice
+INFO  23:52:04 Tournament:326 - End of the battle. Winner Tactica1_java with energy 28254.867
+INFO  23:52:04 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Rings
+INFO  23:52:05 Tournament:326 - End of the battle. Winner Tactica1_java with energy 32970.86
+INFO  23:52:05 Tournament:314 - Starting battle: Tactica1_java vs Random_java in TwoGaussians
+INFO  23:52:05 Tournament:326 - End of the battle. Winner Tactica1_java with energy 49616.15
+INFO  23:52:05 Tournament:314 - Starting battle: Tactica1_java vs Random_java in VerticalBar
+INFO  23:52:06 Tournament:326 - End of the battle. Winner Tactica1_java with energy 9128.402
+INFO  23:52:06 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in InclinedPlane
+INFO  23:52:07 Tournament:326 - End of the battle. Winner Tactica1_java with energy 1465.7659
+INFO  23:52:07 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Famine
+INFO  23:52:08 Tournament:326 - End of the battle. Winner MovX_java with energy 31.401585
+INFO  23:52:08 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Lattice
+INFO  23:52:10 Tournament:326 - End of the battle. Winner Tactica1_java with energy 16013.973
+INFO  23:52:10 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Rings
+INFO  23:52:11 Tournament:326 - End of the battle. Winner Tactica1_java with energy 20339.174
+INFO  23:52:11 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in TwoGaussians
+INFO  23:52:12 Tournament:326 - End of the battle. Winner Tactica1_java with energy 24120.744
+INFO  23:52:12 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in VerticalBar
+INFO  23:52:13 Tournament:326 - End of the battle. Winner Tactica1_java with energy 16023.719
+INFO  23:52:13 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in InclinedPlane
+INFO  23:52:14 Tournament:326 - End of the battle. Winner Tactica1_java with energy 847.0089
+INFO  23:52:14 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Famine
+INFO  23:52:15 Tournament:326 - End of the battle. Winner Tactica1_java with energy 75.67633
+INFO  23:52:15 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Lattice
+INFO  23:52:17 Tournament:326 - End of the battle. Winner Tactica1_java with energy 27366.047
+INFO  23:52:17 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Rings
+INFO  23:52:18 Tournament:326 - End of the battle. Winner Tactica1_java with energy 3362.3901
+INFO  23:52:18 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in TwoGaussians
+INFO  23:52:20 Tournament:326 - End of the battle. Winner Tactica1_java with energy 11042.055
+INFO  23:52:20 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in VerticalBar
+INFO  23:52:21 Tournament:326 - End of the battle. Winner Tactica1_java with energy 10265.368
+INFO  23:52:21 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in InclinedPlane
+INFO  23:52:58 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 24028.234
+INFO  23:52:58 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Famine
+INFO  23:53:08 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 28261.557
+INFO  23:53:08 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Lattice
+INFO  23:53:22 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 53001.273
+INFO  23:53:22 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Rings
+INFO  23:53:35 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 122962.81
+INFO  23:53:35 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in TwoGaussians
+INFO  23:53:46 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 41742.6
+INFO  23:53:46 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in VerticalBar
+INFO  23:54:02 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 51620.332
+INFO  23:54:02 Tournament:314 - Starting battle: Random_java vs MovX_java in InclinedPlane
+INFO  23:54:03 Tournament:326 - End of the battle. Winner MovX_java with energy 2611.8755
+INFO  23:54:03 Tournament:314 - Starting battle: Random_java vs MovX_java in Famine
+INFO  23:54:04 Tournament:326 - End of the battle. Winner MovX_java with energy 4503.881
+INFO  23:54:04 Tournament:314 - Starting battle: Random_java vs MovX_java in Lattice
+INFO  23:54:05 Tournament:326 - End of the battle. Winner MovX_java with energy 2228.0933
+INFO  23:54:05 Tournament:314 - Starting battle: Random_java vs MovX_java in Rings
+INFO  23:54:06 Tournament:326 - End of the battle. Winner MovX_java with energy 3425.4524
+INFO  23:54:06 Tournament:314 - Starting battle: Random_java vs MovX_java in TwoGaussians
+INFO  23:54:09 Tournament:326 - End of the battle. Winner MovX_java with energy 1154.0668
+INFO  23:54:09 Tournament:314 - Starting battle: Random_java vs MovX_java in VerticalBar
+INFO  23:54:10 Tournament:326 - End of the battle. Winner MovX_java with energy 1838.4396
+INFO  23:54:10 Tournament:314 - Starting battle: Random_java vs Movx_cpp in InclinedPlane
+INFO  23:54:11 Tournament:326 - End of the battle. Winner Movx_cpp with energy 1077.1862
+INFO  23:54:11 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Famine
+INFO  23:54:11 Tournament:326 - End of the battle. Winner Movx_cpp with energy 4355.7285
+INFO  23:54:11 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Lattice
+INFO  23:54:13 Tournament:326 - End of the battle. Winner Movx_cpp with energy 6759.886
+INFO  23:54:13 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Rings
+INFO  23:54:14 Tournament:326 - End of the battle. Winner Random_java with energy 979.5536
+INFO  23:54:14 Tournament:314 - Starting battle: Random_java vs Movx_cpp in TwoGaussians
+INFO  23:54:15 Tournament:326 - End of the battle. Winner Random_java with energy 2005.2328
+INFO  23:54:15 Tournament:314 - Starting battle: Random_java vs Movx_cpp in VerticalBar
+INFO  23:54:16 Tournament:326 - End of the battle. Winner Movx_cpp with energy 251.29095
+INFO  23:54:16 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in InclinedPlane
+INFO  23:54:28 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 50401.797
+INFO  23:54:28 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Famine
+INFO  23:54:40 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 33862.695
+INFO  23:54:40 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Lattice
+INFO  23:54:46 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 78133.53
+INFO  23:54:46 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Rings
+INFO  23:54:51 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 64929.93
+INFO  23:54:51 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in TwoGaussians
+INFO  23:54:57 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 132841.3
+INFO  23:54:57 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in VerticalBar
+INFO  23:55:11 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 56911.76
+INFO  23:55:11 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in InclinedPlane
+INFO  23:55:12 Tournament:326 - End of the battle. Winner Movx_cpp with energy 570.92694
+INFO  23:55:12 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Famine
+INFO  23:55:13 Tournament:326 - End of the battle. Winner Movx_cpp with energy 42.521606
+INFO  23:55:13 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Lattice
+INFO  23:55:15 Tournament:326 - End of the battle. Winner Movx_cpp with energy 1261.1187
+INFO  23:55:15 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Rings
+INFO  23:55:16 Tournament:326 - End of the battle. Winner MovX_java with energy 695.0035
+INFO  23:55:16 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in TwoGaussians
+INFO  23:55:18 Tournament:326 - End of the battle. Winner MovX_java with energy 1245.5217
+INFO  23:55:18 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in VerticalBar
+INFO  23:55:19 Tournament:326 - End of the battle. Winner MovX_java with energy 98.14563
+INFO  23:55:19 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in InclinedPlane
+INFO  23:55:42 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 43541.258
+INFO  23:55:42 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Famine
+INFO  23:55:59 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36247.676
+INFO  23:55:59 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Lattice
+INFO  23:56:08 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 80417.99
+INFO  23:56:08 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Rings
+INFO  23:56:21 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 112758.78
+INFO  23:56:21 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in TwoGaussians
+INFO  23:56:28 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 101336.15
+INFO  23:56:28 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in VerticalBar
+INFO  23:56:45 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 49396.887
+INFO  23:56:45 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in InclinedPlane
+INFO  23:57:04 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36073.02
+INFO  23:57:04 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Famine
+INFO  23:57:20 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 34824.99
+INFO  23:57:20 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Lattice
+INFO  23:57:26 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 44947.3
+INFO  23:57:26 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Rings
+INFO  23:57:33 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 81105.26
+INFO  23:57:33 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in TwoGaussians
+INFO  23:57:41 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 144089.72
+INFO  23:57:41 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in VerticalBar
+INFO  23:57:56 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 48299.633
+Final status:
+size impl1: 101501k
+size impl2: 101103k
+size impl3: 20653k --> todo: run using base64(deflater(BestCompress)) .. con base64 usa un 60% más
+size impl4: 14849k
+size impl5: 11805k
+size impl6: 15967k
+Livetime = 26445
 
-    INFO  23:32:26 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in InclinedPlane
-    INFO  23:32:27 Tournament:326 - End of the battle. Winner Tactica2_java with energy 8082.642
-    INFO  23:32:27 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Famine
-    INFO  23:32:28 Tournament:326 - End of the battle. Winner Tactica2_java with energy 27106.373
-    INFO  23:32:28 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Lattice
-    INFO  23:32:31 Tournament:326 - End of the battle. Winner Tactica2_java with energy 15998.866
-    INFO  23:32:31 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in Rings
-    INFO  23:32:33 Tournament:326 - End of the battle. Winner Tactica2_java with energy 37479.88
-    INFO  23:32:33 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in TwoGaussians
-    INFO  23:32:34 Tournament:326 - End of the battle. Winner Tactica2_java with energy 16650.23
-    INFO  23:32:34 Tournament:314 - Starting battle: Tactica2_java vs Tactica1_java in VerticalBar
-    INFO  23:32:36 Tournament:326 - End of the battle. Winner Tactica2_java with energy 38345.53
-    INFO  23:32:36 Tournament:314 - Starting battle: Tactica2_java vs Random_java in InclinedPlane
-    INFO  23:32:36 Tournament:326 - End of the battle. Winner Tactica2_java with energy 13440.906
-    INFO  23:32:36 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Famine
-    INFO  23:32:37 Tournament:326 - End of the battle. Winner Tactica2_java with energy 34762.2
-    INFO  23:32:37 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Lattice
-    INFO  23:32:38 Tournament:326 - End of the battle. Winner Tactica2_java with energy 56356.97
-    INFO  23:32:38 Tournament:314 - Starting battle: Tactica2_java vs Random_java in Rings
-    INFO  23:32:39 Tournament:326 - End of the battle. Winner Tactica2_java with energy 49335.066
-    INFO  23:32:39 Tournament:314 - Starting battle: Tactica2_java vs Random_java in TwoGaussians
-    INFO  23:32:40 Tournament:326 - End of the battle. Winner Tactica2_java with energy 23027.105
-    INFO  23:32:40 Tournament:314 - Starting battle: Tactica2_java vs Random_java in VerticalBar
-    INFO  23:32:41 Tournament:326 - End of the battle. Winner Tactica2_java with energy 31196.01
-    INFO  23:32:41 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in InclinedPlane
-    INFO  23:32:42 Tournament:326 - End of the battle. Winner Tactica2_java with energy 19898.738
-    INFO  23:32:42 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Famine
-    INFO  23:32:43 Tournament:326 - End of the battle. Winner Tactica2_java with energy 36351.58
-    INFO  23:32:43 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Lattice
-    INFO  23:32:45 Tournament:326 - End of the battle. Winner Tactica2_java with energy 42410.074
-    INFO  23:32:45 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in Rings
-    INFO  23:32:46 Tournament:326 - End of the battle. Winner Tactica2_java with energy 71970.13
-    INFO  23:32:46 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in TwoGaussians
-    INFO  23:32:48 Tournament:326 - End of the battle. Winner Tactica2_java with energy 32574.086
-    INFO  23:32:48 Tournament:314 - Starting battle: Tactica2_java vs MovX_java in VerticalBar
-    INFO  23:32:49 Tournament:326 - End of the battle. Winner Tactica2_java with energy 25998.455
-    INFO  23:32:49 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in InclinedPlane
-    INFO  23:32:50 Tournament:326 - End of the battle. Winner Tactica2_java with energy 8325.403
-    INFO  23:32:50 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Famine
-    INFO  23:32:51 Tournament:326 - End of the battle. Winner Tactica2_java with energy 34650.96
-    INFO  23:32:51 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Lattice
-    INFO  23:32:52 Tournament:326 - End of the battle. Winner Tactica2_java with energy 58570.176
-    INFO  23:32:52 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in Rings
-    INFO  23:32:53 Tournament:326 - End of the battle. Winner Tactica2_java with energy 75383.19
-    INFO  23:32:53 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in TwoGaussians
-    INFO  23:32:54 Tournament:326 - End of the battle. Winner Tactica2_java with energy 17327.652
-    INFO  23:32:54 Tournament:314 - Starting battle: Tactica2_java vs Movx_cpp in VerticalBar
-    INFO  23:32:56 Tournament:326 - End of the battle. Winner Tactica2_java with energy 63860.844
-    INFO  23:32:56 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in InclinedPlane
-    INFO  23:34:01 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 20315.451
-    INFO  23:34:01 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Famine
-    INFO  23:35:30 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 273.93213
-    INFO  23:35:30 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Lattice
-    INFO  23:35:54 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 98562.67
-    INFO  23:35:54 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in Rings
-    INFO  23:36:22 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 217096.62
-    INFO  23:36:22 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in TwoGaussians
-    INFO  23:36:36 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 95712.34
-    INFO  23:36:36 Tournament:314 - Starting battle: Tactica2_java vs Advanced_cpp in VerticalBar
-    INFO  23:39:27 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36837.8
-    INFO  23:39:27 Tournament:314 - Starting battle: Tactica1_java vs Random_java in InclinedPlane
-    INFO  23:39:27 Tournament:326 - End of the battle. Winner Tactica1_java with energy 2563.106
-    INFO  23:39:27 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Famine
-    INFO  23:39:28 Tournament:326 - End of the battle. Winner Tactica1_java with energy 2875.8826
-    INFO  23:39:28 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Lattice
-    INFO  23:39:29 Tournament:326 - End of the battle. Winner Tactica1_java with energy 56963.86
-    INFO  23:39:29 Tournament:314 - Starting battle: Tactica1_java vs Random_java in Rings
-    INFO  23:39:30 Tournament:326 - End of the battle. Winner Tactica1_java with energy 46358.742
-    INFO  23:39:30 Tournament:314 - Starting battle: Tactica1_java vs Random_java in TwoGaussians
-    INFO  23:39:30 Tournament:326 - End of the battle. Winner Tactica1_java with energy 37415.168
-    INFO  23:39:30 Tournament:314 - Starting battle: Tactica1_java vs Random_java in VerticalBar
-    INFO  23:39:31 Tournament:326 - End of the battle. Winner Tactica1_java with energy 6573.6313
-    INFO  23:39:31 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in InclinedPlane
-    INFO  23:39:32 Tournament:326 - End of the battle. Winner Tactica1_java with energy 108.03615
-    INFO  23:39:32 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Famine
-    INFO  23:39:33 Tournament:326 - End of the battle. Winner Tactica1_java with energy 22.889606
-    INFO  23:39:33 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Lattice
-    INFO  23:39:34 Tournament:326 - End of the battle. Winner Tactica1_java with energy 16470.904
-    INFO  23:39:34 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in Rings
-    INFO  23:39:35 Tournament:326 - End of the battle. Winner Tactica1_java with energy 18502.049
-    INFO  23:39:35 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in TwoGaussians
-    INFO  23:39:39 Tournament:326 - End of the battle. Winner Tactica1_java with energy 19975.469
-    INFO  23:39:39 Tournament:314 - Starting battle: Tactica1_java vs MovX_java in VerticalBar
-    INFO  23:39:40 Tournament:326 - End of the battle. Winner Tactica1_java with energy 8797.497
-    INFO  23:39:40 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in InclinedPlane
-    INFO  23:39:41 Tournament:326 - End of the battle. Winner Tactica1_java with energy 1311.37
-    INFO  23:39:41 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Famine
-    INFO  23:39:42 Tournament:326 - End of the battle. Winner Tactica1_java with energy 239.72731
-    INFO  23:39:42 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Lattice
-    INFO  23:39:45 Tournament:326 - End of the battle. Winner Tactica1_java with energy 17967.215
-    INFO  23:39:45 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in Rings
-    INFO  23:39:46 Tournament:326 - End of the battle. Winner Tactica1_java with energy 17010.117
-    INFO  23:39:46 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in TwoGaussians
-    INFO  23:39:48 Tournament:326 - End of the battle. Winner Tactica1_java with energy 16919.686
-    INFO  23:39:48 Tournament:314 - Starting battle: Tactica1_java vs Movx_cpp in VerticalBar
-    INFO  23:39:49 Tournament:326 - End of the battle. Winner Tactica1_java with energy 1616.6693
-    INFO  23:39:49 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in InclinedPlane
-    INFO  23:40:09 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 38718.28
-    INFO  23:40:09 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Famine
-    INFO  23:40:22 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 27886.12
-    INFO  23:40:22 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Lattice
-    INFO  23:40:36 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 93072.09
-    INFO  23:40:36 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in Rings
-    INFO  23:40:48 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 128960.57
-    INFO  23:40:48 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in TwoGaussians
-    INFO  23:40:54 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 55498.312
-    INFO  23:40:54 Tournament:314 - Starting battle: Tactica1_java vs Advanced_cpp in VerticalBar
-    INFO  23:41:11 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 49936.99
-    INFO  23:41:11 Tournament:314 - Starting battle: Random_java vs MovX_java in InclinedPlane
-    INFO  23:41:12 Tournament:326 - End of the battle. Winner MovX_java with energy 2352.4736
-    INFO  23:41:12 Tournament:314 - Starting battle: Random_java vs MovX_java in Famine
-    INFO  23:41:13 Tournament:326 - End of the battle. Winner MovX_java with energy 4744.7505
-    INFO  23:41:13 Tournament:314 - Starting battle: Random_java vs MovX_java in Lattice
-    INFO  23:41:14 Tournament:326 - End of the battle. Winner MovX_java with energy 1661.9164
-    INFO  23:41:14 Tournament:314 - Starting battle: Random_java vs MovX_java in Rings
-    INFO  23:41:16 Tournament:326 - End of the battle. Winner MovX_java with energy 1431.0448
-    INFO  23:41:16 Tournament:314 - Starting battle: Random_java vs MovX_java in TwoGaussians
-    INFO  23:41:16 Tournament:326 - End of the battle. Winner MovX_java with energy 12846.63
-    INFO  23:41:16 Tournament:314 - Starting battle: Random_java vs MovX_java in VerticalBar
-    INFO  23:41:17 Tournament:326 - End of the battle. Winner MovX_java with energy 3836.0183
-    INFO  23:41:17 Tournament:314 - Starting battle: Random_java vs Movx_cpp in InclinedPlane
-    INFO  23:41:18 Tournament:326 - End of the battle. Winner Movx_cpp with energy 7326.7275
-    INFO  23:41:18 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Famine
-    INFO  23:41:18 Tournament:326 - End of the battle. Winner Movx_cpp with energy 4737.748
-    INFO  23:41:18 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Lattice
-    INFO  23:41:21 Tournament:326 - End of the battle. Winner Random_java with energy 730.6261
-    INFO  23:41:21 Tournament:314 - Starting battle: Random_java vs Movx_cpp in Rings
-    INFO  23:41:21 Tournament:326 - End of the battle. Winner Random_java with energy 2350.1729
-    INFO  23:41:21 Tournament:314 - Starting battle: Random_java vs Movx_cpp in TwoGaussians
-    INFO  23:41:23 Tournament:326 - End of the battle. Winner Movx_cpp with energy 5817.504
-    INFO  23:41:23 Tournament:314 - Starting battle: Random_java vs Movx_cpp in VerticalBar
-    INFO  23:41:24 Tournament:326 - End of the battle. Winner Movx_cpp with energy 3587.4912
-    INFO  23:41:24 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in InclinedPlane
-    INFO  23:41:35 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 35702.3
-    INFO  23:41:35 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Famine
-    INFO  23:41:48 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36099.504
-    INFO  23:41:48 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Lattice
-    INFO  23:41:55 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 73247.8
-    INFO  23:41:55 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in Rings
-    INFO  23:42:00 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 74136.39
-    INFO  23:42:00 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in TwoGaussians
-    INFO  23:42:06 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 103464.53
-    INFO  23:42:06 Tournament:314 - Starting battle: Random_java vs Advanced_cpp in VerticalBar
-    INFO  23:42:13 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 35194.21
-    INFO  23:42:13 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in InclinedPlane
-    INFO  23:42:14 Tournament:326 - End of the battle. Winner MovX_java with energy 772.5632
-    INFO  23:42:14 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Famine
-    INFO  23:42:15 Tournament:326 - End of the battle. Winner Movx_cpp with energy 52.861515
-    INFO  23:42:15 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Lattice
-    INFO  23:42:16 Tournament:326 - End of the battle. Winner MovX_java with energy 9.044891
-    INFO  23:42:16 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in Rings
-    INFO  23:42:18 Tournament:326 - End of the battle. Winner Movx_cpp with energy 824.41235
-    INFO  23:42:18 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in TwoGaussians
-    INFO  23:42:20 Tournament:326 - End of the battle. Winner Movx_cpp with energy 2897.3472
-    INFO  23:42:20 Tournament:314 - Starting battle: MovX_java vs Movx_cpp in VerticalBar
-    INFO  23:42:21 Tournament:326 - End of the battle. Winner Movx_cpp with energy 56.709473
-    INFO  23:42:21 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in InclinedPlane
-    INFO  23:42:43 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36258.805
-    INFO  23:42:43 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Famine
-    INFO  23:43:00 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 37568.887
-    INFO  23:43:00 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Lattice
-    INFO  23:43:10 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 48729.605
-    INFO  23:43:10 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in Rings
-    INFO  23:43:16 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 96370.625
-    INFO  23:43:16 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in TwoGaussians
-    INFO  23:43:27 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 148106.06
-    INFO  23:43:27 Tournament:314 - Starting battle: MovX_java vs Advanced_cpp in VerticalBar
-    INFO  23:43:46 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 53537.965
-    INFO  23:43:46 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in InclinedPlane
-    INFO  23:44:12 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 39780.953
-    INFO  23:44:12 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Famine
-    INFO  23:44:30 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 36047.03
-    INFO  23:44:30 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Lattice
-    INFO  23:44:37 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 50430.555
-    INFO  23:44:37 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in Rings
-    INFO  23:44:43 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 71529.56
-    INFO  23:44:43 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in TwoGaussians
-    INFO  23:44:49 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 114334.695
-    INFO  23:44:49 Tournament:314 - Starting battle: Movx_cpp vs Advanced_cpp in VerticalBar
-    INFO  23:45:14 Tournament:326 - End of the battle. Winner Advanced_cpp with energy 71261.0
-    Final status:
-    size impl1: 96750k
-    size impl2: 96366k
-    size impl3: 12469k --> todo: esta es la implementación más sencilla y parece la más razonable
-    size impl4: 14194k
-    size impl5: 11748k
-    size impl6: 15946k
-    Livetime = 26405
-*/
+* */
 }
