@@ -67,7 +67,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     public SimulationFileManagerImpl3(String path, boolean createFile) throws IOException {
         file = Paths.get(path);
         builder = new StringBuilder();
-        byteBuffer = ByteBuffer.allocate(4 * Defs.DIAMETER * Defs.DIAMETER);
+        byteBuffer = ByteBuffer.allocate(BUFFER_SIZE);
         nutrients = new float[Defs.DIAMETER][Defs.DIAMETER];
         buffer = new byte[BUFFER_SIZE];
         deflater = new Deflater(Deflater.BEST_COMPRESSION);
