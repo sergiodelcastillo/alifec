@@ -103,7 +103,7 @@ public class ContestReportUI extends JDialog implements ActionListener {
 
     private boolean createReportCsv() {
         try {
-
+            //todo: move it to business logic
             String url = config.getReportFilenameCsv();
             FileWriter fw = new FileWriter(url, false);
             PrintWriter pw = new PrintWriter(fw);
@@ -139,6 +139,7 @@ public class ContestReportUI extends JDialog implements ActionListener {
 
     private void fillTxt() {
         try {
+            //todo: move it to business logic
             StringBuilder builder = new StringBuilder();
 
             builder.append("NAME OF CONTEST: ");
