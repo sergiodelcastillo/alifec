@@ -7,6 +7,8 @@ import alifec.core.persistence.dto.FinishedBattle;
 import alifec.core.persistence.dto.RunningBattle;
 import alifec.core.persistence.dto.StartBattle;
 import alifec.core.simulation.Cell;
+import alifec.core.simulation.Microorganism;
+import alifec.core.simulation.TestMicroorganism;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.nutrient.TestNutrient;
 import org.junit.Assert;
@@ -21,12 +23,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Sergio Del Castillo on 14/11/17.
@@ -35,21 +37,28 @@ import java.util.zip.Inflater;
  */
 public class SimulationFileManagerImpl3Test extends ParentTest {
 
+    private Map<Integer, Microorganism> mos;
+    private List<Cell> cells;
+
     @Test
     public void testCompressStartBattle() throws BattleException, IOException {
         Nutrient nutrient = initializeNutrient();
-        List<Cell> mos = initializeMos();
+        initializeMos();
 
-        Battle battle = new Battle(1, 2, nutrient.getId(), "mo1", "mo2", nutrient.getName());
+        Battle battle = new Battle(1, 2, nutrient.getId(),
+                mos.get(1).getName(), mos.get(2).getName(), nutrient.getName());
 
         SimulationFileManager fileManager = new SimulationFileManagerImpl3(TEST_ROOT_PATH + File.separator + "battle3.run", true);
 
-        fileManager.appendInit(nutrient, mos, battle);
+        fileManager.appendInit(nutrient, cells, battle);
 
         fileManager.iterateAll(new SimulationFileManager.Consumer() {
             @Override
             public void consume(StartBattle line) {
-                System.out.println(line);
+                assertEquals(1, line.getFirstColonyId());
+                assertEquals(mos.get(1).getName(), line.getFirstColony());
+                assertEquals(2, line.getSecondColonyId());
+                assertEquals(mos.get(2).getName(), line.getSecondColony());
             }
 
             @Override
@@ -70,20 +79,25 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
         return nutrient;
     }
 
-    private List<Cell> initializeMos() {
-        Cell mo1 = new Cell(1);
-        mo1.x = 10;
-        mo1.y = -10;
-        mo1.ene = 1000f;
-        Cell mo2 = new Cell(2);
-        mo2.x = 20;
-        mo2.y = -20;
-        mo2.ene = 500f;
-        Cell mo3 = new Cell(2);
-        mo3.x = 30;
-        mo3.y = -30;
-        mo3.ene = 900f;
-        return Arrays.asList(mo1, mo2, mo3);
+    private void initializeMos() {
+        mos = new HashMap<>();
+        cells = new ArrayList<>();
+        mos.put(1, createMo(1));
+        mos.put(2, createMo(2));
+        cells.add(createCell(1));
+        cells.add(createCell(2));
+    }
+
+    private Microorganism createMo(int id) {
+        return new TestMicroorganism("mo_" + id);
+    }
+
+    private Cell createCell(int id) {
+        Cell mo1 = new Cell(id);
+        mo1.x = id;
+        mo1.y = -id;
+        mo1.ene = id * 100f;
+        return mo1;
     }
 
     @Test

@@ -13,7 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -21,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -102,12 +100,13 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
 
     private void saveBattle(Battle battle) throws IOException {
         builder.delete(0, builder.length());
-        builder.append(battle.getFirstColonyId()).append(FIELD_SEPARATOR)
-                .append(battle.getFirstColony()).append(FIELD_SEPARATOR)
-                .append(battle.getSecondColonyId()).append(FIELD_SEPARATOR)
-                .append(battle.getSecondColony()).append(FIELD_SEPARATOR)
-                .append(battle.getNutrientId()).append(FIELD_SEPARATOR)
-                .append(battle.getNutrient()).append(OBJECT_SEPARATOR);
+        builder.append(FIELD_SEPARATOR).append(battle.getFirstColonyId())
+                .append(FIELD_SEPARATOR).append(battle.getFirstColony())
+                .append(FIELD_SEPARATOR).append(battle.getSecondColonyId())
+                .append(FIELD_SEPARATOR).append(battle.getSecondColony())
+                .append(FIELD_SEPARATOR).append(battle.getNutrientId())
+                .append(FIELD_SEPARATOR).append(battle.getNutrient())
+                .append(OBJECT_SEPARATOR);
 
         Files.write(file, BATTLE_PREFIX_BYTES, StandardOpenOption.APPEND);
         Files.write(file, builder.toString().getBytes(), StandardOpenOption.APPEND);
@@ -247,7 +246,15 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     }
 
     private StartBattle parseBattle(String line) {
-        return null;
+        String[] tokens = line.split(FIELD_SEPARATOR);
+        return new StartBattle(
+                Integer.parseInt(tokens[1]),
+                tokens[2],
+                Integer.parseInt(tokens[3]),
+                tokens[4],
+                Integer.parseInt(tokens[5]),
+                tokens[6]
+        );
     }
 
     private RunningBattle parseRunning(String nutrients, String mos) {
