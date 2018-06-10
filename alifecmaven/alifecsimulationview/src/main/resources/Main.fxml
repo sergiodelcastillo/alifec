@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<BorderPane fx:id="mainLayout"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="alifec.simulation.main.ALifeContestMain"
+            prefHeight="400.0" prefWidth="600.0">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+
+            <Menu mnemonicParsing="false" text="File">
+                <MenuItem fx:id="newContest"
+                          mnemonicParsing="false"
+                          onAction="#newContest"
+                          text="%Main.menu.file.newContest"/>
+
+                <MenuItem fx:id="setDefaultContest"
+                          mnemonicParsing="false"
+                          onAction="#setDefaultContest"
+                          text="%Main.menu.file.setDefaultContest"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem fx:id="quit"
+                          mnemonicParsing="false"
+                          onAction="#quit"
+                          text="%Main.menu.file.quit"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Tools">
+                <MenuItem fx:id="setMode"
+                          mnemonicParsing="false"
+                          onAction="#setMode"
+                          text="%Main.menu.tools.setMode"/>
+                <MenuItem fx:id="reports"
+                          mnemonicParsing="false"
+                          onAction="#reports"
+                          text="%Main.menu.tools.reports"/>
+                <MenuItem fx:id="Options"
+                          mnemonicParsing="false"
+                          onAction="#options"
+                          text="%Main.menu.tools.options"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+                <MenuItem fx:id="help"
+                          mnemonicParsing="false"
+                          onAction="#help"
+                          text="%Main.menu.help.help"/>
+                <MenuItem fx:id="about"
+                          mnemonicParsing="false"
+                          onAction="#about"
+                          text="%Main.menu.help.about"/>
+            </Menu>
+        </MenuBar>
+    </top>
+    <left>
+        <Label text="Who are you?"/>
+    </left>
+    <center>
+        <TextField id="textfield" fx:id="textfield"/>
+    </center>
+    <right>
+        <Button id="button" text="Click Me!"
+                onAction="#handleButtonAction" fx:id="button"/>
+    </right>
+    <bottom>
+        <Label id="label" fx:id="label"/>
+    </bottom>
+</BorderPane>
