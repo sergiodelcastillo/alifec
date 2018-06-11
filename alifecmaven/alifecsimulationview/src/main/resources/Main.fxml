@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Text?>
 
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.HBox?>
 <BorderPane fx:id="mainLayout"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -22,55 +16,67 @@
                 <MenuItem fx:id="newContest"
                           mnemonicParsing="false"
                           onAction="#newContest"
-                          text="%Main.menu.file.newContest"/>
+                          text="%Main.menu.file.newContest"
+                          accelerator="Shortcut+N"/>
 
                 <MenuItem fx:id="setDefaultContest"
                           mnemonicParsing="false"
                           onAction="#setDefaultContest"
-                          text="%Main.menu.file.setDefaultContest"/>
+                          text="%Main.menu.file.setDefaultContest"
+                          accelerator="Shortcut+O"/>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem fx:id="quit"
                           mnemonicParsing="false"
                           onAction="#quit"
-                          text="%Main.menu.file.quit"/>
+                          text="%Main.menu.file.quit"
+                          accelerator="ALT+F4"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Tools">
                 <MenuItem fx:id="setMode"
                           mnemonicParsing="false"
                           onAction="#setMode"
-                          text="%Main.menu.tools.setMode"/>
+                          text="%Main.menu.tools.setMode"
+                          accelerator="Shortcut+M"/>
                 <MenuItem fx:id="reports"
                           mnemonicParsing="false"
                           onAction="#reports"
-                          text="%Main.menu.tools.reports"/>
+                          text="%Main.menu.tools.reports"
+                          accelerator="Shortcut+R"/>
                 <MenuItem fx:id="Options"
                           mnemonicParsing="false"
-                          onAction="#options"
-                          text="%Main.menu.tools.options"/>
+                          onAction="#preferences"
+                          text="%Main.menu.tools.preferences"
+                          accelerator="Shortcut+P"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem fx:id="help"
                           mnemonicParsing="false"
                           onAction="#help"
-                          text="%Main.menu.help.help"/>
+                          text="%Main.menu.help.help"
+                          accelerator="F1"/>
                 <MenuItem fx:id="about"
                           mnemonicParsing="false"
                           onAction="#about"
-                          text="%Main.menu.help.about"/>
+                          text="%Main.menu.help.about"
+                          accelerator="Shortcut+A"/>
             </Menu>
         </MenuBar>
     </top>
-    <left>
-        <Label text="Who are you?"/>
-    </left>
+
+
     <center>
-        <TextField id="textfield" fx:id="textfield"/>
+        <TextField fx:id="tournaments" text="Tournament Panel"/>
     </center>
     <right>
-        <Button id="button" text="Click Me!"
-                onAction="#handleButtonAction" fx:id="button"/>
+        <TextField fx:id="opponents" text="Opponents Panel"/>
+
     </right>
+
     <bottom>
-        <Label id="label" fx:id="label"/>
+        <Label fx:id="messagePanel"
+               text="Message Panel"
+               HBox.hgrow="ALWAYS"
+               maxWidth="Infinity"
+               style="-fx-padding: 5; -fx-border-style: dotted; -fx-border-width: 1 0 0 0; -fx-border-color: gray; -fx-font-weight: bold"/>
     </bottom>
 </BorderPane>

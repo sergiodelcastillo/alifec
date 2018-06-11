@@ -3,12 +3,16 @@ package alifec.simulation.main;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -22,7 +26,11 @@ import java.util.ResourceBundle;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestMain extends Application {
+    @FXML
     public BorderPane mainLayout;
+
+    @FXML
+    public Label messagePanel;
 
     /*@FXML
     private MenuItem quit;*/
@@ -82,8 +90,8 @@ public class ALifeContestMain extends Application {
         System.out.println("reports");
     }
 
-    public void options(ActionEvent event) {
-        System.out.println("options");
+    public void preferences(ActionEvent event) {
+        System.out.println("preferences");
     }
 
     public void help(ActionEvent event) {
@@ -98,13 +106,14 @@ public class ALifeContestMain extends Application {
     public void about(ActionEvent event) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
-            AnchorPane page = new FXMLLoader(getClass().getResource("/DialogAbout.fxml"), bundle).load();
+            GridPane page = new FXMLLoader(getClass().getResource("/DialogAbout.fxml"), bundle).load();
 
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle(bundle.getString("ALifeContestMain.about.title"));
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(mainLayout.getScene().getWindow());
+            dialogStage.setResizable(false);
             dialogStage.setScene(new Scene(page));
 
             // Show the dialog and wait until the user closes it
