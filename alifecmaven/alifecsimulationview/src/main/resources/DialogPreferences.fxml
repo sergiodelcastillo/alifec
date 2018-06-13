@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="alifec.simulation.main.ALifeContestMain"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <TitledPane collapsible="false" text="%preferences.general.title">
+        <padding>
+            <Insets top="6" right="6" bottom="3" left="6"/>
+        </padding>
+        <GridPane hgap="10" vgap="10">
+            <Label text="Name of contest" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField text="Contest-01" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="120"/>
+            <Label text="Default path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField text="/home/yeyo/documents/" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Pause between battles" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <ComboBox GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS" maxWidth="Infinity">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="200"/>
+                        <String fx:value="400"/>
+                        <String fx:value="600"/>
+                        <String fx:value="800"/>
+                        <String fx:value="1000"/>
+                        <String fx:value="1200"/>
+                        <String fx:value="1400"/>
+                        <String fx:value="1600"/>
+                        <String fx:value="1800"/>
+                        <String fx:value="2000"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+            <Label text="Contest mode" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <ComboBox GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.hgrow="ALWAYS" maxWidth="Infinity">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Competition"/>
+                        <String fx:value="Programmer"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane collapsible="false" text="%preferences.nutrients.title">
+        <padding>
+            <Insets top="3" right="6" bottom="6" left="6"/>
+        </padding>
+        <GridPane hgap="10" vgap="10">
+            <CheckBox text="Balls" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <CheckBox text="Two Gaussians" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <CheckBox text="Lattice" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <CheckBox text="Rings" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <CheckBox text="Vertical Bar" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <CheckBox text="Famine" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <CheckBox text="Inclined Plane" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane collapsible="false" text="%preferences.graphics.title">
+        <padding>
+            <Insets top="3" right="6" bottom="6" left="6"/>
+        </padding>
+        <GridPane alignment="CENTER_RIGHT">
+            <fx:define>
+                <ToggleGroup fx:id="graphicsGroup"/>
+            </fx:define>
+
+            <RadioButton text="Java 2D" toggleGroup="$graphicsGroup" fx:id="f1" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" maxWidth="Infinity"/>
+            <RadioButton text="Open GL" toggleGroup="$graphicsGroup" fx:id="f2" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" maxWidth="Infinity"/>
+        </GridPane>
+
+    </TitledPane>
+
+    <HBox alignment="CENTER" spacing="10" >
+
+        <Button text="Accept"/>
+        <Button text="Cancel"/>
+    </HBox>
+</VBox>

@@ -9,9 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,15 +34,15 @@ public class ALifeContestMain extends Application {
     @FXML
     public Label messagePanel;
 
-    /*@FXML
-    private MenuItem quit;*/
+    private Stage dialogAbout;
+
+    private Stage dialogPreferences;
 
     private ResourceBundle bundle;
 
     public static void main(String[] args) {
         System.out.println("todo: Load contest!!!");
         Application.launch(ALifeContestMain.class, args);
-
     }
 
     public ALifeContestMain() {
@@ -90,8 +92,29 @@ public class ALifeContestMain extends Application {
         System.out.println("reports");
     }
 
-    public void preferences(ActionEvent event) {
-        System.out.println("preferences");
+    public void preferences(ActionEvent ignored) {
+        try {
+            if (dialogPreferences == null) {
+                // Load the fxml file and create a new stage for the popup dialog.
+                VBox preferences = getFXMLLoader("/DialogPreferences.fxml").load();
+
+                dialogPreferences = new Stage();
+                dialogPreferences.setTitle(bundle.getString("ALifeContestMain.preferences.title"));
+                dialogPreferences.initModality(Modality.WINDOW_MODAL);
+                dialogPreferences.initOwner(mainLayout.getScene().getWindow());
+                dialogPreferences.setResizable(false);
+                dialogPreferences.setScene(new Scene(preferences));
+
+                /*dialogPreferences.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
+                    if (KeyCode.ESCAPE == e.getCode()) {
+                        dialogPreferences.close();
+                    }
+                });*/
+            }
+            dialogPreferences.showAndWait();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void help(ActionEvent event) {
@@ -103,25 +126,34 @@ public class ALifeContestMain extends Application {
         alert.showAndWait();
     }
 
-    public void about(ActionEvent event) {
+    public void about(ActionEvent ignored) {
         try {
-            // Load the fxml file and create a new stage for the popup dialog.
-            GridPane page = new FXMLLoader(getClass().getResource("/DialogAbout.fxml"), bundle).load();
-
             // Create the dialog Stage.
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle(bundle.getString("ALifeContestMain.about.title"));
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(mainLayout.getScene().getWindow());
-            dialogStage.setResizable(false);
-            dialogStage.setScene(new Scene(page));
+            if (dialogAbout == null) {
+                // Load the fxml file and create a new stage for the popup dialog.
+                GridPane dialogAboutPane = getFXMLLoader("/DialogAbout.fxml").load();
 
+                dialogAbout = new Stage();
+                dialogAbout.setTitle(bundle.getString("ALifeContestMain.about.title"));
+                dialogAbout.initModality(Modality.WINDOW_MODAL);
+                dialogAbout.initOwner(mainLayout.getScene().getWindow());
+                dialogAbout.setResizable(false);
+                dialogAbout.setScene(new Scene(dialogAboutPane));
+
+                dialogAbout.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
+                    if (KeyCode.ESCAPE == e.getCode()) {
+                        dialogAbout.close();
+                    }
+                });
+            }
             // Show the dialog and wait until the user closes it
-            dialogStage.showAndWait();
-        } catch (IOException e) {
+            dialogAbout.showAndWait();
+        } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 
+    private FXMLLoader getFXMLLoader(String fxml) {
+        return new FXMLLoader(getClass().getResource(fxml), bundle);
+    }
 }
