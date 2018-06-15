@@ -7,7 +7,7 @@
 <BorderPane fx:id="mainLayout"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="alifec.simulation.main.ALifeContestMain"
+            fx:controller="alifec.simulation.main.ALifeContestController"
             prefHeight="400.0" prefWidth="600.0">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -19,10 +19,10 @@
                           text="%Main.menu.file.newContest"
                           accelerator="Shortcut+N"/>
 
-                <MenuItem fx:id="setDefaultContest"
+                <MenuItem fx:id="changeContest"
                           mnemonicParsing="false"
-                          onAction="#setDefaultContest"
-                          text="%Main.menu.file.setDefaultContest"
+                          onAction="#changeContest"
+                          text="%Main.menu.file.changeContest"
                           accelerator="Shortcut+O"/>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem fx:id="quit"
@@ -32,31 +32,26 @@
                           accelerator="ALT+F4"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Tools">
-                <MenuItem fx:id="setMode"
-                          mnemonicParsing="false"
-                          onAction="#setMode"
-                          text="%Main.menu.tools.setMode"
-                          accelerator="Shortcut+M"/>
                 <MenuItem fx:id="reports"
                           mnemonicParsing="false"
-                          onAction="#reports"
+                          onAction="#showDialogStatistics"
                           text="%Main.menu.tools.reports"
                           accelerator="Shortcut+R"/>
                 <MenuItem fx:id="Options"
                           mnemonicParsing="false"
-                          onAction="#preferences"
+                          onAction="#showDialogPreferences"
                           text="%Main.menu.tools.preferences"
                           accelerator="Shortcut+P"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem fx:id="help"
                           mnemonicParsing="false"
-                          onAction="#help"
+                          onAction="#showDialogHelp"
                           text="%Main.menu.help.help"
                           accelerator="F1"/>
                 <MenuItem fx:id="about"
                           mnemonicParsing="false"
-                          onAction="#about"
+                          onAction="#showDialogAbout"
                           text="%Main.menu.help.about"
                           accelerator="Shortcut+A"/>
             </Menu>
