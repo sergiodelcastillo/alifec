@@ -1,10 +1,8 @@
 package alifec.simulation.controller;
 
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -12,7 +10,7 @@ import javafx.stage.Stage;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class AboutController implements Controller {
+public class AboutController extends Controller {
 
     private MainController father;
     private Parent root;
@@ -22,11 +20,8 @@ public class AboutController implements Controller {
         this.father = controller;
         this.root = root;
 
-        Stage about = new Stage();
-        about.setTitle(father.getBundle().getString("about.title"));
-        about.initModality(Modality.WINDOW_MODAL);
-        about.setResizable(false);
-        about.setScene(new Scene(root));
+        Stage about = buildDefaultStage(root, father.getBundle().getString("about.title"));
+
         about.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
             if (KeyCode.ESCAPE == e.getCode()) {
                 about.close();

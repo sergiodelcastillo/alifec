@@ -3,8 +3,6 @@ package alifec.simulation.controller;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
@@ -13,7 +11,7 @@ import javafx.stage.Stage;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class StatisticsController implements Controller {
+public class StatisticsController extends Controller {
 
     private MainController father;
     private Parent root;
@@ -22,13 +20,7 @@ public class StatisticsController implements Controller {
         this.father = father;
         this.root = root;
 
-        Stage statistics = new Stage();
-        statistics.setTitle(father.getBundle().getString("ALifeContestMain.statistics.title"));
-        statistics.initModality(Modality.WINDOW_MODAL);
-        statistics.setResizable(false);
-        statistics.setScene(new Scene(root));
-
-        return statistics;
+        return buildDefaultStage(root, father.getBundle().getString("statistics.title"));
     }
 
     public void generateReportTxt(ActionEvent event) {

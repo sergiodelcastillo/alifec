@@ -2,8 +2,6 @@ package alifec.simulation.controller;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -11,7 +9,7 @@ import javafx.stage.Stage;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class NewContestController implements Controller {
+public class NewContestController extends Controller {
     private MainController father;
     private Parent root;
 
@@ -20,13 +18,7 @@ public class NewContestController implements Controller {
         this.father = controller;
         this.root = root;
 
-        Stage preferences = new Stage();
-        preferences.setTitle(father.getBundle().getString("ALifeContestMain.newcontest.title"));
-        preferences.initModality(Modality.WINDOW_MODAL);
-        preferences.setResizable(false);
-        preferences.setScene(new Scene(root));
-
-        return preferences;
+        return buildDefaultStage(root, father.getBundle().getString("newcontest.title"));
     }
 
     public void accept(ActionEvent event) {

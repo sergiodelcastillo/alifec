@@ -3,9 +3,7 @@ package alifec.simulation.controller;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ResourceBundle;
@@ -15,7 +13,7 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class PreferencesController implements Controller {
+public class PreferencesController extends Controller {
 
     public ComboBox<String> competitorOptions;
     private MainController controller;
@@ -35,13 +33,7 @@ public class PreferencesController implements Controller {
                 bundle.getString("preferences.contest.mode.programmer")
         );
 
-        Stage preferences = new Stage();
-        preferences.setTitle(bundle.getString("ALifeContestMain.preferences.title"));
-        preferences.initModality(Modality.WINDOW_MODAL);
-        preferences.setResizable(false);
-        preferences.setScene(new Scene(root));
-
-        return preferences;
+        return buildDefaultStage(root, bundle.getString("preferences.title"));
     }
 
     public void cancel(ActionEvent event) {
