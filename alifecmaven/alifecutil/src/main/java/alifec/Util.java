@@ -151,7 +151,7 @@ public class Util {
         }
     }
 
-    private static ContestConfig tryToLoadContest() throws ConfigFileException {
+    private static ContestConfig tryToLoadContest() throws ConfigFileException, IOException {
         String defaultPath = ContestConfig.getDefaultPath();
         List<String> list = ContestFileManager.listContest(defaultPath);
         if (list.size() == 1) {

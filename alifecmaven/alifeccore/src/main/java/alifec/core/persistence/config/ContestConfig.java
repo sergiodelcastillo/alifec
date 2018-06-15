@@ -170,13 +170,8 @@ public class ContestConfig {
         builder = new StringBuilder();
     }
 
-    public static String getDefaultPath() {
-        try {
-            return Paths.get(System.getProperty("user.dir")).toAbsolutePath().normalize().toString();
-        } catch (Throwable t) {
-            logger.error(t.getMessage(), t);
-            return null;
-        }
+    public static String getDefaultPath() throws IOException {
+        return Paths.get(System.getProperty("user.dir")).toFile().getCanonicalPath();
     }
 
     public void setDefaults() {

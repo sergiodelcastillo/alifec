@@ -1,20 +1,17 @@
 package alifec.simulation.controller;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -22,7 +19,7 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ALifeContestController extends Application implements MainController {
+public class ALifeContestController implements MainController {
     @FXML
     public BorderPane mainLayout;
 
@@ -31,6 +28,8 @@ public class ALifeContestController extends Application implements MainControlle
 
     @FXML
     public TableView rankingTable;
+
+    private Stage root;
 
     private Stage dialogAbout;
 
@@ -42,29 +41,17 @@ public class ALifeContestController extends Application implements MainControlle
 
     private ResourceBundle bundle;
 
-
-    public ALifeContestController() {
-        Locale currentLocale = Locale.ENGLISH;
-        //TODO: set the default locale from comfiguration or load english instead.
-
-        bundle = ResourceBundle.getBundle("i18n/messages", currentLocale);
-        System.out.println("init constructor");
+    public void init(ResourceBundle bundle, Stage root) {
+        this.bundle = bundle;
+        this.root = root;
     }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        stage.setTitle(bundle.getString("ALifeContestMain.title"));
-        final Parent root = FXMLLoader.load(getClass().getResource("/ALifeContest.fxml"), bundle);
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
-
 
     public void newContest(ActionEvent ignored) {
         try {
             if (dialogNewContest == null) {
-                dialogNewContest = createDialogStage("/DialogNewContest.fxml");
+                dialogNewContest = createDialog("/DialogNewContest.fxml");
             }
+
 
             dialogNewContest.showAndWait();
         } catch (Exception ex) {
@@ -90,7 +77,7 @@ public class ALifeContestController extends Application implements MainControlle
     public void showDialogStatistics(ActionEvent ignored) {
         try {
             if (dialogStatistics == null) {
-                dialogStatistics = createDialogStage("/DialogStatistics.fxml");
+                dialogStatistics = createDialog("/DialogStatistics.fxml");
             }
 
             dialogStatistics.showAndWait();
@@ -102,7 +89,7 @@ public class ALifeContestController extends Application implements MainControlle
     public void showDialogPreferences(ActionEvent ignored) {
         try {
             if (dialogPreferences == null) {
-                dialogPreferences = createDialogStage("/DialogPreferences.fxml");
+                dialogPreferences = createDialog("/DialogPreferences.fxml");
             }
 
             dialogPreferences.showAndWait();
@@ -123,7 +110,7 @@ public class ALifeContestController extends Application implements MainControlle
     public void showDialogAbout(ActionEvent ignored) {
         try {
             if (dialogAbout == null) {
-                dialogAbout = createDialogStage("/DialogAbout.fxml");
+                dialogAbout = createDialog("/DialogAbout.fxml");
             }
 
             dialogAbout.showAndWait();
@@ -132,7 +119,7 @@ public class ALifeContestController extends Application implements MainControlle
         }
     }
 
-    private Stage createDialogStage(String stageFile) throws java.io.IOException {
+    private Stage createDialog(String stageFile) throws java.io.IOException {
         FXMLLoader loader = getFXMLLoader(stageFile);
         Parent root = loader.load();
 
@@ -142,7 +129,6 @@ public class ALifeContestController extends Application implements MainControlle
         return stage;
     }
 
-
     private FXMLLoader getFXMLLoader(String fxml) {
         return new FXMLLoader(getClass().getResource(fxml), bundle);
     }
@@ -150,7 +136,6 @@ public class ALifeContestController extends Application implements MainControlle
     @Override
     public void savePreferences() {
         System.out.println("update data");
-
     }
 
     public void createReportTxt() {
@@ -159,6 +144,17 @@ public class ALifeContestController extends Application implements MainControlle
 
     public void createReportCsv() {
         System.out.println("update data csv");
+    }
+
+    @Override
+    public Window getView() {
+        return root;
+    }
+
+    @Override
+    public void createNewContest() {
+        //TODO: implement the creation of new contest
+        System.out.println("Todo: create new contest");
     }
 
     public ResourceBundle getBundle() {

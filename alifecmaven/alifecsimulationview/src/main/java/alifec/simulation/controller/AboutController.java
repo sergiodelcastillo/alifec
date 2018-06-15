@@ -20,7 +20,7 @@ public class AboutController extends Controller {
         this.father = controller;
         this.root = root;
 
-        Stage about = buildDefaultStage(root, father.getBundle().getString("about.title"));
+        Stage about = buildDialog(root, father.getBundle().getString("about.title"));
 
         about.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
             if (KeyCode.ESCAPE == e.getCode()) {

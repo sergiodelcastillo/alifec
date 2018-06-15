@@ -99,13 +99,12 @@ public class ContestUI extends JFrame implements ActionListener {
     }
 
     private boolean loadContest() {
-        String path = ContestConfig.getDefaultPath();
 
-        if (path == null) return false;
-
+        String path = null;
         ContestConfig config = null;
 
         try {
+            path = ContestConfig.getDefaultPath();
             //Perform the best effort to load a contest.
             config = new ContestConfig(path);
 
@@ -118,6 +117,9 @@ public class ContestUI extends JFrame implements ActionListener {
                     return false;
                 }
             }
+        } catch (IOException e) {
+            logger.error("Can not load the default path from property user.dir or current dir can not be read.", e);
+            return false;
         }
 
         try {

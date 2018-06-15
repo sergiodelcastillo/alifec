@@ -40,6 +40,8 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
     private Map<Integer, Microorganism> mos;
     private List<Cell> cells;
 
+
+
     @Test
     public void testCompressStartBattle() throws BattleException, IOException {
         Nutrient nutrient = initializeNutrient();

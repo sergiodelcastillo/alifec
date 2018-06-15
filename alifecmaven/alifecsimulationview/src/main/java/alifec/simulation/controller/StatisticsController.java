@@ -3,6 +3,8 @@ package alifec.simulation.controller;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 
@@ -20,7 +22,14 @@ public class StatisticsController extends Controller {
         this.father = father;
         this.root = root;
 
-        return buildDefaultStage(root, father.getBundle().getString("statistics.title"));
+        Stage statistics = buildDialog(root, father.getBundle().getString("statistics.title"));
+
+        statistics.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
+            if (KeyCode.ESCAPE == e.getCode()) {
+                statistics.close();
+            }
+        });
+        return statistics;
     }
 
     public void generateReportTxt(ActionEvent event) {

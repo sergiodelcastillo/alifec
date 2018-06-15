@@ -13,7 +13,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -148,5 +152,31 @@ public class ContestFileManager {
         //remove the file and its folder.
         Files.deleteIfExists(path);
         Files.deleteIfExists(path.getParent());
+    }
+
+    public static String getNextAvailableName(String path) {
+        Calendar calendar = Calendar.getInstance();
+        Integer year = calendar.get(Calendar.YEAR);
+        Integer count = 0;
+        String contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX+"%d", year);
+        String nextFolder = String.format("%s%s%s", path, File.separator, contestName);
+
+        while (count <= 100 && Files.exists(Paths.get(nextFolder))) {
+            contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX+"%d-%d", year, ++count);
+            nextFolder = String.format("%s%s%s", path, File.separator, contestName);
+        }
+
+        if (count > 100) {
+            Integer month = calendar.get(Calendar.MONTH);
+            Integer day = calendar.get(Calendar.DAY_OF_MONTH);
+            Long time = calendar.getTimeInMillis();
+
+            contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX+"%d-%d-%d-%d", year, month, day, time);
+        }
+
+        return contestName;
+    }
+    public static String getNextAvailableNameWithoutPrefix(String path){
+        return getNextAvailableName(path).replace(ContestConfig.CONTEST_NAME_PREFIX, "");
     }
 }

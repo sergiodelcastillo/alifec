@@ -1,5 +1,7 @@
 package alifec.simulation.controller;
 
+import javafx.stage.Window;
+
 import java.util.ResourceBundle;
 
 /**
@@ -7,7 +9,7 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public interface MainController {
+public interface MainController  {
     ResourceBundle getBundle();
 
     void savePreferences();
@@ -15,4 +17,8 @@ public interface MainController {
     void createReportTxt();
 
     void createReportCsv();
+
+    Window getView();
+
+    void createNewContest();
 }
