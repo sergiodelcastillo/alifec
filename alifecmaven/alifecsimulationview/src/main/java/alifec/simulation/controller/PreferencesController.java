@@ -1,8 +1,12 @@
-package alifec.simulation.main;
+package alifec.simulation.controller;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.util.ResourceBundle;
 
@@ -11,22 +15,33 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class PreferencesController {
+public class PreferencesController implements Controller {
 
     public ComboBox<String> competitorOptions;
-    private ALifeContestController mainController;
+    private MainController controller;
+    private Parent root;
 
     public PreferencesController() {
     }
 
-    public void init(ALifeContestController mainController) {
-        this.mainController = mainController;
 
-        ResourceBundle bundle = mainController.getBundle();
+    public Stage init(MainController controller, Parent root) {
+        this.controller = controller;
+        this.root = root;
+
+        ResourceBundle bundle = controller.getBundle();
         competitorOptions.getItems().addAll(
                 bundle.getString("preferences.contest.mode.competition"),
                 bundle.getString("preferences.contest.mode.programmer")
         );
+
+        Stage preferences = new Stage();
+        preferences.setTitle(bundle.getString("ALifeContestMain.preferences.title"));
+        preferences.initModality(Modality.WINDOW_MODAL);
+        preferences.setResizable(false);
+        preferences.setScene(new Scene(root));
+
+        return preferences;
     }
 
     public void cancel(ActionEvent event) {
@@ -35,7 +50,7 @@ public class PreferencesController {
 
     public void accept(ActionEvent event) {
         //DO THE WORK!!
-        mainController.acceptPreferences(event);
+        controller.savePreferences();
 
         ((Node) event.getSource()).getScene().getWindow().hide();
     }

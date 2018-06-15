@@ -1,4 +1,4 @@
-package alifec.simulation.main;
+package alifec.simulation.controller;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,12 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.Locale;
@@ -26,7 +22,7 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ALifeContestController extends Application {
+public class ALifeContestController extends Application implements MainController {
     @FXML
     public BorderPane mainLayout;
 
@@ -42,14 +38,12 @@ public class ALifeContestController extends Application {
 
     private Stage dialogStatistics;
 
+    private Stage dialogNewContest;
+
     private ResourceBundle bundle;
 
-    public static void main(String[] args) {
-        System.out.println("todo: Load contest!!!");
-        Application.launch(ALifeContestController.class, args);
-    }
 
-     public ALifeContestController() {
+    public ALifeContestController() {
         Locale currentLocale = Locale.ENGLISH;
         //TODO: set the default locale from comfiguration or load english instead.
 
@@ -60,14 +54,22 @@ public class ALifeContestController extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle(bundle.getString("ALifeContestMain.title"));
-        final Parent fxmlRoot = FXMLLoader.load(getClass().getResource("/ALifeContest.fxml"), bundle);
-        stage.setScene(new Scene(fxmlRoot));
+        final Parent root = FXMLLoader.load(getClass().getResource("/ALifeContest.fxml"), bundle);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 
 
-    public void newContest(ActionEvent event) {
-        System.out.println("new contest");
+    public void newContest(ActionEvent ignored) {
+        try {
+            if (dialogNewContest == null) {
+                dialogNewContest = createDialogStage("/DialogNewContest.fxml");
+            }
+
+            dialogNewContest.showAndWait();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void changeContest(ActionEvent event) {
@@ -88,17 +90,9 @@ public class ALifeContestController extends Application {
     public void showDialogStatistics(ActionEvent ignored) {
         try {
             if (dialogStatistics == null) {
-                FXMLLoader loader = getFXMLLoader("/DialogStatistics.fxml");
-                VBox preferences = loader.load();
-
-                ((StatisticsController)loader.getController()).init(this);
-                dialogStatistics = new Stage();
-                dialogStatistics.setTitle(bundle.getString("ALifeContestMain.statistics.title"));
-                dialogStatistics.initModality(Modality.WINDOW_MODAL);
-                dialogStatistics.initOwner(mainLayout.getScene().getWindow());
-                dialogStatistics.setResizable(false);
-                dialogStatistics.setScene(new Scene(preferences));
+                dialogStatistics = createDialogStage("/DialogStatistics.fxml");
             }
+
             dialogStatistics.showAndWait();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -108,19 +102,9 @@ public class ALifeContestController extends Application {
     public void showDialogPreferences(ActionEvent ignored) {
         try {
             if (dialogPreferences == null) {
-                // Load the fxml file and create a new stage for the popup dialog.
-                FXMLLoader loader = getFXMLLoader("/DialogPreferences.fxml");
-
-                VBox preferences = loader.load();
-                ((PreferencesController)loader.getController()).init(this);
-
-                dialogPreferences = new Stage();
-                dialogPreferences.setTitle(bundle.getString("ALifeContestMain.preferences.title"));
-                dialogPreferences.initModality(Modality.WINDOW_MODAL);
-                dialogPreferences.initOwner(mainLayout.getScene().getWindow());
-                dialogPreferences.setResizable(false);
-                dialogPreferences.setScene(new Scene(preferences));
+                dialogPreferences = createDialogStage("/DialogPreferences.fxml");
             }
+
             dialogPreferences.showAndWait();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -138,30 +122,24 @@ public class ALifeContestController extends Application {
 
     public void showDialogAbout(ActionEvent ignored) {
         try {
-            // Create the dialog Stage.
             if (dialogAbout == null) {
-                // Load the fxml file and create a new stage for the popup dialog.
-                FXMLLoader loader = getFXMLLoader("/DialogAbout.fxml");
-                GridPane dialogAboutPane = loader.load();
-
-                dialogAbout = new Stage();
-                dialogAbout.setTitle(bundle.getString("ALifeContestMain.about.title"));
-                dialogAbout.initModality(Modality.WINDOW_MODAL);
-                dialogAbout.initOwner(mainLayout.getScene().getWindow());
-                dialogAbout.setResizable(false);
-                dialogAbout.setScene(new Scene(dialogAboutPane));
-
-                dialogAbout.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
-                    if (KeyCode.ESCAPE == e.getCode()) {
-                        dialogAbout.close();
-                    }
-                });
+                dialogAbout = createDialogStage("/DialogAbout.fxml");
             }
-            // Show the dialog and wait until the user closes it
+
             dialogAbout.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Stage createDialogStage(String stageFile) throws java.io.IOException {
+        FXMLLoader loader = getFXMLLoader(stageFile);
+        Parent root = loader.load();
+
+        Stage stage = ((Controller) loader.getController()).init(this, root);
+        stage.initOwner(mainLayout.getScene().getWindow());
+
+        return stage;
     }
 
 
@@ -169,7 +147,8 @@ public class ALifeContestController extends Application {
         return new FXMLLoader(getClass().getResource(fxml), bundle);
     }
 
-    public void acceptPreferences(ActionEvent event) {
+    @Override
+    public void savePreferences() {
         System.out.println("update data");
 
     }
@@ -182,7 +161,8 @@ public class ALifeContestController extends Application {
         System.out.println("update data csv");
     }
 
-    public ResourceBundle getBundle(){
+    public ResourceBundle getBundle() {
         return bundle;
     }
+
 }

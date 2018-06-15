@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="alifec.simulation.main.PreferencesController"
+      fx:controller="alifec.simulation.controller.PreferencesController"
       prefHeight="400.0" prefWidth="600.0">
 
     <TitledPane collapsible="false" text="%preferences.general.title">

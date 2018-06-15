@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="alifec.simulation.controller.NewContestController"
+            prefHeight="400.0" prefWidth="600.0">
+    <GridPane>
+        <Label text="Name of contest: " />
+        <TextField editable="false" text="Contest-" />
+        <TextField fx:id="contestField" />
+        <Label text="Contest path: " />
+        <TextField editable="false" text="/bla"/>
+        <Button text="Browse" />
+        <CheckBox text="Set default and load" />
+        <CheckBox text="Generate examples"/>
+    </GridPane>
+
+    <HBox alignment="CENTER" spacing="10" >
+        <Button text="%newcontest.accept" onAction="#accept"/>
+        <Button text="%newcontest.cancel" onAction="#cancel"/>
+    </HBox>
+</VBox>

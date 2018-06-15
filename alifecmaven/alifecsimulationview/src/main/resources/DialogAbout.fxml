@@ -8,7 +8,7 @@
 
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="alifec.simulation.main.ALifeContestController"
+          fx:controller="alifec.simulation.controller.AboutController"
           prefHeight="280" prefWidth="680.0"
           hgap="10" vgap="10">
 
@@ -16,7 +16,7 @@
         <Insets top="25" right="25" bottom="10" left="25"/>
     </padding>
 
-    <Text text="%about.title"
+    <Text text="%about.welcome"
           lineSpacing="10"
           style="-fx-font-size: 20px"
           GridPane.columnIndex="0"

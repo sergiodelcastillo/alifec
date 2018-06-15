@@ -7,7 +7,7 @@
 <BorderPane fx:id="mainLayout"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="alifec.simulation.main.ALifeContestController"
+            fx:controller="alifec.simulation.controller.ALifeContestController"
             prefHeight="400.0" prefWidth="600.0">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
