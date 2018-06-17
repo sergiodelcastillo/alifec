@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<TitledPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="alifec.simulation.controller.TournamentsController"
+            minHeight="400.0" minWidth="400.0"
+            collapsible="false"
+            text="Tournament-001">
+    <padding>
+        <Insets top="6" right="3" bottom="6" left="6"/>
+    </padding>
+    <VBox>
+        <ListView>
+            <Label text="bla"/>
+            <Label text="bla2"/>
+            <Label text="bla4"/>
+        </ListView>
+
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10"/>
+            </padding>
+
+            <Button onAction="#previousTournament">
+                <graphic>
+                    <ImageView>
+                        <Image url="images/prevTournament.png"/>
+                    </ImageView>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="Go to previous tournament."/>
+                </tooltip>
+            </Button>
+
+            <Button onAction="#nextTournament">
+                <graphic>
+                    <ImageView>
+                        <Image url="images/nextTournament.png"/>
+                    </ImageView>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="Go to next tournament."/>
+                </tooltip>
+            </Button>
+
+            <Button onAction="#deleteTournament">
+                <graphic>
+                    <ImageView>
+                        <Image url="images/delTournament.png"/>
+                    </ImageView>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="Remove this tournament."/>
+                </tooltip>
+            </Button>
+
+            <Button onAction="#addTournament">
+                <graphic>
+                    <ImageView>
+                        <Image url="images/addTournament.png"/>
+                    </ImageView>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="Create new tournament."/>
+                </tooltip>
+            </Button>
+        </HBox>
+    </VBox>
+</TitledPane>

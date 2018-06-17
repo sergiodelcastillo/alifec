@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<?import javafx.scene.layout.HBox?>
 <BorderPane fx:id="mainLayout"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="alifec.simulation.controller.ALifeContestController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="400.0" prefWidth="600.0" >
+
     <top>
         <MenuBar BorderPane.alignment="CENTER">
 
@@ -19,11 +20,6 @@
                           text="%Main.menu.file.newContest"
                           accelerator="Shortcut+N"/>
 
-                <MenuItem fx:id="changeContest"
-                          mnemonicParsing="false"
-                          onAction="#changeContest"
-                          text="%Main.menu.file.changeContest"
-                          accelerator="Shortcut+O"/>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem fx:id="quit"
                           mnemonicParsing="false"
@@ -58,20 +54,24 @@
         </MenuBar>
     </top>
 
-
     <center>
-        <TextField fx:id="tournaments" text="Tournament Panel"/>
-    </center>
-    <right>
-        <TextField fx:id="opponents" text="Opponents Panel"/>
 
+        <fx:include source="/TournamentsView.fxml" fx:id="tournaments"/>
+    </center>
+
+    <right>
+        <fx:include source="/BattlesView.fxml" fx:id="battles"/>
     </right>
 
     <bottom>
-        <Label fx:id="messagePanel"
-               text="Message Panel"
-               HBox.hgrow="ALWAYS"
-               maxWidth="Infinity"
-               style="-fx-padding: 5; -fx-border-style: dotted; -fx-border-width: 1 0 0 0; -fx-border-color: gray; -fx-font-weight: bold"/>
+        <TitledPane text="Information" collapsible="false">
+            <padding>
+                <Insets right="6" left="6" bottom="6"/>
+            </padding>
+            <Label fx:id="messagePanel"
+                   text="Message Panel"
+                   maxWidth="Infinity"
+                   style="-fx-padding: 3 3 3 3; -fx-font-weight: bold"/>
+        </TitledPane>
     </bottom>
 </BorderPane>

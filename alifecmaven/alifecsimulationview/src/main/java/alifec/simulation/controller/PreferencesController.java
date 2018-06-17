@@ -55,4 +55,8 @@ public class PreferencesController extends Controller {
 
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
+
+    public void changeContest(ActionEvent event) {
+        System.out.println("change contest");
+    }
 }

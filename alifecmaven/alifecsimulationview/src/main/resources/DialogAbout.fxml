@@ -31,7 +31,7 @@
         <GridPane.margin>
             <Insets right="25.0"/>
         </GridPane.margin>
-        <Image url="@images/petriDish.png"/>
+        <Image url="@images/logo.png" requestedHeight="200" preserveRatio="true"/>
     </ImageView>
 
     <TextFlow fx:id="data"

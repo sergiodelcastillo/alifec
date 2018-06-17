@@ -8,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -29,6 +31,12 @@ public class ALifeContestController implements MainController {
     @FXML
     public TableView rankingTable;
 
+    @FXML
+    public TitledPane tournaments;
+
+    @FXML
+    public TitledPane battles;
+
     private Stage root;
 
     private Stage dialogAbout;
@@ -44,6 +52,9 @@ public class ALifeContestController implements MainController {
     public void init(ResourceBundle bundle, Stage root) {
         this.bundle = bundle;
         this.root = root;
+
+        root.setResizable(false);
+        root.getIcons().add(new Image("/images/logo.png"));
     }
 
     public void newContest(ActionEvent ignored) {
@@ -57,10 +68,6 @@ public class ALifeContestController implements MainController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public void changeContest(ActionEvent event) {
-        System.out.println("set default contest");
     }
 
     public void quit(ActionEvent event) {
