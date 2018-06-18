@@ -1,19 +1,26 @@
 package alifec.simulation.controller;
 
+import alifec.core.contest.oponentInfo.ColonyStatistics;
+import alifec.core.contest.oponentInfo.TournamentStatistics;
+import alifec.simulation.util.CompetitorViewComparator;
+import alifec.simulation.view.CompetitorView;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -32,10 +39,16 @@ public class ALifeContestController implements MainController {
     public TableView rankingTable;
 
     @FXML
-    public TitledPane tournaments;
+    public ComboBox opponentsList1;
 
     @FXML
-    public TitledPane battles;
+    public ComboBox opponentsList2;
+
+    @FXML
+    public ComboBox nutrientsList;
+
+    @FXML
+    public ListView<Parent> coloniesStatistics;
 
     private Stage root;
 
@@ -49,12 +62,21 @@ public class ALifeContestController implements MainController {
 
     private ResourceBundle bundle;
 
+
     public void init(ResourceBundle bundle, Stage root) {
         this.bundle = bundle;
         this.root = root;
 
         root.setResizable(false);
         root.getIcons().add(new Image("/images/logo.png"));
+
+        try {
+
+            //TODO
+            updateStatistics(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void newContest(ActionEvent ignored) {
@@ -166,6 +188,73 @@ public class ALifeContestController implements MainController {
 
     public ResourceBundle getBundle() {
         return bundle;
+    }
+
+    public void deleteSelectedBattles(ActionEvent event) {
+        System.out.println("delete selected battles");
+    }
+
+    public void deleteAllBattles(ActionEvent event) {
+        System.out.println("delete all battles");
+    }
+
+    public void runSelectedBattle(ActionEvent event) {
+        System.out.println("run selected battle");
+    }
+
+    public void runAllBattles(ActionEvent event) {
+        System.out.println("Run all battles");
+    }
+
+    public void addBattle(ActionEvent event) {
+        System.out.println("Add one battle");
+    }
+
+    public void addAllBattles(ActionEvent event) {
+        System.out.println("add all battles");
+    }
+
+    public void previousTournament(ActionEvent event) {
+        System.out.println("prev tournament");
+    }
+
+    public void nextTournament(ActionEvent event) {
+        System.out.println("next tournament");
+    }
+
+    public void deleteTournament(ActionEvent event) {
+        System.out.println("delete tournament");
+    }
+
+    public void addTournament(ActionEvent event) {
+        System.out.println("create new tournament");
+    }
+
+
+    public void updateStatistics(TournamentStatistics statistics) throws IOException {
+        //clear all items
+        coloniesStatistics.getItems().clear();
+
+        //Create test data!!!
+        if (statistics == null) {
+            statistics = new TournamentStatistics();
+            statistics.addWinner("yeyo", "yeyo", "yeyo", 12518f);
+            statistics.addWinner("Bicho", "bbbaa", "frsf", 1258f);
+            statistics.addWinner("Bacteria", "lele", "test", 5258f);
+            //calculate the points
+            statistics.calculate();
+        }
+
+        ObservableList<CompetitorView> list = FXCollections.observableArrayList();
+
+        for (ColonyStatistics col : statistics.getColonyStatistics()) {
+            list.addAll(new CompetitorView(col, statistics.getMaxEnergy()));
+        }
+
+        SortedList<CompetitorView> sortedList = new SortedList<>(list, new CompetitorViewComparator());
+
+        coloniesStatistics.getItems().addAll(sortedList);
+
     }
 
 }

@@ -4,6 +4,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <BorderPane fx:id="mainLayout"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -56,11 +62,238 @@
 
     <center>
 
-        <fx:include source="/TournamentsView.fxml" fx:id="tournaments"/>
+        <TitledPane minHeight="400.0" minWidth="400.0"
+                    collapsible="false"
+                    text="Tournament-001">
+            <padding>
+                <Insets top="6" right="3" bottom="6" left="6"/>
+            </padding>
+            <VBox>
+                <ListView fx:id="coloniesStatistics"/>
+
+                <HBox spacing="10">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+
+                    <Button onAction="#previousTournament">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/previousTournament.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Go to previous tournament."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#nextTournament">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/nextTournament.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Go to next tournament."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#deleteTournament">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/deleteTournament.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Remove this tournament."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#addTournament">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/addTournament.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Create new tournament."/>
+                        </tooltip>
+                    </Button>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
     </center>
 
     <right>
-        <fx:include source="/BattlesView.fxml" fx:id="battles"/>
+        <TitledPane minHeight="400.0" minWidth="500.0" collapsible="false" text="Battles">
+            <padding>
+                <Insets top="6" right="6" bottom="6" left="3"/>
+            </padding>
+
+            <VBox spacing="10">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+
+                    <Label text="Op. 1"/>
+                    <ComboBox fx:id="opponentsList1">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Oponent 1"/>
+                                <String fx:value="bicho"/>
+                                <String fx:value="Tactica1 java"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                    <Label text="Op. 2"/>
+                    <ComboBox fx:id="opponentsList2">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Oponent 2"/>
+                                <String fx:value="bicho 2"/>
+                                <String fx:value="Tactica1 cpp"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+
+                    <Label text="Nutrients"/>
+                    <ComboBox fx:id="nutrientsList">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Lattice"/>
+                                <String fx:value="InclinedPlane"/>
+                                <String fx:value="Rings"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+
+                </HBox>
+
+                <ListView>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tessst"/>
+                    <Label text="tesssdt"/>
+                </ListView>
+
+                <HBox spacing="10">
+
+                    <Button onAction="#deleteSelectedBattles">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/deleteSelectedBattle.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Delete selected battle."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#deleteAllBattles">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/deleteAllBattles.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Delete all battles."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#runSelectedBattle">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/runSelectedBattle.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Run selected battle."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#runAllBattles">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/runAllBattles.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Run all battles."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#addBattle">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/addBattle.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Add battle."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#addAllBattles">
+                        <graphic>
+                            <ImageView>
+                                <Image url="images/addAllBattles.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Add all battles."/>
+                        </tooltip>
+                    </Button>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
     </right>
 
     <bottom>
