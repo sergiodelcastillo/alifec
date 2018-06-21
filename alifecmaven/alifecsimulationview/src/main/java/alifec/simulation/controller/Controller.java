@@ -8,6 +8,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -16,9 +17,9 @@ import java.io.IOException;
  */
 public abstract class Controller {
 
-    public abstract Stage init(MainController controller, Parent root);
+    public abstract Stage init(MainController controller, Parent root, ResourceBundle bundle);
 
-    protected Stage buildDialog(Parent root, String title) {
+    public Stage buildDialog(Parent root, String title) {
         Stage preferences = new Stage();
 
         preferences.setTitle(title);

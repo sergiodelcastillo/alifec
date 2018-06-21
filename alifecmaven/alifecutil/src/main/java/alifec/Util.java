@@ -109,8 +109,7 @@ public class Util {
         logger.info("Create new contest");
 
         try {
-            ContestConfig config = new ContestConfig(ContestConfig.getDefaultPath(),
-                    ContestConfig.CONTEST_NAME_PREFIX + name);
+            ContestConfig config = new ContestConfig(ContestConfig.CONTEST_NAME_PREFIX + name);
             new NewContestFolderValidator().validate(config.getContestPath());
             ContestFileManager.buildNewContestFolder(config, Boolean.TRUE);
             saveConfigFile(config);
@@ -127,8 +126,7 @@ public class Util {
         logger.info("Set default contest");
 
         try {
-            ContestConfig config = new ContestConfig(ContestConfig.getDefaultPath(),
-                    ContestConfig.CONTEST_NAME_PREFIX + name);
+            ContestConfig config = new ContestConfig(ContestConfig.CONTEST_NAME_PREFIX + name);
             saveConfigFile(config);
         } catch (ConfigFileException e) {
             logger.error(e.getMessage());
@@ -139,7 +137,7 @@ public class Util {
 
     private static ContestConfig loadConfiguration() throws IOException, ConfigFileException {
         try {
-            return new ContestConfig(ContestConfig.getDefaultPath());
+            return new ContestConfig();
         } catch (ConfigFileException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 ContestConfig config = tryToLoadContest();
@@ -152,11 +150,10 @@ public class Util {
     }
 
     private static ContestConfig tryToLoadContest() throws ConfigFileException, IOException {
-        String defaultPath = ContestConfig.getDefaultPath();
-        List<String> list = ContestFileManager.listContest(defaultPath);
+        List<String> list = ContestFileManager.listContest();
         if (list.size() == 1) {
             String name = list.get(0);
-            ContestConfig config = new ContestConfig(defaultPath, name);
+            ContestConfig config = new ContestConfig(name);
             saveConfigFile(config);
             return config;
         }

@@ -1,5 +1,6 @@
 package alifec.contest.view;
 
+import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.validation.NewContestFolderValidator;
@@ -137,15 +138,15 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
     public void actionPerformed(ActionEvent ev) {
         if (ev.getSource().equals(this.buttonOK)) {
             String contestFolderName = ContestConfig.CONTEST_NAME_PREFIX + textName.getText();
-            String contestFolderRoot = textPath.getText();
+            //String contestFolderRoot = textPath.getText();
             try {
-                config = new ContestConfig(contestFolderRoot, contestFolderName);
+                config = new ContestConfig( contestFolderName);
                 newContestFolderValidator.validate(config.getContestPath());
                 createExamples = examples.isSelected() ? Boolean.TRUE : Boolean.FALSE;
                 makeDefault = checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE;
 
                 dispose();
-            } catch (ValidationException ex) {
+            } catch (ValidationException | ConfigFileException ex) {
                 logger.warn(ex.getMessage(), ex);
                 Message.printErr(this, ex.getMessage());
             }

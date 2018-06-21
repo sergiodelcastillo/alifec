@@ -21,7 +21,7 @@
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0"/>
         </columnConstraints>
 
-        <Label text="%newcontest.contest.name " GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label text="%newcontest.contest.name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <TextField editable="false" text="Contest-" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         <TextField fx:id="contestName" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 

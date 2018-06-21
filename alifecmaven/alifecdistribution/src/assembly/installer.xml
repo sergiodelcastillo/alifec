@@ -10,7 +10,7 @@
         <dependencySet>
             <unpack>false</unpack>
             <scope>compile</scope>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>alifec-${project.version}/lib</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
             <useTransitiveFiltering>true</useTransitiveFiltering>
             <includes>
@@ -27,9 +27,23 @@
             <excludes>
                 <exclude>config</exclude>
             </excludes>
+            <outputDirectory>alifec-${project.version}/app</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>bin</directory>
+            <outputDirectory>alifec-${project.version}/bin</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>alifec-${project.version}/data</outputDirectory>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>alifec-${project.version}/log</outputDirectory>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
         </fileSet>
     </fileSets>
 </assembly>

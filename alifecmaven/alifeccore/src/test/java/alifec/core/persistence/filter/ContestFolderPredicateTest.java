@@ -77,7 +77,7 @@ public class ContestFolderPredicateTest extends ParentTest {
         }
 
 
-        Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH)).filter(new ContestFolderPredicate()).allMatch(path -> {
+        Assert.assertTrue(Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH))).filter(new ContestFolderPredicate()).allMatch(path -> {
             String file = path.getFileName().toString();
             if (target.contains(file)) {
                 target.remove(file);
@@ -118,7 +118,7 @@ public class ContestFolderPredicateTest extends ParentTest {
         }
 
 
-        Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH))
+        Assert.assertTrue(Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH)))
                 .filter(new ContestFolderPredicate())
                 .allMatch(path -> {
                     String file = path.getFileName().toString();

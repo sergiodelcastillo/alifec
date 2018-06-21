@@ -100,13 +100,13 @@ public class ContestUI extends JFrame implements ActionListener {
 
     private boolean loadContest() {
 
-        String path = null;
+//        String path = null;
         ContestConfig config = null;
 
         try {
-            path = ContestConfig.getDefaultPath();
+       //     path = ContestConfig.getDefaultPath();
             //Perform the best effort to load a contest.
-            config = new ContestConfig(path);
+            config = new ContestConfig();
 
         } catch (ConfigFileException ex) {
             if (!(ex.getCause() instanceof FileNotFoundException) &&
@@ -117,14 +117,11 @@ public class ContestUI extends JFrame implements ActionListener {
                     return false;
                 }
             }
-        } catch (IOException e) {
-            logger.error("Can not load the default path from property user.dir or current dir can not be read.", e);
-            return false;
         }
 
         try {
             if (config == null) {
-                java.util.List<String> list = ContestFileManager.listContest(path);
+                java.util.List<String> list = ContestFileManager.listContest();
 
                 if (list.isEmpty()) {
                     config = createNewContest(null);
@@ -143,7 +140,8 @@ public class ContestUI extends JFrame implements ActionListener {
                         }
                     }
 
-                    config = new ContestConfig(path, name);
+                    //todo
+                    config = new ContestConfig( name);
                     config.save();
                 }
             }
@@ -228,21 +226,21 @@ public class ContestUI extends JFrame implements ActionListener {
 
     }
 
-    private boolean setDefaultContest(String path, String name) {
+    private boolean setDefaultContest(String name) {
         // The new contest file will be saved but it will be loaded after the restart of the application.
         // Now the application will continue without any changes at runtime.
-        ContestConfig config = new ContestConfig(path, name);
 
         try {
+        ContestConfig config = new ContestConfig(name);
             config.validate();
+        return setDefaultContest(config);
 
-        } catch (ValidationException ex) {
+        } catch (ValidationException | ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
-            logger.error(config.toString());
+            //logger.error(config.toString());
             Message.printErr(this, ex.getMessage());
             return false;
         }
-        return setDefaultContest(config);
     }
 
     /**
@@ -392,9 +390,9 @@ public class ContestUI extends JFrame implements ActionListener {
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                String contestPath = fc.getCurrentDirectory().getAbsolutePath();
+            //    String contestPath = fc.getCurrentDirectory().getAbsolutePath();
                 String fileName = fc.getSelectedFile().getName();
-                if (this.setDefaultContest(contestPath, fileName)) {
+                if (this.setDefaultContest( fileName)) {
                     requestRestart();
                 }
             }

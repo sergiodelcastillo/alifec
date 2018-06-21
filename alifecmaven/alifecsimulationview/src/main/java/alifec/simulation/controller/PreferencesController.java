@@ -25,11 +25,10 @@ public class PreferencesController extends Controller {
     }
 
 
-    public Stage init(MainController controller, Parent root) {
+    public Stage init(MainController controller, Parent root, ResourceBundle bundle) {
         this.controller = controller;
         this.root = root;
 
-        ResourceBundle bundle = controller.getBundle();
         competitorOptions.getItems().addAll(
                 bundle.getString("preferences.contest.mode.competition"),
                 bundle.getString("preferences.contest.mode.programmer")

@@ -36,9 +36,6 @@ public class ALifeContestController implements MainController {
     public Label messagePanel;
 
     @FXML
-    public TableView rankingTable;
-
-    @FXML
     public ComboBox opponentsList1;
 
     @FXML
@@ -152,7 +149,7 @@ public class ALifeContestController implements MainController {
         FXMLLoader loader = getFXMLLoader(stageFile);
         Parent root = loader.load();
 
-        Stage stage = ((Controller) loader.getController()).init(this, root);
+        Stage stage = ((Controller) loader.getController()).init(this, root, getBundle());
         stage.initOwner(mainLayout.getScene().getWindow());
 
         return stage;

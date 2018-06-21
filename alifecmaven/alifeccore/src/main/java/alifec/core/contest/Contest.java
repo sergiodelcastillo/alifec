@@ -197,7 +197,7 @@ public class Contest implements Listener {
      */
     public boolean reloadConfig() throws IOException {
         try {
-            config = new ContestConfig(config.getPath());
+            config = new ContestConfig();
             return true;
         } catch (ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
@@ -209,14 +209,12 @@ public class Contest implements Listener {
     /**
      * update the config file into the proyect.
      *
-     * @param path  url of contest
      * @param name  name of contest
      * @param mode  mode of contest(programmer or competition)
      * @param pause default pause between battles
      * @return true if is successfully
      */
-    public boolean updateConfigFile(String path, String name, int mode, int pause, List<Integer> nutrients) {
-        config.setPath(path);
+    public boolean updateConfigFile(String name, int mode, int pause, List<Integer> nutrients) {
         config.setContestName(name);
         config.setMode(mode);
         config.setPauseBetweenBattles(pause);

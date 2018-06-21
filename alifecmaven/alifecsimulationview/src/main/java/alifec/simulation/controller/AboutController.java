@@ -5,6 +5,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
+import java.util.ResourceBundle;
+
 /**
  * Created by Sergio Del Castillo on 14/06/18.
  *
@@ -16,11 +18,11 @@ public class AboutController extends Controller {
     private Parent root;
 
     @Override
-    public Stage init(MainController controller, Parent root) {
+    public Stage init(MainController controller, Parent root, ResourceBundle bundle) {
         this.father = controller;
         this.root = root;
 
-        Stage about = buildDialog(root, father.getBundle().getString("about.title"));
+        Stage about = buildDialog(root, bundle.getString("about.title"));
 
         about.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
             if (KeyCode.ESCAPE == e.getCode()) {

@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Year;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -44,11 +45,11 @@ public class NewContestController extends Controller {
     private Parent root;
 
     @Override
-    public Stage init(MainController controller, Parent root) {
+    public Stage init(MainController controller, Parent root, ResourceBundle bundle) {
         this.father = controller;
         this.root = root;
 
-        Stage stage = buildDialog(root, father.getBundle().getString("newcontest.title"));
+        Stage stage = buildDialog(root, bundle.getString("newcontest.title"));
 
         //reset the values when the interface is displayed
         stage.setOnShown(event -> setDefaults());

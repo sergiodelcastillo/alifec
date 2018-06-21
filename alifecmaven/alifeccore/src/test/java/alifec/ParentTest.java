@@ -71,7 +71,7 @@ public class ParentTest {
     }
 
     protected ContestConfig createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
-        ContestConfig config = new ContestConfig(TEST_ROOT_PATH, name);
+        ContestConfig config = new ContestConfig(TEST_ROOT_PATH , name);
 
         createContest(config);
 

@@ -29,6 +29,7 @@ public class ContestConfig {
     private static final String DATETIME_FORMAT = "yyyyMMdd-HHmmss";
 
     public static final String BASE_APP_FOLDER = "app";
+    public static final String BASE_DATA_FOLDER = "data";
 
     private static final String BATTLES_RUN_FILE = "battles_run.csv";
     private static final String BATTLES_FILE = "battles.csv";
@@ -80,7 +81,7 @@ public class ContestConfig {
 
     public static final int DEFAULT_PAUSE_BETWEEN_BATTLES = 100;
 
-    private static final String PROPERTY_PATH_KEY = "contest_path";
+    //  private static final String PROPERTY_PATH_KEY = "contest_path";
     private static final String PROPERTY_CONTEST_NAME_KEY = "contest_name";
     private static final String PROPERTY_PAUSE_BETWEEN_BATTLES_KEY = "pause_between_battles";
     private static final String PROPERTY_MODE_KEY = "contest_mode";
@@ -99,7 +100,7 @@ public class ContestConfig {
     /**
      * Absolute path of Contest.
      */
-    private String path = "";
+    private final String path;
     /**
      * name of contest
      */
@@ -126,19 +127,20 @@ public class ContestConfig {
     /**
      * Read the config File in the project.
      *
-     * @param path path to read the config
      * @return true if is successfully
      * @throws IOException         if can not find the config file
      * @throws ConfigFileException if the config file is not valid
      */
-    public ContestConfig(String path) throws ConfigFileException {
-        setDefaults();
+    public ContestConfig() throws ConfigFileException {
         try {
+            path = getDefaultPath();
+            setDefaults();
+
             Properties property = new Properties();
             InputStream is = new FileInputStream(getConfigFilePath(path));
 
             property.load(is);
-            setPath(path);
+            //       setPath(path);
             for (Object object : property.keySet()) {
 
                 if (!setProperty(object.toString(), property.getProperty(object.toString()))) {
@@ -151,17 +153,28 @@ public class ContestConfig {
             init();
 
         } catch (IOException ex) {
-            throw new ConfigFileException("Error loading the config file in path: " + path, ex, this);
+            throw new ConfigFileException("Error loading the config file.", ex, this);
         } catch (ValidationException e) {
             logger.warn(this.toString());
             throw new ConfigFileException(e.getMessage(), e, this);
         }
     }
 
-    public ContestConfig(String path, String contestName) {
-        setDefaults();
+    public ContestConfig(String contestName) throws ConfigFileException {
+        try {
 
-        setPath(path);
+            path = getDefaultPath();
+            setDefaults();
+            setContestName(contestName);
+            init();
+        } catch (IOException ex) {
+            throw new ConfigFileException("Error loading the config file.", ex, this);
+        }
+    }
+
+    public ContestConfig(String path, String contestName) {
+        this.path = path;
+        setDefaults();
         setContestName(contestName);
         init();
     }
@@ -183,7 +196,7 @@ public class ContestConfig {
     public void save() throws ConfigFileException {
         Properties property = new Properties();
 
-        property.setProperty(PROPERTY_PATH_KEY, path);
+        //   property.setProperty(PROPERTY_PATH_KEY, path);
         property.setProperty(PROPERTY_CONTEST_NAME_KEY, contestName);
         property.setProperty(PROPERTY_MODE_KEY, Integer.toString(mode));
         property.setProperty(PROPERTY_PAUSE_BETWEEN_BATTLES_KEY, Integer.toString(pauseBetweenBattles));
@@ -224,14 +237,14 @@ public class ContestConfig {
             return false;
 
         switch (type) {
-            case PROPERTY_PATH_KEY:
+            /*case PROPERTY_PATH_KEY:
                 try {
                     path = Paths.get(option).normalize().toAbsolutePath().toString();
                 } catch (Exception ex) {
                     logger.error(ex.getMessage(), ex);
                     return false;
                 }
-                break;
+                break;*/
             case PROPERTY_CONTEST_NAME_KEY:
                 contestName = option;
                 break;
@@ -279,9 +292,9 @@ public class ContestConfig {
     }
 
 
-    public void setPath(String path) {
+   /* public void setPath(String path) {
         this.path = path;
-    }
+    }*/
 
     public void setContestName(String name) {
         this.contestName = name;
@@ -296,9 +309,16 @@ public class ContestConfig {
     }
 
     public String getContestPath() {
-        return this.path + File.separator + this.contestName;
+        return getBaseDataFolder() + File.separator + this.contestName;
     }
 
+    public String getBaseDataFolder() {
+        return getBaseDataFolder(path);
+    }
+
+    public static String getBaseDataFolder(String path) {
+        return path + File.separator + BASE_DATA_FOLDER;
+    }
 
     public String getTournamentPath(String tournamentName) {
         return getContestPath() + File.separator + tournamentName;

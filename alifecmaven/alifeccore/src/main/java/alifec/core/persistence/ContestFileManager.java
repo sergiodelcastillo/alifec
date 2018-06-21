@@ -34,9 +34,9 @@ public class ContestFileManager {
         this.path = Paths.get(folder);
     }
 
-    public static List<String> listContest(String path) {
+    public static List<String> listContest() {
         try {
-            return Files.list(Paths.get(path))
+            return Files.list(Paths.get(ContestConfig.getDefaultPath()))
                     .filter(new ContestFolderPredicate())
                     .map(new FileNameFunction())
                     .filter(new NotNullPredicate())
@@ -92,7 +92,7 @@ public class ContestFileManager {
 
     private static void createFolder(String folder) throws CreateContestFolderException {
         try {
-            Files.createDirectory(Paths.get(folder));
+            Files.createDirectories(Paths.get(folder));
         } catch (IOException e) {
             logger.error("Creating folder: " + folder + " [FAIL]");
             throw new CreateContestFolderException("Can not create the folder: " + folder, e);
@@ -154,16 +154,17 @@ public class ContestFileManager {
         Files.deleteIfExists(path.getParent());
     }
 
-    public static String getNextAvailableName(String path) {
+    public static String getNextAvailableName(String p) {
+        String dataFolder = ContestConfig.getBaseDataFolder(p);
         Calendar calendar = Calendar.getInstance();
         Integer year = calendar.get(Calendar.YEAR);
         Integer count = 0;
         String contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX+"%d", year);
-        String nextFolder = String.format("%s%s%s", path, File.separator, contestName);
+        String nextFolder = String.format("%s%s%s", dataFolder, File.separator, contestName);
 
         while (count <= 100 && Files.exists(Paths.get(nextFolder))) {
             contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX+"%d-%d", year, ++count);
-            nextFolder = String.format("%s%s%s", path, File.separator, contestName);
+            nextFolder = String.format("%s%s%s", dataFolder, File.separator, contestName);
         }
 
         if (count > 100) {

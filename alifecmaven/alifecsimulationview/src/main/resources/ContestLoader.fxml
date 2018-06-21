@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="alifec.simulation.controller.ContestLoaderController"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <Label text="%contest.loader.info"/>
+
+    <VBox>
+        <fx:define>
+            <ToggleGroup fx:id="option"/>
+        </fx:define>
+        <RadioButton text="Discard config file and create new context." toggleGroup="$option" onAction="#discardFile"
+                     selected="true"/>
+        <RadioButton text="Fix configuration issue." toggleGroup="$option" onAction="#fixFile"/>
+    </VBox>
+    <StackPane>
+        <GridPane fx:id="discardFilePane" >
+            <Label text="panel 1"></Label>
+        </GridPane>
+        <GridPane fx:id="fixFilePane">
+            <Label text="panel 2"></Label>
+        </GridPane>
+    </StackPane>
+    <HBox>
+        <Button text="Accept"/>
+        <Button text="Cancel."/>
+    </HBox>
+</VBox>

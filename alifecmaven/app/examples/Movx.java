@@ -18,7 +18,7 @@ public class Movx extends Microorganism {
     }
 
     public boolean mitosis() {
-        //never is duplicated
+        //do not duplicate
         return false;
     }
 

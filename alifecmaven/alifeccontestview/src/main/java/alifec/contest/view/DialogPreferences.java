@@ -272,7 +272,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
 
     private boolean updateConfig() {
         Contest contest = father.getContest();
-        String path = defaultPath.getText();
+       //todo: remove this field from ui: String path = defaultPath.getText();
         String name = nameOfContest.getText();
         int mode = this.modeOfContest.getSelectedIndex();
         int pause = parseInt(defaultPause.getSelectedItem().toString());
@@ -286,7 +286,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
             }
         }
 
-        return contest.updateConfigFile(path, name, mode, pause, nutrientsIds);
+        return contest.updateConfigFile(name, mode, pause, nutrientsIds);
     }
 
 }
