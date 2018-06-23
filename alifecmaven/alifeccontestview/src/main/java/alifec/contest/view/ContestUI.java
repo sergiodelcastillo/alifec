@@ -107,8 +107,8 @@ public class ContestUI extends JFrame implements ActionListener {
        //     path = ContestConfig.getDefaultPath();
             //Perform the best effort to load a contest.
             config = new ContestConfig();
-
-        } catch (ConfigFileException ex) {
+            config.validate();
+        } catch (ConfigFileException |ValidationException ex) {
             if (!(ex.getCause() instanceof FileNotFoundException) &&
                     !(ex.getCause() instanceof ValidationException)) {
                 logger.error(ex.getMessage(), ex);

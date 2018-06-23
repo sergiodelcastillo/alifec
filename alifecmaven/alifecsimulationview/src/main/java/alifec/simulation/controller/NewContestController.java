@@ -1,5 +1,6 @@
 package alifec.simulation.controller;
 
+import alifec.core.exception.ConfigFileException;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import javafx.event.ActionEvent;
@@ -71,7 +72,7 @@ public class NewContestController extends Controller {
             loadContest.setSelected(true);
             generateExamples.setSelected(true);
 
-        } catch (IOException e) {
+        } catch (ConfigFileException e) {
             e.printStackTrace();
         }
     }

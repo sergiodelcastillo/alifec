@@ -1,8 +1,15 @@
 package alifec.simulation.main;
 
+import alifec.core.contest.Contest;
+import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.ValidationException;
+import alifec.core.persistence.ContestFileManager;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.simulation.controller.ALifeContestController;
+import alifec.simulation.controller.ContestLoaderController;
 import alifec.simulation.controller.Controller;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -82,21 +89,47 @@ public class ALifeContestMain extends Application {
 
     private void loadContest() throws IOException {
 
-        boolean fail = true;
-        if (fail){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ContestLoader.fxml"), bundle);
-            //Todo: remember that the issue to load could be because
-            //1. The system was closed unexpectedly
-            //2. The configuration file is not OK
-            //3. The configuration file does not exist but there are some contest folder in the working directory
-            Parent root = loader.load();
+        ContestConfig config = null;
+        try {
+            config = new ContestConfig();
+            config.validate();
 
-            Stage contestLoader = ((Controller)loader.getController()).init(null,root, bundle);
+        } catch (ConfigFileException | ValidationException ex) {
+            logger.error("Can not load the configuration file.", ex);
+
+            if (ex instanceof ConfigFileException) {
+                if (((ConfigFileException) ex).getState() == ConfigFileException.Status.DEFAULT_PATH_ERROR) {
+                    logger.error("The default path must be valid. The application will shutdown.");
+                    Platform.exit();
+                }
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ContestLoader.fxml"), bundle);
+            Parent root = loader.load();
+            ContestLoaderController controller = loader.getController();
+
+            if (ex instanceof ConfigFileException) {
+                controller.disableEditFile();
+            } else {
+                controller.setContestConfig(config);
+            }
+            //todo: queda implementar la opción de un existing contest!!
+            Stage contestLoader = controller.init(null, root, bundle);
+
 
             contestLoader.showAndWait();
+
+
         }
 
+        logger.info("continue with config:" + config.toString());
+
+        //Todo: remember that the issue to load could be because
+        //1. The system was closed unexpectedly
+        //2. The configuration file is not OK
+        //3. The configuration file does not exist but there are some contest folder in the working directory
 
     }
+
 
 }

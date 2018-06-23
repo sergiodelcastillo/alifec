@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -81,7 +80,6 @@ public class ContestConfig {
 
     public static final int DEFAULT_PAUSE_BETWEEN_BATTLES = 100;
 
-    //  private static final String PROPERTY_PATH_KEY = "contest_path";
     private static final String PROPERTY_CONTEST_NAME_KEY = "contest_name";
     private static final String PROPERTY_PAUSE_BETWEEN_BATTLES_KEY = "pause_between_battles";
     private static final String PROPERTY_MODE_KEY = "contest_mode";
@@ -140,36 +138,26 @@ public class ContestConfig {
             InputStream is = new FileInputStream(getConfigFilePath(path));
 
             property.load(is);
-            //       setPath(path);
-            for (Object object : property.keySet()) {
 
+            for (Object object : property.keySet()) {
                 if (!setProperty(object.toString(), property.getProperty(object.toString()))) {
                     logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
                 }
             }
 
-            validate();
-
             init();
 
-        } catch (IOException ex) {
-            throw new ConfigFileException("Error loading the config file.", ex, this);
-        } catch (ValidationException e) {
-            logger.warn(this.toString());
-            throw new ConfigFileException(e.getMessage(), e, this);
+        } catch (FileNotFoundException ex) {
+            throw new ConfigFileException("Error loading the config file.", ex,
+                    ConfigFileException.Status.CONFIG_FILE_DOES_NOT_EXISTS);
+        } catch (IOException e) {
+            throw new ConfigFileException("Error reading the properties in config file", e,
+                    ConfigFileException.Status.CONFIG_FILE_READ_ISSUE);
         }
     }
 
     public ContestConfig(String contestName) throws ConfigFileException {
-        try {
-
-            path = getDefaultPath();
-            setDefaults();
-            setContestName(contestName);
-            init();
-        } catch (IOException ex) {
-            throw new ConfigFileException("Error loading the config file.", ex, this);
-        }
+        this(getDefaultPath(), contestName);
     }
 
     public ContestConfig(String path, String contestName) {
@@ -183,8 +171,14 @@ public class ContestConfig {
         builder = new StringBuilder();
     }
 
-    public static String getDefaultPath() throws IOException {
-        return Paths.get(System.getProperty("user.dir")).toFile().getCanonicalPath();
+    public static String getDefaultPath() throws ConfigFileException {
+        try {
+            return Paths.get(System.getProperty("user.dir")).toFile().getCanonicalPath();
+        } catch (IOException e) {
+            throw new ConfigFileException("Error detecting the user directory", e,
+                    ConfigFileException.Status.DEFAULT_PATH_ERROR);
+
+        }
     }
 
     public void setDefaults() {
@@ -196,7 +190,6 @@ public class ContestConfig {
     public void save() throws ConfigFileException {
         Properties property = new Properties();
 
-        //   property.setProperty(PROPERTY_PATH_KEY, path);
         property.setProperty(PROPERTY_CONTEST_NAME_KEY, contestName);
         property.setProperty(PROPERTY_MODE_KEY, Integer.toString(mode));
         property.setProperty(PROPERTY_PAUSE_BETWEEN_BATTLES_KEY, Integer.toString(pauseBetweenBattles));
@@ -206,12 +199,14 @@ public class ContestConfig {
             String basePath = getBaseAppFolder();
 
             if (Files.notExists(Paths.get(basePath))) {
-                throw new ConfigFileException("The base path can not be found: " + basePath, this);
+                throw new ConfigFileException("The base path can not be found: " + basePath, this,
+                        ConfigFileException.Status.SAVE_ISSUE);
             }
             property.store(new FileWriter(this.getConfigFilePath()),
                     "Configuration File\n Warning: do not modify this file");
         } catch (IOException e) {
-            throw new ConfigFileException("Can not update the config file: " + getConfigFilePath(), this);
+            throw new ConfigFileException("Can not update the config file: " + getConfigFilePath(),
+                    ConfigFileException.Status.SAVE_ISSUE);
         }
         //the property was saved so the system should be restarted.
     }
@@ -237,14 +232,6 @@ public class ContestConfig {
             return false;
 
         switch (type) {
-            /*case PROPERTY_PATH_KEY:
-                try {
-                    path = Paths.get(option).normalize().toAbsolutePath().toString();
-                } catch (Exception ex) {
-                    logger.error(ex.getMessage(), ex);
-                    return false;
-                }
-                break;*/
             case PROPERTY_CONTEST_NAME_KEY:
                 contestName = option;
                 break;
@@ -290,11 +277,6 @@ public class ContestConfig {
         }
         return true;
     }
-
-
-   /* public void setPath(String path) {
-        this.path = path;
-    }*/
 
     public void setContestName(String name) {
         this.contestName = name;

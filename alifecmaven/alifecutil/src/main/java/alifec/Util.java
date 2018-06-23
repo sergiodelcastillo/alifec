@@ -135,17 +135,19 @@ public class Util {
         }
     }
 
-    private static ContestConfig loadConfiguration() throws IOException, ConfigFileException {
+    private static ContestConfig loadConfiguration() throws IOException, ConfigFileException, ValidationException {
         try {
-            return new ContestConfig();
-        } catch (ConfigFileException e) {
-            if (e.getCause() instanceof FileNotFoundException) {
+            ContestConfig config = new ContestConfig();
+            config.validate();
+            return config;
+        } catch (ConfigFileException |ValidationException ex) {
+            if (ex.getCause() instanceof FileNotFoundException) {
                 ContestConfig config = tryToLoadContest();
                 if (config != null) {
                     return config;
                 }
             }
-            throw e;
+            throw ex;
         }
     }
 

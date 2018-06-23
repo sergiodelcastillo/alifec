@@ -9,31 +9,32 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="alifec.simulation.controller.NewContestController"
-      prefHeight="200.0" prefWidth="600.0" >
-    <GridPane  hgap="10" vgap="10">
+      prefHeight="200.0" prefWidth="500.0">
+    <GridPane hgap="10" vgap="10">
         <padding>
             <Insets top="20" left="10" right="10" bottom="10"/>
         </padding>
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" halignment="LEFT"/>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="45.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" halignment="LEFT"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
         </columnConstraints>
 
-        <Label text="%newcontest.contest.name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <TextField editable="false" text="Contest-" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="%newcontest.contest.name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField disable="true" text="Contest-" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
         <TextField fx:id="contestName" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
         <Label text="%newcontest.contest.path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <TextField fx:id="contestPath" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
-        <Button text="%newcontest.select.path" GridPane.columnIndex="3" GridPane.rowIndex="1" onAction="#choosePath"/>
+        <TextField fx:id="contestPath" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                   GridPane.columnSpan="2"/>
 
-        <CheckBox fx:id="loadContest" text="%newcontest.option.load" GridPane.valignment="BOTTOM" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
-        <CheckBox fx:id="generateExamples" text="%newcontest.option.examples" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+        <CheckBox fx:id="loadContest" text="%newcontest.option.load" GridPane.valignment="BOTTOM"
+                  GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+        <CheckBox fx:id="generateExamples" text="%newcontest.option.examples" GridPane.columnIndex="0"
+                  GridPane.rowIndex="4" GridPane.columnSpan="2"/>
     </GridPane>
 
-    <HBox alignment="CENTER" spacing="10" >
+    <HBox alignment="CENTER" spacing="10">
         <Button text="%newcontest.accept" onAction="#accept"/>
         <Button text="%newcontest.cancel" onAction="#cancel"/>
     </HBox>

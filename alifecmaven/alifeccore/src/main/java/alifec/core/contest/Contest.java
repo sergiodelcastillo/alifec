@@ -198,8 +198,9 @@ public class Contest implements Listener {
     public boolean reloadConfig() throws IOException {
         try {
             config = new ContestConfig();
+            config.validate();
             return true;
-        } catch (ConfigFileException ex) {
+        } catch (ConfigFileException | ValidationException ex) {
             logger.error(ex.getMessage(), ex);
             return false;
         }

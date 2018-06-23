@@ -1,5 +1,6 @@
 package alifec.core.persistence;
 
+import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.custom.FileNameFunction;
@@ -41,7 +42,7 @@ public class ContestFileManager {
                     .map(new FileNameFunction())
                     .filter(new NotNullPredicate())
                     .collect(Collectors.toList());
-        } catch (IOException e) {
+        } catch (ConfigFileException | IOException e) {
             logger.error(e.getMessage(), e);
         }
 
@@ -159,11 +160,11 @@ public class ContestFileManager {
         Calendar calendar = Calendar.getInstance();
         Integer year = calendar.get(Calendar.YEAR);
         Integer count = 0;
-        String contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX+"%d", year);
+        String contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX + "%d", year);
         String nextFolder = String.format("%s%s%s", dataFolder, File.separator, contestName);
 
         while (count <= 100 && Files.exists(Paths.get(nextFolder))) {
-            contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX+"%d-%d", year, ++count);
+            contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX + "%d-%d", year, ++count);
             nextFolder = String.format("%s%s%s", dataFolder, File.separator, contestName);
         }
 
@@ -172,12 +173,13 @@ public class ContestFileManager {
             Integer day = calendar.get(Calendar.DAY_OF_MONTH);
             Long time = calendar.getTimeInMillis();
 
-            contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX+"%d-%d-%d-%d", year, month, day, time);
+            contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX + "%d-%d-%d-%d", year, month, day, time);
         }
 
         return contestName;
     }
-    public static String getNextAvailableNameWithoutPrefix(String path){
+
+    public static String getNextAvailableNameWithoutPrefix(String path) {
         return getNextAvailableName(path).replace(ContestConfig.CONTEST_NAME_PREFIX, "");
     }
 }
