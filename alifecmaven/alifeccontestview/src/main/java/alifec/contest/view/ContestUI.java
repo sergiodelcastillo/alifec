@@ -256,7 +256,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
             logger.info("The contest file was updated as follows: " + config.toString());
 
-        } catch (ConfigFileException ex) {
+        } catch (ConfigFileWriteException ex) {
             logger.error("Can not create the contest file: " + ex.getConfig().toString(), ex);
             Message.printErr(null, "Can not create the contest file: " + ex.getConfig().toString());
             return false;

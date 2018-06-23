@@ -223,7 +223,7 @@ public class Contest implements Listener {
 
         try {
             config.save();
-        } catch (ConfigFileException e) {
+        } catch (ConfigFileWriteException e) {
             logger.error("Error updating config file: " + e.getConfig(), e);
             return false;
         }

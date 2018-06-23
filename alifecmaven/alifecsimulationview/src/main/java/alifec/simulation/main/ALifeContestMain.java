@@ -2,6 +2,7 @@ package alifec.simulation.main;
 
 import alifec.core.contest.Contest;
 import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.InvalidUserDirException;
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -97,11 +98,9 @@ public class ALifeContestMain extends Application {
         } catch (ConfigFileException | ValidationException ex) {
             logger.error("Can not load the configuration file.", ex);
 
-            if (ex instanceof ConfigFileException) {
-                if (((ConfigFileException) ex).getState() == ConfigFileException.Status.DEFAULT_PATH_ERROR) {
-                    logger.error("The default path must be valid. The application will shutdown.");
-                    Platform.exit();
-                }
+            if (ex instanceof InvalidUserDirException) {
+                logger.error("The default path must be valid. The application will shutdown.");
+                Platform.exit();
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ContestLoader.fxml"), bundle);
@@ -116,10 +115,7 @@ public class ALifeContestMain extends Application {
             //todo: queda implementar la opción de un existing contest!!
             Stage contestLoader = controller.init(null, root, bundle);
 
-
             contestLoader.showAndWait();
-
-
         }
 
         logger.info("continue with config:" + config.toString());

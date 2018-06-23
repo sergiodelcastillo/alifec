@@ -1,7 +1,6 @@
 package alifec.core.persistence.config;
 
-import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.ValidationException;
+import alifec.core.exception.*;
 import alifec.core.simulation.Agar;
 import alifec.core.simulation.nutrient.function.*;
 import alifec.core.validation.ContestConfigValidator;
@@ -94,7 +93,6 @@ public class ContestConfig {
             FamineFunction.ID
     };
 
-
     /**
      * Absolute path of Contest.
      */
@@ -148,11 +146,9 @@ public class ContestConfig {
             init();
 
         } catch (FileNotFoundException ex) {
-            throw new ConfigFileException("Error loading the config file.", ex,
-                    ConfigFileException.Status.CONFIG_FILE_DOES_NOT_EXISTS);
+            throw new ConfigFileNotFoundException("Error loading the config file.", ex);
         } catch (IOException e) {
-            throw new ConfigFileException("Error reading the properties in config file", e,
-                    ConfigFileException.Status.CONFIG_FILE_READ_ISSUE);
+            throw new ConfigFileReadException("Error reading the properties in config file", e);
         }
     }
 
@@ -175,9 +171,7 @@ public class ContestConfig {
         try {
             return Paths.get(System.getProperty("user.dir")).toFile().getCanonicalPath();
         } catch (IOException e) {
-            throw new ConfigFileException("Error detecting the user directory", e,
-                    ConfigFileException.Status.DEFAULT_PATH_ERROR);
-
+            throw new InvalidUserDirException("Error detecting the user directory", e);
         }
     }
 
@@ -187,7 +181,7 @@ public class ContestConfig {
         setNutrients(Arrays.asList(DEFAULT_NUTRIENTS));
     }
 
-    public void save() throws ConfigFileException {
+    public void save() throws ConfigFileWriteException{
         Properties property = new Properties();
 
         property.setProperty(PROPERTY_CONTEST_NAME_KEY, contestName);
@@ -199,14 +193,12 @@ public class ContestConfig {
             String basePath = getBaseAppFolder();
 
             if (Files.notExists(Paths.get(basePath))) {
-                throw new ConfigFileException("The base path can not be found: " + basePath, this,
-                        ConfigFileException.Status.SAVE_ISSUE);
+                throw new ConfigFileWriteException("The base path can not be found: " + basePath, null, this);
             }
             property.store(new FileWriter(this.getConfigFilePath()),
                     "Configuration File\n Warning: do not modify this file");
         } catch (IOException e) {
-            throw new ConfigFileException("Can not update the config file: " + getConfigFilePath(),
-                    ConfigFileException.Status.SAVE_ISSUE);
+            throw new ConfigFileWriteException("Can not update the config file: " + getConfigFilePath(), e, this);
         }
         //the property was saved so the system should be restarted.
     }
