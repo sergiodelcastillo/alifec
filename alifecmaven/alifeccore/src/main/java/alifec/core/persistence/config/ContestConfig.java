@@ -20,7 +20,6 @@ import java.util.*;
  */
 public class ContestConfig {
 
-
     static Logger logger = LogManager.getLogger(ContestConfig.class);
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -146,13 +145,13 @@ public class ContestConfig {
             init();
 
         } catch (FileNotFoundException ex) {
-            throw new ConfigFileNotFoundException("Error loading the config file.", ex);
+            throw new ConfigFileNotFoundException("The config file was not found.", ex);
         } catch (IOException e) {
             throw new ConfigFileReadException("Error reading the properties in config file", e);
         }
     }
 
-    public ContestConfig(String contestName) throws ConfigFileException {
+    public ContestConfig(String contestName) throws InvalidUserDirException {
         this(getDefaultPath(), contestName);
     }
 
@@ -167,7 +166,7 @@ public class ContestConfig {
         builder = new StringBuilder();
     }
 
-    public static String getDefaultPath() throws ConfigFileException {
+    public static String getDefaultPath() throws InvalidUserDirException {
         try {
             return Paths.get(System.getProperty("user.dir")).toFile().getCanonicalPath();
         } catch (IOException e) {
@@ -181,7 +180,7 @@ public class ContestConfig {
         setNutrients(Arrays.asList(DEFAULT_NUTRIENTS));
     }
 
-    public void save() throws ConfigFileWriteException{
+    public void save() throws ConfigFileWriteException {
         Properties property = new Properties();
 
         property.setProperty(PROPERTY_CONTEST_NAME_KEY, contestName);
@@ -292,6 +291,10 @@ public class ContestConfig {
 
     public static String getBaseDataFolder(String path) {
         return path + File.separator + BASE_DATA_FOLDER;
+    }
+
+    public static String getDefaultBaseDataFolder() throws ConfigFileException {
+        return getDefaultPath() + File.separator + BASE_DATA_FOLDER;
     }
 
     public String getTournamentPath(String tournamentName) {

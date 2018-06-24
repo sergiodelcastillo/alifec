@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.collections.FXCollections?>
-<?import alifec.simulation.util.ConfigProperty?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.cell.TextFieldTableCell?>
-
+<?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="alifec.simulation.controller.ContestLoaderController"
@@ -29,13 +26,16 @@
             <ToggleGroup fx:id="option"/>
         </fx:define>
 
-        <RadioButton text="Discard config file and create new context." toggleGroup="$option" fx:id="createFile"
+        <RadioButton fx:id="newContestRadioButton" text="Discard config file and create new context." toggleGroup="$option"
                      onAction="#discardFile" selected="true"/>
-        <RadioButton text="Fix configuration issue." toggleGroup="$option" onAction="#fixFile" fx:id="fixFile"/>
+        <RadioButton fx:id="setExistingContestRadioButton" text="Set existing contest" toggleGroup="$option"
+                     onAction="#setExistingContest"/>
+        <RadioButton fx:id="updateConfigFileRadiobutton" text="Fix configuration issue." toggleGroup="$option"
+                     onAction="#fixFile" />
     </VBox>
 
     <StackPane>
-        <TitledPane collapsible="false" fx:id="discardFilePane" text="%contest.loader.new.contest">
+        <TitledPane collapsible="false" fx:id="newContestPane" text="%contest.loader.new.contest">
             <GridPane hgap="10" vgap="10">
                 <padding>
                     <Insets top="20" left="10" right="10" bottom="10"/>
@@ -62,7 +62,38 @@
             </GridPane>
         </TitledPane>
 
-        <TitledPane collapsible="false" fx:id="fixFilePane" text="%contest.loader.edit.config">
+        <TitledPane collapsible="false" fx:id="setExistingContestPane" text="%contest.loader.set.contest">
+            <GridPane hgap="10" vgap="10">
+                <padding>
+                    <Insets top="20" left="10" right="10" bottom="10"/>
+                </padding>
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" halignment="LEFT"/>
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
+                </columnConstraints>
+
+                <Label text="%contest.loader.contest.name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="existingContestCombobox" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                          GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" maxWidth="Infinity">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList"/>
+                    </items>
+                </ComboBox>
+
+                <Label text="%contest.loader.contest.path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="existingContestPath" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                           GridPane.columnSpan="2"/>
+
+                <CheckBox fx:id="existingLoadContest" text="%contest.loader.option.load" GridPane.valignment="BOTTOM"
+                          GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" disable="true"
+                          selected="true"/>
+                <CheckBox fx:id="existingGenerateExamples" text="%contest.loader.examples" GridPane.columnIndex="0"
+                          GridPane.rowIndex="4" GridPane.columnSpan="2" selected="true"/>
+            </GridPane>
+        </TitledPane>
+
+        <TitledPane collapsible="false" fx:id="updateConfigFilePane" text="%contest.loader.update.config">
             <TableView fx:id="configPropertiesTable" editable="true">
                 <columns>
                     <TableColumn text="Property">
@@ -72,30 +103,31 @@
                     </TableColumn>
 
                     <TableColumn text="Value" onEditCommit="#editTableField">
-                        <cellValueFactory >
-                            <PropertyValueFactory property="content" />
+                        <cellValueFactory>
+                            <PropertyValueFactory property="content"/>
                         </cellValueFactory>
 
                         <cellFactory>
-                            <TextFieldTableCell fx:factory="forTableColumn" />
+                            <TextFieldTableCell fx:factory="forTableColumn"/>
                         </cellFactory>
                     </TableColumn>
                 </columns>
 
                 <items>
-                    <FXCollections fx:factory="observableArrayList" >
+                    <FXCollections fx:factory="observableArrayList">
                     </FXCollections>
                 </items>
             </TableView>
 
         </TitledPane>
+
     </StackPane>
 
     <HBox spacing="10" alignment="CENTER">
         <padding>
             <Insets top="10"/>
         </padding>
-        <Button text="Accept"/>
-        <Button text="Cancel."/>
+        <Button text="Accept" onAction="#onAccept"/>
+        <Button text="Cancel." onAction="#onCancel"/>
     </HBox>
 </VBox>

@@ -104,11 +104,10 @@ public class ContestUI extends JFrame implements ActionListener {
         ContestConfig config = null;
 
         try {
-       //     path = ContestConfig.getDefaultPath();
             //Perform the best effort to load a contest.
             config = new ContestConfig();
             config.validate();
-        } catch (ConfigFileException |ValidationException ex) {
+        } catch (ConfigFileException | ValidationException ex) {
             if (!(ex.getCause() instanceof FileNotFoundException) &&
                     !(ex.getCause() instanceof ValidationException)) {
                 logger.error(ex.getMessage(), ex);
@@ -141,7 +140,7 @@ public class ContestUI extends JFrame implements ActionListener {
                     }
 
                     //todo
-                    config = new ContestConfig( name);
+                    config = new ContestConfig(name);
                     config.save();
                 }
             }
@@ -231,9 +230,9 @@ public class ContestUI extends JFrame implements ActionListener {
         // Now the application will continue without any changes at runtime.
 
         try {
-        ContestConfig config = new ContestConfig(name);
+            ContestConfig config = new ContestConfig(name);
             config.validate();
-        return setDefaultContest(config);
+            return setDefaultContest(config);
 
         } catch (ValidationException | ConfigFileException ex) {
             logger.error(ex.getMessage(), ex);
@@ -390,9 +389,9 @@ public class ContestUI extends JFrame implements ActionListener {
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            //    String contestPath = fc.getCurrentDirectory().getAbsolutePath();
+                //    String contestPath = fc.getCurrentDirectory().getAbsolutePath();
                 String fileName = fc.getSelectedFile().getName();
-                if (this.setDefaultContest( fileName)) {
+                if (this.setDefaultContest(fileName)) {
                     requestRestart();
                 }
             }

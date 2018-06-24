@@ -1,20 +1,16 @@
 package alifec.simulation.main;
 
-import alifec.core.contest.Contest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.InvalidUserDirException;
 import alifec.core.exception.ValidationException;
-import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.simulation.controller.ALifeContestController;
 import alifec.simulation.controller.ContestLoaderController;
-import alifec.simulation.controller.Controller;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,20 +71,25 @@ public class ALifeContestMain extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         //load and existing contest or create a new one.
-        loadContest();
+        ContestConfig config = loadContest();
 
-        //initialize the UI
-        stage.setTitle(bundle.getString("ALifeContestMain.title"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ALifeContestView.fxml"), bundle);
-        Parent root = loader.load();
+        if ((config == null)) {
+            logger.warn("The contest file was not loaded. Application wont start.");
+            Platform.exit();
+        } else {
+            //initialize the UI
+            stage.setTitle(bundle.getString("ALifeContestMain.title"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ALifeContestView.fxml"), bundle);
+            Parent root = loader.load();
 
-        ((ALifeContestController) loader.getController()).init(bundle, stage);
+            ((ALifeContestController) loader.getController()).init(bundle, stage);
 
-        stage.setScene(new Scene(root));
-        stage.show();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
     }
 
-    private void loadContest() throws IOException {
+    private ContestConfig loadContest() throws IOException {
 
         ContestConfig config = null;
         try {
@@ -96,11 +97,11 @@ public class ALifeContestMain extends Application {
             config.validate();
 
         } catch (ConfigFileException | ValidationException ex) {
-            logger.error("Can not load the configuration file.", ex);
+            logger.info("Can not load the configuration file.", ex);
 
             if (ex instanceof InvalidUserDirException) {
-                logger.error("The default path must be valid. The application will shutdown.");
-                Platform.exit();
+                logger.error("The default path must be valid.");
+                return null;
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ContestLoader.fxml"), bundle);
@@ -108,23 +109,26 @@ public class ALifeContestMain extends Application {
             ContestLoaderController controller = loader.getController();
 
             if (ex instanceof ConfigFileException) {
-                controller.disableEditFile();
+                controller.allowCreateFileOption();
             } else {
-                controller.setContestConfig(config);
+                controller.allowEditFileOption(config);
             }
-            //todo: queda implementar la opción de un existing contest!!
+
             Stage contestLoader = controller.init(null, root, bundle);
 
             contestLoader.showAndWait();
+
+            if (controller.isCancelled()) return null;
+
+            return controller.getUpdatedConfig();
+        } catch (Throwable t) {
+            logger.error("Unknown error:", t);
+            return null;
         }
 
-        logger.info("continue with config:" + config.toString());
+        logger.info("Continue loading with config:" + config.toString());
 
-        //Todo: remember that the issue to load could be because
-        //1. The system was closed unexpectedly
-        //2. The configuration file is not OK
-        //3. The configuration file does not exist but there are some contest folder in the working directory
-
+        return config;
     }
 
 

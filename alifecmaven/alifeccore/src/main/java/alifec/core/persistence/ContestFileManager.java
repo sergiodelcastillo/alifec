@@ -1,5 +1,6 @@
 package alifec.core.persistence;
 
+import alifec.core.contest.Contest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
@@ -37,7 +38,7 @@ public class ContestFileManager {
 
     public static List<String> listContest() {
         try {
-            return Files.list(Paths.get(ContestConfig.getDefaultPath()))
+            return Files.list(Paths.get(ContestConfig.getDefaultBaseDataFolder()))
                     .filter(new ContestFolderPredicate())
                     .map(new FileNameFunction())
                     .filter(new NotNullPredicate())
