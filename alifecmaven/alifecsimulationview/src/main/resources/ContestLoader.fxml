@@ -26,12 +26,12 @@
             <ToggleGroup fx:id="option"/>
         </fx:define>
 
-        <RadioButton fx:id="newContestRadioButton" text="Discard config file and create new context." toggleGroup="$option"
+        <RadioButton fx:id="newContestRadioButton" text="%contest.loader.new.contest.option" toggleGroup="$option"
                      onAction="#discardFile" selected="true"/>
-        <RadioButton fx:id="setExistingContestRadioButton" text="Set existing contest" toggleGroup="$option"
-                     onAction="#setExistingContest"/>
-        <RadioButton fx:id="updateConfigFileRadiobutton" text="Fix configuration issue." toggleGroup="$option"
-                     onAction="#fixFile" />
+        <RadioButton fx:id="setExistingContestRadioButton" text="%contest.loader.set.contest.option"
+                     toggleGroup="$option" onAction="#setExistingContest"/>
+        <RadioButton fx:id="updateConfigFileRadioButton" text="%contest.loader.update.config.option"
+                     toggleGroup="$option" onAction="#fixFile"/>
     </VBox>
 
     <StackPane>
@@ -127,7 +127,7 @@
         <padding>
             <Insets top="10"/>
         </padding>
-        <Button text="Accept" onAction="#onAccept"/>
-        <Button text="Cancel." onAction="#onCancel"/>
+        <Button text="%contest.loader.accept" onAction="#onAccept"/>
+        <Button text="%contest.loader.cancel" onAction="#onCancel"/>
     </HBox>
 </VBox>

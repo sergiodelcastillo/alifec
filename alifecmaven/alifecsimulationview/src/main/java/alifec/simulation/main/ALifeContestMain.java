@@ -1,5 +1,7 @@
 package alifec.simulation.main;
 
+import alifec.core.compilation.CompilationResult;
+import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.InvalidUserDirException;
 import alifec.core.exception.ValidationException;
@@ -9,8 +11,15 @@ import alifec.simulation.controller.ContestLoaderController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,19 +82,65 @@ public class ALifeContestMain extends Application {
         //load and existing contest or create a new one.
         ContestConfig config = loadContest();
 
-        if ((config == null)) {
+        if (config == null) {
             logger.warn("The contest file was not loaded. Application wont start.");
             Platform.exit();
         } else {
+            //compile the colonies
+            compileColonies(config);
+
             //initialize the UI
             stage.setTitle(bundle.getString("ALifeContestMain.title"));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ALifeContestView.fxml"), bundle);
             Parent root = loader.load();
 
-            ((ALifeContestController) loader.getController()).init(bundle, stage);
+            ((ALifeContestController) loader.getController()).init(bundle, stage, config);
 
             stage.setScene(new Scene(root));
             stage.show();
+        }
+    }
+
+    private void compileColonies(ContestConfig config) {
+        CompileHelper compiler = new CompileHelper(config);
+        CompilationResult result = compiler.compileMOs();
+
+        if (result.haveErrors()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Compilation error");
+            alert.setHeaderText("At least one MO was not compiled successful.");
+            Text contentInfo = new Text("The application will continue to run without the non-compiled source codes. Please check the compilation log for more details.");
+            contentInfo.setWrappingWidth(470);
+            TextArea detailsArea = new TextArea();
+            detailsArea.setEditable(false);
+            detailsArea.setWrapText(true);
+            detailsArea.setMaxWidth(Double.MAX_VALUE);
+            detailsArea.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setVgrow(detailsArea, Priority.ALWAYS);
+            GridPane.setHgrow(detailsArea, Priority.ALWAYS);
+
+            GridPane content = new GridPane();
+            content.setHgap(5);
+            content.setVgap(5);
+
+            content.add(contentInfo, 0, 0);
+            content.add(detailsArea, 0, 1);
+            content.setPrefWidth(500);
+            content.setPrefHeight(150);
+
+            StringBuilder builder = new StringBuilder();
+
+            for (String error : result.getJavaMessages()) {
+                builder.append(error).append('\n');
+            }
+            for (String error : result.getCppMessages()) {
+                builder.append(error).append('\n');
+            }
+
+            detailsArea.setText(builder.toString());
+
+            alert.getDialogPane().setContent(content);
+            alert.showAndWait();
         }
     }
 
@@ -126,7 +181,7 @@ public class ALifeContestMain extends Application {
             return null;
         }
 
-        logger.info("Continue loading with config:" + config.toString());
+        logger.info("Config file loaded successfully:" + config.toString());
 
         return config;
     }

@@ -68,11 +68,11 @@ public class CompileHelper {
                         logger.info(f.toString() + " [OK]");
                     } else {
                         logger.error(f.toString() + " [FAIL]");
-                        result.logJavaError("Could not compileMO " + f.getFileName().toString() + ". For more details see the logs.");
+                        result.logJavaError("Could not compile the Java colony " + f.getFileName().toString() + ".");
                     }
                 }
             }
-        } catch (CompilerException | IOException ex) {
+        } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
             result.logJavaError(ex.getMessage());
         }
@@ -88,12 +88,12 @@ public class CompileHelper {
                 logger.info("Create libcppcolonies: [OK]");
             } else {
                 logger.info("Create libcppcolonies: [FAIL]");
-                result.logCppError("Could not compileMOs one o more microorganisms of C++. For more details see log file.");
+                result.logCppError("Could not compile cpp colonies.");
             }
 
         } else {
             logger.info("Update C++ Files: [FAIL]");
-            result.logCppError("Could not update cpp files. For more details see log file.");
+            result.logCppError("Could not update cpp files.");
         }
     }
 
@@ -164,7 +164,7 @@ public class CompileHelper {
      * @return true if the compilation is successfully
      * @throws CompilerException if can not find the C/C++ compiler
      */
-    boolean javaSourceCodeCompilation(String javaFileFolder, String javaFileName) throws CompilerException {
+    boolean javaSourceCodeCompilation(String javaFileFolder, String javaFileName)  {
         try {
             JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 

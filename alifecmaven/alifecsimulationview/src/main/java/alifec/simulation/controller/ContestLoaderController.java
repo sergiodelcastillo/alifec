@@ -1,6 +1,5 @@
 package alifec.simulation.controller;
 
-import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.ConfigFileWriteException;
 import alifec.core.exception.InvalidUserDirException;
 import alifec.core.persistence.ContestFileManager;
@@ -35,7 +34,7 @@ public class ContestLoaderController extends Controller {
     @FXML
     public RadioButton newContestRadioButton;
     @FXML
-    public RadioButton updateConfigFileRadiobutton;
+    public RadioButton updateConfigFileRadioButton;
     @FXML
     public RadioButton setExistingContestRadioButton;
 
@@ -125,7 +124,7 @@ public class ContestLoaderController extends Controller {
     }
 
     public void allowCreateFileOption() {
-        updateConfigFileRadiobutton.setDisable(true);
+        updateConfigFileRadioButton.setDisable(true);
         newContestRadioButton.setSelected(true);
 
         //set default selection
@@ -155,7 +154,7 @@ public class ContestLoaderController extends Controller {
         if (newContestRadioButton.isSelected()) {
             //create new Contest!
             System.out.println("create new contest");
-        } else if (updateConfigFileRadiobutton.isSelected()) {
+        } else if (updateConfigFileRadioButton.isSelected()) {
             //update config file
             System.out.println("update config file");
         } else if (setExistingContestRadioButton.isSelected()) {

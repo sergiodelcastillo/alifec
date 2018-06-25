@@ -4,7 +4,6 @@ import alifec.core.exception.ConfigFileException;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -14,14 +13,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.Year;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 /**
@@ -50,7 +44,7 @@ public class NewContestController extends Controller {
         this.father = controller;
         this.root = root;
 
-        Stage stage = buildDialog(root, bundle.getString("newcontest.title"));
+        Stage stage = buildDialog(root, bundle.getString("new.contest.title"));
 
         //reset the values when the interface is displayed
         stage.setOnShown(event -> setDefaults());

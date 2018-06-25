@@ -14,7 +14,7 @@
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="alifec.simulation.controller.ALifeContestController"
-            prefHeight="400.0" prefWidth="600.0" >
+            prefHeight="400.0" prefWidth="600.0">
 
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -23,38 +23,38 @@
                 <MenuItem fx:id="newContest"
                           mnemonicParsing="false"
                           onAction="#newContest"
-                          text="%Main.menu.file.newContest"
+                          text="%alifec.menu.file.new.contest"
                           accelerator="Shortcut+N"/>
 
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem fx:id="quit"
                           mnemonicParsing="false"
                           onAction="#quit"
-                          text="%Main.menu.file.quit"
+                          text="%alifec.menu.file.quit"
                           accelerator="ALT+F4"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Tools">
                 <MenuItem fx:id="reports"
                           mnemonicParsing="false"
                           onAction="#showDialogStatistics"
-                          text="%Main.menu.tools.reports"
+                          text="%alifec.menu.tools.reports"
                           accelerator="Shortcut+R"/>
-                <MenuItem fx:id="Options"
+                <MenuItem fx:id="options"
                           mnemonicParsing="false"
                           onAction="#showDialogPreferences"
-                          text="%Main.menu.tools.preferences"
+                          text="%alifec.menu.tools.preferences"
                           accelerator="Shortcut+P"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem fx:id="help"
                           mnemonicParsing="false"
                           onAction="#showDialogHelp"
-                          text="%Main.menu.help.help"
+                          text="%alifec.menu.help.help"
                           accelerator="F1"/>
                 <MenuItem fx:id="about"
                           mnemonicParsing="false"
                           onAction="#showDialogAbout"
-                          text="%Main.menu.help.about"
+                          text="%alifec.menu.help.about"
                           accelerator="Shortcut+A"/>
             </Menu>
         </MenuBar>
@@ -62,9 +62,7 @@
 
     <center>
 
-        <TitledPane minHeight="400.0" minWidth="400.0"
-                    collapsible="false"
-                    text="Tournament-001">
+        <TitledPane minHeight="400.0" minWidth="400.0" collapsible="false" text="Tournament-001">
             <padding>
                 <Insets top="6" right="3" bottom="6" left="6"/>
             </padding>
@@ -126,7 +124,7 @@
     </center>
 
     <right>
-        <TitledPane minHeight="400.0" minWidth="500.0" collapsible="false" text="Battles">
+        <TitledPane minHeight="400.0" minWidth="500.0" collapsible="false" text="%alifec.battles.title">
             <padding>
                 <Insets top="6" right="6" bottom="6" left="3"/>
             </padding>
@@ -134,7 +132,7 @@
             <VBox spacing="10">
                 <HBox spacing="5" alignment="CENTER_LEFT">
 
-                    <Label text="Op. 1"/>
+                    <Label text="%alifec.battles.first.opponent"/>
                     <ComboBox fx:id="opponentsList1">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
@@ -144,7 +142,7 @@
                             </FXCollections>
                         </items>
                     </ComboBox>
-                    <Label text="Op. 2"/>
+                    <Label text="%alifec.battles.second.opponent"/>
                     <ComboBox fx:id="opponentsList2">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
@@ -155,7 +153,7 @@
                         </items>
                     </ComboBox>
 
-                    <Label text="Nutrients"/>
+                    <Label text="%alifec.battles.nutrients"/>
                     <ComboBox fx:id="nutrientsList">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
@@ -224,7 +222,6 @@
                 </ListView>
 
                 <HBox spacing="10">
-
                     <Button onAction="#deleteSelectedBattles">
                         <graphic>
                             <ImageView>
@@ -232,7 +229,7 @@
                             </ImageView>
                         </graphic>
                         <tooltip>
-                            <Tooltip text="Delete selected battle."/>
+                            <Tooltip text="%alifec.battles.delete.selected"/>
                         </tooltip>
                     </Button>
 
@@ -243,7 +240,7 @@
                             </ImageView>
                         </graphic>
                         <tooltip>
-                            <Tooltip text="Delete all battles."/>
+                            <Tooltip text="%alifec.battles.delete.all"/>
                         </tooltip>
                     </Button>
 
@@ -254,7 +251,7 @@
                             </ImageView>
                         </graphic>
                         <tooltip>
-                            <Tooltip text="Run selected battle."/>
+                            <Tooltip text="%alifec.battles.run.selected"/>
                         </tooltip>
                     </Button>
 
@@ -265,7 +262,7 @@
                             </ImageView>
                         </graphic>
                         <tooltip>
-                            <Tooltip text="Run all battles."/>
+                            <Tooltip text="%alifec.battles.run.all"/>
                         </tooltip>
                     </Button>
 
@@ -276,7 +273,7 @@
                             </ImageView>
                         </graphic>
                         <tooltip>
-                            <Tooltip text="Add battle."/>
+                            <Tooltip text="%alifec.battles.add"/>
                         </tooltip>
                     </Button>
 
@@ -287,7 +284,7 @@
                             </ImageView>
                         </graphic>
                         <tooltip>
-                            <Tooltip text="Add all battles."/>
+                            <Tooltip text="%alifec.battles.add.all"/>
                         </tooltip>
                     </Button>
                 </HBox>
@@ -297,7 +294,7 @@
     </right>
 
     <bottom>
-        <TitledPane text="Information" collapsible="false">
+        <TitledPane text="%alifec.information.title" collapsible="false">
             <padding>
                 <Insets right="6" left="6" bottom="6"/>
             </padding>

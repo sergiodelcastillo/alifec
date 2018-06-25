@@ -2,6 +2,7 @@ package alifec.simulation.controller;
 
 import alifec.core.contest.oponentInfo.ColonyStatistics;
 import alifec.core.contest.oponentInfo.TournamentStatistics;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.simulation.util.CompetitorViewComparator;
 import alifec.simulation.view.CompetitorView;
 import javafx.application.Platform;
@@ -59,21 +60,29 @@ public class ALifeContestController implements MainController {
 
     private ResourceBundle bundle;
 
+    //contest properties
+    private ContestConfig config;
 
-    public void init(ResourceBundle bundle, Stage root) {
+
+    public void init(ResourceBundle bundle, Stage root, ContestConfig config) {
         this.bundle = bundle;
         this.root = root;
+        this.config = config;
 
+        loadContest(config);
         root.setResizable(false);
         root.getIcons().add(new Image("/images/logo.png"));
 
         try {
-
             //TODO
             updateStatistics(null);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadContest(ContestConfig config) {
+
     }
 
     public void newContest(ActionEvent ignored) {
