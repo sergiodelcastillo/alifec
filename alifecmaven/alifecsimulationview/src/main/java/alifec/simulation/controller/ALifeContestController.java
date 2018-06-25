@@ -1,7 +1,9 @@
 package alifec.simulation.controller;
 
+import alifec.core.contest.Contest;
 import alifec.core.contest.oponentInfo.ColonyStatistics;
 import alifec.core.contest.oponentInfo.TournamentStatistics;
+import alifec.core.exception.CreateContestException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.simulation.util.CompetitorViewComparator;
 import alifec.simulation.view.CompetitorView;
@@ -63,7 +65,6 @@ public class ALifeContestController implements MainController {
     //contest properties
     private ContestConfig config;
 
-
     public void init(ResourceBundle bundle, Stage root, ContestConfig config) {
         this.bundle = bundle;
         this.root = root;
@@ -82,7 +83,22 @@ public class ALifeContestController implements MainController {
     }
 
     private void loadContest(ContestConfig config) {
+        /*
+         //create an instance of the contest
+        contest = new Contest(config);
 
+        Battle failed = contest.getUnsuccessfulBattle();
+
+        if (failed != null) {
+            UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, failed.getFirstColony(), failed.getSecondColony());
+            solver.setVisible(true);
+
+            //remove the colony which was excluded from the Dialog "UnsuccessfulColoniesSolverUI".
+            for (String excludedColony : excluded) {
+                contest.getEnvironment().delete(excludedColony);
+            }
+        }
+        * */
     }
 
     public void newContest(ActionEvent ignored) {
@@ -182,11 +198,6 @@ public class ALifeContestController implements MainController {
     }
 
     @Override
-    public Window getView() {
-        return root;
-    }
-
-    @Override
     public void createNewContest() {
         //TODO: implement the creation of new contest
         System.out.println("Todo: create new contest");
@@ -260,7 +271,6 @@ public class ALifeContestController implements MainController {
         SortedList<CompetitorView> sortedList = new SortedList<>(list, new CompetitorViewComparator());
 
         coloniesStatistics.getItems().addAll(sortedList);
-
     }
 
 }

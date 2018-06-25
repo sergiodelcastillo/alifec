@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+
+<?import javafx.stage.Stage?>
+<?import javafx.scene.Scene?>
+<?import javafx.geometry.Insets?>
+<Stage xmlns="http://javafx.com/javafx"
+       xmlns:fx="http://javafx.com/fxml"
+       fx:controller="alifec.simulation.controller.CompilationErrorController" title="Compilation error"
+       resizable="false">
+    <scene>
+        <Scene>
+            <VBox spacing="5">
+                <padding>
+                    <Insets left="10" right="10" top="10" bottom="10"/>
+                </padding>
+
+                <Text fx:id="header" text="The compilation of colonies failed."
+                      style="-fx-font-size: 18px"/>
+
+                <GridPane hgap="10" vgap="10">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+                    <columnConstraints>
+                        <ColumnConstraints/>
+                        <ColumnConstraints halignment="RIGHT"/>
+                    </columnConstraints>
+
+                    <Text GridPane.columnIndex="0" GridPane.rowIndex="0" wrappingWidth="500" GridPane.columnSpan="2"
+                          text="The application will continue to run without the non-compiled source codes. Please check the compilation log for more details."/>
+                    <TextArea fx:id="textArea" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"
+                              editable="false"
+                              wrapText="true"
+                              maxWidth="Infinity"
+                              maxHeight="Infinity" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+                    <Button text="Close" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#close"/>
+                </GridPane>
+            </VBox>
+        </Scene>
+    </scene>
+</Stage>

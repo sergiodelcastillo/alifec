@@ -18,7 +18,5 @@ public interface MainController  {
 
     void createReportCsv();
 
-    Window getView();
-
     void createNewContest();
 }

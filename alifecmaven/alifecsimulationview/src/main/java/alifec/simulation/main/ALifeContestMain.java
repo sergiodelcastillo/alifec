@@ -7,23 +7,16 @@ import alifec.core.exception.InvalidUserDirException;
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.simulation.controller.ALifeContestController;
+import alifec.simulation.controller.CompilationErrorController;
 import alifec.simulation.controller.ContestLoaderController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -101,32 +94,13 @@ public class ALifeContestMain extends Application {
         }
     }
 
-    private void compileColonies(ContestConfig config) {
+    private void compileColonies(ContestConfig config) throws IOException {
         CompileHelper compiler = new CompileHelper(config);
         CompilationResult result = compiler.compileMOs();
 
         if (result.haveErrors()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Compilation error");
-            alert.setHeaderText("At least one MO was not compiled successful.");
-            Text contentInfo = new Text("The application will continue to run without the non-compiled source codes. Please check the compilation log for more details.");
-            contentInfo.setWrappingWidth(470);
-            TextArea detailsArea = new TextArea();
-            detailsArea.setEditable(false);
-            detailsArea.setWrapText(true);
-            detailsArea.setMaxWidth(Double.MAX_VALUE);
-            detailsArea.setMaxHeight(Double.MAX_VALUE);
-            GridPane.setVgrow(detailsArea, Priority.ALWAYS);
-            GridPane.setHgrow(detailsArea, Priority.ALWAYS);
-
-            GridPane content = new GridPane();
-            content.setHgap(5);
-            content.setVgap(5);
-
-            content.add(contentInfo, 0, 0);
-            content.add(detailsArea, 0, 1);
-            content.setPrefWidth(500);
-            content.setPrefHeight(150);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CompilationError.fxml"), bundle);
+            Stage root = loader.load();
 
             StringBuilder builder = new StringBuilder();
 
@@ -137,10 +111,9 @@ public class ALifeContestMain extends Application {
                 builder.append(error).append('\n');
             }
 
-            detailsArea.setText(builder.toString());
+            ((CompilationErrorController) loader.getController()).setText(builder.toString());
 
-            alert.getDialogPane().setContent(content);
-            alert.showAndWait();
+            root.showAndWait();
         }
     }
 
