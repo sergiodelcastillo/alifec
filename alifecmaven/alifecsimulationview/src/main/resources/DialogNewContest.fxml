@@ -6,36 +6,46 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="alifec.simulation.controller.NewContestController"
-      prefHeight="200.0" prefWidth="500.0">
-    <GridPane hgap="10" vgap="10">
-        <padding>
-            <Insets top="20" left="10" right="10" bottom="10"/>
-        </padding>
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" halignment="LEFT"/>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
-        </columnConstraints>
 
-        <Label text="%new.contest.contest.name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField disable="true" text="Contest-" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        <TextField fx:id="contestName" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+<?import javafx.scene.Scene?>
+<?import javafx.stage.Stage?>
+<Stage xmlns="http://javafx.com/javafx"
+       xmlns:fx="http://javafx.com/fxml"
+       fx:controller="alifec.simulation.controller.NewContestController"
+       title="%new.contest.title"
+       resizable="false" onShown="#setDefaults">
+    <scene>
+        <Scene onKeyPressed="#keyHandler">
+            <VBox prefHeight="200.0" prefWidth="500.0">
+                <GridPane hgap="10" vgap="10">
+                    <padding>
+                        <Insets top="20" left="10" right="10" bottom="10"/>
+                    </padding>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" halignment="LEFT"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
+                    </columnConstraints>
 
-        <Label text="%new.contest.contest.path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <TextField fx:id="contestPath" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"
-                   GridPane.columnSpan="2"/>
+                    <Label text="%new.contest.contest.name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField disable="true" text="Contest-" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <TextField fx:id="contestName" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
-        <CheckBox fx:id="loadContest" text="%new.contest.option.load" GridPane.valignment="BOTTOM"
-                  GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
-        <CheckBox fx:id="generateExamples" text="%new.contest.option.examples" GridPane.columnIndex="0"
-                  GridPane.rowIndex="4" GridPane.columnSpan="2"/>
-    </GridPane>
+                    <Label text="%new.contest.contest.path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="contestPath" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                               GridPane.columnSpan="2"/>
 
-    <HBox alignment="CENTER" spacing="10">
-        <Button text="%new.contest.accept" onAction="#accept"/>
-        <Button text="%new.contest.cancel" onAction="#cancel"/>
-    </HBox>
-</VBox>
+                    <CheckBox fx:id="loadContest" text="%new.contest.option.load" GridPane.valignment="BOTTOM"
+                              GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+                    <CheckBox fx:id="generateExamples" text="%new.contest.option.examples" GridPane.columnIndex="0"
+                              GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+                </GridPane>
+
+                <HBox alignment="CENTER" spacing="10">
+                    <Button text="%new.contest.accept" onAction="#accept"/>
+                    <Button text="%new.contest.cancel" onAction="#cancel"/>
+                </HBox>
+            </VBox>
+        </Scene>
+    </scene>
+</Stage>

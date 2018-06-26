@@ -133,7 +133,7 @@ public class ALifeContestMain extends Application {
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ContestLoader.fxml"), bundle);
-            Parent root = loader.load();
+            Stage root = loader.load();
             ContestLoaderController controller = loader.getController();
 
             if (ex instanceof ConfigFileException) {
@@ -142,9 +142,7 @@ public class ALifeContestMain extends Application {
                 controller.allowEditFileOption(config);
             }
 
-            Stage contestLoader = controller.init(null, root, bundle);
-
-            contestLoader.showAndWait();
+            root.showAndWait();
 
             if (controller.isCancelled()) return null;
 

@@ -10,7 +10,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +26,7 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ContestLoaderController extends Controller {
+public class ContestLoaderController {
     private Logger logger = LogManager.getLogger(getClass());
     @FXML
     public TitledPane updateConfigFilePane;
@@ -46,24 +49,9 @@ public class ContestLoaderController extends Controller {
     @FXML
     public ComboBox existingContestCombobox;
 
-    private Parent root;
-    private MainController father;
-
     private ContestConfig config;
 
     private boolean cancelled;
-
-    @Override
-    public Stage init(MainController controller, Parent root, ResourceBundle bundle) {
-        this.father = controller;
-        this.root = root;
-
-        Stage stage = buildDialog(root, bundle.getString("contest.loader.title"));
-
-        setDefaults();
-
-        return stage;
-    }
 
     public void allowEditFileOption(ContestConfig config) {
         this.config = config;
@@ -74,6 +62,8 @@ public class ContestLoaderController extends Controller {
         configPropertiesTable.getItems().add(new ConfigProperty("nutrients", config.getNutrients()));
         configPropertiesTable.getItems().add(new ConfigProperty("pause_between_battles", config.getPauseBetweenBattles()));
 
+        //default screen
+        setDiscardFile();
     }
 
     public void discardFile(ActionEvent event) {
@@ -89,10 +79,6 @@ public class ContestLoaderController extends Controller {
         setExistingContest();
     }
 
-    @Override
-    void setDefaults() {
-        setDiscardFile();
-    }
 
     private void setDiscardFile() {
         updateConfigFilePane.setVisible(false);
@@ -184,5 +170,9 @@ public class ContestLoaderController extends Controller {
         return cancelled;
     }
 
-
+    public void keyHandler(KeyEvent event) {
+        if (KeyCode.ESCAPE == event.getCode()) {
+            ((Scene) event.getSource()).getWindow().hide();
+        }
+    }
 }

@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ALifeContestController implements MainController {
+public class ALifeContestController {
     @FXML
     public BorderPane mainLayout;
 
@@ -104,7 +104,14 @@ public class ALifeContestController implements MainController {
     public void newContest(ActionEvent ignored) {
         try {
             if (dialogNewContest == null) {
-                dialogNewContest = createDialog("/DialogNewContest.fxml");
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogNewContest.fxml"), bundle);
+                dialogNewContest = loader.load();
+                dialogNewContest.initOwner(mainLayout.getScene().getWindow());
+
+                //set specific data!!
+                NewContestController controller = loader.getController();
+                controller.setMainController(this);
+                controller.setParentView(root);
             }
 
 
@@ -128,7 +135,13 @@ public class ALifeContestController implements MainController {
     public void showDialogStatistics(ActionEvent ignored) {
         try {
             if (dialogStatistics == null) {
-                dialogStatistics = createDialog("/DialogStatistics.fxml");
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogStatistics.fxml"), bundle);
+                dialogStatistics = loader.load();
+                dialogStatistics.initOwner(mainLayout.getScene().getWindow());
+
+                //set specific data!!
+                StatisticsController controller = loader.getController();
+                controller.setMainController(this);
             }
 
             dialogStatistics.showAndWait();
@@ -140,7 +153,13 @@ public class ALifeContestController implements MainController {
     public void showDialogPreferences(ActionEvent ignored) {
         try {
             if (dialogPreferences == null) {
-                dialogPreferences = createDialog("/DialogPreferences.fxml");
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogPreferences.fxml"), bundle);
+                dialogPreferences= loader.load();
+                dialogPreferences.initOwner(mainLayout.getScene().getWindow());
+
+                //set specific data!!
+                PreferencesController controller = loader.getController();
+                controller.setMainController(this);
             }
 
             dialogPreferences.showAndWait();
@@ -154,6 +173,7 @@ public class ALifeContestController implements MainController {
         alert.setTitle(bundle.getString("ALifeContestMain.help.title"));
         alert.setHeaderText(bundle.getString("ALifeContestMain.help.header"));
         alert.setContentText(bundle.getString("ALifeContestMain.help.contentText"));
+        alert.initOwner(mainLayout.getScene().getWindow());
 
         alert.showAndWait();
     }
@@ -161,7 +181,9 @@ public class ALifeContestController implements MainController {
     public void showDialogAbout(ActionEvent ignored) {
         try {
             if (dialogAbout == null) {
-                dialogAbout = createDialog("/DialogAbout.fxml");
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogAbout.fxml"), bundle);
+                dialogAbout = loader.load();
+                dialogAbout.initOwner(mainLayout.getScene().getWindow());
             }
 
             dialogAbout.showAndWait();
@@ -170,21 +192,8 @@ public class ALifeContestController implements MainController {
         }
     }
 
-    private Stage createDialog(String stageFile) throws java.io.IOException {
-        FXMLLoader loader = getFXMLLoader(stageFile);
-        Parent root = loader.load();
 
-        Stage stage = ((Controller) loader.getController()).init(this, root, getBundle());
-        stage.initOwner(mainLayout.getScene().getWindow());
 
-        return stage;
-    }
-
-    private FXMLLoader getFXMLLoader(String fxml) {
-        return new FXMLLoader(getClass().getResource(fxml), bundle);
-    }
-
-    @Override
     public void savePreferences() {
         System.out.println("update data");
     }
@@ -197,7 +206,7 @@ public class ALifeContestController implements MainController {
         System.out.println("update data csv");
     }
 
-    @Override
+
     public void createNewContest() {
         //TODO: implement the creation of new contest
         System.out.println("Todo: create new contest");

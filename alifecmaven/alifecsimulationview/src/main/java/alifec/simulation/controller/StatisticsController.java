@@ -3,6 +3,7 @@ package alifec.simulation.controller;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -15,23 +16,20 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class StatisticsController extends Controller {
+public class StatisticsController {
 
-    private MainController father;
-    private Parent root;
+    private ALifeContestController father;
+    //private Parent root;
 
-    public Stage init(MainController father, Parent root, ResourceBundle bundle) {
-        this.father = father;
-        this.root = root;
 
-        Stage statistics = buildDialog(root, bundle.getString("statistics.title"));
+    public void setMainController(ALifeContestController controller) {
+        this.father = controller;
+    }
 
-        statistics.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
-            if (KeyCode.ESCAPE == e.getCode()) {
-                statistics.close();
-            }
-        });
-        return statistics;
+    public void keyHandler(KeyEvent event) {
+        if (KeyCode.ESCAPE == event.getCode()) {
+            ((Scene) event.getSource()).getWindow().hide();
+        }
     }
 
     public void generateReportTxt(ActionEvent event) {

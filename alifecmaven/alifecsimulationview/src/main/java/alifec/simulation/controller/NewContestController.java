@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -23,7 +24,7 @@ import java.util.ResourceBundle;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class NewContestController extends Controller {
+public class NewContestController {
     @FXML
     public TextField contestPath;
 
@@ -36,27 +37,24 @@ public class NewContestController extends Controller {
     @FXML
     public CheckBox generateExamples;
 
-    private MainController father;
-    private Parent root;
+    private ALifeContestController father;
+    private Stage parent;
 
-    @Override
-    public Stage init(MainController controller, Parent root, ResourceBundle bundle) {
+    public void setMainController(ALifeContestController controller) {
         this.father = controller;
-        this.root = root;
-
-        Stage stage = buildDialog(root, bundle.getString("new.contest.title"));
-
-        //reset the values when the interface is displayed
-        stage.setOnShown(event -> setDefaults());
-        stage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
-            if (KeyCode.ESCAPE == e.getCode()) {
-                stage.close();
-            }
-        });
-        return stage;
     }
 
-    @Override
+    public void setParentView(Stage parent) {
+        this.parent = parent;
+
+    }
+
+    public void keyHandler(KeyEvent event) {
+        if (KeyCode.ESCAPE == event.getCode()) {
+            ((Scene) event.getSource()).getWindow().hide();
+        }
+    }
+
     public void setDefaults() {
         try {
             String defaultPath = ContestConfig.getDefaultPath();
@@ -86,7 +84,7 @@ public class NewContestController extends Controller {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setInitialDirectory(new File("."));
         //todo: improve it
-        File directory = chooser.showDialog(root.getScene().getWindow());
+        File directory = chooser.showDialog(parent);
         try {
             if (directory != null)
                 contestPath.setText(directory.getCanonicalPath());

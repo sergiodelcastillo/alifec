@@ -9,7 +9,7 @@ import java.util.Comparator;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class CompetitorViewComparator  implements Comparator<CompetitorView>{
+public class CompetitorViewComparator implements Comparator<CompetitorView> {
     @Override
     public int compare(CompetitorView o1, CompetitorView o2) {
         return Float.compare(o2.getModel().getAccumulated(), o1.getModel().getAccumulated());

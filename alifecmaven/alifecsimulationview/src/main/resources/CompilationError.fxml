@@ -2,18 +2,18 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.text.Text?>
-
 <?import javafx.stage.Stage?>
 <?import javafx.scene.Scene?>
 <?import javafx.geometry.Insets?>
+
 <Stage xmlns="http://javafx.com/javafx"
        xmlns:fx="http://javafx.com/fxml"
-       fx:controller="alifec.simulation.controller.CompilationErrorController" title="Compilation error"
+       fx:controller="alifec.simulation.controller.CompilationErrorController"
+       title="%compilation.error.title"
        resizable="false">
     <scene>
-        <Scene>
+        <Scene onKeyPressed="#keyHandler">
             <VBox spacing="5">
                 <padding>
                     <Insets left="10" right="10" top="10" bottom="10"/>

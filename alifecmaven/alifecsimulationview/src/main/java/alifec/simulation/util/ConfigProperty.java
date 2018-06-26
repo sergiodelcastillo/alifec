@@ -52,7 +52,6 @@ public class ConfigProperty {
     }
 
     public void setContent(String content) {
-        //this.content.set(content);
         this.content.set(content);
     }
 }
