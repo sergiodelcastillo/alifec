@@ -19,11 +19,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -39,13 +36,13 @@ public class ALifeContestController {
     public Label messagePanel;
 
     @FXML
-    public ComboBox opponentsList1;
+    public ComboBox<String> opponentsList1;
 
     @FXML
-    public ComboBox opponentsList2;
+    public ComboBox<String> opponentsList2;
 
     @FXML
-    public ComboBox nutrientsList;
+    public ComboBox<alifec.core.simulation.NutrientDistribution> nutrientsList;
 
     @FXML
     public ListView<Parent> coloniesStatistics;
@@ -64,29 +61,44 @@ public class ALifeContestController {
 
     //contest properties
     private ContestConfig config;
+    private Contest contest;
 
-    public void init(ResourceBundle bundle, Stage root, ContestConfig config) {
+    public void init(ResourceBundle bundle, Stage root, ContestConfig config) throws CreateContestException {
         this.bundle = bundle;
         this.root = root;
         this.config = config;
 
-        loadContest(config);
         root.setResizable(false);
         root.getIcons().add(new Image("/images/logo.png"));
 
+        contest = loadContest(config);
+
         try {
-            //TODO
-            updateStatistics(null);
+            //TODO implement this part
+            initStatisticsPanel(contest);
+            initBattlePanel(contest);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadContest(ContestConfig config) {
-        /*
-         //create an instance of the contest
-        contest = new Contest(config);
+    private void initBattlePanel(Contest contest) {
+        opponentsList1.getItems().setAll(contest.getEnvironment().getOpponentNames());
+        opponentsList1.getSelectionModel().selectFirst();
 
+        opponentsList2.getItems().setAll(contest.getEnvironment().getOpponentNames());
+        opponentsList2.getSelectionModel().selectLast();
+
+        nutrientsList.getItems().setAll(contest.getCurrentNutrients());
+        nutrientsList.getSelectionModel().selectFirst();
+    }
+
+    private Contest loadContest(ContestConfig config) throws CreateContestException {
+
+        //create an instance of the contest
+        Contest contest = new Contest(config);
+
+        /* todo: implement this part!!
         Battle failed = contest.getUnsuccessfulBattle();
 
         if (failed != null) {
@@ -99,6 +111,7 @@ public class ALifeContestController {
             }
         }
         * */
+        return contest;
     }
 
     public void newContest(ActionEvent ignored) {
@@ -154,7 +167,7 @@ public class ALifeContestController {
         try {
             if (dialogPreferences == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogPreferences.fxml"), bundle);
-                dialogPreferences= loader.load();
+                dialogPreferences = loader.load();
                 dialogPreferences.initOwner(mainLayout.getScene().getWindow());
 
                 //set specific data!!
@@ -191,7 +204,6 @@ public class ALifeContestController {
             e.printStackTrace();
         }
     }
-
 
 
     public void savePreferences() {
@@ -257,19 +269,20 @@ public class ALifeContestController {
     }
 
 
-    public void updateStatistics(TournamentStatistics statistics) throws IOException {
+    public void initStatisticsPanel(Contest contest) throws IOException {
         //clear all items
         coloniesStatistics.getItems().clear();
+        TournamentStatistics statistics = contest.lastTournament().getTournamentStatistics();
 
         //Create test data!!!
-        if (statistics == null) {
+        /*if (statistics == null) {
             statistics = new TournamentStatistics();
             statistics.addWinner("yeyo", "yeyo", "yeyo", 12518f);
             statistics.addWinner("Bicho", "bbbaa", "frsf", 1258f);
             statistics.addWinner("Bacteria", "lele", "test", 5258f);
             //calculate the points
             statistics.calculate();
-        }
+        }*/
 
         ObservableList<CompetitorView> list = FXCollections.observableArrayList();
 

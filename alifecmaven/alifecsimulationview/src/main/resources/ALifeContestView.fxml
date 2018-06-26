@@ -137,9 +137,6 @@
                     <ComboBox fx:id="opponentsList1">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Oponent 1"/>
-                                <String fx:value="bicho"/>
-                                <String fx:value="Tactica1 java"/>
                             </FXCollections>
                         </items>
                     </ComboBox>
@@ -147,9 +144,6 @@
                     <ComboBox fx:id="opponentsList2">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Oponent 2"/>
-                                <String fx:value="bicho 2"/>
-                                <String fx:value="Tactica1 cpp"/>
                             </FXCollections>
                         </items>
                     </ComboBox>
@@ -158,9 +152,6 @@
                     <ComboBox fx:id="nutrientsList">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Lattice"/>
-                                <String fx:value="InclinedPlane"/>
-                                <String fx:value="Rings"/>
                             </FXCollections>
                         </items>
                     </ComboBox>
