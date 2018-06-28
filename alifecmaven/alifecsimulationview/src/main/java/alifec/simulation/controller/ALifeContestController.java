@@ -1,10 +1,16 @@
 package alifec.simulation.controller;
 
+import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
 import alifec.core.contest.oponentInfo.ColonyStatistics;
 import alifec.core.contest.oponentInfo.TournamentStatistics;
+import alifec.core.exception.BattleException;
 import alifec.core.exception.CreateContestException;
+import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.simulation.Competitor;
+import alifec.core.simulation.NutrientDistribution;
+import alifec.core.validation.BattleRuntimeValidator;
 import alifec.simulation.util.CompetitorViewComparator;
 import alifec.simulation.view.CompetitorView;
 import javafx.application.Platform;
@@ -19,6 +25,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -29,6 +37,8 @@ import java.util.ResourceBundle;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestController {
+    private Logger logger = LogManager.getLogger(ALifeContestController.class.getName());
+
     @FXML
     public BorderPane mainLayout;
 
@@ -36,16 +46,22 @@ public class ALifeContestController {
     public Label messagePanel;
 
     @FXML
-    public ComboBox<String> opponentsList1;
+    public ComboBox<Competitor> opponentsList1;
 
     @FXML
-    public ComboBox<String> opponentsList2;
+    public ComboBox<Competitor> opponentsList2;
 
     @FXML
-    public ComboBox<alifec.core.simulation.NutrientDistribution> nutrientsList;
+    public ComboBox<NutrientDistribution> nutrientsList;
 
     @FXML
     public ListView<Parent> coloniesStatistics;
+
+    @FXML
+    public TitledPane tournamentPanel;
+
+    @FXML
+    public ListView<Battle> battleList;
 
     private Stage root;
 
@@ -63,6 +79,9 @@ public class ALifeContestController {
     private ContestConfig config;
     private Contest contest;
 
+    private Alert existingBattleAlert;
+    private Alert createBattleAlert;
+
     public void init(ResourceBundle bundle, Stage root, ContestConfig config) throws CreateContestException {
         this.bundle = bundle;
         this.root = root;
@@ -78,15 +97,15 @@ public class ALifeContestController {
             initStatisticsPanel(contest);
             initBattlePanel(contest);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
     private void initBattlePanel(Contest contest) {
-        opponentsList1.getItems().setAll(contest.getEnvironment().getOpponentNames());
+        opponentsList1.getItems().setAll(contest.getEnvironment().getCompetitors());
         opponentsList1.getSelectionModel().selectFirst();
 
-        opponentsList2.getItems().setAll(contest.getEnvironment().getOpponentNames());
+        opponentsList2.getItems().setAll(contest.getEnvironment().getCompetitors());
         opponentsList2.getSelectionModel().selectLast();
 
         nutrientsList.getItems().setAll(contest.getCurrentNutrients());
@@ -127,10 +146,9 @@ public class ALifeContestController {
                 controller.setParentView(root);
             }
 
-
             dialogNewContest.showAndWait();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -159,7 +177,7 @@ public class ALifeContestController {
 
             dialogStatistics.showAndWait();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -177,15 +195,15 @@ public class ALifeContestController {
 
             dialogPreferences.showAndWait();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
     public void showDialogHelp(ActionEvent ignored) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(bundle.getString("ALifeContestMain.help.title"));
-        alert.setHeaderText(bundle.getString("ALifeContestMain.help.header"));
-        alert.setContentText(bundle.getString("ALifeContestMain.help.contentText"));
+        alert.setTitle(bundle.getString("ALifeContestController.help.title"));
+        alert.setHeaderText(bundle.getString("ALifeContestController.help.header"));
+        alert.setContentText(bundle.getString("ALifeContestController.help.contentText"));
         alert.initOwner(mainLayout.getScene().getWindow());
 
         alert.showAndWait();
@@ -201,7 +219,7 @@ public class ALifeContestController {
 
             dialogAbout.showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -219,7 +237,7 @@ public class ALifeContestController {
     }
 
 
-    public void createNewContest() {
+    void createNewContest() {
         //TODO: implement the creation of new contest
         System.out.println("Todo: create new contest");
     }
@@ -229,7 +247,11 @@ public class ALifeContestController {
     }
 
     public void deleteSelectedBattles(ActionEvent event) {
-        System.out.println("delete selected battles");
+        int index = battleList.getSelectionModel().getSelectedIndex();
+
+        if (index > -1)
+            battleList.getItems().remove(index);
+
     }
 
     public void deleteAllBattles(ActionEvent event) {
@@ -245,8 +267,27 @@ public class ALifeContestController {
     }
 
     public void addBattle(ActionEvent event) {
-        System.out.println("Add one battle");
+        try {
+            Battle battle = new Battle(opponentsList1.getSelectionModel().getSelectedItem(),
+                    opponentsList2.getSelectionModel().getSelectedItem(),
+                    nutrientsList.getSelectionModel().getSelectedItem());
+
+            if (config.isCompetitionMode()) {
+                if (battleList.getItems().contains(battle)) {
+                    showExistingBattleAlert();
+                } else {
+                    battleList.getItems().add(battle);
+                }
+            } else {
+                battleList.getItems().add(battle);
+            }
+        } catch (BattleException e) {
+            logger.error(e.getMessage(), e);
+
+            showCreateBattleAlert(e);
+        }
     }
+
 
     public void addAllBattles(ActionEvent event) {
         System.out.println("add all battles");
@@ -271,18 +312,9 @@ public class ALifeContestController {
 
     public void initStatisticsPanel(Contest contest) throws IOException {
         //clear all items
+        tournamentPanel.setText(contest.lastTournament().getName());
         coloniesStatistics.getItems().clear();
         TournamentStatistics statistics = contest.lastTournament().getTournamentStatistics();
-
-        //Create test data!!!
-        /*if (statistics == null) {
-            statistics = new TournamentStatistics();
-            statistics.addWinner("yeyo", "yeyo", "yeyo", 12518f);
-            statistics.addWinner("Bicho", "bbbaa", "frsf", 1258f);
-            statistics.addWinner("Bacteria", "lele", "test", 5258f);
-            //calculate the points
-            statistics.calculate();
-        }*/
 
         ObservableList<CompetitorView> list = FXCollections.observableArrayList();
 
@@ -295,4 +327,31 @@ public class ALifeContestController {
         coloniesStatistics.getItems().addAll(sortedList);
     }
 
+    private void showCreateBattleAlert(BattleException ex) {
+        if (createBattleAlert == null) {
+            createBattleAlert = new Alert(Alert.AlertType.ERROR);
+            createBattleAlert.setTitle(bundle.getString("ALifeContestController.create.battle.alert.title"));
+            createBattleAlert.setHeaderText(bundle.getString("ALifeContestController.create.battle.alert.header"));
+            createBattleAlert.initOwner(mainLayout.getScene().getWindow());
+        }
+
+        if (ex.getCause() instanceof ValidationException) {
+            //todo: improve translation
+            createBattleAlert.setContentText(ex.getCause().getMessage());
+        } else {
+            createBattleAlert.setContentText(bundle.getString("ALifeContestController.create.battle.alert.content"));
+        }
+        createBattleAlert.showAndWait();
+    }
+
+    private void showExistingBattleAlert() {
+        if (existingBattleAlert == null) {
+            existingBattleAlert = new Alert(Alert.AlertType.ERROR);
+            existingBattleAlert.setTitle(bundle.getString("ALifeContestController.existing.battle.alert.title"));
+            existingBattleAlert.setHeaderText(bundle.getString("ALifeContestController.existing.battle.alert.header"));
+            existingBattleAlert.setContentText(bundle.getString("ALifeContestController.existing.battle.alert.content"));
+            existingBattleAlert.initOwner(mainLayout.getScene().getWindow());
+        }
+        existingBattleAlert.showAndWait();
+    }
 }

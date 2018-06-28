@@ -2,6 +2,8 @@ package alifec.core.contest;
 
 
 import alifec.core.exception.BattleException;
+import alifec.core.simulation.Competitor;
+import alifec.core.simulation.NutrientDistribution;
 import alifec.core.validation.BattleFromCsvValidator;
 import alifec.core.validation.BattleRuntimeValidator;
 
@@ -14,6 +16,9 @@ import java.util.Objects;
  *         Contains de history of battles.
  */
 public class Battle implements Comparable<Battle> {
+    private final String BATTLE_STRING_FORMAT = "%s vs %s in %s";
+    private final String BATTLE_CSV_FORMAT = "%s,%s,%s,%f,%f";
+
     private float firstEnergy;
     private String firstName;
     private int firstId = -1;
@@ -25,7 +30,6 @@ public class Battle implements Comparable<Battle> {
     private String nutrient;
     private int nutrientId = -1;
 
-    private StringBuilder builder;
 
     public Battle(String line) throws BattleException {
         checkLineFromCSV(line);
@@ -37,8 +41,6 @@ public class Battle implements Comparable<Battle> {
         nutrient = tmp[2];
         firstEnergy = Float.parseFloat(tmp[3]);
         secondEnergy = Float.parseFloat(tmp[4]);
-
-        init();
     }
 
     public Battle(int op1, int op2, int nutri, String name1, String name2, String n)
@@ -53,14 +55,12 @@ public class Battle implements Comparable<Battle> {
         this.nutrientId = nutri;
         this.nutrient = n;
 
-        init();
-
         checkRuntime();
 
     }
 
-    private void init() {
-        this.builder = new StringBuilder(100);
+    public Battle(Competitor c1, Competitor c2, NutrientDistribution n1) throws BattleException {
+        this(c1.getId(), c2.getId(), n1.getId(), c1.getColonyName(), c2.getColonyName(), n1.getNutrientName());
     }
 
 
@@ -135,15 +135,7 @@ public class Battle implements Comparable<Battle> {
 
     @Override
     public String toString() {
-        builder.delete(0, builder.length());
-
-        builder.append(firstName)
-                .append(" vs ")
-                .append(secondName)
-                .append(" in ")
-                .append(nutrient);
-
-        return builder.toString();
+        return String.format(BATTLE_STRING_FORMAT, firstName, secondName, nutrient);
     }
 
     @Override
@@ -177,19 +169,7 @@ public class Battle implements Comparable<Battle> {
     }
 
     public String toCsv() {
-        builder.delete(0, builder.length());
-
-        builder.append(firstName)
-                .append(',')
-                .append(secondName)
-                .append(',')
-                .append(nutrient)
-                .append(',')
-                .append(firstEnergy)
-                .append(',')
-                .append(secondEnergy);
-
-        return builder.toString();
+        return String.format(BATTLE_CSV_FORMAT, firstName, secondName, nutrient, firstEnergy, secondEnergy);
     }
 
     public void setWinner(int id, float energy) {
@@ -198,6 +178,5 @@ public class Battle implements Comparable<Battle> {
 
         if (secondId == id)
             this.secondEnergy = energy;
-
     }
 }

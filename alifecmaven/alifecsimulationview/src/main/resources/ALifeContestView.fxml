@@ -21,39 +21,33 @@
         <MenuBar BorderPane.alignment="CENTER">
 
             <Menu mnemonicParsing="false" text="File">
-                <MenuItem fx:id="newContest"
-                          mnemonicParsing="false"
+                <MenuItem mnemonicParsing="false"
                           onAction="#newContest"
                           text="%alifec.menu.file.new.contest"
                           accelerator="Shortcut+N"/>
 
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem fx:id="quit"
-                          mnemonicParsing="false"
+                <MenuItem mnemonicParsing="false"
                           onAction="#quit"
                           text="%alifec.menu.file.quit"
                           accelerator="ALT+F4"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Tools">
-                <MenuItem fx:id="reports"
-                          mnemonicParsing="false"
+                <MenuItem mnemonicParsing="false"
                           onAction="#showDialogStatistics"
                           text="%alifec.menu.tools.reports"
                           accelerator="Shortcut+R"/>
-                <MenuItem fx:id="options"
-                          mnemonicParsing="false"
+                <MenuItem mnemonicParsing="false"
                           onAction="#showDialogPreferences"
                           text="%alifec.menu.tools.preferences"
                           accelerator="Shortcut+P"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
-                <MenuItem fx:id="help"
-                          mnemonicParsing="false"
+                <MenuItem mnemonicParsing="false"
                           onAction="#showDialogHelp"
                           text="%alifec.menu.help.help"
                           accelerator="F1"/>
-                <MenuItem fx:id="about"
-                          mnemonicParsing="false"
+                <MenuItem mnemonicParsing="false"
                           onAction="#showDialogAbout"
                           text="%alifec.menu.help.about"
                           accelerator="Shortcut+A"/>
@@ -63,7 +57,7 @@
 
     <center>
 
-        <TitledPane minHeight="400.0" minWidth="400.0" collapsible="false" text="Tournament-001">
+        <TitledPane fx:id="tournamentPanel" minHeight="400.0" minWidth="400.0" collapsible="false">
             <padding>
                 <Insets top="6" right="3" bottom="6" left="6"/>
             </padding>
@@ -158,59 +152,7 @@
 
                 </HBox>
 
-                <ListView>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tessst"/>
-                    <Label text="tesssdt"/>
+                <ListView fx:id="battleList">
                 </ListView>
 
                 <HBox spacing="10">

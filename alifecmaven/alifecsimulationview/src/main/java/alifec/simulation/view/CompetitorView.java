@@ -1,9 +1,11 @@
 package alifec.simulation.view;
 
 import alifec.core.contest.oponentInfo.ColonyStatistics;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -42,6 +44,7 @@ public class CompetitorView extends GridPane {
         GridPane.setHgrow(opponentsProgress, Priority.ALWAYS);
         opponentsProgress.setMaxWidth(Double.MAX_VALUE);
         opponentsProgress.setProgress(col.getAccumulated()/maxEnergy);
+        opponentsProgress.setMouseTransparent(true);
 
         Label opponentsDetails = new Label();
         opponentsDetails.setStyle("-fx-font-size: 12");

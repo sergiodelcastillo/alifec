@@ -302,7 +302,7 @@ public class Tournament implements Comparable<Tournament>, Listener {
             return null;
         }
 
-        //the first battle it the one which didn't finish successful
+        //the first battle is the one which didn't finish successful
         return missingRun.get(0);
     }
 

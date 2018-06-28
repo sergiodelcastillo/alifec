@@ -32,6 +32,6 @@ public class BattleRuntimeValidator implements Validator<Battle> {
 
         if (battle.getFirstColonyId() == battle.getSecondColonyId() ||
                 battle.getFirstColony().equals(battle.getSecondColony()))
-            throw new ValidationException("First and second opponents must have different value.");
+            throw new ValidationException("First and second opponents must not be the same.");
     }
 }
