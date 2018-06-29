@@ -10,7 +10,6 @@ import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
 import alifec.core.simulation.NutrientDistribution;
-import alifec.core.validation.BattleRuntimeValidator;
 import alifec.simulation.util.CompetitorViewComparator;
 import alifec.simulation.view.CompetitorView;
 import javafx.application.Platform;
@@ -29,6 +28,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -37,32 +38,23 @@ import java.util.ResourceBundle;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestController {
-    private Logger logger = LogManager.getLogger(ALifeContestController.class.getName());
-
     @FXML
     public BorderPane mainLayout;
-
     @FXML
     public Label messagePanel;
-
     @FXML
     public ComboBox<Competitor> opponentsList1;
-
     @FXML
     public ComboBox<Competitor> opponentsList2;
-
     @FXML
     public ComboBox<NutrientDistribution> nutrientsList;
-
     @FXML
     public ListView<Parent> coloniesStatistics;
-
     @FXML
     public TitledPane tournamentPanel;
-
     @FXML
     public ListView<Battle> battleList;
-
+    private Logger logger = LogManager.getLogger(ALifeContestController.class.getName());
     private Stage root;
 
     private Stage dialogAbout;
@@ -81,6 +73,7 @@ public class ALifeContestController {
 
     private Alert existingBattleAlert;
     private Alert createBattleAlert;
+    private Alert duplicatedBattlesDecision;
 
     public void init(ResourceBundle bundle, Stage root, ContestConfig config) throws CreateContestException {
         this.bundle = bundle;
@@ -97,7 +90,7 @@ public class ALifeContestController {
             initStatisticsPanel(contest);
             initBattlePanel(contest);
         } catch (IOException e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -147,8 +140,9 @@ public class ALifeContestController {
             }
 
             dialogNewContest.showAndWait();
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            ;
         }
     }
 
@@ -176,8 +170,8 @@ public class ALifeContestController {
             }
 
             dialogStatistics.showAndWait();
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -194,8 +188,8 @@ public class ALifeContestController {
             }
 
             dialogPreferences.showAndWait();
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -219,7 +213,7 @@ public class ALifeContestController {
 
             dialogAbout.showAndWait();
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -254,8 +248,8 @@ public class ALifeContestController {
 
     }
 
-    public void deleteAllBattles(ActionEvent event) {
-        System.out.println("delete all battles");
+    public void deleteAllBattles() {
+        battleList.getItems().clear();
     }
 
     public void runSelectedBattle(ActionEvent event) {
@@ -266,7 +260,8 @@ public class ALifeContestController {
         System.out.println("Run all battles");
     }
 
-    public void addBattle(ActionEvent event) {
+    public void addBattle() {
+        //todo: alertar cuando es una batalla duplicada!!!
         try {
             Battle battle = new Battle(opponentsList1.getSelectionModel().getSelectedItem(),
                     opponentsList2.getSelectionModel().getSelectedItem(),
@@ -288,10 +283,43 @@ public class ALifeContestController {
         }
     }
 
+    /*
+    boolean existingBattle = false;
+            boolean option = father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE;
+            List<Battle> list = contest.lastTournament().generateMissingBattles(opponents, nutrients, option);
 
-    public void addAllBattles(ActionEvent event) {
-        System.out.println("add all battles");
+            for (Battle battle : list) {
+                if (!addBattle(battle, option)) {
+                    existingBattle = true;
+                }
+
+                if (list.size() == 0 && existingBattle)
+                    Message.printErr(this, "Battle/s already run.");
+            }
+    * */
+    public void addAllBattles() {
+        boolean duplicate = config.isProgrammerMode();
+
+        if (config.isProgrammerMode()) {
+            if (!battleList.getItems().isEmpty() || !contest.lastTournament().getBattles().isEmpty()) {
+                Optional<ButtonType> optional = showDuplicatedBattlesDecision();
+
+                duplicate = !optional.get().getButtonData().isCancelButton();
+            }
+        }
+        List<Battle> list = contest.lastTournament().generateMissingBattles(
+                opponentsList1.getItems(),
+                nutrientsList.getItems(),
+                duplicate);
+
+        if (!duplicate) {
+            //remove battles which are pending to run.
+            list.removeAll(battleList.getItems());
+        }
+
+        battleList.getItems().addAll(list);
     }
+
 
     public void previousTournament(ActionEvent event) {
         System.out.println("prev tournament");
@@ -325,6 +353,17 @@ public class ALifeContestController {
         SortedList<CompetitorView> sortedList = new SortedList<>(list, new CompetitorViewComparator());
 
         coloniesStatistics.getItems().addAll(sortedList);
+    }
+
+    private Optional<ButtonType> showDuplicatedBattlesDecision() {
+        if (duplicatedBattlesDecision == null) {
+            duplicatedBattlesDecision = new Alert(Alert.AlertType.CONFIRMATION);
+            duplicatedBattlesDecision.setTitle(bundle.getString("ALifeContestController.duplicated.battles.alert.title"));
+            duplicatedBattlesDecision.setHeaderText(bundle.getString("ALifeContestController.duplicated.battles.alert.header"));
+            duplicatedBattlesDecision.setContentText(bundle.getString("ALifeContestController.duplicated.battles.alert.content"));
+            duplicatedBattlesDecision.initOwner(mainLayout.getScene().getWindow());
+        }
+        return duplicatedBattlesDecision.showAndWait();
     }
 
     private void showCreateBattleAlert(BattleException ex) {

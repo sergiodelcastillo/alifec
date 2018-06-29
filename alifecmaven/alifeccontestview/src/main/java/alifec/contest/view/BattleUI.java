@@ -282,7 +282,7 @@ public class BattleUI extends JPanel implements ActionListener {
     private void generateAllBattle() {
         boolean existingBattle = false;
         boolean option = father.getContest().getMode() == ContestConfig.PROGRAMMER_MODE;
-        List<Battle> list = contest.lastTournament().generateAllBattles(opponents, nutrients, option);
+        List<Battle> list = contest.lastTournament().generateMissingBattles(opponents, nutrients, option);
 
         for (Battle battle : list) {
             if (!addBattle(battle, option)) {

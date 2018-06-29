@@ -1,4 +1,3 @@
-
 package alifec.core.contest;
 
 import alifec.core.contest.oponentInfo.TournamentStatistics;
@@ -10,7 +9,6 @@ import alifec.core.event.impl.BattleStartsEvent;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.TournamentException;
 import alifec.core.persistence.SimulationFileManager;
-import alifec.core.persistence.SimulationFileManagerImpl1;
 import alifec.core.persistence.SimulationFileManagerList;
 import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -26,14 +24,10 @@ import java.util.List;
 
 public class Tournament implements Comparable<Tournament>, Listener {
 
-    private Logger logger = LogManager.getLogger(getClass());
-
-    private List<Battle> battles;
-
-    private List<String> colonies;
-
     private final String name;
-
+    private Logger logger = LogManager.getLogger(getClass());
+    private List<Battle> battles;
+    private List<String> colonies;
     private TournamentFileManager persistence;
     private SimulationFileManager sPersistence;
 
@@ -177,14 +171,13 @@ public class Tournament implements Comparable<Tournament>, Listener {
         persistence.saveAll(battles);
     }
 
-    public void setEnabled(boolean b) {
-        isEnabled = b;
-    }
-
     public boolean isEnabled() {
         return isEnabled;
     }
 
+    public void setEnabled(boolean b) {
+        isEnabled = b;
+    }
 
     public String getName() {
         return name;
@@ -211,14 +204,14 @@ public class Tournament implements Comparable<Tournament>, Listener {
         return persistence.existsFile(config.getBattlesTargetRunFile(name));
     }
 
-    public List<Battle> generateAllBattles(List<Competitor> competitors, List<NutrientDistribution> nutrients, boolean duplicate) {
+    public List<Battle> generateMissingBattles(List<Competitor> competitors, List<NutrientDistribution> nutrients, boolean duplicate) {
         //todo: create tests.
         List<Battle> list = new ArrayList<>();
 
-        for (int i = 0, competitorsSize = competitors.size(); i < competitorsSize; i++) {
+        for (int i = 0; i < competitors.size(); i++) {
             Competitor c1 = competitors.get(i);
-            for (int i1 = i + 1, competitorsSize1 = competitors.size(); i1 < competitorsSize1; i1++) {
-                Competitor c2 = competitors.get(i1);
+            for (int j = i + 1; j < competitors.size(); j++) {
+                Competitor c2 = competitors.get(j);
                 for (NutrientDistribution n : nutrients) {
                     try {
                         Battle battle = new Battle(
@@ -229,8 +222,9 @@ public class Tournament implements Comparable<Tournament>, Listener {
                                 c2.getColonyName(),
                                 n.getNutrientName());
 
-                        if (!list.contains(battle))
+                        if (duplicate || !battles.contains(battle)) {
                             list.add(battle);
+                        }
 
                     } catch (BattleException ex) {
                         logger.error(ex.getMessage(), ex);
@@ -239,15 +233,6 @@ public class Tournament implements Comparable<Tournament>, Listener {
             }
         }
 
-        //remove already run
-        if (!duplicate) {
-            for (Battle finished : battles) {
-                if (list.contains(finished)) {
-                    logger.warn("Battle already run: (" + battles.toString() + ")");
-                    list.remove(finished);
-                }
-            }
-        }
 
         return list;
 
