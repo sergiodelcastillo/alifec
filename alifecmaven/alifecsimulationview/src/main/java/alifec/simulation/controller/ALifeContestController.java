@@ -10,6 +10,7 @@ import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
 import alifec.core.simulation.NutrientDistribution;
+import alifec.simulation.simulation.ALifeContestSimulationView;
 import alifec.simulation.util.CompetitorViewComparator;
 import alifec.simulation.view.CompetitorView;
 import javafx.application.Platform;
@@ -28,6 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -64,6 +66,8 @@ public class ALifeContestController {
     private Stage dialogStatistics;
 
     private Stage dialogNewContest;
+
+    private ALifeContestSimulationView dialogSimulation;
 
     private ResourceBundle bundle;
 
@@ -142,7 +146,7 @@ public class ALifeContestController {
             dialogNewContest.showAndWait();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            ;
+
         }
     }
 
@@ -253,15 +257,27 @@ public class ALifeContestController {
     }
 
     public void runSelectedBattle(ActionEvent event) {
-        System.out.println("run selected battle");
+        Battle battle = battleList.getSelectionModel().getSelectedItem();
+
+        if (dialogSimulation == null) {
+            dialogSimulation = new ALifeContestSimulationView(mainLayout);
+        }
+
+        dialogSimulation.simulate(Arrays.asList(battle));
     }
 
     public void runAllBattles(ActionEvent event) {
-        System.out.println("Run all battles");
+        List<Battle> battles = (List<Battle>)battleList.getItems();
+
+        if (dialogSimulation == null) {
+            dialogSimulation = new ALifeContestSimulationView(mainLayout);
+        }
+
+        dialogSimulation.simulate(battles);
     }
 
     public void addBattle() {
-        //todo: alertar cuando es una batalla duplicada!!!
+        //todo: alertar cuando es una batalla duplicada!
         try {
             Battle battle = new Battle(opponentsList1.getSelectionModel().getSelectedItem(),
                     opponentsList2.getSelectionModel().getSelectedItem(),

@@ -20,6 +20,7 @@ import java.util.Comparator;
 public class CompetitorView extends GridPane {
     private final ColonyStatistics model;
 
+    //todo: add translation
     private String format = "Energy: %.2f, Points: %d";
 
     public CompetitorView(ColonyStatistics col, float maxEnergy) {
