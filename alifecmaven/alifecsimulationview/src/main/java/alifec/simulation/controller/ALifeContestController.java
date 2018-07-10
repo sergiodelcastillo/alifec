@@ -56,6 +56,20 @@ public class ALifeContestController {
     public TitledPane tournamentPanel;
     @FXML
     public ListView<Battle> battleList;
+    @FXML
+    public Button deletedSelectedBattlesButton;
+    @FXML
+    public Button deleteAllBattlesButton;
+    @FXML
+    public Button runSelectedBattleButton;
+    @FXML
+    public Button runAllBattlesButton;
+    @FXML
+    public Button addBattleButton;
+    @FXML
+    public Button addAllBattlesButton;
+
+
     private Logger logger = LogManager.getLogger(ALifeContestController.class.getName());
     private Stage root;
 
@@ -96,6 +110,12 @@ public class ALifeContestController {
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
+        battleList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            boolean selection = (newValue == null);
+
+            deletedSelectedBattlesButton.setDisable(selection);
+            runSelectedBattleButton.setDisable(selection);
+        });
     }
 
     private void initBattlePanel(Contest contest) {
@@ -250,10 +270,16 @@ public class ALifeContestController {
         if (index > -1)
             battleList.getItems().remove(index);
 
+        if(battleList.getItems().isEmpty()){
+            setDisableBattleButtons(true);
+        }
+
     }
 
     public void deleteAllBattles() {
         battleList.getItems().clear();
+
+        setDisableBattleButtons(true);
     }
 
     public void runSelectedBattle(ActionEvent event) {
@@ -267,7 +293,7 @@ public class ALifeContestController {
     }
 
     public void runAllBattles(ActionEvent event) {
-        List<Battle> battles = (List<Battle>)battleList.getItems();
+        List<Battle> battles = (List<Battle>) battleList.getItems();
 
         if (dialogSimulation == null) {
             dialogSimulation = new ALifeContestSimulationView(mainLayout);
@@ -292,11 +318,24 @@ public class ALifeContestController {
             } else {
                 battleList.getItems().add(battle);
             }
+
+            //ensure that battle buttons are enabled.
+            setDisableBattleButtons(false);
+            if (battleList.getItems().size() == 1) {
+                battleList.getSelectionModel().selectFirst();
+            }
         } catch (BattleException e) {
             logger.error(e.getMessage(), e);
 
             showCreateBattleAlert(e);
         }
+    }
+
+    private void setDisableBattleButtons(boolean value) {
+        runAllBattlesButton.setDisable(value);
+        runSelectedBattleButton.setDisable(value);
+        deleteAllBattlesButton.setDisable(value);
+        deletedSelectedBattlesButton.setDisable(value);
     }
 
     /*
@@ -333,7 +372,12 @@ public class ALifeContestController {
             list.removeAll(battleList.getItems());
         }
 
+
         battleList.getItems().addAll(list);
+
+        //ensure that battle buttons are enabled.
+        setDisableBattleButtons(false);
+        battleList.getSelectionModel().selectFirst();
     }
 
 

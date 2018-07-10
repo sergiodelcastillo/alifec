@@ -151,7 +151,7 @@
                 </ListView>
 
                 <HBox spacing="10">
-                    <Button onAction="#deleteSelectedBattles">
+                    <Button fx:id="deletedSelectedBattlesButton" onAction="#deleteSelectedBattles" disable="true">
                         <graphic>
                             <ImageView>
                                 <Image url="images/deleteSelectedBattle.png"/>
@@ -162,7 +162,7 @@
                         </tooltip>
                     </Button>
 
-                    <Button onAction="#deleteAllBattles">
+                    <Button fx:id="deleteAllBattlesButton" onAction="#deleteAllBattles" disable="true">
                         <graphic>
                             <ImageView>
                                 <Image url="images/deleteAllBattles.png"/>
@@ -173,7 +173,7 @@
                         </tooltip>
                     </Button>
 
-                    <Button onAction="#runSelectedBattle">
+                    <Button fx:id="runSelectedBattleButton" onAction="#runSelectedBattle" disable="true">
                         <graphic>
                             <ImageView>
                                 <Image url="images/runSelectedBattle.png"/>
@@ -184,7 +184,7 @@
                         </tooltip>
                     </Button>
 
-                    <Button onAction="#runAllBattles">
+                    <Button fx:id="runAllBattlesButton" onAction="#runAllBattles" disable="true">
                         <graphic>
                             <ImageView>
                                 <Image url="images/runAllBattles.png"/>
@@ -195,7 +195,7 @@
                         </tooltip>
                     </Button>
 
-                    <Button onAction="#addBattle">
+                    <Button fx:id="addBattleButton" onAction="#addBattle">
                         <graphic>
                             <ImageView>
                                 <Image url="images/addBattle.png"/>
@@ -206,7 +206,7 @@
                         </tooltip>
                     </Button>
 
-                    <Button onAction="#addAllBattles">
+                    <Button fx:id="addAllBattlesButton" onAction="#addAllBattles">
                         <graphic>
                             <ImageView>
                                 <Image url="images/addAllBattles.png"/>

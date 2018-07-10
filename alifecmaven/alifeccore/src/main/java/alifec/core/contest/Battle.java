@@ -16,8 +16,8 @@ import java.util.Objects;
  *         Contains de history of battles.
  */
 public class Battle implements Comparable<Battle> {
-    private final String BATTLE_STRING_FORMAT = "%s vs %s in %s";
-    private final String BATTLE_CSV_FORMAT = "%s,%s,%s,%f,%f";
+    private static final String BATTLE_STRING_FORMAT = "%s vs %s in %s";
+    private static final String BATTLE_CSV_FORMAT = "%s,%s,%s,%f,%f";
 
     private float firstEnergy;
     private String firstName;

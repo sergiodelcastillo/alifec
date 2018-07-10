@@ -90,7 +90,7 @@ public class ALifeContestSimulationView extends Stage {
         paused = true;
     }
 
-    private void endSimulation() {
+    public void endSimulation() {
         if (active) {
             //stop everything!!!
 
