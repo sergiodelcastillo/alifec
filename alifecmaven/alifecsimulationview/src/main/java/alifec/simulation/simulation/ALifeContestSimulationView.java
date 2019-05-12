@@ -1,6 +1,7 @@
 package alifec.simulation.simulation;
 
 import alifec.core.contest.Battle;
+import alifec.core.exception.ValidationException;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -110,7 +111,7 @@ public class ALifeContestSimulationView extends Stage {
 
 
 
-    public void simulate(List<Battle> battles) {
+    public void simulate(List<Battle> battles) throws ValidationException {
         //update all needed!
         active = true;
         paused = false;

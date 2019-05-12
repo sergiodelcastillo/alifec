@@ -1,6 +1,7 @@
 package alifec.simulation.simulation;
 
 import alifec.core.contest.Battle;
+import alifec.core.exception.ValidationException;
 import alifec.core.simulation.Defs;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,33 +34,34 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         colonyInfo = view.getColonyInfoGraphicsContext();
         energyTrend = view.getEnergyTrendGraphicsContext();
         battles = new LinkedList<>();
+
     }
 
     @Override
     public void handle(long now) {
-        switch (getNextAction()) {
-            case START:
-                showStart();
-                lastState = State.BEGINNING;
+        switch (decideAction()) {
+            case START_SIMULATION:
+                showStartSimulation();
+                lastState = State.THE_BEGINNING;
                 break;
-            case NEW_BATTLE:
+            case START_BATTLE:
                 createBattle();
-                //lastState = State.LIVING;
-                //break;
-            case CONTINUE_SIMULATION:
+                lastState = State.LIVING;
+                break;
+            case MOVE_COLONIES:
                 live();
                 lastState = State.LIVING;
                 break;
-            case ONE_MOVEMENT_SIMULATION:
+            case MOVE_COLONIES_ONE_STEP:
                 live();
                 stop();
-                lastState = State.LIVING_ONE_MOVEMENT;
+                lastState = State.LIVING_ONE_STEP;
                 break;
-            case FINISH_BATTLE:
+            case END_BATTLE:
                 waitBetweenBattles();
-                lastState = State.DEAD_COLONY;
+                lastState = State.END_BATTLE;
                 break;
-            case FINISH_SIMULATION:
+            case END_SIMULATION:
                 showEnd();
         }
     }
@@ -69,7 +71,6 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
         current = battles.poll();
         System.out.println("new battle: " + current.toString());
-
     }
 
     private void waitBetweenBattles() {
@@ -81,7 +82,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         view.endSimulation();
     }
 
-    private void showStart() {
+    private void showStartSimulation() {
         System.out.println("start");
     }
 
@@ -95,47 +96,47 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
                 (Defs.DIAMETER + 1) * MO_SIZE);
     }
 
-    public void setSimulation(List<Battle> simulation) {
+    public void setSimulation(List<Battle> simulation) throws ValidationException {
+        if (simulation == null  || simulation.isEmpty())
+            throw new ValidationException("The battle list is empty so it is not possible to run a simulation.");
 
         //clear battles list
         battles.clear();
-        if (simulation.isEmpty()) {
-            lastState = State.ENDING;
-        } else {
-            battles.addAll(simulation);
 
-            //set new state!
-            lastState = State.NONE;
-        }
+        //set new state!
+        lastState = State.NONE;
+
+        //set the list of battles
+        battles.addAll(simulation);
     }
 
     public void setOneRunSimulation() {
-        lastState = State.LIVING_ONE_MOVEMENT;
+        lastState = State.LIVING_ONE_STEP;
     }
 
     public void disableOneRunSimulation() {
         lastState = State.LIVING;
     }
 
-    private Action getNextAction() {
+    private Action decideAction() {
 
         switch (lastState) {
             case NONE:
-                return Action.START;
-            case BEGINNING:
-                return Action.NEW_BATTLE;
+                return Action.START_SIMULATION;
+            case THE_BEGINNING:
+                return Action.START_BATTLE;
             case LIVING:
-                return Action.CONTINUE_SIMULATION;
-            case LIVING_ONE_MOVEMENT:
-                return Action.ONE_MOVEMENT_SIMULATION;
-            case DEAD_COLONY:
+                return Action.MOVE_COLONIES;
+            case LIVING_ONE_STEP:
+                return Action.MOVE_COLONIES_ONE_STEP;
+            case END_BATTLE:
                 //ver!!
-                return Action.NEW_BATTLE;
-            case ENDING:
-                return Action.FINISH_SIMULATION;
+                return Action.START_BATTLE;
+            case END_SIMULATION:
+                return Action.END_SIMULATION;
         }
 
         //something wrong .. finish simulation!!
-        return Action.FINISH_SIMULATION;
+        return Action.END_SIMULATION;
     }
 }

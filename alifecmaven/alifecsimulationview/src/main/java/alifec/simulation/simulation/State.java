@@ -7,9 +7,9 @@ package alifec.simulation.simulation;
  */
 public enum State {
     NONE,
-    BEGINNING,
+    THE_BEGINNING,
     LIVING,
-    LIVING_ONE_MOVEMENT,
-    DEAD_COLONY,
-    ENDING
+    LIVING_ONE_STEP,
+    END_BATTLE,
+    END_SIMULATION
 }

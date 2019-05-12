@@ -92,6 +92,8 @@ public class ALifeContestController {
     private Alert existingBattleAlert;
     private Alert createBattleAlert;
     private Alert duplicatedBattlesDecision;
+    private Alert help;
+    private Alert simulationException;
 
     public void init(ResourceBundle bundle, Stage root, ContestConfig config) throws CreateContestException {
         this.bundle = bundle;
@@ -218,13 +220,28 @@ public class ALifeContestController {
     }
 
     public void showDialogHelp(ActionEvent ignored) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(bundle.getString("ALifeContestController.help.title"));
-        alert.setHeaderText(bundle.getString("ALifeContestController.help.header"));
-        alert.setContentText(bundle.getString("ALifeContestController.help.contentText"));
-        alert.initOwner(mainLayout.getScene().getWindow());
+        if (help == null) {
+            help = new Alert(Alert.AlertType.INFORMATION);
+            help.setTitle(bundle.getString("ALifeContestController.help.title"));
+            help.setHeaderText(bundle.getString("ALifeContestController.help.header"));
+            help.setContentText(bundle.getString("ALifeContestController.help.contentText"));
+            help.initOwner(mainLayout.getScene().getWindow());
+        }
 
-        alert.showAndWait();
+        help.showAndWait();
+    }
+
+    private void showDialogSimulationException(ValidationException ex) {
+        //todo: improve the alert in order to show the exception in the alert.
+        if (simulationException == null) {
+            simulationException = new Alert(Alert.AlertType.ERROR);
+            simulationException.setTitle(bundle.getString("ALifeContestController.simulation.title"));
+            simulationException.setHeaderText(bundle.getString("ALifeContestController.simulation.header"));
+            simulationException.setContentText(bundle.getString("ALifeContestController.simulation.contentText"));
+            simulationException.initOwner(mainLayout.getScene().getWindow());
+        }
+
+        simulationException.showAndWait();
     }
 
     public void showDialogAbout(ActionEvent ignored) {
@@ -270,7 +287,7 @@ public class ALifeContestController {
         if (index > -1)
             battleList.getItems().remove(index);
 
-        if(battleList.getItems().isEmpty()){
+        if (battleList.getItems().isEmpty()) {
             setDisableBattleButtons(true);
         }
 
@@ -289,17 +306,28 @@ public class ALifeContestController {
             dialogSimulation = new ALifeContestSimulationView(mainLayout);
         }
 
-        dialogSimulation.simulate(Arrays.asList(battle));
+        try {
+            dialogSimulation.simulate(Arrays.asList(battle));
+        } catch (ValidationException e) {
+            logger.error("Error to set or run the simulation.", e);
+            showDialogSimulationException(e);
+        }
     }
 
     public void runAllBattles(ActionEvent event) {
-        List<Battle> battles = (List<Battle>) battleList.getItems();
+        List<Battle> battles = battleList.getItems();
 
         if (dialogSimulation == null) {
             dialogSimulation = new ALifeContestSimulationView(mainLayout);
         }
 
-        dialogSimulation.simulate(battles);
+        try {
+          //todo:  dialogSimulation.simulate(battles);
+            dialogSimulation.simulate(null);
+        } catch (ValidationException e) {
+            logger.error("Error to set or run the simulation.", e);
+            showDialogSimulationException(e);
+        }
     }
 
     public void addBattle() {

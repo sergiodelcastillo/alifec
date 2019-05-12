@@ -6,9 +6,10 @@ package alifec.simulation.simulation;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public enum  Action {
-    NEW_BATTLE,
-    CONTINUE_SIMULATION,
-    ONE_MOVEMENT_SIMULATION,
-    FINISH_BATTLE,
-    START, FINISH_SIMULATION
+    START_BATTLE,
+    END_BATTLE,
+    MOVE_COLONIES,
+    MOVE_COLONIES_ONE_STEP,
+    START_SIMULATION,
+    END_SIMULATION
 }

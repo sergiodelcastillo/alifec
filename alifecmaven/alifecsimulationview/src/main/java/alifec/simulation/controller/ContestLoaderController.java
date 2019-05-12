@@ -9,17 +9,14 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 19/06/18.
@@ -28,6 +25,7 @@ import java.util.ResourceBundle;
  */
 public class ContestLoaderController {
     private Logger logger = LogManager.getLogger(getClass());
+
     @FXML
     public TitledPane updateConfigFilePane;
     @FXML
@@ -40,12 +38,10 @@ public class ContestLoaderController {
     public RadioButton updateConfigFileRadioButton;
     @FXML
     public RadioButton setExistingContestRadioButton;
-
     @FXML
     public FXCollections configProperties;
     @FXML
     public TableView configPropertiesTable;
-
     @FXML
     public ComboBox existingContestCombobox;
 
@@ -57,10 +53,11 @@ public class ContestLoaderController {
         this.config = config;
 
         configPropertiesTable.getItems().clear();
-        configPropertiesTable.getItems().add(new ConfigProperty("contest_name", config.getContestName()));
-        configPropertiesTable.getItems().add(new ConfigProperty("contest_mode", config.getMode()));
-        configPropertiesTable.getItems().add(new ConfigProperty("nutrients", config.getNutrients()));
-        configPropertiesTable.getItems().add(new ConfigProperty("pause_between_battles", config.getPauseBetweenBattles()));
+        configPropertiesTable.getItems().addAll(
+                new ConfigProperty("contest_name", config.getContestName()),
+                new ConfigProperty("contest_mode", config.getMode()),
+                new ConfigProperty("nutrients", config.getNutrients()),
+                new ConfigProperty("pause_between_battles", config.getPauseBetweenBattles()));
 
         //default screen
         setDiscardFile();
