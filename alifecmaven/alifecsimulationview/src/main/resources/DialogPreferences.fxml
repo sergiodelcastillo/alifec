@@ -13,7 +13,8 @@
        xmlns:fx="http://javafx.com/fxml"
        fx:controller="alifec.simulation.controller.PreferencesController"
        title="%preferences.title"
-       resizable="false">
+       resizable="false"
+        onShowing="#setPreferences">
     <scene>
         <Scene onKeyPressed="#keyHandler">
             <VBox prefHeight="400.0" prefWidth="600.0">
@@ -34,16 +35,16 @@
                                      programmer="%preferences.contest.mode.programmer"/>
                         </fx:define>
                         <Label text="%preferences.current.contest" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <TextField text="Contest-01" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <TextField fx:id="contestName" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
                         <Hyperlink text="%preferences.change.contest" GridPane.columnIndex="2" GridPane.rowIndex="0"
                                    onAction="#changeContest"/>
                         <Label text="%preferences.contest.path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField text="/home/yeyo/documents/" editable="false" GridPane.columnIndex="1"
+                        <TextField fx:id="contestPath" editable="false" GridPane.columnIndex="1"
                                    GridPane.rowIndex="1"
                                    GridPane.columnSpan="2"/>
                         <Label text="%preferences.contest.pause" GridPane.columnIndex="0" GridPane.rowIndex="2"
                                GridPane.columnSpan="2"/>
-                        <ComboBox GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS"
+                        <ComboBox fx:id="pauseBetweenBattlesCombobox" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS"
                                   maxWidth="Infinity"
                                   GridPane.columnSpan="2" >
                             <items >
@@ -67,8 +68,8 @@
                                   maxWidth="Infinity" GridPane.columnSpan="2">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
-                                    <fx:reference source="competitionOptionsMap.competition"/>
                                     <fx:reference source="competitionOptionsMap.programmer"/>
+                                    <fx:reference source="competitionOptionsMap.competition"/>
                                 </FXCollections>
                             </items>
                         </ComboBox>
@@ -86,14 +87,13 @@
                             <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0"/>
                             <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0"/>
                         </columnConstraints>
-                        <CheckBox text="%contest.nutrients.balls" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <CheckBox text="%contest.nutrients.gaussians" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <CheckBox text="%contest.nutrients.lattice" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                        <CheckBox text="%contest.nutrients.rings" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <CheckBox text="%contest.nutrients.verticalbar" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                        <CheckBox text="%contest.nutrients.famine" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                        <CheckBox text="%contest.nutrients.inclinedplane" GridPane.columnIndex="3"
-                                  GridPane.rowIndex="0"/>
+                        <CheckBox fx:id="ballsNutrient" text="%contest.nutrients.balls" GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#changeBalls"/>
+                        <CheckBox fx:id="gaussiansNutrient" text="%contest.nutrients.gaussians" GridPane.columnIndex="0" GridPane.rowIndex="1" onAction="#changeGaussians"/>
+                        <CheckBox fx:id="latticeNutrient" text="%contest.nutrients.lattice" GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#changeLattice"/>
+                        <CheckBox fx:id="ringsNutrient" text="%contest.nutrients.rings" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#changeRings"/>
+                        <CheckBox fx:id="verticalBarNutrient" text="%contest.nutrients.verticalbar" GridPane.columnIndex="2" GridPane.rowIndex="0" onAction="#changeVerticalBar"/>
+                        <CheckBox fx:id="famineNutrient" text="%contest.nutrients.famine" GridPane.columnIndex="2" GridPane.rowIndex="1" onAction="#changeFamine" />
+                        <CheckBox fx:id="inclinedPlaneNutrient" text="%contest.nutrients.inclinedplane" GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#changeInclinedPlane"/>
                     </GridPane>
                 </TitledPane>
 
@@ -107,14 +107,14 @@
                             <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
                         </columnConstraints>
                         <fx:define>
-                            <ToggleGroup fx:id="graphicsGroup"/>
+                            <ToggleGroup fx:id="graphicsGroupPreferences" />
                         </fx:define>
-                        <RadioButton text="%preferences.simulator.java2d" toggleGroup="$graphicsGroup" fx:id="f1"
+                        <RadioButton text="%preferences.simulator.java2d" toggleGroup="$graphicsGroupPreferences"
                                      GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"
-                                     maxWidth="Infinity"/>
-                        <RadioButton text="%preferences.simulator.openGL" toggleGroup="$graphicsGroup" fx:id="f2"
+                                     maxWidth="Infinity" selected="true" disable="true"/>
+                        <RadioButton text="%preferences.simulator.openGL" toggleGroup="$graphicsGroupPreferences"
                                      GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"
-                                     maxWidth="Infinity"/>
+                                     maxWidth="Infinity" disable="true"/>
                     </GridPane>
                 </TitledPane>
 

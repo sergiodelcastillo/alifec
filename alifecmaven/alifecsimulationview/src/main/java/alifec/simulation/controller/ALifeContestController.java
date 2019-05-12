@@ -14,16 +14,20 @@ import alifec.simulation.simulation.ALifeContestSimulationView;
 import alifec.simulation.util.CompetitorViewComparator;
 import alifec.simulation.view.CompetitorView;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,7 +72,8 @@ public class ALifeContestController {
     public Button addBattleButton;
     @FXML
     public Button addAllBattlesButton;
-
+    @FXML
+    public ToggleGroup graphicsGroupPreferences;
 
     private Logger logger = LogManager.getLogger(ALifeContestController.class.getName());
     private Stage root;
@@ -94,6 +99,7 @@ public class ALifeContestController {
     private Alert duplicatedBattlesDecision;
     private Alert help;
     private Alert simulationException;
+    private Alert notSupportedYet;
 
     public void init(ResourceBundle bundle, Stage root, ContestConfig config) throws CreateContestException {
         this.bundle = bundle;
@@ -118,6 +124,7 @@ public class ALifeContestController {
             deletedSelectedBattlesButton.setDisable(selection);
             runSelectedBattleButton.setDisable(selection);
         });
+
     }
 
     private void initBattlePanel(Contest contest) {
@@ -173,7 +180,7 @@ public class ALifeContestController {
     }
 
     public void quit(ActionEvent event) {
-        System.out.println("quit");
+        logger.info("Good bye!.");
 
         /*TODO:
            if (!contest.createBackUp())
@@ -244,6 +251,18 @@ public class ALifeContestController {
         simulationException.showAndWait();
     }
 
+    private void showDialogNotSupportedYet() {
+
+        if (notSupportedYet== null) {
+            notSupportedYet= new Alert(Alert.AlertType.INFORMATION);
+            notSupportedYet.setTitle(bundle.getString("ALifeContestController.notSupported.title"));
+            notSupportedYet.setHeaderText(bundle.getString("ALifeContestController.notSupported.header"));
+            notSupportedYet.setContentText(bundle.getString("ALifeContestController.notSupported.contentText"));
+            notSupportedYet.initOwner(mainLayout.getScene().getWindow());
+        }
+
+        notSupportedYet.showAndWait();
+    }
     public void showDialogAbout(ActionEvent ignored) {
         try {
             if (dialogAbout == null) {
@@ -260,21 +279,30 @@ public class ALifeContestController {
 
 
     public void savePreferences() {
-        System.out.println("update data");
+        ObservableList<Node> list = dialogPreferences.getScene().getRoot().getChildrenUnmodifiable();
+        TitledPane general = (TitledPane) list.get(0);
+
+        //get: pause between battles + contest_mode
+
+
+        //TODO Implement it!!
+        showDialogNotSupportedYet();
     }
 
     public void createReportTxt() {
-        System.out.println("update data txt");
+        //TODO Implement it!!
+        showDialogNotSupportedYet();
     }
 
     public void createReportCsv() {
-        System.out.println("update data csv");
+        //TODO Implement it!!
+        showDialogNotSupportedYet();
     }
 
 
     void createNewContest() {
-        //TODO: implement the creation of new contest
-        System.out.println("Todo: create new contest");
+        //TODO Implement it!!
+        showDialogNotSupportedYet();
     }
 
     public ResourceBundle getBundle() {
@@ -322,8 +350,7 @@ public class ALifeContestController {
         }
 
         try {
-          //todo:  dialogSimulation.simulate(battles);
-            dialogSimulation.simulate(null);
+          dialogSimulation.simulate(battles);
         } catch (ValidationException e) {
             logger.error("Error to set or run the simulation.", e);
             showDialogSimulationException(e);
@@ -480,5 +507,9 @@ public class ALifeContestController {
             existingBattleAlert.initOwner(mainLayout.getScene().getWindow());
         }
         existingBattleAlert.showAndWait();
+    }
+
+    public ContestConfig getConfig(){
+        return config;
     }
 }

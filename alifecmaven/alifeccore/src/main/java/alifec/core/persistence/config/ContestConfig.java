@@ -6,6 +6,7 @@ import alifec.core.simulation.nutrient.function.*;
 import alifec.core.validation.ContestConfigValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -160,6 +161,16 @@ public class ContestConfig {
         setDefaults();
         setContestName(contestName);
         init();
+    }
+
+
+    public ContestConfig(ContestConfig config){
+        //todo: create a unit test
+        this.path = config.path;
+        this.contestName = config.contestName;
+        this.mode = config.mode;
+        this.pauseBetweenBattles = config.pauseBetweenBattles;
+        this.nutrients.addAll(config.nutrients);
     }
 
     private void init() {
