@@ -19,17 +19,19 @@ public class ContestFileManagerTest extends ParentTest {
 
     @Test
     public void testGetNextAvailableName() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException {
-        Assert.assertEquals("Contest-2018", ContestFileManager.getNextAvailableName(TEST_ROOT_PATH));
+        String contestName = "Contest-" + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 
-        createContest("Contest-2018");
-        Assert.assertEquals("Contest-2018-1", ContestFileManager.getNextAvailableName(TEST_ROOT_PATH));
+        Assert.assertEquals(contestName, ContestFileManager.getNextAvailableName(TEST_ROOT_PATH));
+
+        createContest(contestName);
+        Assert.assertEquals(contestName + "-1", ContestFileManager.getNextAvailableName(TEST_ROOT_PATH));
 
         for (int i = 0; i < 100; i++) {
-            createContest("Contest-2018-" + i);
-            Assert.assertEquals("Contest-2018-" + (i + 1), ContestFileManager.getNextAvailableName(TEST_ROOT_PATH));
+            createContest(contestName + "-" + i);
+            Assert.assertEquals(contestName + "-" + (i + 1), ContestFileManager.getNextAvailableName(TEST_ROOT_PATH));
         }
 
-        createContest("Contest-2018-100");
+        createContest(contestName + "-100");
 
         String name = ContestFileManager.getNextAvailableName(TEST_ROOT_PATH);
 
