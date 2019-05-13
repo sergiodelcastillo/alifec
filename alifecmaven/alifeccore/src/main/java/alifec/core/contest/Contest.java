@@ -12,15 +12,12 @@ import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.ZipFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Environment;
-import alifec.core.simulation.NutrientDistribution;
-import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
 
 
@@ -159,32 +156,6 @@ public class Contest implements Listener {
         }
 
         return config.getTournamentFilename(tournamentNumber);
-    }
-
-    public List<NutrientDistribution> getCurrentNutrients() {
-        List<NutrientDistribution> list = new ArrayList<>();
-
-        List<Integer> current = config.getNutrients();
-        Hashtable<Integer, Nutrient> allNutrients = ContestConfig.nutrientOptions();
-
-        for (int nutrientId : current) {
-            list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
-
-        }
-
-        return list;
-    }
-
-    public List<NutrientDistribution> getAllNutrients() {
-        List<NutrientDistribution> list = new ArrayList<>();
-
-        Hashtable<Integer, Nutrient> allNutrients = ContestConfig.nutrientOptions();
-
-        for (Integer nutrientId : allNutrients.keySet()) {
-            list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
-        }
-
-        return list;
     }
 
     /**

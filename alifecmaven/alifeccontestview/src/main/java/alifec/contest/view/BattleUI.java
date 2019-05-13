@@ -10,6 +10,7 @@ import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.NutrientDistribution;
+import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 
 public class BattleUI extends JPanel implements ActionListener {
@@ -79,6 +81,19 @@ public class BattleUI extends JPanel implements ActionListener {
         }
     }
 
+    public List<NutrientDistribution> getCurrentNutrients() {
+    List<NutrientDistribution> list = new ArrayList<>();
+
+    List<Integer> current = config.getNutrients();
+    Hashtable<Integer, Nutrient> allNutrients = ContestConfig.nutrientOptions();
+
+    for (int nutrientId : current) {
+        list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
+
+    }
+
+    return list;
+}
     private JPanel createNorthPanel() {
         JPanel northPanel = new JPanel();
 
@@ -87,7 +102,7 @@ public class BattleUI extends JPanel implements ActionListener {
         JLabel labelDist = new JLabel("Nutrients");
 
         opponents = environment.getCompetitors();
-        nutrients = father.getContest().getCurrentNutrients();
+        nutrients = getCurrentNutrients();
 
         opponent1 = new JComboBox<>(new ColonyComboboxModel(opponents));
         opponent2 = new JComboBox<>(new ColonyComboboxModel(opponents));
@@ -314,7 +329,7 @@ public class BattleUI extends JPanel implements ActionListener {
     }
 
     public void updateNutrients() {
-        nutrients = father.getContest().getCurrentNutrients();
+        nutrients = getCurrentNutrients();
 
         nutrient.setModel(new NutrientComboboxModel(nutrients));
         nutrient.updateUI();
@@ -339,7 +354,7 @@ public class BattleUI extends JPanel implements ActionListener {
 
     public void clear() {
         opponents = environment.getCompetitors();
-        nutrients = father.getContest().getCurrentNutrients();
+        nutrients = getCurrentNutrients();
         opponent1.setModel(new ColonyComboboxModel(opponents));
         opponent2.setModel(new ColonyComboboxModel(opponents));
         nutrient.setModel(new NutrientComboboxModel(nutrients));

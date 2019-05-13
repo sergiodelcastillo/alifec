@@ -16,10 +16,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Properties;
+import java.util.*;
 
 
 public class ContestUI extends JFrame implements ActionListener {
@@ -105,7 +102,7 @@ public class ContestUI extends JFrame implements ActionListener {
 
         try {
             //Perform the best effort to load a contest.
-            config = new ContestConfig();
+            config = new ContestConfig((ResourceBundle) null);
             config.validate();
         } catch (ConfigFileException | ValidationException ex) {
             if (!(ex.getCause() instanceof FileNotFoundException) &&
@@ -140,7 +137,7 @@ public class ContestUI extends JFrame implements ActionListener {
                     }
 
                     //todo
-                    config = new ContestConfig(name);
+                    config = new ContestConfig(null, name);
                     config.save();
                 }
             }
@@ -230,7 +227,7 @@ public class ContestUI extends JFrame implements ActionListener {
         // Now the application will continue without any changes at runtime.
 
         try {
-            ContestConfig config = new ContestConfig(name);
+            ContestConfig config = new ContestConfig(null, name);
             config.validate();
             return setDefaultContest(config);
 

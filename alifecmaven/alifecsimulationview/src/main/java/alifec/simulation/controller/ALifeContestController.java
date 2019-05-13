@@ -30,10 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 10/06/18.
@@ -50,7 +47,7 @@ public class ALifeContestController {
     @FXML
     public ComboBox<Competitor> opponentsList2;
     @FXML
-    public ComboBox<NutrientDistribution> nutrientsList;
+    public ComboBox<KeyBasedModel> nutrientsList;
     @FXML
     public ListView<Parent> coloniesStatistics;
     @FXML
@@ -89,6 +86,8 @@ public class ALifeContestController {
     private ContestConfig config;
     private Contest contest;
 
+    private List<KeyBasedModel> nutrients;
+
     private Alert existingBattleAlert;
     private Alert createBattleAlert;
     private Alert duplicatedBattlesDecision;
@@ -96,10 +95,12 @@ public class ALifeContestController {
     private Alert simulationException;
     private Alert notSupportedYet;
 
+
     public void init(ResourceBundle bundle, Stage root, ContestConfig config) throws CreateContestException {
         this.bundle = bundle;
         this.root = root;
         this.config = config;
+        nutrients = new ArrayList<>();
 
         root.setResizable(false);
         root.getIcons().add(new Image("/images/logo.png"));
@@ -129,8 +130,7 @@ public class ALifeContestController {
         opponentsList2.getItems().setAll(contest.getEnvironment().getCompetitors());
         opponentsList2.getSelectionModel().selectLast();
 
-        nutrientsList.getItems().setAll(contest.getCurrentNutrients());
-        nutrientsList.getSelectionModel().selectFirst();
+        updateNutrientsList();
     }
 
     private Contest loadContest(ContestConfig config) throws CreateContestException {
@@ -291,12 +291,34 @@ public class ALifeContestController {
 
         if (nutrientsUpdated) {
             //update the nutrients page
-            nutrientsList.getItems().setAll(contest.getCurrentNutrients());
-            nutrientsList.getSelectionModel().selectFirst();
+            updateNutrientsList();
         }
 
     }
 
+    private void updateNutrientsList() {
+        nutrients.clear();
+        for (Integer nutrientId : config.getNutrients()) {
+            nutrients.add(new KeyBasedModel(nutrientId, bundle.getString("nutrient." + nutrientId)));
+        }
+        nutrientsList.getItems().setAll(nutrients);
+        nutrientsList.getSelectionModel().selectFirst();
+    }
+
+    /*
+      public List<NutrientDistribution> getCurrentNutrients() {
+        List<NutrientDistribution> list = new ArrayList<>();
+
+        List<Integer> current = config.getNutrients();
+        Hashtable<Integer, Nutrient> allNutrients = ContestConfig.nutrientOptions();
+
+        for (int nutrientId : current) {
+            list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
+
+        }
+
+        return list;
+    * */
     public void createReportTxt() {
         //TODO Implement it!!
         showDialogNotSupportedYet();
@@ -369,9 +391,12 @@ public class ALifeContestController {
     public void addBattle() {
         //todo: alertar cuando es una batalla duplicada!
         try {
+            Integer nutrientId = nutrientsList.getSelectionModel().getSelectedItem().getKey();
+            NutrientDistribution nutrient = new NutrientDistribution(nutrientId, bundle.getString("nutrient." + nutrientId));
+
             Battle battle = new Battle(opponentsList1.getSelectionModel().getSelectedItem(),
                     opponentsList2.getSelectionModel().getSelectedItem(),
-                    nutrientsList.getSelectionModel().getSelectedItem());
+                    nutrient);
 
             if (config.isCompetitionMode()) {
                 if (battleList.getItems().contains(battle)) {
@@ -426,9 +451,18 @@ public class ALifeContestController {
                 duplicate = !optional.get().getButtonData().isCancelButton();
             }
         }
+
+        //todo: improve this. It is not necessary to use Nutrientdistribution
+        List<KeyBasedModel> nutrientsKeyList = nutrientsList.getItems();
+        List<NutrientDistribution> nutrientDistributionList = new ArrayList<>();
+
+        for (KeyBasedModel key : nutrientsKeyList) {
+            nutrientDistributionList.add(new NutrientDistribution(key.getKey(), bundle.getString("nutrient." + key.getKey())));
+        }
+
         List<Battle> list = contest.lastTournament().generateMissingBattles(
                 opponentsList1.getItems(),
-                nutrientsList.getItems(),
+                nutrientDistributionList,
                 duplicate);
 
         if (!duplicate) {

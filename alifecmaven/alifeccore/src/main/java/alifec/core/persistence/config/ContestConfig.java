@@ -451,7 +451,6 @@ public class ContestConfig {
 
     @Override
     public String toString() {
-
         return "ContestConfig{" +
                 "path='" + path +
                 ", contestName='" + contestName +

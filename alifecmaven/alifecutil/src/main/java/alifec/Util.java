@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 /**
@@ -109,7 +111,8 @@ public class Util {
         logger.info("Create new contest");
 
         try {
-            ContestConfig config = new ContestConfig(ContestConfig.CONTEST_NAME_PREFIX + name);
+            ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
+            ContestConfig config = new ContestConfig(bundle, ContestConfig.CONTEST_NAME_PREFIX + name);
             new NewContestFolderValidator().validate(config.getContestPath());
             ContestFileManager.buildNewContestFolder(config, Boolean.TRUE);
             saveConfigFile(config);
@@ -126,7 +129,9 @@ public class Util {
         logger.info("Set default contest");
 
         try {
-            ContestConfig config = new ContestConfig(ContestConfig.CONTEST_NAME_PREFIX + name);
+            ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
+
+            ContestConfig config = new ContestConfig(bundle, ContestConfig.CONTEST_NAME_PREFIX + name);
             saveConfigFile(config);
         } catch (ConfigFileException e) {
             logger.error(e.getMessage());
@@ -137,10 +142,12 @@ public class Util {
 
     private static ContestConfig loadConfiguration() throws IOException, ConfigFileException, ValidationException {
         try {
-            ContestConfig config = new ContestConfig();
+            ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
+
+            ContestConfig config = new ContestConfig(bundle);
             config.validate();
             return config;
-        } catch (ConfigFileException |ValidationException ex) {
+        } catch (ConfigFileException | ValidationException ex) {
             if (ex.getCause() instanceof FileNotFoundException) {
                 ContestConfig config = tryToLoadContest();
                 if (config != null) {
@@ -152,10 +159,12 @@ public class Util {
     }
 
     private static ContestConfig tryToLoadContest() throws ConfigFileException, IOException {
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
+
         List<String> list = ContestFileManager.listContest();
         if (list.size() == 1) {
             String name = list.get(0);
-            ContestConfig config = new ContestConfig(name);
+            ContestConfig config = new ContestConfig(bundle, name);
             saveConfigFile(config);
             return config;
         }

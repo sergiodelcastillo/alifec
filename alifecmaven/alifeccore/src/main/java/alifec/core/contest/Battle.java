@@ -56,7 +56,6 @@ public class Battle implements Comparable<Battle> {
         this.nutrient = n;
 
         checkRuntime();
-
     }
 
     public Battle(Competitor c1, Competitor c2, NutrientDistribution n1) throws BattleException {

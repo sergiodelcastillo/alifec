@@ -140,7 +140,7 @@ public class DialogNewContest extends JDialog implements ActionListener, KeyList
             String contestFolderName = ContestConfig.CONTEST_NAME_PREFIX + textName.getText();
             //String contestFolderRoot = textPath.getText();
             try {
-                config = new ContestConfig( contestFolderName);
+                config = new ContestConfig(null, contestFolderName);
                 newContestFolderValidator.validate(config.getContestPath());
                 createExamples = examples.isSelected() ? Boolean.TRUE : Boolean.FALSE;
                 makeDefault = checkLoad.isSelected() ? Boolean.TRUE : Boolean.FALSE;

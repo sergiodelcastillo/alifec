@@ -1,9 +1,8 @@
 package alifec.contest.view;
 
 import alifec.core.contest.Contest;
-import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.ValidationException;
-import alifec.core.simulation.Agar;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.NutrientDistribution;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.validation.ContestNameValidator;
@@ -18,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import static java.lang.Integer.parseInt;
 
@@ -209,13 +209,39 @@ public class DialogPreferences extends JDialog implements ActionListener {
         graphics.setBorder(BorderFactory.createTitledBorder("Graphics Options"));
 
         return graphics;
+
+    }
+
+    public java.util.List<NutrientDistribution> getCurrentNutrients() {
+        java.util.List<NutrientDistribution> list = new ArrayList<>();
+
+        java.util.List<Integer> current = father.getContest().getConfig().getNutrients();
+      Hashtable<Integer, Nutrient> allNutrients = ContestConfig.nutrientOptions();
+
+      for (int nutrientId : current) {
+          list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
+
+      }
+
+      return list;
+  }
+    public java.util.List<NutrientDistribution> getAllNutrients() {
+        java.util.List<NutrientDistribution> list = new ArrayList<>();
+
+        Hashtable<Integer, Nutrient> allNutrients = ContestConfig.nutrientOptions();
+
+        for (Integer nutrientId : allNutrients.keySet()) {
+            list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
+        }
+
+        return list;
     }
 
     private Component createNutrientsPanel() throws IOException {
         JPanel nutrientPanel = new JPanel();
         GroupLayout layout = new GroupLayout(nutrientPanel);
-        java.util.List<NutrientDistribution> currentNutrients = father.getContest().getCurrentNutrients();
-        java.util.List<NutrientDistribution> allNutrients = father.getContest().getAllNutrients();
+        java.util.List<NutrientDistribution> currentNutrients = getCurrentNutrients();
+        java.util.List<NutrientDistribution> allNutrients = getAllNutrients();
 
         this.nutrients = new JCheckBox[allNutrients.size()];
 
@@ -281,7 +307,7 @@ public class DialogPreferences extends JDialog implements ActionListener {
 
         for (JCheckBox nutrient : nutrients) {
             if (nutrient.isSelected()) {
-                Nutrient nutri = Agar.getNutrientByName(nutrient.getText());
+                Nutrient nutri = ContestConfig.getNutrientByName(nutrient.getText());
                 if (nutri != null) nutrientsIds.add(nutri.getId());
             }
         }
