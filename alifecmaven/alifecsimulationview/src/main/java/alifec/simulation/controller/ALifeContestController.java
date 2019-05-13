@@ -5,6 +5,7 @@ import alifec.core.contest.Contest;
 import alifec.core.contest.oponentInfo.ColonyStatistics;
 import alifec.core.contest.oponentInfo.TournamentStatistics;
 import alifec.core.exception.BattleException;
+import alifec.core.exception.ConfigFileWriteException;
 import alifec.core.exception.CreateContestException;
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
@@ -14,26 +15,22 @@ import alifec.simulation.simulation.ALifeContestSimulationView;
 import alifec.simulation.util.CompetitorViewComparator;
 import alifec.simulation.view.CompetitorView;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -72,8 +69,6 @@ public class ALifeContestController {
     public Button addBattleButton;
     @FXML
     public Button addAllBattlesButton;
-    @FXML
-    public ToggleGroup graphicsGroupPreferences;
 
     private Logger logger = LogManager.getLogger(ALifeContestController.class.getName());
     private Stage root;
@@ -251,10 +246,10 @@ public class ALifeContestController {
         simulationException.showAndWait();
     }
 
-    private void showDialogNotSupportedYet() {
+    public void showDialogNotSupportedYet() {
 
-        if (notSupportedYet== null) {
-            notSupportedYet= new Alert(Alert.AlertType.INFORMATION);
+        if (notSupportedYet == null) {
+            notSupportedYet = new Alert(Alert.AlertType.INFORMATION);
             notSupportedYet.setTitle(bundle.getString("ALifeContestController.notSupported.title"));
             notSupportedYet.setHeaderText(bundle.getString("ALifeContestController.notSupported.header"));
             notSupportedYet.setContentText(bundle.getString("ALifeContestController.notSupported.contentText"));
@@ -263,6 +258,7 @@ public class ALifeContestController {
 
         notSupportedYet.showAndWait();
     }
+
     public void showDialogAbout(ActionEvent ignored) {
         try {
             if (dialogAbout == null) {
@@ -278,15 +274,27 @@ public class ALifeContestController {
     }
 
 
-    public void savePreferences() {
-        ObservableList<Node> list = dialogPreferences.getScene().getRoot().getChildrenUnmodifiable();
-        TitledPane general = (TitledPane) list.get(0);
+    public void savePreferences(ContestConfig c, boolean nutrientsUpdated) throws ConfigFileWriteException, ValidationException {
+        //validate
+        //asegurarse que hayan mas de un nutriente.
+        if (nutrientsUpdated) {
+            if (c.getNutrients().isEmpty())
+                //todo: add translation -- use boundle
+                throw new ValidationException("Please select one or more nutrients.");
+        }
 
-        //get: pause between battles + contest_mode
+        //update the configuration
+        contest.updateConfigFile(c);
 
+        //point to the new configuration
+        config = contest.getConfig();
 
-        //TODO Implement it!!
-        showDialogNotSupportedYet();
+        if (nutrientsUpdated) {
+            //update the nutrients page
+            nutrientsList.getItems().setAll(contest.getCurrentNutrients());
+            nutrientsList.getSelectionModel().selectFirst();
+        }
+
     }
 
     public void createReportTxt() {
@@ -335,8 +343,9 @@ public class ALifeContestController {
         }
 
         try {
-            dialogSimulation.simulate(Arrays.asList(battle));
+            dialogSimulation.simulate(Collections.singletonList(battle));
         } catch (ValidationException e) {
+            //todo: add translation
             logger.error("Error to set or run the simulation.", e);
             showDialogSimulationException(e);
         }
@@ -350,7 +359,7 @@ public class ALifeContestController {
         }
 
         try {
-          dialogSimulation.simulate(battles);
+            dialogSimulation.simulate(battles);
         } catch (ValidationException e) {
             logger.error("Error to set or run the simulation.", e);
             showDialogSimulationException(e);
@@ -452,7 +461,6 @@ public class ALifeContestController {
         System.out.println("create new tournament");
     }
 
-
     public void initStatisticsPanel(Contest contest) throws IOException {
         //clear all items
         tournamentPanel.setText(contest.lastTournament().getName());
@@ -509,7 +517,11 @@ public class ALifeContestController {
         existingBattleAlert.showAndWait();
     }
 
-    public ContestConfig getConfig(){
+    public ContestConfig getConfig() {
         return config;
+    }
+
+    public BorderPane getMainLayout() {
+        return mainLayout;
     }
 }

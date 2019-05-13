@@ -1,21 +1,28 @@
 package alifec.simulation.controller;
 
+import alifec.core.exception.ConfigFileWriteException;
+import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
-import alifec.core.simulation.nutrient.BallsNutrient;
-import alifec.core.simulation.nutrient.function.*;
+import alifec.core.simulation.nutrient.Nutrient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.WindowEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -23,9 +30,8 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class PreferencesController {
-
     @FXML
-    public ComboBox<String> competitorOptions;
+    public ComboBox<KeyBasedModel> contestModeCombobox;
     @FXML
     public ComboBox<String> pauseBetweenBattlesCombobox;
     @FXML
@@ -33,27 +39,50 @@ public class PreferencesController {
     @FXML
     public TextField contestName;
     @FXML
-    public CheckBox ballsNutrient;
-    @FXML
-    public CheckBox gaussiansNutrient;
-    @FXML
-    public CheckBox latticeNutrient;
-    @FXML
-    public CheckBox ringsNutrient;
-    @FXML
-    public CheckBox verticalBarNutrient;
-    @FXML
-    public CheckBox famineNutrient;
-    @FXML
-    public CheckBox inclinedPlaneNutrient;
+    public GridPane nutrientsPane;
 
+
+    private Logger logger = LogManager.getLogger(PreferencesController.class.getName());
     private ALifeContestController controller;
     private ContestConfig configTmp;
+    private boolean nutrientsUpdated;
+    private boolean pauseBetweenBattlesUpdated;
+    private boolean contestModeUpdated;
 
+    private Alert invalidConfiguration;
+    private Alert saveError;
+    private ResourceBundle bundle;
+
+    private List<KeyBasedModel> modes;
+    private Hashtable<Integer, CheckBox> nutrientsCheckboxes;
+    private boolean ignoreNutrientsModification;
 
     public void setMainController(ALifeContestController controller) {
         this.controller = controller;
+        this.bundle = controller.getBundle();
+
+        modes = new ArrayList<>();
+        modes.add(new KeyBasedModel(ContestConfig.PROGRAMMER_MODE, bundle.getString("PreferencesController.programmerMode")));
+        modes.add(new KeyBasedModel(ContestConfig.COMPETITION_MODE, bundle.getString("PreferencesController.competitionMode")));
+
+        nutrientsCheckboxes = new Hashtable<>();
+
+        int row = 0, column = 0, MAX_COLUMN = 4;
+
+        for (Nutrient nut : ContestConfig.nutrientOptions().values()) {
+            CheckBox checkbox = new CheckBox(bundle.getString("nutrient." + nut.getId()));
+            checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> changeNutrient(newValue, nut.getId()));
+            nutrientsCheckboxes.put(nut.getId(), checkbox);
+            nutrientsPane.add(checkbox, column, row);
+
+            column++;
+            if (column >= MAX_COLUMN) {
+                column = 0;
+                row++;
+            }
+        }
     }
+
 
     public void keyHandler(KeyEvent event) {
         if (KeyCode.ESCAPE == event.getCode()) {
@@ -67,16 +96,34 @@ public class PreferencesController {
 
     public void accept(ActionEvent event) {
         //DO THE WORK!!
-        controller.savePreferences();
+        if (nutrientsUpdated || pauseBetweenBattlesUpdated || contestModeUpdated) {
+            try {
+                controller.savePreferences(configTmp, nutrientsUpdated);
 
-        ((Node) event.getSource()).getScene().getWindow().hide();
+                ((Node) event.getSource()).getScene().getWindow().hide();
+
+                //release the config reference.
+                configTmp = null;
+            } catch (ConfigFileWriteException e) {
+                logger.error(e.getMessage(), e);
+                showDialogSaveError(e);
+            } catch (ValidationException e) {
+                logger.error(e.getMessage(), e);
+                showDialogInvalidConfiguration(e);
+            }
+        }
     }
 
     public void changeContest(ActionEvent event) {
-        System.out.println("change contest");
+        controller.showDialogNotSupportedYet();
     }
 
 
+    /**
+     * Update the preferences dialog before showing it.
+     *
+     * @param windowEvent
+     */
     public void setPreferences(WindowEvent windowEvent) {
         configTmp = new ContestConfig(controller.getConfig());
 
@@ -86,69 +133,76 @@ public class PreferencesController {
         String path = configTmp.getContestPath();
         contestPath.setText(path);
 
+        // load the list of options to set pause between battle and set the current configuration
         int pause = configTmp.getPauseBetweenBattles();
+        pauseBetweenBattlesCombobox.getItems().setAll(ContestConfig.pauseBetweenBattlesOptions());
         pauseBetweenBattlesCombobox.getSelectionModel().select(String.valueOf(pause));
 
+        //load the list of options to set modes and set the current mode.
         int mode = configTmp.getMode();
-        competitorOptions.getSelectionModel().select(mode);
+        contestModeCombobox.getItems().setAll(modes);
+        contestModeCombobox.getSelectionModel().select(mode);
 
-        List<Integer> nutrients = configTmp.getNutrients();
 
-        for (Integer nutrient : nutrients) {
-            if (BallsNutrient.ID == nutrient)
-                ballsNutrient.setSelected(true);
-            else if (TwoGaussiansFunction.ID == nutrient)
-                gaussiansNutrient.setSelected(true);
-            else if (LatticeFunction.ID == nutrient)
-                latticeNutrient.setSelected(true);
-            else if (RingsFunction.ID == nutrient)
-                ringsNutrient.setSelected(true);
-            else if (VerticalBarFunction.ID == nutrient)
-                verticalBarNutrient.setSelected(true);
-            else if (FamineFunction.ID == nutrient)
-                famineNutrient.setSelected(true);
-            else if (InclinedPlaneFunction.ID == nutrient)
-                inclinedPlaneNutrient.setSelected(true);
+        //the variable ignoreNutrientsModification allows to skip the change in the
+        //event handler during the configuration of the current status.
+        ignoreNutrientsModification = true;
+        for (CheckBox nutrient : nutrientsCheckboxes.values()) {
+            nutrient.setSelected(false);
         }
+        for (Integer nutrient : configTmp.getNutrients()) {
+            nutrientsCheckboxes.get(nutrient).setSelected(true);
+        }
+        ignoreNutrientsModification = false;
 
-
-        //todo: update the fields!!
-    }
-
-    public void changeBalls(ActionEvent event) {
-        changeNutrient(((CheckBox) event.getSource()).isSelected(), BallsNutrient.ID);
-    }
-
-    public void changeGaussians(ActionEvent event) {
-        changeNutrient(((CheckBox) event.getSource()).isSelected(), TwoGaussiansFunction.ID);
-    }
-
-    public void changeLattice(ActionEvent event) {
-        changeNutrient(((CheckBox) event.getSource()).isSelected(), LatticeFunction.ID);
-    }
-
-    public void changeRings(ActionEvent event) {
-        changeNutrient(((CheckBox) event.getSource()).isSelected(), RingsFunction.ID);
-    }
-
-    public void changeFamine(ActionEvent event) {
-        changeNutrient(((CheckBox) event.getSource()).isSelected(), FamineFunction.ID);
-    }
-
-    public void changeVerticalBar(ActionEvent event) {
-        changeNutrient(((CheckBox) event.getSource()).isSelected(), VerticalBarFunction.ID);
-    }
-
-    public void changeInclinedPlane(ActionEvent event) {
-        changeNutrient(((CheckBox) event.getSource()).isSelected(), InclinedPlaneFunction.ID);
+        nutrientsUpdated = false;
+        pauseBetweenBattlesUpdated = false;
+        contestModeUpdated = false;
     }
 
     private void changeNutrient(boolean add, Integer id) {
+        if (ignoreNutrientsModification) return;
+
+        nutrientsUpdated = true;
         if (add) configTmp.getNutrients().add(id);
         else configTmp.getNutrients().remove(id);
     }
 
-    public void changeToJava2D(ActionEvent event) {
+    public void changePauseBetweenBattles(ActionEvent event) {
+        String selected = pauseBetweenBattlesCombobox.getSelectionModel().getSelectedItem();
+        configTmp.setPauseBetweenBattles(Integer.valueOf(selected));
 
+        pauseBetweenBattlesUpdated = true;
     }
+
+    public void changeContestMode(ActionEvent event) {
+        contestModeUpdated = true;
+        configTmp.setMode(contestModeCombobox.getSelectionModel().getSelectedItem().getKey());
+    }
+
+    private void showDialogInvalidConfiguration(ValidationException e) {
+        if (invalidConfiguration == null) {
+
+            invalidConfiguration = new Alert(Alert.AlertType.ERROR);
+            invalidConfiguration.setTitle(bundle.getString("PreferencesController.InvalidConfiguration.title"));
+            invalidConfiguration.setHeaderText(bundle.getString("PreferencesController.InvalidConfiguration.header"));
+            invalidConfiguration.setContentText(e.getMessage());
+            invalidConfiguration.initOwner(controller.getMainLayout().getScene().getWindow());
+        }
+
+        invalidConfiguration.showAndWait();
+    }
+
+    private void showDialogSaveError(ConfigFileWriteException e) {
+        if (saveError == null) {
+            saveError = new Alert(Alert.AlertType.ERROR);
+            saveError.setTitle(bundle.getString("PreferencesController.saveError.title"));
+            saveError.setHeaderText(bundle.getString("PreferencesController.saveError.header"));
+            saveError.setContentText(e.getMessage());
+            saveError.initOwner(controller.getMainLayout().getScene().getWindow());
+        }
+
+        saveError.showAndWait();
+    }
+
 }

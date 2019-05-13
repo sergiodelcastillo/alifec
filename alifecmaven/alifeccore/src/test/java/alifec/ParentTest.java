@@ -2,11 +2,11 @@ package alifec;
 
 import alifec.core.contest.Battle;
 import alifec.core.event.EventBus;
-import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.BattleException;
+import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
-import alifec.core.persistence.config.ContestConfig;
 import alifec.core.persistence.ContestFileManager;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
 import org.junit.After;
@@ -19,9 +19,7 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
@@ -33,6 +31,8 @@ public class ParentTest {
     public static String ROOT_PATH = "./target";
 
     public static String TEST_ROOT_PATH = ROOT_PATH + File.separator + "alifectests";
+
+    private ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
 
     @Before
     public void init() throws IOException {
@@ -71,7 +71,7 @@ public class ParentTest {
     }
 
     protected ContestConfig createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
-        ContestConfig config = new ContestConfig(TEST_ROOT_PATH , name);
+        ContestConfig config = new ContestConfig(bundle, TEST_ROOT_PATH, name);
 
         createContest(config);
 
@@ -118,25 +118,25 @@ public class ParentTest {
     public List<Battle> battleDataSet() throws BattleException {
         List<Battle> list = new ArrayList<>();
 
-        Battle battle1 = new Battle(1,2, 1, "col1", "col2", "Famine");
+        Battle battle1 = new Battle(1, 2, 1, "col1", "col2", "Famine");
         battle1.setWinner(1, 100f);
-        Battle battle2 = new Battle(1,3, 1, "col1", "col3", "Famine");
+        Battle battle2 = new Battle(1, 3, 1, "col1", "col3", "Famine");
         battle2.setWinner(3, 140f);
-        Battle battle3 = new Battle(1,4, 1, "col1", "col4", "Famine");
+        Battle battle3 = new Battle(1, 4, 1, "col1", "col4", "Famine");
         battle3.setWinner(1, 130f);
-        Battle battle4 = new Battle(1,2, 2, "col1", "col2", "Balls");
+        Battle battle4 = new Battle(1, 2, 2, "col1", "col2", "Balls");
         battle4.setWinner(2, 200f);
-        Battle battle5 = new Battle(1,3, 2, "col1", "col3", "Balls");
+        Battle battle5 = new Battle(1, 3, 2, "col1", "col3", "Balls");
         battle5.setWinner(1, 10f);
-        Battle battle6 = new Battle(1,4, 2, "col1", "col4", "Balls");
+        Battle battle6 = new Battle(1, 4, 2, "col1", "col4", "Balls");
         battle6.setWinner(4, 1000f);
-        Battle battle7 = new Battle(2,3, 1, "col2", "col3", "Famine");
+        Battle battle7 = new Battle(2, 3, 1, "col2", "col3", "Famine");
         battle7.setWinner(2, 2000f);
-        Battle battle8 = new Battle(2,4, 1, "col2", "col4", "Famine");
+        Battle battle8 = new Battle(2, 4, 1, "col2", "col4", "Famine");
         battle8.setWinner(4, 500f);
-        Battle battle9 = new Battle(3,4, 1, "col3", "col4", "Famine");
+        Battle battle9 = new Battle(3, 4, 1, "col3", "col4", "Famine");
         battle9.setWinner(3, 750f);
-        Battle battle10 = new Battle(1,4, 2, "col1", "col4", "Balls");
+        Battle battle10 = new Battle(1, 4, 2, "col1", "col4", "Balls");
         battle10.setWinner(4, 1000f);
 
         list.add(battle1);

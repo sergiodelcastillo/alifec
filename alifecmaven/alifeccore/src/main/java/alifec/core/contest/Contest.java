@@ -1,4 +1,3 @@
-
 package alifec.core.contest;
 
 import alifec.core.contest.oponentInfo.Opponent;
@@ -12,7 +11,6 @@ import alifec.core.exception.*;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.ZipFileManager;
 import alifec.core.persistence.config.ContestConfig;
-import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.NutrientDistribution;
 import alifec.core.simulation.nutrient.Nutrient;
@@ -167,7 +165,7 @@ public class Contest implements Listener {
         List<NutrientDistribution> list = new ArrayList<>();
 
         List<Integer> current = config.getNutrients();
-        Hashtable<Integer, Nutrient> allNutrients = Agar.getAllNutrient();
+        Hashtable<Integer, Nutrient> allNutrients = ContestConfig.nutrientOptions();
 
         for (int nutrientId : current) {
             list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
@@ -180,7 +178,7 @@ public class Contest implements Listener {
     public List<NutrientDistribution> getAllNutrients() {
         List<NutrientDistribution> list = new ArrayList<>();
 
-        Hashtable<Integer, Nutrient> allNutrients = Agar.getAllNutrient();
+        Hashtable<Integer, Nutrient> allNutrients = ContestConfig.nutrientOptions();
 
         for (Integer nutrientId : allNutrients.keySet()) {
             list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
@@ -197,7 +195,7 @@ public class Contest implements Listener {
      */
     public boolean reloadConfig() throws IOException {
         try {
-            config = new ContestConfig();
+            config = new ContestConfig(config.getBundle());
             config.validate();
             return true;
         } catch (ConfigFileException | ValidationException ex) {
@@ -214,7 +212,9 @@ public class Contest implements Listener {
      * @param mode  mode of contest(programmer or competition)
      * @param pause default pause between battles
      * @return true if is successfully
+     * @deprecated Use the method updateConfigFile(ContestConfig)
      */
+    @Deprecated
     public boolean updateConfigFile(String name, int mode, int pause, List<Integer> nutrients) {
         config.setContestName(name);
         config.setMode(mode);
@@ -230,13 +230,16 @@ public class Contest implements Listener {
         return true;
     }
 
-    public void setMode(int mode) throws IOException {
-        this.config.setMode(mode);
-        if (this.config.isProgrammerMode() &&
-                mode == ContestConfig.COMPETITION_MODE) {
-            lastTournament().save();
-        }
+    public void updateConfigFile(ContestConfig c) throws ConfigFileWriteException {
+        c.save();
 
+        config.setContestName(c.getContestName());
+        config.setMode(c.getMode());
+        config.setPauseBetweenBattles(c.getPauseBetweenBattles());
+        config.setNutrients(c.getNutrients());
+
+        logger.info("Contest configuration updated.");
+        logger.info(config.toString());
     }
 
     /**
@@ -253,14 +256,21 @@ public class Contest implements Listener {
         return tournaments.get(tournaments.size() - 1);
     }
 
-
     public Environment getEnvironment() {
         return environment;
     }
 
-
     public int getMode() {
         return config.getMode();
+    }
+
+    public void setMode(int mode) throws IOException {
+        this.config.setMode(mode);
+        if (this.config.isProgrammerMode() &&
+                mode == ContestConfig.COMPETITION_MODE) {
+            lastTournament().save();
+        }
+
     }
 
     public String getName() {

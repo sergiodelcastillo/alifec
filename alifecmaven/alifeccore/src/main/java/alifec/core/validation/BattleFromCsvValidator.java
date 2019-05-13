@@ -1,7 +1,7 @@
 package alifec.core.validation;
 
 import alifec.core.exception.ValidationException;
-import alifec.core.simulation.Agar;
+import alifec.core.persistence.config.ContestConfig;
 
 /**
  * Created by Sergio Del Castillo on 28/10/17.
@@ -33,7 +33,7 @@ public class BattleFromCsvValidator implements Validator<String> {
         if (nutri == null || nutri.isEmpty())
             throw new ValidationException("The battle line is invalid. Nutrient is empty.");
 
-        if (Agar.getNutrientByName(nutri) == null)
+        if (ContestConfig.getNutrientByName(nutri) == null)
             throw new ValidationException("The battle line is invalid. The nutrient distribution " + nutri + " is unknown.");
     }
 

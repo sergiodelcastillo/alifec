@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 19/06/18.
@@ -24,8 +25,6 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ContestLoaderController {
-    private Logger logger = LogManager.getLogger(getClass());
-
     @FXML
     public TitledPane updateConfigFilePane;
     @FXML
@@ -44,10 +43,11 @@ public class ContestLoaderController {
     public TableView configPropertiesTable;
     @FXML
     public ComboBox existingContestCombobox;
-
+    private Logger logger = LogManager.getLogger(getClass());
     private ContestConfig config;
 
     private boolean cancelled;
+    private ResourceBundle bundle;
 
     public void allowEditFileOption(ContestConfig config) {
         this.config = config;
@@ -146,7 +146,7 @@ public class ContestLoaderController {
             String contestName = existingContestCombobox.getSelectionModel().getSelectedItem().toString();
 
             try {
-                config = new ContestConfig(contestName);
+                config = new ContestConfig(bundle, contestName);
                 config.save();
             } catch (InvalidUserDirException e) {
                 logger.error("Error reading java property user.dir.");
@@ -171,5 +171,9 @@ public class ContestLoaderController {
         if (KeyCode.ESCAPE == event.getCode()) {
             ((Scene) event.getSource()).getWindow().hide();
         }
+    }
+
+    public void setBundle(ResourceBundle bundle) {
+        this.bundle = bundle;
     }
 }

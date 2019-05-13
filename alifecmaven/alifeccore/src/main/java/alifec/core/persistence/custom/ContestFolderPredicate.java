@@ -1,6 +1,5 @@
 package alifec.core.persistence.custom;
 
-import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.validation.ContestNameValidator;
@@ -63,7 +62,7 @@ public class ContestFolderPredicate implements Predicate<Path> {
         }
         ContestConfig config;
 
-        config = new ContestConfig(path, name);
+        config = new ContestConfig(null, path, name);
 
 
         Path contestName = Paths.get(config.getContestPath());

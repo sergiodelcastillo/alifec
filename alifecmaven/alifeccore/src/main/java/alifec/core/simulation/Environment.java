@@ -6,7 +6,6 @@ import alifec.core.event.impl.BattleFinishEvent;
 import alifec.core.event.impl.BattleMovementEvent;
 import alifec.core.event.impl.BattleStartsEvent;
 import alifec.core.exception.MoveMicroorganismException;
-import alifec.core.exception.NutrientException;
 import alifec.core.exception.OpponentException;
 import alifec.core.persistence.SourceCodeFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -137,12 +136,15 @@ public class Environment {
     public boolean createBattle(Battle b) {
         battle = b;
 
-        try {
-            agar.setNutrient(b.getNutrientId());
-        } catch (NutrientException e) {
-            logger.error(e.getMessage(), e);
+        int nutrientId = b.getNutrientId();
+        Nutrient temp = ContestConfig.nutrientOptions().get(nutrientId);
+
+        if (temp == null) {
+            logger.error("There is not nutrient distribution with id = " + nutrientId + ".");
             return false;
         }
+
+        agar.setNutrient(temp);
 
         if ((c1 = getColonyById(b.getFirstColonyId())) == null) {
             return false;
@@ -204,7 +206,7 @@ public class Environment {
             } catch (Exception ex) {
                 //todo: check the logs.
                 logger.error(ex.getMessage(), ex);
-                String txt = "The colony: " + current.getName() + " has been Penalized.";
+                String txt = "The colony: " + current.getName() + " has been penalized.";
                 throw new MoveMicroorganismException(txt, current.getName(), ex);
             }
 
@@ -313,8 +315,7 @@ public class Environment {
     public List<Competitor> getCompetitors() {
         List<Competitor> list = new ArrayList<>();
 
-        for (int i = 0, coloniesSize = colonies.size(); i < coloniesSize; i++) {
-            Colony c = colonies.get(i);
+        for (Colony c : colonies) {
             try {
                 list.add(new Competitor(c.getId(), c.getName(), c.getAuthor(), c.getAffiliation()));
             } catch (OpponentException e) {

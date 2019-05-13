@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -121,7 +122,7 @@ public class ALifeContestMain extends Application {
 
         ContestConfig config = null;
         try {
-            config = new ContestConfig();
+            config = new ContestConfig(bundle);
             config.validate();
 
         } catch (ConfigFileException | ValidationException ex) {
@@ -136,6 +137,7 @@ public class ALifeContestMain extends Application {
             Stage root = loader.load();
             ContestLoaderController controller = loader.getController();
 
+            controller.setBundle(bundle);
             if (ex instanceof ConfigFileException) {
                 controller.allowCreateFileOption();
             } else {
@@ -157,5 +159,9 @@ public class ALifeContestMain extends Application {
         return config;
     }
 
-
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        logger.info("Good bye!.");
+    }
 }

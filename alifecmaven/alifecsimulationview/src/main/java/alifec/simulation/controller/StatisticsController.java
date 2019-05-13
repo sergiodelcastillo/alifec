@@ -2,13 +2,9 @@ package alifec.simulation.controller;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
-
-import java.util.ResourceBundle;
 
 
 /**
@@ -18,12 +14,12 @@ import java.util.ResourceBundle;
  */
 public class StatisticsController {
 
-    private ALifeContestController father;
+    private ALifeContestController controller;
     //private Parent root;
 
 
     public void setMainController(ALifeContestController controller) {
-        this.father = controller;
+        this.controller = controller;
     }
 
     public void keyHandler(KeyEvent event) {
@@ -34,14 +30,14 @@ public class StatisticsController {
 
     public void generateReportTxt(ActionEvent event) {
         //do the work
-        father.createReportTxt();
+        controller.createReportTxt();
 
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
     public void generateReportCsv(ActionEvent event) {
         //do the work
-        father.createReportCsv();
+        controller.createReportCsv();
 
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
