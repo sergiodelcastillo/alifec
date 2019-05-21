@@ -103,7 +103,8 @@ public class ALifeContestController {
         nutrients = new ArrayList<>();
 
         root.setResizable(false);
-        root.getIcons().add(new Image("/images/logo.png"));
+        root.getIcons().add(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
+        //root.getIcons().add(new Image("/images/logo.png"));
 
         contest = loadContest(config);
 

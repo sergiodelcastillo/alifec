@@ -60,7 +60,7 @@ public class CompileConfig {
 
         this.os = System.getProperty("os.name").toLowerCase();
         this.jvm = System.getProperty("java.runtime.name");
-        this.javaHome = System.getProperty("java.home") + File.separator + "../";
+        this.javaHome = System.getProperty("java.home") + File.separator;
         this.compilationTarget = compilationTarget;
         this.cppApiFolder = cppApiFolder;
         this.mosPath = mosPath;

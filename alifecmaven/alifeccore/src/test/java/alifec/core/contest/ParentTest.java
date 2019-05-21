@@ -1,4 +1,4 @@
-package alifec;
+package alifec.core.contest;
 
 import alifec.core.contest.Battle;
 import alifec.core.event.EventBus;
@@ -9,20 +9,29 @@ import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
+import alifec.core.simulation.Microorganism;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
+ * Parent test was set to this package to avoid setting a new module-info.java file.
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
@@ -85,8 +94,8 @@ public class ParentTest {
     }
 
     protected void createContest(ContestConfig config) throws IOException, CreateContestFolderException, URISyntaxException {
-        Path cppResources = Paths.get(ParentTest.class.getClass().getResource("/app/cpp/").toURI());
-        Path examplesResources = Paths.get(ParentTest.class.getClass().getResource("/app/examples/").toURI());
+        Path cppResources = Paths.get(getClass().getResource("/app/cpp/").toURI());
+        Path examplesResources = Paths.get(getClass().getResource("/app/examples/").toURI());
 
         ContestFileManager.buildNewContestFolder(config, true, cppResources, examplesResources);
 
@@ -100,7 +109,7 @@ public class ParentTest {
         //create the file compiler.properties
         Path compilerProperties = Paths.get(config.getCompilerConfigFile());
         if (Files.notExists(compilerProperties)) {
-            Path compilerConfigFile = Paths.get(ParentTest.class.getClass().getResource("/app/compiler.properties").toURI());
+            Path compilerConfigFile = Paths.get(getClass().getResource("/app/compiler.properties").toURI());
             Files.copy(compilerConfigFile, compilerProperties);
         }
     }
@@ -151,5 +160,37 @@ public class ParentTest {
         list.add(battle10);
 
         return list;
+    }
+
+ //   @Test
+    public void test() throws MalformedURLException, ClassNotFoundException {
+      //  URL url= new URL("file://");
+        //URLClassLoader cl = new URLClassLoader(new URL[]{url}, getClass().getClassLoader());
+        //Constructor<Microorganism> constructor = (Constructor<Microorganism>) cl.loadClass("MOs.Tactica2").getConstructors()[0];
+
+     /*   Class loadedClass = cl.loadClass("com.xyz.MyClass");
+        MyClass obj = (MyClass) loadedClass.newInstance();
+        obj.doSomething();*/
+
+
+/*        try{
+
+            File file = new File("/home/yeyo/work/alifec_new/alifec/alifecmaven/alifeccore/target/alifectests/data/Contest-01/compiled/");
+
+            //load this folder into Class loader
+            ClassLoader cl = new URLClassLoader(new URL[]{file.toURI().toURL()});
+
+            //load the Address class in 'c:\\other_classes\\'
+            Class  cls = cl.loadClass("MOs.Tactica2");
+
+            //print the location from where this class was loaded
+            ProtectionDomain pDomain = cls.getProtectionDomain();
+            CodeSource cSource = pDomain.getCodeSource();
+            URL urlfrom = cSource.getLocation();
+            System.out.println(urlfrom.getFile());
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }*/
     }
 }

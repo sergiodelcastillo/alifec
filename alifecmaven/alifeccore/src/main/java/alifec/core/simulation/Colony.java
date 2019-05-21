@@ -112,7 +112,10 @@ public abstract class Colony {
         moList.clear();
         clearAll();
     }
-
+/*
+* System.load(String filename); to specify the complete path to the native library you want to load, perhaps together
+* with System.mapLibraryName(String) to add the platform specific file ending (e.g. .dll or .so).
+* */
     protected abstract void clearAll();
 
     /**
@@ -140,30 +143,6 @@ public abstract class Colony {
         final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
         newPaths[newPaths.length - 1] = pathToAdd;
         usrPathsField.set(null, newPaths);
-    }
-
-    /**
-     * Sets the java library path to the specified path
-     *
-     * @param s the new library path
-     * @throws Exception
-     */
-   /* protected static void setLibraryPath(String path) throws Exception {
-        System.setProperty("java.library.path", path);
-
-        //set sys_paths to null
-        final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-        sysPathsField.setAccessible(true);
-        sysPathsField.set(null, null);
-    }*/
-    public static void addClassPath(String s) throws Exception {
-        File f = new File(s);
-        URI u = f.toURI();
-        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class<URLClassLoader> urlClass = URLClassLoader.class;
-        Method method = urlClass.getDeclaredMethod("addURL", URL.class);
-        method.setAccessible(true);
-        method.invoke(urlClassLoader, u.toURL());
     }
 
     public int getId() {

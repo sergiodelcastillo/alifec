@@ -82,8 +82,8 @@ public class Environment {
         try {
             for (String name : helper.listJavaMOs()) {
                 try {
-                    JavaColony.addClassPath(config.getCompilationTarget());
-                    colonies.add(new JavaColony(colonies.size(), "MOs." + name));
+                    //todo: it seems to be unnecessary: JavaColony.addClassPath(config.getCompilationTarget());
+                    colonies.add(new JavaColony(colonies.size(), config.getCompilationTarget(),"MOs." + name));
                     logger.info(name + " [OK]");
                 } catch (ClassNotFoundException ex) {
                     logger.warn(ex.getMessage(), ex);

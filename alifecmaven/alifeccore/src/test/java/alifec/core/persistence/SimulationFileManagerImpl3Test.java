@@ -1,6 +1,6 @@
 package alifec.core.persistence;
 
-import alifec.ParentTest;
+import alifec.core.contest.ParentTest;
 import alifec.core.contest.Battle;
 import alifec.core.exception.BattleException;
 import alifec.core.persistence.dto.FinishedBattle;

@@ -5,7 +5,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-
 <BorderPane fx:id="mainLayout"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -67,7 +66,7 @@
                     <Button onAction="#previousTournament">
                         <graphic>
                             <ImageView>
-                                <Image url="images/previousTournament.png"/>
+                                <Image url="@images/previousTournament.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -78,7 +77,7 @@
                     <Button onAction="#nextTournament">
                         <graphic>
                             <ImageView>
-                                <Image url="images/nextTournament.png"/>
+                                <Image url="@images/nextTournament.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -89,7 +88,7 @@
                     <Button onAction="#deleteTournament">
                         <graphic>
                             <ImageView>
-                                <Image url="images/deleteTournament.png"/>
+                                <Image url="@images/deleteTournament.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -100,7 +99,7 @@
                     <Button onAction="#addTournament">
                         <graphic>
                             <ImageView>
-                                <Image url="images/addTournament.png"/>
+                                <Image url="@images/addTournament.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -154,7 +153,7 @@
                     <Button fx:id="deletedSelectedBattlesButton" onAction="#deleteSelectedBattles" disable="true">
                         <graphic>
                             <ImageView>
-                                <Image url="images/deleteSelectedBattle.png"/>
+                                <Image url="@images/deleteSelectedBattle.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -165,7 +164,7 @@
                     <Button fx:id="deleteAllBattlesButton" onAction="#deleteAllBattles" disable="true">
                         <graphic>
                             <ImageView>
-                                <Image url="images/deleteAllBattles.png"/>
+                                <Image url="@images/deleteAllBattles.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -176,7 +175,7 @@
                     <Button fx:id="runSelectedBattleButton" onAction="#runSelectedBattle" disable="true">
                         <graphic>
                             <ImageView>
-                                <Image url="images/runSelectedBattle.png"/>
+                                <Image url="@images/runSelectedBattle.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -187,7 +186,7 @@
                     <Button fx:id="runAllBattlesButton" onAction="#runAllBattles" disable="true">
                         <graphic>
                             <ImageView>
-                                <Image url="images/runAllBattles.png"/>
+                                <Image url="@images/runAllBattles.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -198,7 +197,7 @@
                     <Button fx:id="addBattleButton" onAction="#addBattle">
                         <graphic>
                             <ImageView>
-                                <Image url="images/addBattle.png"/>
+                                <Image url="@images/addBattle.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>
@@ -209,7 +208,7 @@
                     <Button fx:id="addAllBattlesButton" onAction="#addAllBattles">
                         <graphic>
                             <ImageView>
-                                <Image url="images/addAllBattles.png"/>
+                                <Image url="@images/addAllBattles.png"/>
                             </ImageView>
                         </graphic>
                         <tooltip>

@@ -1,6 +1,6 @@
 package alifec.core.persistence;
 
-import alifec.ParentTest;
+import alifec.core.contest.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;

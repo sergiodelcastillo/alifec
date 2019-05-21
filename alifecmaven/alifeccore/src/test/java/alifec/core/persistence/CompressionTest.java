@@ -1,6 +1,6 @@
 package alifec.core.persistence;
 
-import alifec.ParentTest;
+import alifec.core.contest.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.contest.Contest;
@@ -13,7 +13,6 @@ import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.nutrient.function.*;
 import org.junit.Assert;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -56,7 +55,7 @@ public class CompressionTest extends ParentTest {
     }
 
 
-    @Test
+  //  @Test
     public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException, CreateContestException {
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");

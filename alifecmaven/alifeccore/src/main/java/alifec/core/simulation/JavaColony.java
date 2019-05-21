@@ -2,14 +2,18 @@ package alifec.core.simulation;
 
 import org.apache.logging.log4j.LogManager;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
-  * Manager of Microorganisms which are implemented in Java Language.
+ * Manager of Microorganisms which are implemented in Java Language.
  */
 public class JavaColony extends Colony {
     org.apache.logging.log4j.Logger logger = LogManager.getLogger(getClass());
@@ -18,12 +22,17 @@ public class JavaColony extends Colony {
     private List<Microorganism> instances = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
-    JavaColony(int index, String path) throws ClassNotFoundException {
-        super(index, path.replace(".class", "").replace("/", "."));
-        constructor = (Constructor<Microorganism>) Class.forName(super.path).getConstructors()[0];
+    JavaColony(int index, String folder, String classToLoad) throws ClassNotFoundException, MalformedURLException {
+        super(index, classToLoad.replace(".class", "").replace("/", "."));
+        File file = new File(folder);
+
+        //load this folder into Class loader
+        ClassLoader cl = new URLClassLoader(new URL[]{file.toURI().toURL()});
+
+        constructor = (Constructor<Microorganism>) cl.loadClass(classToLoad).getConstructors()[0];
 
         // initialise the information of colony
-        createMO(0.0f,1, -1);
+        createMO(0.0f, 1, -1);
         kill(0);
     }
 
@@ -90,13 +99,11 @@ public class JavaColony extends Colony {
 
     @Override
     public void update(int indexMO, float ene, int x, int y) {
-            instances.get(indexMO).update(ene, x, y);
+        instances.get(indexMO).update(ene, x, y);
     }
 
     @Override
     public void clearAll() {
         instances.clear();
     }
-
-
 }

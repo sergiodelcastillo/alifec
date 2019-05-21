@@ -5,7 +5,7 @@
     <parent>
         <artifactId>alifecmaven</artifactId>
         <groupId>alifec</groupId>
-        <version>v.0.0.0-alpha</version>
+        <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

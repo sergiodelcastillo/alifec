@@ -1,6 +1,5 @@
 package alifec.core.contest;
 
-import alifec.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.*;

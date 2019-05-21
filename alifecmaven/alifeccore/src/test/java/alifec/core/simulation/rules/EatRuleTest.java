@@ -1,6 +1,6 @@
 package alifec.core.simulation.rules;
 
-import alifec.ParentTest;
+import alifec.core.contest.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.persistence.config.ContestConfig;

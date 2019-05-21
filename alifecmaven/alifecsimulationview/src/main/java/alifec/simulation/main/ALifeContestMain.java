@@ -54,7 +54,6 @@ public class ALifeContestMain extends Application {
         //TODO: set the default locale from configuration or load english instead.
 
         bundle = ResourceBundle.getBundle("i18n/messages", currentLocale);
-        System.out.println("Init constructor application");
     }
 
     private void logProperties() {
@@ -93,13 +92,19 @@ public class ALifeContestMain extends Application {
             stage.setScene(new Scene(root));
             stage.show();
         }
+        /*String javaVersion = System.getProperty("java.version");
+        String javafxVersion = System.getProperty("javafx.version");
+        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
+        Scene scene = new Scene(new StackPane(l), 640, 480);
+        stage.setScene(scene);
+        stage.show();*/
     }
 
     private void compileColonies(ContestConfig config) throws IOException {
         CompileHelper compiler = new CompileHelper(config);
         CompilationResult result = compiler.compileMOs();
 
-        if (result.haveErrors()) {
+        if (false &&result.haveErrors()) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/CompilationError.fxml"), bundle);
             Stage root = loader.load();
 
@@ -117,8 +122,7 @@ public class ALifeContestMain extends Application {
             root.showAndWait();
         }
     }
-
-    private ContestConfig loadContest() throws IOException {
+ private ContestConfig loadContest() throws IOException {
 
         ContestConfig config = null;
         try {

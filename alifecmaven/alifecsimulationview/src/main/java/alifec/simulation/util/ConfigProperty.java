@@ -14,7 +14,6 @@ public class ConfigProperty {
     private final SimpleStringProperty content = new SimpleStringProperty("");
 
     public ConfigProperty() {
-
     }
 
     public ConfigProperty(String key, List<Integer> list) {

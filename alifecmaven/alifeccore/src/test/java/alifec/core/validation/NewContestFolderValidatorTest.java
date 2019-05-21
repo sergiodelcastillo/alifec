@@ -1,6 +1,6 @@
 package alifec.core.validation;
 
-import alifec.ParentTest;
+import alifec.core.contest.ParentTest;
 import alifec.core.exception.ValidationException;
 import org.junit.Assert;
 import org.junit.Test;
