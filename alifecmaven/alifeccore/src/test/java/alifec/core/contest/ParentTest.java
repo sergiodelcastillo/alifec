@@ -9,29 +9,24 @@ import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
-import alifec.core.simulation.Microorganism;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
 import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
  * Parent test was set to this package to avoid setting a new module-info.java file.
+ * todo: improve this in order to have the parent test in a general folder instead of
+ * an specific sub-folder
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */

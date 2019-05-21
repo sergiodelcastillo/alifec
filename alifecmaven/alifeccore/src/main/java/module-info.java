@@ -7,9 +7,9 @@ module alifec.core {
     requires org.apache.logging.log4j;
     requires org.apache.logging.log4j.core;
     requires org.apache.logging.log4j.iostreams;
-
     requires java.compiler;
 
+    //todo:verify what is required.
     exports alifec.core.compilation;
     exports alifec.core.contest;
     exports alifec.core.contest.oponentInfo;
@@ -26,5 +26,4 @@ module alifec.core {
     exports alifec.core.simulation.nutrient;
     exports alifec.core.simulation.nutrient.function;
     exports alifec.core.validation;
-
 }

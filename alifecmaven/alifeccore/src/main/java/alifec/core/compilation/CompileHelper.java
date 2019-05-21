@@ -52,7 +52,7 @@ public class CompileHelper {
 
         CompilationResult result = new CompilationResult();
 
-        compileJavaFiles( null, result);
+        compileJavaFiles(null, result);
         compileAllCppFiles(result);
 
         return result;
@@ -164,7 +164,7 @@ public class CompileHelper {
      * @return true if the compilation is successfully
      * @throws CompilerException if can not find the C/C++ compiler
      */
-    boolean javaSourceCodeCompilation(String javaFileFolder, String javaFileName)  {
+    private boolean javaSourceCodeCompilation(String javaFileFolder, String javaFileName) {
         try {
             JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 
@@ -173,7 +173,10 @@ public class CompileHelper {
 
             configureLogFile(javaFileName, config);
             String javaFilePath = javaFileFolder + File.separator + javaFileName;
-            int s = javac.run(null, out, err, "-d", config.getCompilationTarget(), javaFilePath);
+
+            //todo: make it general. It should be loaded from a property file or read a java property in order to
+            // decide how to set the classpath.
+            int s = javac.run(null, out, err, "-cp", "/home/yeyo/work/alifec_new/alifec/alifecmaven//alifeccore/target/alifec-core-0.0.1.jar","-d", config.getCompilationTarget(),  javaFilePath);
 
             return s == 0;
         } catch (Exception ex) {
