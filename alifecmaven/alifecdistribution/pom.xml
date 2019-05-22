@@ -15,13 +15,29 @@
     <dependencies>
         <dependency>
             <groupId>alifec</groupId>
-            <artifactId>alifec-contest-view</artifactId>
+            <artifactId>alifec-simulation-view</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>alifec</groupId>
             <artifactId>alifec-util</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
         </dependency>
     </dependencies>
 
