@@ -15,8 +15,13 @@
             <useTransitiveFiltering>true</useTransitiveFiltering>
             <includes>
                 <include>alifec:alifec-core:jar</include>
-                <include>alifec:alifec-contest-view:jar</include>
+                <include>alifec:alifec-simulation-view:jar</include>
                 <include>alifec:alifec-util:jar</include>
+
+                <!-- JavaFx dependency -->
+                <include>org.openjfx:javafx-controls:jar</include>
+                <include>org.openjfx:javafx-fxml:jar</include>
+                <include>org.openjfx:javafx-graphics:jar</include>
             </includes>
         </dependencySet>
     </dependencySets>

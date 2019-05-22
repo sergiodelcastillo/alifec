@@ -174,9 +174,11 @@ public class CompileHelper {
             configureLogFile(javaFileName, config);
             String javaFilePath = javaFileFolder + File.separator + javaFileName;
 
-            //todo: make it general. It should be loaded from a property file or read a java property in order to
-            // decide how to set the classpath.
-            int s = javac.run(null, out, err, "-cp", "/home/yeyo/work/alifec_new/alifec/alifecmaven//alifeccore/target/alifec-core-0.0.1.jar","-d", config.getCompilationTarget(),  javaFilePath);
+            //the core and the view part of the framework are java modules,
+            // so the property jdk.module.path should be set in order to run ALifeC.
+            String modulesPath = System.getProperty("jdk.module.path");
+
+            int s = javac.run(null, out, err, "-cp", modulesPath, "-d", config.getCompilationTarget(), javaFilePath);
 
             return s == 0;
         } catch (Exception ex) {
