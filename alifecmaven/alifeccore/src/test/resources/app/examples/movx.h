@@ -17,7 +17,7 @@ using namespace std;
 class Movx: public Microorganism{
 	public:
 		Movx(){
-			srand(time(NULL));
+//			srand(time(NULL));
 		}
 		void move(Movement &mov) {
 			mov.dx = (rand() % 3) -1;

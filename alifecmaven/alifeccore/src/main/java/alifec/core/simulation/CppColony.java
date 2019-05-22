@@ -41,13 +41,8 @@ public class CppColony extends Colony {
                 logger.warn(ex.getMessage(), ex);
             }
 
-            //load the library according to the os
-            if (os.contains("linux")) {
-                //System.loadLibrary("cppcolonies");
-
-                System.load(absolutePath + File.separator + "libcppcolonies.so");
-            } else
-                System.loadLibrary("libcppcolonies");
+            String extension = os.contains("linux") ? "so" : "dll";
+            System.load(absolutePath + File.separator + "libcppcolonies." + extension);
 
             return true;
         } catch (UnsatisfiedLinkError ex) {

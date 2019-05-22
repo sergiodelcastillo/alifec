@@ -135,6 +135,8 @@ public class CompileConfig {
                 compilationTarget,
                 cppApiFolder,
                 mosPath,
+                javaHome + "include/",
+                javaHome + "include/win32/",
                 cppApiFolder);
     }
 
