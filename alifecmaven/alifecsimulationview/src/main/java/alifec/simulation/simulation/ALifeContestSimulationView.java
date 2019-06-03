@@ -1,6 +1,7 @@
 package alifec.simulation.simulation;
 
 import alifec.core.contest.Battle;
+import alifec.core.contest.Contest;
 import alifec.core.exception.ValidationException;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -28,7 +29,7 @@ public class ALifeContestSimulationView extends Stage {
     private ALifeContestSimulationTimer timer;
     private boolean paused;
 
-    public ALifeContestSimulationView(Parent father) {
+    public ALifeContestSimulationView(Parent father, Contest contest) {
         super();
 
         if (father != null){
@@ -83,7 +84,7 @@ public class ALifeContestSimulationView extends Stage {
         setResizable(false);
         active = false;
 
-        timer = new ALifeContestSimulationTimer(this);
+        timer = new ALifeContestSimulationTimer(this, contest);
     }
 
     private void continueSimulation() {

@@ -40,6 +40,6 @@ public class Test extends Application {
 
         list.add(new Battle(1,  2, 1, "uno","dos", "nut"));
 
-        new ALifeContestSimulationView(null).simulate(list);
+        new ALifeContestSimulationView(null, null).simulate(list);
     }
 }
