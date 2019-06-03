@@ -104,7 +104,6 @@ public class ALifeContestController {
 
         root.setResizable(false);
         root.getIcons().add(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
-        //root.getIcons().add(new Image("/images/logo.png"));
 
         contest = loadContest(config);
 

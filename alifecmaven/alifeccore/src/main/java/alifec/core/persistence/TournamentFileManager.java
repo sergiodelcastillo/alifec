@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,12 +23,11 @@ import java.util.stream.Stream;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class TournamentFileManager {
-    Logger logger = LogManager.getLogger(getClass());
     private static final String TEMP_SUFFIX = ".tmp";
-
-
+    private static final String BATTLE_CSV_FORMAT = "%s,%s,%s,%f,%f" + System.lineSeparator();
     private final Path path;
     private final String file;
+    Logger logger = LogManager.getLogger(getClass());
 
     public TournamentFileManager(String battleFIle, boolean createFiles) throws IOException {
         this.file = battleFIle;
@@ -53,8 +51,17 @@ public class TournamentFileManager {
         try (BufferedWriter writer = Files.newBufferedWriter(path,
                 StandardOpenOption.APPEND,
                 StandardOpenOption.CREATE)) {
-            writer.write(battle.toCsv() + System.lineSeparator());
+            writeBattleLine(battle, writer);
         }
+    }
+
+    private void writeBattleLine(Battle battle, BufferedWriter writer) throws IOException {
+        writer.write(String.format(BATTLE_CSV_FORMAT,
+                battle.getFirstColony(),
+                battle.getSecondColony(),
+                battle.getNutrient(),
+                battle.getFirstEnergy(),
+                battle.getSecondEnergy()));
     }
 
     /**
@@ -89,7 +96,7 @@ public class TournamentFileManager {
         saveAll(Paths.get(path), battles);
     }
 
-    public void saveAll(List<?> battles) throws IOException {
+    public void saveAll(List<Battle> battles) throws IOException {
         saveAll(path, battles);
     }
 
@@ -97,7 +104,7 @@ public class TournamentFileManager {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : battles) {
                 if (line instanceof Battle)
-                    writer.write(((Battle) line).toCsv() + System.lineSeparator());
+                    writeBattleLine((Battle) line, writer);
                 else
                     writer.write(line.toString() + System.lineSeparator());
             }
@@ -105,14 +112,15 @@ public class TournamentFileManager {
     }
 
     public List<Battle> readAll() throws IOException {
-        return Files.lines(path)
-                .map(new BattlesFunction())
-                .filter(new NotNullPredicate())
-                .collect(Collectors.toList());
+        return readAll(path);
     }
 
     public List<Battle> readAll(String path) throws IOException {
-        return Files.lines(Paths.get(path))
+        return readAll(Paths.get(path));
+    }
+
+    private List<Battle> readAll(Path path1) throws IOException {
+        return Files.lines(path1)
                 .map(new BattlesFunction())
                 .filter(new NotNullPredicate())
                 .collect(Collectors.toList());

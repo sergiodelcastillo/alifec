@@ -17,7 +17,6 @@ import java.util.Objects;
  */
 public class Battle implements Comparable<Battle> {
     private static final String BATTLE_STRING_FORMAT = "%s vs %s in %s";
-    private static final String BATTLE_CSV_FORMAT = "%s,%s,%s,%f,%f";
 
     private float firstEnergy;
     private String firstName;
@@ -69,7 +68,7 @@ public class Battle implements Comparable<Battle> {
         try {
             validator.validate(line);
         } catch (Throwable ex) {
-            throw new BattleException("Invalid battle: (" + this.toCsv() + ")", ex);
+            throw new BattleException("Invalid battle line: " + line , ex);
         }
     }
 
@@ -79,7 +78,7 @@ public class Battle implements Comparable<Battle> {
         try {
             runtimeValidator.validate(this);
         } catch (Throwable t) {
-            throw new BattleException("Invalid battle: (" + this.toCsv() + ")", t);
+            throw new BattleException("Invalid battle: " + this.toString(), t);
         }
     }
 
@@ -167,15 +166,19 @@ public class Battle implements Comparable<Battle> {
         return secondId;
     }
 
-    public String toCsv() {
-        return String.format(BATTLE_CSV_FORMAT, firstName, secondName, nutrient, firstEnergy, secondEnergy);
-    }
-
     public void setWinner(int id, float energy) {
         if (firstId == id)
             this.firstEnergy = energy;
 
         if (secondId == id)
             this.secondEnergy = energy;
+    }
+
+    public float getFirstEnergy() {
+        return firstEnergy;
+    }
+
+    public float getSecondEnergy() {
+        return secondEnergy;
     }
 }

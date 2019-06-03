@@ -19,6 +19,8 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestSimulationView extends Stage {
+    private static final String COLOR_BACKGROUND = "#F3F3F3";
+
     private boolean active;
     private Canvas petriDish;
     private Canvas energyTrend;
@@ -29,15 +31,20 @@ public class ALifeContestSimulationView extends Stage {
     public ALifeContestSimulationView(Parent father) {
         super();
 
-        if (father != null)
+        if (father != null){
             initOwner(father.getScene().getWindow());
+        }
 
         VBox rootPane = new VBox();
+        rootPane.setStyle("-fx-background-color: " + COLOR_BACKGROUND);
+//        rootPane.setSpacing(10);
+        rootPane.setPadding(new Insets(10,10,10,10));
         petriDish = new Canvas();
         energyTrend = new Canvas();
         colonyInfo = new Canvas();
+
         Label info = new Label("P: pause/one movement; ENTER: continue simulation; Q: quit");
-        info.setPadding(new Insets(10, 10, 10, 10));
+        //info.setPadding(new Insets(10, 10, 10, 10));
         rootPane.getChildren().addAll(petriDish, energyTrend, colonyInfo, info);
 
         Scene scene = new Scene(rootPane);
@@ -110,7 +117,6 @@ public class ALifeContestSimulationView extends Stage {
     }
 
 
-
     public void simulate(List<Battle> battles) throws ValidationException {
         //update all needed!
         active = true;
@@ -134,7 +140,12 @@ public class ALifeContestSimulationView extends Stage {
     public GraphicsContext getColonyInfoGraphicsContext() {
         return colonyInfo.getGraphicsContext2D();
     }
+
     public boolean isPaused() {
         return paused;
+    }
+
+    public static String getColorBackground() {
+        return COLOR_BACKGROUND;
     }
 }

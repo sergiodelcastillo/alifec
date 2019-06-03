@@ -3,9 +3,11 @@ package alifec.simulation.simulation;
 import alifec.core.contest.Battle;
 import alifec.core.exception.ValidationException;
 import alifec.core.simulation.Defs;
+import alifec.core.simulation.Petri;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,11 +19,15 @@ import java.util.Queue;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestSimulationTimer extends AnimationTimer {
+    private static Color COLONY_A_COLOR = Color.RED;
+    private static Color COLONY_B_COLOR = Color.BLUE;
+    private static Color NUTRIENT_COLOR = Color.YELLOW;
     private final ALifeContestSimulationView view;
     private final GraphicsContext petriDish;
     private final GraphicsContext colonyInfo;
     private final GraphicsContext energyTrend;
     private final int MO_SIZE = 8;
+    private final Paint defaultColor;
 
     private Queue<Battle> battles;
     private State lastState;
@@ -35,6 +41,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         energyTrend = view.getEnergyTrendGraphicsContext();
         battles = new LinkedList<>();
 
+        defaultColor = petriDish.getFill();
     }
 
     @Override
@@ -46,6 +53,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
                 break;
             case START_BATTLE:
                 createBattle();
+                live();
                 lastState = State.LIVING;
                 break;
             case MOVE_COLONIES:
@@ -70,7 +78,10 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         System.out.println("create battle");
 
         current = battles.poll();
-        System.out.println("new battle: " + current.toString());
+
+        //todo: ver porque da error
+        if (current != null)
+            System.out.println("new battle: " + current.toString());
     }
 
     private void waitBetweenBattles() {
@@ -88,16 +99,53 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
     private void live() {
         System.out.println("Perform one movement");
+        //todo: hacer movimiento.
+
+        //Clear the whole circle
+        petriDish.setFill(Color.valueOf(ALifeContestSimulationView.getColorBackground()));
+        petriDish.fillOval(0, 0, MO_SIZE * (2 + Defs.DIAMETER), MO_SIZE * (2 + Defs.DIAMETER));
+
+
+        //draw the petri dish
         petriDish.setStroke(Color.GRAY);
         petriDish.setLineWidth(MO_SIZE);
-        petriDish.strokeOval(MO_SIZE >> 1,
-                MO_SIZE >> 1,
-                (Defs.DIAMETER + 1) * MO_SIZE,
-                (Defs.DIAMETER + 1) * MO_SIZE);
+
+        petriDish.strokeOval(MO_SIZE, MO_SIZE, (Defs.DIAMETER + 1) * MO_SIZE, (Defs.DIAMETER + 1) * MO_SIZE);
+
+        //draw nutrients
+        for (int i = 0; i < Defs.DIAMETER; i++) {
+            for (int j = 0; j < Defs.DIAMETER; j++) {
+                if (Petri.getInstance().inDish(i, j)) {
+                    petriDish.setFill(Color.color(NUTRIENT_COLOR.getRed(), NUTRIENT_COLOR.getGreen(), NUTRIENT_COLOR.getBlue(), getAlphaNutrients((i * Defs.DIAMETER) + j)));
+                    petriDish.fillRect((i + 1) * MO_SIZE, (j + 1) * MO_SIZE, MO_SIZE, MO_SIZE);
+                }
+            }
+        }
+
+        //draw MOs
+        for (int i = 0; i < Defs.DIAMETER; i++) {
+            for (int j = 0; j < Defs.DIAMETER; j++) {
+                if (Petri.getInstance().inDish(i, j)) {
+                    if ((i * Defs.DIAMETER + j) % 2 == 0)
+                        petriDish.setFill(Color.RED);
+                    else
+                        petriDish.setFill(Color.BLUE);
+
+                    petriDish.fillOval((i + 1) * MO_SIZE, (j + 1) * MO_SIZE, MO_SIZE, MO_SIZE);
+                }
+
+            }
+        }
+    }
+
+    private double getAlphaNutrients(double nutrients) {
+        return Math.pow(nutrients / 5000d, 1d / 3d);
+
+
     }
 
     public void setSimulation(List<Battle> simulation) throws ValidationException {
-        if (simulation == null  || simulation.isEmpty())
+        if (simulation == null || simulation.isEmpty())
             throw new ValidationException("The battle list is empty so it is not possible to run a simulation.");
 
         //clear battles list
