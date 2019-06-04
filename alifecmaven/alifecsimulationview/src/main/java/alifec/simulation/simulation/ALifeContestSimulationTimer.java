@@ -51,6 +51,8 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     @Override
     public void handle(long now) {
         try {
+            //todo: improve the lastState update, it coul be passed to decideAction and updated in this method
+            // so the switch
             switch (decideAction()) {
                 case START_SIMULATION:
                     showStartSimulation();
@@ -84,11 +86,19 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
                     lastState = State.END_BATTLE;
                     break;
                 case END_SIMULATION:
-                    showEnd();
+                    showEndSimulation();
+                    lastState=State.END_SIMULATION;
+                    break;
+                case EXIT:
+                    end();
             }
         } catch (MoveMicroorganismException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showEndSimulation() {
+        System.out.println("End simulation");
     }
 
     private void createBattle() {
@@ -106,7 +116,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         this.colonyA = environment.getFirstOpponent();
         this.colonyB = environment.getSecondOpponent();
 
-        //todo: agregar logger. battle craeted: <bla>
+        //todo: agregar logger. battle created: <bla>
 
     }
 
@@ -114,7 +124,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         System.out.println("wait between battles");
     }
 
-    private void showEnd() {
+    private void end() {
         System.out.println("end");
         view.endSimulation();
     }
@@ -124,8 +134,6 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     }
 
     private boolean live() throws MoveMicroorganismException {
-        System.out.println("Perform one movement");
-        //todo: hacer movimiento.
         //move colonies
         boolean battleContinue = !environment.moveColonies();
 
@@ -161,6 +169,9 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         petriDish.setLineWidth(MO_SIZE);
         petriDish.strokeOval(MO_SIZE, MO_SIZE, (Defs.DIAMETER + 1) * MO_SIZE, (Defs.DIAMETER + 1) * MO_SIZE);
 
+        //todo: implement battle information
+
+        //todo: implement the history
         return battleContinue;
 
     }
@@ -215,6 +226,9 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
             case THE_BEGINNING:
                 return Action.START_BATTLE;
             case LIVING:
+                /*if(colonyA.isDied() || colonyB.isDied()){
+                    return
+                }*/
                 return Action.MOVE_COLONIES;
             case LIVING_ONE_STEP:
                 return Action.MOVE_COLONIES_ONE_STEP;
@@ -222,12 +236,12 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
                 //ver!!
                 colonyA = null;
                 colonyB = null;
-                return Action.START_BATTLE;
+                return battles.isEmpty() ? Action.END_SIMULATION : Action.START_BATTLE;
             case END_SIMULATION:
-                return Action.END_SIMULATION;
+                return Action.EXIT;
         }
 
         //something wrong .. finish simulation!!
-        return Action.END_SIMULATION;
+        return Action.EXIT;
     }
 }
