@@ -11,5 +11,6 @@ public enum  Action {
     MOVE_COLONIES,
     MOVE_COLONIES_ONE_STEP,
     START_SIMULATION,
-    END_SIMULATION
+    END_SIMULATION,
+    EXIT
 }

@@ -23,10 +23,10 @@ import static java.lang.Math.*;
 
 public class MiThread extends Thread {
 
+    private final Environment environment;
+    private final Tournament lastTournament;
     Logger logger = LogManager.getLogger(getClass());
-
-    enum Status {STATUS_PLAY, STATUS_PAUSE, STATUS_STOPPED}
-
+    float interLine = 50000.0f;
     /**
      * Status value.
      * It can be:
@@ -35,7 +35,6 @@ public class MiThread extends Thread {
      * STATUS_STOPPED when the user press close button.
      */
     private Status status = Status.STATUS_PLAY;
-
     private int timewait = 2000;
     private ContestUI cui;
     private JDialog father;
@@ -43,39 +42,27 @@ public class MiThread extends Thread {
     private Image image;
     private Graphics2D graphics;
     private DefaultListModel battles;
-
     private Color color1 = Color.BLUE;
     private Color color2 = Color.RED;
     private Color colorNutri = Color.YELLOW;
     private Color backGround = new Color(238, 238, 238);
     private Color petriColor = new Color(184, 207, 229);
-
     private int historyCount = 0;
     private int historyIndex = 0;
     private int energyMax = 0;
     private int[] history1 = new int[Defs.DIAMETER + 4];
     private int[] history2 = new int[Defs.DIAMETER + 4];
-
     private int light = 3;
-
     private String textOponent;
     private int anchoText;
     private int anchoNum;
     private Point textPosition;
-
     private Rectangle history;
-    float interLine = 50000.0f;
-
     private int[] h_xPoints;
     private int[] h1_yPoints;
     private int[] h2_yPoints;
-
     private Colony firstOpponent;
     private Colony secondOpponent;
-
-    private final Environment environment;
-    private final Tournament lastTournament;
-
     /**
      * This class is a thread that paint the panel of battles.
      *
@@ -246,7 +233,6 @@ public class MiThread extends Thread {
         status = Status.STATUS_STOPPED;
     }
 
-
     public void paintInit() {
 
         panel.setBackground(backGround);
@@ -376,7 +362,7 @@ public class MiThread extends Thread {
                     GUIdosD.K * (Defs.DIAMETER + 1) + 2 * light));
 
 
-            // Draw the history 
+            // Draw the history
             int t3 = (int) (0.25 * GUIdosD.K);
 
             graphics.setStroke(new BasicStroke(t3));
@@ -407,7 +393,6 @@ public class MiThread extends Thread {
 
         }
     }
-
 
     private void updateHistory() {
         // update the energy of the colonies
@@ -463,6 +448,8 @@ public class MiThread extends Thread {
                 GUIdosD.K * (GUIdosD.rel.y + Defs.DIAMETER + 10));
 
     }
+
+    enum Status {STATUS_PLAY, STATUS_PAUSE, STATUS_STOPPED}
 }
 
 

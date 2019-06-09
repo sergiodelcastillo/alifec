@@ -361,7 +361,7 @@ public class ALifeContestController {
         Battle battle = battleList.getSelectionModel().getSelectedItem();
 
         if (dialogSimulation == null) {
-            dialogSimulation = new ALifeContestSimulationView(mainLayout, contest);
+            dialogSimulation = new ALifeContestSimulationView(mainLayout, contest, bundle);
         }
 
         try {
@@ -377,7 +377,7 @@ public class ALifeContestController {
         List<Battle> battles = battleList.getItems();
 
         if (dialogSimulation == null) {
-            dialogSimulation = new ALifeContestSimulationView(mainLayout, contest);
+            dialogSimulation = new ALifeContestSimulationView(mainLayout, contest, bundle);
         }
 
         try {
