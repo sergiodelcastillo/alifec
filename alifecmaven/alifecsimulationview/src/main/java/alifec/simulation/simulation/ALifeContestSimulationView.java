@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 02/07/18.
@@ -21,6 +22,7 @@ import java.util.List;
  */
 public class ALifeContestSimulationView extends Stage {
     private static final String COLOR_BACKGROUND = "#F3F3F3";
+    private final ResourceBundle bundle;
 
     private boolean active;
     private Canvas petriDish;
@@ -29,17 +31,19 @@ public class ALifeContestSimulationView extends Stage {
     private ALifeContestSimulationTimer timer;
     private boolean paused;
 
-    public ALifeContestSimulationView(Parent father, Contest contest) {
+    public ALifeContestSimulationView(Parent father, Contest contest, ResourceBundle bundle) {
         super();
 
-        if (father != null){
+        if (father != null) {
             initOwner(father.getScene().getWindow());
         }
+
+        this.bundle = bundle;
 
         VBox rootPane = new VBox();
         rootPane.setStyle("-fx-background-color: " + COLOR_BACKGROUND);
 //        rootPane.setSpacing(10);
-        rootPane.setPadding(new Insets(10,10,10,10));
+        rootPane.setPadding(new Insets(10, 10, 10, 10));
         petriDish = new Canvas();
         energyTrend = new Canvas();
         colonyInfo = new Canvas();
@@ -50,6 +54,7 @@ public class ALifeContestSimulationView extends Stage {
 
         Scene scene = new Scene(rootPane);
         scene.setOnKeyPressed(event -> {
+
             switch (event.getCode()) {
                 case Q:
                 case ESCAPE:
@@ -87,16 +92,16 @@ public class ALifeContestSimulationView extends Stage {
         timer = new ALifeContestSimulationTimer(this, contest);
     }
 
+    public static String getColorBackground() {
+        return COLOR_BACKGROUND;
+    }
+
     private void continueSimulation() {
-        timer.disableOneRunSimulation();
-        timer.start();
-        paused = false;
+        paused = timer.disableOneRunSimulation();
     }
 
     private void oneRunSimulation() {
-        timer.setOneRunSimulation();
-        timer.start();
-        paused = true;
+        paused = timer.setOneRunSimulation();
     }
 
     public void endSimulation() {
@@ -107,28 +112,24 @@ public class ALifeContestSimulationView extends Stage {
             paused = false;
         }
 
-        timer.stop();
+        timer.endSimulation();
         this.hide();
     }
 
-
     public void pauseSimulation() {
-        timer.stop();
-        paused = true;
+        paused = timer.pauseSimulation();
     }
-
 
     public void simulate(List<Battle> battles) throws ValidationException {
         //update all needed!
         active = true;
         paused = false;
 
-        timer.setSimulation(battles);
-        timer.start();
+        timer.startSimulation(battles);
+
         //how
         showAndWait();
     }
-
 
     public GraphicsContext getPetriDishGraphicsContext() {
         return petriDish.getGraphicsContext2D();
@@ -142,11 +143,19 @@ public class ALifeContestSimulationView extends Stage {
         return colonyInfo.getGraphicsContext2D();
     }
 
+    public double getPetriDishWidth() {
+        return petriDish.getWidth();
+    }
+
+    public double getPetriDishHeight() {
+        return petriDish.getHeight();
+    }
+
     public boolean isPaused() {
         return paused;
     }
 
-    public static String getColorBackground() {
-        return COLOR_BACKGROUND;
+    public ResourceBundle getBundle() {
+        return bundle;
     }
 }

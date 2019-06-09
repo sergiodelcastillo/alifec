@@ -3,7 +3,6 @@ package alifec.simulation.sumulation.test;
 import alifec.core.contest.Battle;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.ValidationException;
-import alifec.simulation.simulation.ALifeContestSimulationView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -40,6 +39,6 @@ public class Test extends Application {
 
         list.add(new Battle(1,  2, 1, "uno","dos", "nut"));
 
-        new ALifeContestSimulationView(null, null).simulate(list);
+       // new ALifeContestSimulationView(null, null, bundle).simulate(list);
     }
 }
