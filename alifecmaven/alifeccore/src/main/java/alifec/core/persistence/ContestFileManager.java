@@ -44,7 +44,7 @@ public class ContestFileManager {
                     .filter(new NotNullPredicate())
                     .collect(Collectors.toList());
         } catch (ConfigFileException | IOException e) {
-            logger.error(e.getMessage(), e);
+            logger.info("Could not retrieve the contest list: {}", e.getMessage());
         }
 
         return new ArrayList<>();

@@ -76,7 +76,7 @@ public class ALifeContestMain extends Application {
         ContestConfig config = loadContest();
 
         if (config == null) {
-            logger.warn("The contest file was not loaded. Application wont start.");
+            logger.fatal("The contest file was not loaded. Application wont start.");
             Platform.exit();
         } else {
             //compile the colonies
@@ -130,7 +130,7 @@ public class ALifeContestMain extends Application {
             config.validate();
 
         } catch (ConfigFileException | ValidationException ex) {
-            logger.info("Can not load the configuration file.", ex);
+            logger.info("Could not load the configuration file: {}", ex.getMessage());
 
             if (ex instanceof InvalidUserDirException) {
                 logger.error("The default path must be valid.");

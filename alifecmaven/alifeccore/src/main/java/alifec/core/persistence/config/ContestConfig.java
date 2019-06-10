@@ -236,8 +236,9 @@ public class ContestConfig {
             if (Files.notExists(Paths.get(basePath))) {
                 throw new ConfigFileWriteException("The base path can not be found: " + basePath, null, this);
             }
-            property.store(new FileWriter(this.getConfigFilePath()),
-                    "Configuration File\n Warning: do not modify this file");
+            FileWriter writer = new FileWriter(this.getConfigFilePath());
+            property.store(writer, "Configuration File\n Warning: do not modify this file");
+            writer.close();
         } catch (IOException e) {
             throw new ConfigFileWriteException("Can not update the config file: " + getConfigFilePath(), e, this);
         }
