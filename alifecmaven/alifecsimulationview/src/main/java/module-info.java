@@ -16,7 +16,6 @@ module alifec.simulation.view {
     requires alifec.core;
 
     exports alifec.simulation.main;
-    exports alifec.simulation.sumulation.test;
     exports alifec.simulation.controller;
 
 }
