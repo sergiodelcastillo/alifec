@@ -1,6 +1,6 @@
 /**
- * @author Sergio Del Castillo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @author: Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 #include <jni.h>
 

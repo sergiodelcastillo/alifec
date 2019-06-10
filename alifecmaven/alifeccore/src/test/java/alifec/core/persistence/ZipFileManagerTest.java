@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Sergio Del Castillo on 22/08/17.
@@ -28,9 +29,9 @@ public class ZipFileManagerTest extends ParentTest {
         ZipFileManager zipFileManager = new ZipFileManager(config);
         String zipFile = zipFileManager.zipContest();
 
-        Assert.assertEquals(1, new File(config.getBackupFolder()).list((dir, name) -> {
+        Assert.assertEquals(1, Objects.requireNonNull(new File(config.getBackupFolder()).list((dir, name) -> {
             return name.equals(zipFile);
-        }).length);
+        })).length);
 
     }
 

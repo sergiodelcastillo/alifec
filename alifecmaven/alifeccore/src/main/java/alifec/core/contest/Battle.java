@@ -10,10 +10,10 @@ import alifec.core.validation.BattleRuntimeValidator;
 import java.util.Objects;
 
 /**
- * @author Sergio Del Castillo
- *         mail@: sergio.jose.delcastillo@gmail.com
- *         <p>
- *         Contains de history of battles.
+ * @author: Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
+ * <p>
+ * Contains de history of battles.
  */
 public class Battle implements Comparable<Battle> {
     private static final String BATTLE_STRING_FORMAT = "%s vs %s in %s";
@@ -68,7 +68,7 @@ public class Battle implements Comparable<Battle> {
         try {
             validator.validate(line);
         } catch (Throwable ex) {
-            throw new BattleException("Invalid battle line: " + line , ex);
+            throw new BattleException("Invalid battle line: " + line, ex);
         }
     }
 

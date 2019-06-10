@@ -1,8 +1,8 @@
 #ifndef DEFS_H
 #define DEFS_H
 /**
- * @author Sergio Del castillo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @author: Sergio Del castillo
+ *@email: sergio.jose.delcastillo@gmail.com
  *
  * This class define the important constant to alifec.
  * A player can use them.

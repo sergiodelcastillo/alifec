@@ -16,9 +16,9 @@ public class BallsNutrient implements Nutrient {
     private Random random = new Random();
     private Random random2 = new Random();
 
-    private float ball1[][];
-    private float ball2[][];
-    private float result[][];
+    private float[][] ball1;
+    private float[][] ball2;
+    private float[][] result;
 
     public BallsNutrient() {
         ball1 = new float[Defs.DIAMETER][Defs.DIAMETER];

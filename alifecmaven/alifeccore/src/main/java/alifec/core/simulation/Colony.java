@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Sergio Del Castillo
+ * @author: Sergio Del Castillo
  * @email sergio.jose.delcastillo@gmail.com
  * <p>
  * It is a generic class which represents the colony of microorganisms.

@@ -68,12 +68,12 @@ public class ContestFolderPredicateTest extends ParentTest {
     public void testListManyContests() throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
         List<String> target = new ArrayList<>(100);
         for (int i = 99; i >= 0; i--) {
-            target.add(ContestConfig.CONTEST_NAME_PREFIX + Integer.toString(i));
+            target.add(ContestConfig.CONTEST_NAME_PREFIX + i);
         }
 
         //Create 100  contests
         for (int i = 0; i < 100; i++) {
-            createContest(ContestConfig.CONTEST_NAME_PREFIX + Integer.toString(i));
+            createContest(ContestConfig.CONTEST_NAME_PREFIX + i);
         }
 
 

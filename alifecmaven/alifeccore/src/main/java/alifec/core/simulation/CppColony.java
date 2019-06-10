@@ -9,9 +9,9 @@ import java.nio.file.Paths;
 public class CppColony extends Colony {
 
     static Logger logger = LogManager.getLogger(CppColony.class);
-    private String author = "";
-    private String name = "";
-    private String affiliation = "";
+    private String author;
+    private String name;
+    private String affiliation;
 
     CppColony(int index, String colony_name) throws ClassNotFoundException {
         super(index, colony_name);
@@ -33,13 +33,6 @@ public class CppColony extends Colony {
         try {
             String absolutePath = Paths.get(path).toAbsolutePath().toString();
             String os = System.getProperty("os.name").toLowerCase();
-
-            //add the current path to java library path
-            try {
-                //addLibraryPath(path);
-            } catch (Exception ex) {
-                logger.warn(ex.getMessage(), ex);
-            }
 
             String extension = os.contains("linux") ? "so" : "dll";
             System.load(absolutePath + File.separator + "libcppcolonies." + extension);

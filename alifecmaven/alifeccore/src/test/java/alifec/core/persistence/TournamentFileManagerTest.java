@@ -91,7 +91,7 @@ public class TournamentFileManagerTest extends ParentTest {
 
         //deleteFromBattlesFile the first
          manager.saveAll(path, list.subList(0, 2));
-        manager.deleteFromBattlesFile(Arrays.asList(list.get(0)));
+        manager.deleteFromBattlesFile(Collections.singletonList(list.get(0)));
         result = manager.readAll(path);
         Assert.assertEquals(1, result.size());
         Assert.assertEquals(list.get(1), result.get(0));

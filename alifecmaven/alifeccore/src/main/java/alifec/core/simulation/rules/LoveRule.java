@@ -1,4 +1,5 @@
 package alifec.core.simulation.rules;
+
 import alifec.core.simulation.Cell;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.Movement;
@@ -10,6 +11,7 @@ import java.util.Random;
 
 public class LoveRule implements ColonyRule {
     private static final Random random = new Random();
+
     /**
      * The current MO can duplicate if it want.
      *
@@ -24,7 +26,7 @@ public class LoveRule implements ColonyRule {
             return Status.NONE;
         }
 
-        ArrayList<Position> posRel = new ArrayList<Position>();
+        ArrayList<Position> posRel = new ArrayList<>();
 
         for (int i = mo.x - 1; i <= mo.x + 1; i++) {
             for (int j = mo.y - 1; j <= mo.y + 1; j++) {

@@ -1,5 +1,5 @@
 /**
- * @author Sergio Del Castillo
+ * @author: Sergio Del Castillo
  * @email sergio.jose.delcastillo@gmail.com
  */
  

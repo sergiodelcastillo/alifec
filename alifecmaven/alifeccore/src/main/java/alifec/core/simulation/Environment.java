@@ -36,7 +36,7 @@ public class Environment {
     /**
      * Reference to position of MOs.
      */
-    private Cell microorganism[][];
+    private Cell[][] microorganism;
 
     /**
      * First Opponent .. temporal reference !!

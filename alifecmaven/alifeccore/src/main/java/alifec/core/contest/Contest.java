@@ -35,7 +35,7 @@ public class Contest implements Listener {
     /**
      * current tournament.
      */
-    private int selected = -1;
+    private int selected;
 
 
     /**

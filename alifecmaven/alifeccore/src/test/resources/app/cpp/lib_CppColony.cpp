@@ -1,6 +1,6 @@
 /**
- * @author Yeyo
- * mail@: sergio.jose.delcastillo@gmail.com
+ * @author: Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
  */
 
 #include "lib_CppColony.h"

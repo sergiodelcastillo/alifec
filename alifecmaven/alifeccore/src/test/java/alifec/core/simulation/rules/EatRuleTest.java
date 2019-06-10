@@ -34,12 +34,11 @@ public class EatRuleTest extends ParentTest {
 
         Cell mo = environment.getFirstOpponent().getMO(0);
         Movement mov = new Movement(0, 0);
-        boolean mitosis = false;
 
         EatRule rule = new EatRule();
         Assert.assertEquals(Defs.E_INITIAL, mo.ene, 0.00001);
         float nutriInitial = environment.getAgar().getNutrient(mo.x, mo.y);
-        Assert.assertEquals(ColonyRule.Status.NONE, rule.apply(environment, mo, mov, mitosis));
+        Assert.assertEquals(ColonyRule.Status.NONE, rule.apply(environment, mo, mov, false));
 
         //validate energy of the mo. It should be last energy + 0.01* nutrient
         Assert.assertEquals(mo.ene, Defs.E_INITIAL + nutriInitial * (Defs.EAT_PERCENT), 0.00001);

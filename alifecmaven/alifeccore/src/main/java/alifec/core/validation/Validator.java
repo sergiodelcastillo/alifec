@@ -1,6 +1,6 @@
 package alifec.core.validation;
 
-;import alifec.core.exception.ValidationException;
+import alifec.core.exception.ValidationException;
 
 /**
  * Created by Sergio Del Castillo on 15/08/17.
