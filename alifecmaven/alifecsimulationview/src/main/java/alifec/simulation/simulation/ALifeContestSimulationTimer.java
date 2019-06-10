@@ -192,7 +192,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
     private void clearDish() {
         dish.setFill(COLOR_BACKGROUND);
-        dish.fillOval(0, 0, WIDTH, WIDTH);
+        dish.fillOval(0, 0, WIDTH, DISH_HEIGH);
     }
 
     private boolean live() throws MoveMicroorganismException {
