@@ -283,6 +283,15 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         return Color.color(COLOR_NUTRIENT.getRed(), COLOR_NUTRIENT.getGreen(), COLOR_NUTRIENT.getBlue(), getAlphaNutrients(nutrient));
     }
 
+    /**
+     * This f(x) will always return a value between 0-1
+     * The reason behind of using a x^3 function is
+     * because low values of nutrients are almost not visible
+     * if it is normalized by using nutrients/MAX_NUTRIENTS.
+     *
+     * @param nutrients the amount of nutrient in an specific position (x,y). The nutrient value should be between 0 and 5000.
+     * @return a value between 0 and 1
+     */
     private double getAlphaNutrients(double nutrients) {
         return Math.pow(nutrients / 5000d, 1d / 3d);
     }
@@ -302,9 +311,6 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     public void startSimulation(List<Battle> simulation) throws ValidationException {
         if (simulation == null || simulation.isEmpty())
             throw new ValidationException("The battle list is empty so it is not possible to run a simulation.");
-
-        //clear battles list
-        battles.clear();
 
         //set initial state!
         resetValues();
@@ -370,6 +376,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     }
 
     private void resetValues() {
+        battles.clear();
         lastState = State.NONE;
         startNanoTime = 0;
         lastCount = -1;
