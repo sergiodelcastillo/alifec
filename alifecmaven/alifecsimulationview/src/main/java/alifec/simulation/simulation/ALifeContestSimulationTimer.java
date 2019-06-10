@@ -15,25 +15,36 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import static alifec.simulation.simulation.ALifeContestSimulationView.*;
+
 /**
  * Created by Sergio Del Castillo on 09/07/18.
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestSimulationTimer extends AnimationTimer {
-    private static Color COLONY_A_COLOR = Color.RED;
-    private static Color COLONY_B_COLOR = Color.BLUE;
-    private static Color NUTRIENT_COLOR = Color.YELLOW;
+
+    //COLORS
+    private static Color COLOR_LINE = Color.GRAY;
+    private static Color COLOR_COLONY_A = Color.RED;
+    private static Color COLOR_COLONY_B = Color.BLUE;
+    private static Color COLOR_NUTRIENT = Color.YELLOW;
+    private static Color COLOR_BACKGROUND = Color.valueOf(COLOR_BACKGROUND_STRING);
+
+    //Fonts
+    private static Font FONT_COLONIES = new Font(Font.getDefault().getName(), 14);
+    private static String FORMAT_ENERGY = "Energy: %.2f";
+    private static String FORMAT_MOS = "MOs: %d";
+
 
     private final ALifeContestSimulationView view;
-    private final GraphicsContext petriDish;
-    private final GraphicsContext colonyInfo;
-    private final GraphicsContext energyTrend;
-    private final int MO_SIZE = 8;
+    private final GraphicsContext dish;
+    private final GraphicsContext info;
+    private final GraphicsContext trend;
+
     private final Contest contest;
     private final Environment environment;
-
-    private Queue<Battle> battles;
+    private final Queue<Battle> battles;
     private State lastState;
     private Battle current;
     private Colony colonyA;
@@ -49,9 +60,9 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     public ALifeContestSimulationTimer(ALifeContestSimulationView view, Contest contest) {
         this.view = view;
 
-        petriDish = view.getPetriDishGraphicsContext();
-        colonyInfo = view.getColonyInfoGraphicsContext();
-        energyTrend = view.getEnergyTrendGraphicsContext();
+        dish = view.getPetriDishGraphicsContext();
+        info = view.getColonyInfoGraphicsContext();
+        trend = view.getEnergyTrendGraphicsContext();
         battles = new LinkedList<>();
         this.contest = contest;
         this.environment = contest.getEnvironment();
@@ -67,7 +78,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         }
 
         try {
-            //todo: improve the lastState update, it coul be passed to decideAction and updated in this method
+            //todo: improve the lastState update, it could be passed to decideAction and updated in this method
             // so the switch
             switch (decideAction()) {
                 case START_SIMULATION:
@@ -166,27 +177,41 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     private void centeredText(String text1, String text2) {
         clearDish();
 
-        petriDish.setTextAlign(TextAlignment.CENTER);
-        petriDish.setFont(new Font(Font.getDefault().getName(), 16));
-        petriDish.setFill(Color.GRAY);
+        dish.setTextAlign(TextAlignment.CENTER);
+        //todo: improve this!!!
+        dish.setFont(new Font(Font.getDefault().getName(), 16));
+        dish.setFill(COLOR_LINE);
 
         if (text1 != null && !text1.isEmpty())
-            petriDish.fillText(text1, view.getPetriDishWidth() / 2, 150);
+            dish.fillText(text1, view.getPetriDishWidth() / 2, 150);
 
         if (text2 != null && !text2.isEmpty())
-            petriDish.fillText(text2, view.getPetriDishWidth() / 2, 200);
+            dish.fillText(text2, view.getPetriDishWidth() / 2, 200);
     }
 
 
     private void clearDish() {
-        petriDish.setFill(Color.valueOf(ALifeContestSimulationView.getColorBackground()));
-        petriDish.fillOval(0, 0, MO_SIZE * (3 + Defs.DIAMETER), MO_SIZE * (3 + Defs.DIAMETER));
+        dish.setFill(COLOR_BACKGROUND);
+        dish.fillOval(0, 0, WIDTH, WIDTH);
     }
 
     private boolean live() throws MoveMicroorganismException {
-        //move colonies
+        //do the movement of colonies
         boolean battleContinue = !environment.moveColonies();
 
+        //draw the petri dish including colonies and nutrients
+        drawPetriDish();
+
+        //Colonies information
+        drawColoniesInformation();
+
+        //todo: implement the history
+        drawColoniesTrend();
+        return battleContinue;
+
+    }
+
+    private void drawPetriDish() {
         //Clear the whole circle
         clearDish();
 
@@ -194,8 +219,8 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         for (int x = 0; x < Defs.DIAMETER; x++) {
             for (int y = 0; y < Defs.DIAMETER; y++) {
                 if (Petri.getInstance().inDish(x, y)) {
-                    petriDish.setFill(nutrientColor(environment.getAgar().getNutrient(x, y)));
-                    petriDish.fillRect((x + 1) * MO_SIZE, (y + 1) * MO_SIZE, MO_SIZE, MO_SIZE);
+                    dish.setFill(nutrientColor(environment.getAgar().getNutrient(x, y)));
+                    dish.fillRect((x + 1) * MO_SIZE, (y + 1) * MO_SIZE, MO_SIZE, MO_SIZE);
                 }
             }
         }
@@ -203,30 +228,59 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         //draw MOs
         for (int a = 0; a < colonyA.size(); a++) {
             Cell cell = colonyA.getMO(a);
-            petriDish.setFill(colonyAColor(cell.ene));
-            petriDish.fillOval((cell.x + 1) * MO_SIZE, (cell.y + 1) * MO_SIZE, MO_SIZE, MO_SIZE);
+            dish.setFill(colonyAColor(cell.ene));
+            dish.fillOval((cell.x + 1) * MO_SIZE, (cell.y + 1) * MO_SIZE, MO_SIZE, MO_SIZE);
         }
 
         for (int b = 0; b < colonyB.size(); b++) {
             Cell cell = colonyB.getMO(b);
-            petriDish.setFill(colonyBColor(cell.ene));
-            petriDish.fillOval((cell.x + 1) * MO_SIZE, (cell.y + 1) * MO_SIZE, MO_SIZE, MO_SIZE);
+            dish.setFill(colonyBColor(cell.ene));
+            dish.fillOval((cell.x + 1) * MO_SIZE, (cell.y + 1) * MO_SIZE, MO_SIZE, MO_SIZE);
         }
 
-        //draw the petri dish
-        petriDish.setStroke(Color.GRAY);
-        petriDish.setLineWidth(MO_SIZE);
-        petriDish.strokeOval(MO_SIZE, MO_SIZE, (Defs.DIAMETER + 1) * MO_SIZE, (Defs.DIAMETER + 1) * MO_SIZE);
-
-        //todo: implement battle information
-
-        //todo: implement the history
-        return battleContinue;
-
+        //draw the petri dish line
+        dish.setStroke(COLOR_LINE);
+        dish.setLineWidth(MO_SIZE);
+        dish.strokeOval(MO_SIZE, MO_SIZE, (Defs.DIAMETER + 1) * MO_SIZE, (Defs.DIAMETER + 1) * MO_SIZE);
     }
 
+    private void drawColoniesInformation() {
+        //todo: the performance can be improved:
+        // currently the whole rectangle is repainted per iteration.
+        // There is an option of painting the line and the colony names and update only
+        // the fields which are changing every iteration (energy / mos ).
+        // To cleanup the already painted energy / mos it is possible to use
+        // "old" amount and paint them with background color and then
+        // paint the new amount with the corresponding color.
+
+        //clear the old information
+        info.setFill(COLOR_BACKGROUND);
+        info.fillRect(0, 0, WIDTH, INFO_HEIGH);
+
+        info.setFont(FONT_COLONIES);
+        info.setStroke(COLOR_LINE);
+        info.setLineWidth(2);
+        info.strokeLine(MO_SIZE, MO_SIZE, WIDTH - MO_SIZE, MO_SIZE);
+
+        drawColonyLine(COLOR_COLONY_A, environment.getFirstOpponent(), 28);
+
+        drawColonyLine(COLOR_COLONY_B, environment.getSecondOpponent(), 50);
+    }
+
+    private void drawColoniesTrend() {
+        //todo
+    }
+
+    private void drawColonyLine(Color color, Colony colony, int y) {
+        info.setFill(color);
+        info.fillText(colony.getName(), 10, y);
+        info.fillText(String.format(FORMAT_ENERGY, colony.getEnergy()), 160, y);
+        info.fillText(String.format(FORMAT_MOS, colony.getMOs().size()), 340, y);
+    }
+
+
     private Color nutrientColor(float nutrient) {
-        return Color.color(NUTRIENT_COLOR.getRed(), NUTRIENT_COLOR.getGreen(), NUTRIENT_COLOR.getBlue(), getAlphaNutrients(nutrient));
+        return Color.color(COLOR_NUTRIENT.getRed(), COLOR_NUTRIENT.getGreen(), COLOR_NUTRIENT.getBlue(), getAlphaNutrients(nutrient));
     }
 
     private double getAlphaNutrients(double nutrients) {
@@ -234,11 +288,11 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     }
 
     private Color colonyAColor(float energy) {
-        return calculateColonyColor(COLONY_A_COLOR, energy);
+        return calculateColonyColor(COLOR_COLONY_A, energy);
     }
 
     private Color colonyBColor(float energy) {
-        return calculateColonyColor(COLONY_B_COLOR, energy);
+        return calculateColonyColor(COLOR_COLONY_B, energy);
     }
 
     private Color calculateColonyColor(Color c, float e) {

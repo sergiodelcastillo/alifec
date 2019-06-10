@@ -26,7 +26,7 @@ public class ContestConfigValidatorTest {
         try {
             validator.validate(contestConfig);
             Assert.fail("it should fail");
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
 
         }
     }

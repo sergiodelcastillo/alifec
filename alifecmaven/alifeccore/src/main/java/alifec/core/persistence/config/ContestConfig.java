@@ -113,9 +113,8 @@ public class ContestConfig {
 
     private List<Integer> nutrients = new ArrayList<>();
 
-    private ContestConfigValidator validator = new ContestConfigValidator();
-
-    private StringBuilder builder;
+    private final ContestConfigValidator validator = new ContestConfigValidator();
+    private final StringBuilder builder = new StringBuilder();
 
     private ResourceBundle bundle;
 
@@ -142,7 +141,7 @@ public class ContestConfig {
                 }
             }
 
-            this.builder = new StringBuilder();
+           // this.builder = new StringBuilder();
             this.bundle = bundle;
 
         } catch (FileNotFoundException ex) {
@@ -158,7 +157,6 @@ public class ContestConfig {
 
     public ContestConfig(ResourceBundle bundle, String path, String contestName) {
         this.path = path;
-        this.builder = new StringBuilder();
         this.bundle = bundle;
 
         setDefaults();
@@ -174,7 +172,6 @@ public class ContestConfig {
         this.pauseBetweenBattles = config.pauseBetweenBattles;
         this.nutrients.addAll(config.nutrients);
         this.bundle = config.getBundle();
-        this.builder = new StringBuilder();
     }
 
     public static String getDefaultPath() throws InvalidUserDirException {
