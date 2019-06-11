@@ -21,7 +21,7 @@ public class BattlesFunction implements Function<String, Battle> {
         try {
             return new Battle(path);
         } catch (Throwable t) {
-            logger.error(t.getMessage(), t);
+            logger.warn(t.getMessage());
         }
         return null;
     }

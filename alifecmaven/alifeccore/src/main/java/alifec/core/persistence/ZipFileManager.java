@@ -113,7 +113,9 @@ public class ZipFileManager {
 
             // create a new ZipEntry, which is basically another file
             // within the archive. We omit the path from the filename
-            ZipEntry entry = new ZipEntry(file.toFile().getCanonicalPath().replaceFirst(root, ""));
+            ZipEntry entry = new ZipEntry(file.toFile().getCanonicalPath()
+                    .replace("\\", "/")
+                    .replaceFirst(root, ""));
             entry.setCreationTime(FileTime.fromMillis(file.toFile().lastModified()));
 
             //entry.setComment("Created by Alifec");

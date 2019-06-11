@@ -9,11 +9,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,7 +54,7 @@ public class TournamentFileManager {
     }
 
     private void writeBattleLine(Battle battle, BufferedWriter writer) throws IOException {
-        writer.write(String.format(BATTLE_CSV_FORMAT,
+        writer.write(String.format(Locale.ROOT, BATTLE_CSV_FORMAT,
                 battle.getFirstColony(),
                 battle.getSecondColony(),
                 battle.getNutrient(),
