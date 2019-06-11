@@ -35,20 +35,27 @@ public class CompileConfig {
 
 
     public CompileConfig(String compilerConfigFile, String compilationTarget, String cppApiFolder, String mosPath) throws CompileConfigException {
+        Properties property = new Properties();
+        InputStream is = null;
         try {
-            Properties property = new Properties();
-            InputStream is = new FileInputStream(compilerConfigFile);
+            is = new FileInputStream(compilerConfigFile);
 
             property.load(is);
 
             for (Object object : property.keySet()) {
-
                 if (!setProperty(object.toString(), property.getProperty(object.toString()))) {
                     logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
                 }
             }
+
         } catch (IOException e) {
             throw new CompileConfigException("Error loading the config file in path: " + compilerConfigFile, e, this);
+        } finally {
+            try {
+                if (is != null) is.close();
+            } catch (IOException e) {
+                logger.debug("Can not close the InputStream", e);
+            }
         }
         try {
             //validate if the configuration is Ok.
@@ -172,11 +179,11 @@ public class CompileConfig {
         return os.toLowerCase().contains("windows");
     }
 
-    public boolean isOpenJDKJVM(){
+    public boolean isOpenJDKJVM() {
         return jvm.equals("OpenJDK Runtime Environment");
     }
 
-    public boolean isOracleJVM(){
+    public boolean isOracleJVM() {
         return jvm.equals("Java(TM) SE Runtime Environment");
     }
 

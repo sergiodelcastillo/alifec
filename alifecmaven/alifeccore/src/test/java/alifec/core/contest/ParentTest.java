@@ -10,6 +10,7 @@ import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 
 import java.io.File;
@@ -72,6 +73,9 @@ public class ParentTest {
             //.peek - is there only to show which entry is processed
             //.forEach - calls the .deleteFromBattlesFile() method on every File object
         }
+
+        //Ensure everything is removed!!
+        Assert.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH)));
     }
 
     protected ContestConfig createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
