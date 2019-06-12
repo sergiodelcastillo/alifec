@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
@@ -25,9 +26,10 @@ public class ContestFolderPredicateTest extends ParentTest {
 
     @Test
     public void testListEmpty() throws IOException {
-
-        Assert.assertEquals(Files.list(Paths.get(TEST_ROOT_PATH))
-                .filter(new ContestFolderPredicate()).count(), 0);
+        Stream<Path> list = Files.list(Paths.get(TEST_ROOT_PATH));
+        long count = list.filter(new ContestFolderPredicate()).count();
+        list.close();
+        Assert.assertEquals(count, 0);
     }
 
     @Test
@@ -38,10 +40,10 @@ public class ContestFolderPredicateTest extends ParentTest {
 
         ContestFolderPredicate contestFolderPredicate = new ContestFolderPredicate(false);
         Assert.assertFalse(contestFolderPredicate.test(folder.resolve(stringBuilder.toString())));
-        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-|")));
-        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-|")));
-        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-1|")));
-        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-|1")));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-q a")));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest- baa")));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-dd__--")));
+        Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-ll!")));
         Assert.assertFalse(contestFolderPredicate.test(folder.resolve("contest-11111111111111111111111111")));
 
         for (int i = 0; i < 25; i++) {
@@ -76,8 +78,8 @@ public class ContestFolderPredicateTest extends ParentTest {
             createContest(ContestConfig.CONTEST_NAME_PREFIX + i);
         }
 
-
-        Assert.assertTrue(Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH))).filter(new ContestFolderPredicate()).allMatch(path -> {
+        Stream<Path> list = Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH)));
+        boolean allMatch = list.filter(new ContestFolderPredicate()).allMatch(path -> {
             String file = path.getFileName().toString();
             if (target.contains(file)) {
                 target.remove(file);
@@ -85,8 +87,10 @@ public class ContestFolderPredicateTest extends ParentTest {
             }
 
             return false;
-        }));
+        });
+        list.close();
 
+        Assert.assertTrue(allMatch);
         Assert.assertTrue(target.isEmpty());
     }
 
@@ -117,9 +121,8 @@ public class ContestFolderPredicateTest extends ParentTest {
             createContest(contestName);
         }
 
-
-        Assert.assertTrue(Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH)))
-                .filter(new ContestFolderPredicate())
+        Stream<Path> list = Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH)));
+        boolean allMatch = list.filter(new ContestFolderPredicate())
                 .allMatch(path -> {
                     String file = path.getFileName().toString();
                     if (contestListTarget.contains(file)) {
@@ -128,7 +131,9 @@ public class ContestFolderPredicateTest extends ParentTest {
                     }
 
                     return false;
-                }));
+                });
+        list.close();
+        Assert.assertTrue(allMatch);
         Assert.assertTrue(contestListTarget.isEmpty());
     }
 

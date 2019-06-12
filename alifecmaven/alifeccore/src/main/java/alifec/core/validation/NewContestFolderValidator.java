@@ -23,7 +23,7 @@ public class NewContestFolderValidator implements Validator<String> {
     @Override
     public void validate(String folder) throws ValidationException {
 
-        if (folder == null || folder.isEmpty())
+        if (folder == null || folder.isEmpty() || folder.trim().isEmpty())
             throw new ValidationException("The new contest folder is not a valid contest name: name is empty.");
 
         Path file = Paths.get(folder);
