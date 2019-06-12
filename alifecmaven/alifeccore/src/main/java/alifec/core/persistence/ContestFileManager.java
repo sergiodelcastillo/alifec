@@ -109,11 +109,11 @@ public class ContestFileManager {
 
             Files.walk(source).forEach(path -> {
                 try {
-                    Path target = Paths.get(MOsFolder + File.separator + path.getFileName());
+                    Path target = Paths.get(MOsFolder + File.separator + path.getFileName()).toAbsolutePath().normalize();
 
                     if (Files.isRegularFile(path))
                         Files.copy(path, target);
-                    logger.info("Generated file: " + target.toFile().getAbsolutePath());
+                    logger.info("Generated file: " + target.toString());
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -129,11 +129,11 @@ public class ContestFileManager {
 
             Files.walk(source).forEach(path -> {
                 try {
-                    Path target = Paths.get(targetFolder + File.separator + path.getFileName());
+                    Path target = Paths.get(targetFolder + File.separator + path.getFileName()).toAbsolutePath().normalize();
 
                     if (Files.isRegularFile(path)) {
                         Files.copy(path, target);
-                        logger.info("Copying file: " + target.toFile().getAbsolutePath());
+                        logger.info("Copying file: " + target.toAbsolutePath());
                     }
                 } catch (IOException e) {
                     isOK[0] = false;

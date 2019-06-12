@@ -78,6 +78,8 @@ public class ContestConfig {
     static Logger logger = LogManager.getLogger(ContestConfig.class);
     private static Hashtable<Integer, Nutrient> NUTRIENT_OPTIONS;
 
+    public static final String SEPARATOR_PATTERN;
+
     static {
         NUTRIENT_OPTIONS = new Hashtable<>();
 
@@ -88,6 +90,8 @@ public class ContestConfig {
         NUTRIENT_OPTIONS.put(TwoGaussiansFunction.ID, new FunctionBasedNutrient(new TwoGaussiansFunction()));
         NUTRIENT_OPTIONS.put(FamineFunction.ID, new FunctionBasedNutrient(new FamineFunction()));
         NUTRIENT_OPTIONS.put(BallsNutrient.ID, new BallsNutrient());
+
+        SEPARATOR_PATTERN = File.separator .equals("\\") ? "\\\\" : File.separator;
     }
 
     /**
@@ -141,7 +145,7 @@ public class ContestConfig {
                 }
             }
 
-           // this.builder = new StringBuilder();
+            // this.builder = new StringBuilder();
             this.bundle = bundle;
 
         } catch (FileNotFoundException ex) {

@@ -11,10 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -31,11 +29,13 @@ public class ZipFileManager {
     private static int BUFFER = 2048;
     private final ContestConfig config;
 
+
     public ZipFileManager(ContestConfig config) {
         //todo: remove the config and use string
         //todo improve use of path
         this.config = config;
     }
+
 
     /**
      * This method creates the zip archive and then goes through
@@ -49,7 +49,7 @@ public class ZipFileManager {
         // the directory to be zipped
         String backupFile = config.getBackupFile();
         Path directory = Paths.get(config.getContestPath());
-        String canonicalPathBackup = Paths.get(config.getBackupFolder()).toFile().getCanonicalPath();
+        String backupPath = Paths.get(config.getBackupFolder()).toFile().getCanonicalPath();
         String canonicalPath = directory.getParent().toFile().getCanonicalPath() + File.separator;
         // the zip file name that we will create
         File zipFile = Paths.get(backupFile).toFile();
@@ -64,7 +64,7 @@ public class ZipFileManager {
                     .sorted(Comparator.naturalOrder())
                     .filter(path -> {
                         try {
-                            if (path.toFile().getCanonicalPath().contains(canonicalPathBackup)) {
+                            if (path.toFile().getCanonicalPath().contains(backupPath)) {
                                 logger.trace("Ignoring file: " + path.toFile().toString());
                                 return false;
                             }
@@ -88,7 +88,7 @@ public class ZipFileManager {
     }
 
     private String getName(String backupFile) {
-        String[] tmp1 = backupFile.split(File.separator);
+        String[] tmp1 = backupFile.split(ContestConfig.SEPARATOR_PATTERN);
 
         return tmp1.length == 1 ? backupFile : tmp1[tmp1.length - 1];
     }
@@ -115,7 +115,7 @@ public class ZipFileManager {
             // within the archive. We omit the path from the filename
             ZipEntry entry = new ZipEntry(file.toFile().getCanonicalPath()
                     .replace("\\", "/")
-                    .replaceFirst(root, ""));
+                    .substring(root.length()));
             entry.setCreationTime(FileTime.fromMillis(file.toFile().lastModified()));
 
             //entry.setComment("Created by Alifec");
