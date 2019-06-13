@@ -99,19 +99,14 @@ public class TournamentFileManager {
     }
 
     public void saveAll(Path path, List<?> battles) throws IOException {
-        BufferedWriter writer = null;
 
-        try {
-            writer = Files.newBufferedWriter(path);
-
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : battles) {
                 if (line instanceof Battle)
                     writeBattleLine((Battle) line, writer);
                 else
                     writer.write(line.toString() + System.lineSeparator());
             }
-        } finally {
-            if (writer != null) writer.close();
         }
     }
 
@@ -124,16 +119,14 @@ public class TournamentFileManager {
     }
 
     private List<Battle> readAll(Path path1) throws IOException {
-        Stream<String> battleStream = null;
-        try {
-            battleStream = Files.lines(path1);
+        List<Battle> list;
 
-            return battleStream.map(new BattlesFunction())
+        try (Stream<String> battleStream = Files.lines(path1)) {
+            list = battleStream.map(new BattlesFunction())
                     .filter(new NotNullPredicate())
                     .collect(Collectors.toList());
-        } finally {
-            if (battleStream != null) battleStream.close();
         }
+        return list;
     }
 
     public void deleteFile(String file) throws IOException {
