@@ -31,8 +31,8 @@ public class TournamentTest extends ParentTest {
         CompileHelper compiler = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compiler.compileMOs();
-        Assert.assertFalse(result.haveErrors());
 
+        Assert.assertFalse(result.haveErrors());
         Contest contest = new Contest(config);
         Environment environment = contest.getEnvironment();
 

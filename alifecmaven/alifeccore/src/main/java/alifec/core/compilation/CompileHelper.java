@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -138,13 +139,10 @@ public class CompileHelper {
             Path rootDir = Paths.get(targetFolder);
 
             if (Files.exists(rootDir)) {
-                Path dirPath = Paths.get(targetFolder);
+                Stream<File> files = Files.walk(Paths.get(targetFolder)).sorted(Comparator.reverseOrder()).map(Path::toFile);
 
-                Files.walk(dirPath)
-                        .sorted(Comparator.reverseOrder())
-                        .map(Path::toFile)
-                        .peek(file -> logger.info("Deleting: " + file))
-                        .forEach(File::delete);
+                files.peek(file -> logger.info("Deleting: " + file)).forEach(File::delete);
+                files.close();
             }
 
             Files.createDirectory(rootDir);
@@ -196,6 +194,10 @@ public class CompileHelper {
      * @return true if is successfully
      */
     private boolean cppCompilationAllSourceCodes() {
+        Process p = null;
+        BufferedReader readerInputStream = null;
+        BufferedReader readerErrorStream = null;
+
         try {
             CompileConfig compileConfig = new CompileConfig(config);
 
@@ -230,27 +232,24 @@ public class CompileHelper {
             }
 
             logger.trace("Using compile line: " + compileCommand);
-            Process p = Runtime.getRuntime().exec(console);
+
+            p = Runtime.getRuntime().exec(console);
             p.waitFor();
 
             String buffer;
-            BufferedReader readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedReader readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
             configureLogFile("cpp", config);
             while ((buffer = readerInputStream.readLine()) != null) {
                 moLogger.info(buffer);
             }
-            readerInputStream.close();
+
             while ((buffer = readerErrorStream.readLine()) != null) {
                 moLogger.error(buffer);
             }
-            readerErrorStream.close();
-            p.waitFor();
 
-            p.getErrorStream().close();
-            p.getInputStream().close();
-            p.getOutputStream().close();
+            p.waitFor();
 
             return p.exitValue() == 0;
         } catch (IOException ex) {
@@ -263,6 +262,19 @@ public class CompileHelper {
         } catch (CompileConfigException e) {
             logger.trace(e.getMessage(), e);
             return false;
+        } finally {
+            try {
+                if (readerErrorStream != null) readerErrorStream.close();
+                if (readerInputStream != null) readerInputStream.close();
+                if (p != null) {
+                    p.getErrorStream().close();
+                    p.getInputStream().close();
+                    p.getOutputStream().close();
+                }
+            } catch (IOException ex) {
+                logger.error(ex.getMessage(), ex);
+            }
+
         }
     }
 
