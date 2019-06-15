@@ -176,6 +176,13 @@ public class CompileHelper {
             // so the property jdk.module.path should be set in order to run ALifeC.
             String modulesPath = System.getProperty("jdk.module.path");
 
+            //make an effort to find modules in the class path if the module path was not maintained.
+            if (modulesPath == null)
+                modulesPath = System.getProperty("java.class.path");
+
+            logger.debug("jdk.module.path: " + modulesPath);
+            logger.debug("java.class.path: " + System.getProperty("java.class.path"));
+
             int s = javac.run(null, out, err, "-cp", modulesPath, "-d", config.getCompilationTarget(), javaFilePath);
 
             return s == 0;
