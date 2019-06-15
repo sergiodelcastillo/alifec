@@ -94,10 +94,10 @@ public class ContestFileManager {
 
     private static void createFolder(String folder) throws CreateContestFolderException {
         try {
-            Files.createDirectories(Paths.get(folder));
+            Files.createDirectories(Paths.get(folder).toAbsolutePath().normalize());
         } catch (IOException e) {
-            logger.error("Creating folder: " + folder + " [FAIL]");
-            throw new CreateContestFolderException("Can not create the folder: " + folder, e);
+            logger.error("Creating folder: " + Paths.get(folder).toAbsolutePath().normalize() + " [FAIL]");
+            throw new CreateContestFolderException("Can not create the folder: " + Paths.get(folder).toAbsolutePath().normalize(), e);
         }
 
         logger.info("Creating folder: " + folder + " [OK]");

@@ -10,7 +10,9 @@ import alifec.core.simulation.nutrient.function.FamineFunction;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,18 +24,27 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class TournamentTest extends ParentTest {
-    @Test
-    public void testDelete() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, CreateContestException, TournamentException, BattleException {
+    public static void main(String[] args) throws Exception {
+        if (args[0].equals("testDeleteImpl"))
+            new TournamentTest().testDeleteImpl();
+        else System.exit(-1);
+
+    }
+
+    public void testDeleteImpl() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, CreateContestException, TournamentException, BattleException {
         ContestConfig config = createContest("Contest-01");
         //ensure the competition mode
         config.setMode(ContestConfig.COMPETITION_MODE);
         config.save();
+
         CompileHelper compiler = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compiler.compileMOs();
-
         Assert.assertFalse(result.haveErrors());
+
+
         Contest contest = new Contest(config);
+
         Environment environment = contest.getEnvironment();
 
         List<String> colonies = environment.getOpponentNames();
@@ -45,7 +56,7 @@ public class TournamentTest extends ParentTest {
         BallsNutrient ballsNutrient = new BallsNutrient();
 
         Battle battle1 = new Battle(
-                0,1,
+                0, 1,
                 famineFunction.getId(),
                 colonies.get(0),
                 colonies.get(1),
@@ -53,7 +64,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(0, 100f);
 
         Battle battle2 = new Battle(
-                0,1,
+                0, 1,
                 ballsNutrient.getId(),
                 colonies.get(0),
                 colonies.get(1),
@@ -61,7 +72,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(0, 10f);
 
         Battle battle3 = new Battle(
-                0,2,
+                0, 2,
                 ballsNutrient.getId(),
                 colonies.get(0),
                 colonies.get(2),
@@ -69,7 +80,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(2, 150f);
 
         Battle battle4 = new Battle(
-                0,2,
+                0, 2,
                 famineFunction.getId(),
                 colonies.get(0),
                 colonies.get(2),
@@ -104,5 +115,37 @@ public class TournamentTest extends ParentTest {
         Assert.assertEquals(5, names.size());
 
         Assert.assertEquals(names, target);
+
+
+    }
+
+    @Test
+    public void testDelete2() throws InterruptedException, IOException {
+        String modulePath = System.getProperty("jdk.module.path");
+        String classPath = System.getProperty("java.class.path");
+
+        String path = modulePath;
+
+        if (path == null)
+            path = classPath;
+        else
+            path += ";" + classPath;
+        System.out.println("Path: " + path);
+        ProcessBuilder builder = new ProcessBuilder("java", "-cp", path, "alifec.core.contest.TournamentTest", "testDeleteImpl");
+
+        Process process = builder.start();
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String s = null;
+        while ((s = stdInput.readLine()) != null) {
+            System.out.println(s);
+        }
+
+        BufferedReader errInput = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        String e = null;
+        while ((e = errInput.readLine()) != null) {
+            System.out.println(e);
+        }
+
+        Assert.assertEquals(0, process.waitFor());
     }
 }

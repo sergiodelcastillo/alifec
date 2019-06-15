@@ -75,6 +75,7 @@ public class ParentTest {
         }
 
         //Ensure everything is removed!!
+
         Assert.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH)));
     }
 
@@ -161,9 +162,9 @@ public class ParentTest {
         return list;
     }
 
- //   @Test
+    //   @Test
     public void test() throws MalformedURLException, ClassNotFoundException {
-      //  URL url= new URL("file://");
+        //  URL url= new URL("file://");
         //URLClassLoader cl = new URLClassLoader(new URL[]{url}, getClass().getClassLoader());
         //Constructor<Microorganism> constructor = (Constructor<Microorganism>) cl.loadClass("MOs.Tactica2").getConstructors()[0];
 
