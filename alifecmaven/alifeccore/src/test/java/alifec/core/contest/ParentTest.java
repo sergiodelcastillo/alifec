@@ -1,6 +1,5 @@
 package alifec.core.contest;
 
-import alifec.core.contest.Battle;
 import alifec.core.event.EventBus;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.ConfigFileException;
@@ -207,7 +206,7 @@ public class ParentTest {
         if (path == null)
             path = classPath;
         else
-            path += ";" + classPath;
+            path += File.pathSeparator + classPath;
 
         System.out.println("Path: " + path);
 
