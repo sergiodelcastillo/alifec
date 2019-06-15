@@ -80,7 +80,7 @@ public class NewContestFolderValidatorTest extends ParentTest {
         try {
 
             Path file = Paths.get(TEST_ROOT_PATH + File.separator + "contest-01");
-            Files.createDirectory(file.toAbsolutePath().normalize());
+            Files.createDirectories(file.toAbsolutePath().normalize());
             validator.validate(TEST_ROOT_PATH + File.separator + "contest-01");
             Assert.fail("It should be non valid.");
         } catch (ValidationException ex) {

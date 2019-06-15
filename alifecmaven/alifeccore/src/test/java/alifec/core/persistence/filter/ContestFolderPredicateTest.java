@@ -26,10 +26,10 @@ public class ContestFolderPredicateTest extends ParentTest {
 
     @Test
     public void testListEmpty() throws IOException {
-        Stream<Path> list = Files.list(Paths.get(TEST_ROOT_PATH));
-        long count = list.filter(new ContestFolderPredicate()).count();
-        list.close();
-        Assert.assertEquals(count, 0);
+        try (Stream<Path> list = Files.list(Paths.get(TEST_ROOT_PATH))) {
+            long count = list.filter(new ContestFolderPredicate()).count();
+            Assert.assertEquals(count, 0);
+        }
     }
 
     @Test
@@ -60,10 +60,12 @@ public class ContestFolderPredicateTest extends ParentTest {
         String contestName = ContestConfig.CONTEST_NAME_PREFIX + "01";
         createContest(contestName);
 
+        try (Stream<Path> list = Files.list(Paths.get(TEST_ROOT_PATH))) {
+            boolean allmatch = list.filter(new ContestFolderPredicate())
+                    .allMatch(path -> path.getFileName().toString().equals(contestName));
 
-        Assert.assertTrue(Files.list(Paths.get(TEST_ROOT_PATH))
-                .filter(new ContestFolderPredicate())
-                .allMatch(path -> path.getFileName().toString().equals(contestName)));
+            Assert.assertTrue(allmatch);
+        }
     }
 
     @Test
@@ -78,19 +80,19 @@ public class ContestFolderPredicateTest extends ParentTest {
             createContest(ContestConfig.CONTEST_NAME_PREFIX + i);
         }
 
-        Stream<Path> list = Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH)));
-        boolean allMatch = list.filter(new ContestFolderPredicate()).allMatch(path -> {
-            String file = path.getFileName().toString();
-            if (target.contains(file)) {
-                target.remove(file);
-                return true;
-            }
+        try (Stream<Path> list = Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH)))) {
+            boolean allMatch = list.filter(new ContestFolderPredicate()).allMatch(path -> {
+                String file = path.getFileName().toString();
+                if (target.contains(file)) {
+                    target.remove(file);
+                    return true;
+                }
 
-            return false;
-        });
-        list.close();
+                return false;
+            });
+            Assert.assertTrue(allMatch);
+        }
 
-        Assert.assertTrue(allMatch);
         Assert.assertTrue(target.isEmpty());
     }
 
@@ -121,19 +123,19 @@ public class ContestFolderPredicateTest extends ParentTest {
             createContest(contestName);
         }
 
-        Stream<Path> list = Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH)));
-        boolean allMatch = list.filter(new ContestFolderPredicate())
-                .allMatch(path -> {
-                    String file = path.getFileName().toString();
-                    if (contestListTarget.contains(file)) {
-                        contestListTarget.remove(file);
-                        return true;
-                    }
+        try (Stream<Path> list = Files.list(Paths.get(ContestConfig.getBaseDataFolder(TEST_ROOT_PATH)))) {
+            boolean allMatch = list.filter(new ContestFolderPredicate())
+                    .allMatch(path -> {
+                        String file = path.getFileName().toString();
+                        if (contestListTarget.contains(file)) {
+                            contestListTarget.remove(file);
+                            return true;
+                        }
 
-                    return false;
-                });
-        list.close();
-        Assert.assertTrue(allMatch);
+                        return false;
+                    });
+            Assert.assertTrue(allMatch);
+        }
         Assert.assertTrue(contestListTarget.isEmpty());
     }
 

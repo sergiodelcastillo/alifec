@@ -115,12 +115,10 @@ public class TournamentTest extends ParentTest {
         Assert.assertEquals(5, names.size());
 
         Assert.assertEquals(names, target);
-
-
     }
 
     @Test
-    public void testDelete2() throws InterruptedException, IOException {
+    public void testDelete() throws InterruptedException, IOException {
         String modulePath = System.getProperty("jdk.module.path");
         String classPath = System.getProperty("java.class.path");
 
