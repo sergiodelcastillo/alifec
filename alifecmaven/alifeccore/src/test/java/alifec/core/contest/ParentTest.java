@@ -13,8 +13,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.nio.file.FileVisitOption;
@@ -192,5 +196,45 @@ public class ParentTest {
         }catch(Exception ex){
             ex.printStackTrace();
         }*/
+    }
+
+    protected void executeInDifferentVMProcess(String completeClassName, String method) throws IOException, InterruptedException {
+        String modulePath = System.getProperty("jdk.module.path");
+        String classPath = System.getProperty("java.class.path");
+
+        String path = modulePath;
+
+        if (path == null)
+            path = classPath;
+        else
+            path += ";" + classPath;
+
+        System.out.println("Path: " + path);
+
+        ProcessBuilder builder = new ProcessBuilder("java", "-cp", path, "alifec.core.contest.ParentTest", completeClassName, method);
+
+        Process process = builder.start();
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String s = null;
+        while ((s = stdInput.readLine()) != null) {
+            System.out.println(s);
+        }
+
+        BufferedReader errInput = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        String e = null;
+        while ((e = errInput.readLine()) != null) {
+            System.out.println(e);
+        }
+
+        Assert.assertEquals(0, process.waitFor());
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Class clazz = Class.forName(args[0]);
+        Object object = clazz.getDeclaredConstructor().newInstance();
+        Method method = clazz.getMethod(args[1]);
+
+        System.out.println("Executing by reflection: " + args[0] + "->" + args[1]);
+        method.invoke(object);
     }
 }

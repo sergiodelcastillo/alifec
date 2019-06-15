@@ -1,13 +1,13 @@
 package alifec.core.persistence;
 
-import alifec.core.contest.Contest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
+import alifec.core.persistence.custom.ContestFolderPredicate;
 import alifec.core.persistence.custom.FileNameFunction;
 import alifec.core.persistence.custom.NotNullPredicate;
-import alifec.core.persistence.custom.ContestFolderPredicate;
 import alifec.core.persistence.custom.TournamentPredicate;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -15,13 +15,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Month;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Sergio Del Castillo on 06/08/17.
@@ -29,7 +27,7 @@ import java.util.stream.Collectors;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ContestFileManager {
-    private static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ContestFileManager.class);
+    private static Logger logger = LogManager.getLogger(ContestFileManager.class);
     private final Path path;
 
     public ContestFileManager(String folder) {
@@ -37,9 +35,8 @@ public class ContestFileManager {
     }
 
     public static List<String> listContest() {
-        try {
-            return Files.list(Paths.get(ContestConfig.getDefaultBaseDataFolder()))
-                    .filter(new ContestFolderPredicate())
+        try (Stream<Path> list = Files.list(Paths.get(ContestConfig.getDefaultBaseDataFolder()))) {
+            return list.filter(new ContestFolderPredicate())
                     .map(new FileNameFunction())
                     .filter(new NotNullPredicate())
                     .collect(Collectors.toList());
@@ -52,13 +49,12 @@ public class ContestFileManager {
 
 
     public List<String> listTournaments(String file) throws IOException {
-        Path path = Paths.get(file);
-
-        return Files.list(path)
-                .filter(new TournamentPredicate())
-                .map(new FileNameFunction())
-                .filter(new NotNullPredicate())
-                .collect(Collectors.toList());
+        try (Stream<Path> list = Files.list(Paths.get(file))) {
+            return list.filter(new TournamentPredicate())
+                    .map(new FileNameFunction())
+                    .filter(new NotNullPredicate())
+                    .collect(Collectors.toList());
+        }
     }
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
@@ -104,10 +100,10 @@ public class ContestFileManager {
     }
 
     public static void createExamples(Path source, String MOsFolder) {
-        try {
-            logger.info("Generating examples in folder " + MOsFolder);
+        logger.info("Generating examples in folder " + MOsFolder);
 
-            Files.walk(source).forEach(path -> {
+        try (Stream<Path> list = Files.walk(source)) {
+            list.forEach(path -> {
                 try {
                     Path target = Paths.get(MOsFolder + File.separator + path.getFileName()).toAbsolutePath().normalize();
 
@@ -124,10 +120,10 @@ public class ContestFileManager {
     }
 
     private static boolean createCppApi(Path source, String targetFolder) {
-        try {
-            final boolean[] isOK = {true};
+        final boolean[] isOK = {true};
 
-            Files.walk(source).forEach(path -> {
+        try (Stream<Path> list = Files.walk(source)) {
+            list.forEach(path -> {
                 try {
                     Path target = Paths.get(targetFolder + File.separator + path.getFileName()).toAbsolutePath().normalize();
 

@@ -35,8 +35,8 @@ public class CppColony extends Colony {
             String os = System.getProperty("os.name").toLowerCase();
 
             String extension = os.contains("linux") ? "so" : "dll";
+            //Warning: the library file is not released and closed until the JVM is closed.
             System.load(absolutePath + File.separator + "libcppcolonies." + extension);
-
             return true;
         } catch (UnsatisfiedLinkError ex) {
             logger.error(ex.getMessage(), ex);

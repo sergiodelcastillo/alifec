@@ -17,8 +17,8 @@ import java.net.URISyntaxException;
  */
 public class ContestPathValidatorTest extends ParentTest {
 
-    @Test
-    public void testValidate() throws CreateContestFolderException, IOException, URISyntaxException, ConfigFileException {
+
+    public void testValidateImpl() throws CreateContestFolderException, IOException, URISyntaxException, ConfigFileException {
         ContestPathValidator validator = new ContestPathValidator();
 
         try {
@@ -33,5 +33,10 @@ public class ContestPathValidatorTest extends ParentTest {
         } catch (ValidationException ex) {
             Assert.fail("It should be valid.");
         }
+    }
+
+    @Test
+    public void testValidate() throws IOException, InterruptedException {
+        executeInDifferentVMProcess(this.getClass().getName(), "testValidateImpl");
     }
 }

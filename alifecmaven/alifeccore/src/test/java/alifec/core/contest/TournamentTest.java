@@ -24,13 +24,11 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class TournamentTest extends ParentTest {
-    public static void main(String[] args) throws Exception {
-        if (args[0].equals("testDeleteImpl"))
-            new TournamentTest().testDeleteImpl();
-        else System.exit(-1);
 
-    }
-
+    /**
+     * This test method will be invoked by reflection in other JVM run to avoid the issue of the method System.load
+     * which does not release the library until the JVM is closed.
+     */
     public void testDeleteImpl() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, CreateContestException, TournamentException, BattleException {
         ContestConfig config = createContest("Contest-01");
         //ensure the competition mode
@@ -119,31 +117,7 @@ public class TournamentTest extends ParentTest {
 
     @Test
     public void testDelete() throws InterruptedException, IOException {
-        String modulePath = System.getProperty("jdk.module.path");
-        String classPath = System.getProperty("java.class.path");
-
-        String path = modulePath;
-
-        if (path == null)
-            path = classPath;
-        else
-            path += ";" + classPath;
-        System.out.println("Path: " + path);
-        ProcessBuilder builder = new ProcessBuilder("java", "-cp", path, "alifec.core.contest.TournamentTest", "testDeleteImpl");
-
-        Process process = builder.start();
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String s = null;
-        while ((s = stdInput.readLine()) != null) {
-            System.out.println(s);
-        }
-
-        BufferedReader errInput = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-        String e = null;
-        while ((e = errInput.readLine()) != null) {
-            System.out.println(e);
-        }
-
-        Assert.assertEquals(0, process.waitFor());
+        executeInDifferentVMProcess(this.getClass().getName(), "testDeleteImpl");
     }
+
 }

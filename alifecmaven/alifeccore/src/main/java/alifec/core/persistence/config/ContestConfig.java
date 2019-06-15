@@ -91,7 +91,7 @@ public class ContestConfig {
         NUTRIENT_OPTIONS.put(FamineFunction.ID, new FunctionBasedNutrient(new FamineFunction()));
         NUTRIENT_OPTIONS.put(BallsNutrient.ID, new BallsNutrient());
 
-        SEPARATOR_PATTERN = File.separator .equals("\\") ? "\\\\" : File.separator;
+        SEPARATOR_PATTERN = File.separator.equals("\\") ? "\\\\" : File.separator;
     }
 
     /**
@@ -135,13 +135,13 @@ public class ContestConfig {
             setDefaults();
 
             Properties property = new Properties();
-            InputStream is = new FileInputStream(getConfigFilePath(path));
+            try (InputStream is = new FileInputStream(getConfigFilePath(path))) {
+                property.load(is);
 
-            property.load(is);
-
-            for (Object object : property.keySet()) {
-                if (!setProperty(object.toString(), property.getProperty(object.toString()))) {
-                    logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
+                for (Object object : property.keySet()) {
+                    if (!setProperty(object.toString(), property.getProperty(object.toString()))) {
+                        logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
+                    }
                 }
             }
 
@@ -240,9 +240,10 @@ public class ContestConfig {
             if (Files.notExists(Paths.get(basePath))) {
                 throw new ConfigFileWriteException("The base path can not be found: " + basePath, null, this);
             }
-            FileWriter writer = new FileWriter(this.getConfigFilePath());
-            property.store(writer, "Configuration File\n Warning: do not modify this file");
-            writer.close();
+
+            try (FileWriter writer = new FileWriter(this.getConfigFilePath())) {
+                property.store(writer, "Configuration File\n Warning: do not modify this file");
+            }
         } catch (IOException e) {
             throw new ConfigFileWriteException("Can not update the config file: " + getConfigFilePath(), e, this);
         }

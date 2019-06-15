@@ -10,6 +10,8 @@ import alifec.core.simulation.nutrient.function.FamineFunction;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * Created by Sergio Del Castillo on 14/10/17.
  *
@@ -17,11 +19,14 @@ import org.junit.Test;
  */
 public class EatRuleTest extends ParentTest {
 
-    @Test
-    public void testApply() throws Exception {
+    /**
+     * This test method will be invoked by reflection in other JVM run to avoid the issue of the method System.load
+     * which does not release the library until the JVM is closed.
+     */
+    public void testApplyImpl() throws Exception {
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");
-        CompileHelper compileHelper = new CompileHelper(config );
+        CompileHelper compileHelper = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compileHelper.compileMOs();
         Assert.assertFalse(result.haveErrors());
@@ -47,5 +52,8 @@ public class EatRuleTest extends ParentTest {
         Assert.assertEquals(nutriInitial * (1 - Defs.EAT_PERCENT), environment.getAgar().getNutrient(mo.x, mo.y), 0.00001);
     }
 
-
+    @Test
+    public void testApply() throws IOException, InterruptedException {
+        executeInDifferentVMProcess(this.getClass().getName(), "testApplyImpl");
+    }
 }

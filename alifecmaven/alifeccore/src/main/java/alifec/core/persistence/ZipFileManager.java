@@ -14,6 +14,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -60,23 +61,23 @@ public class ZipFileManager {
 
             // traverse every file in the selected directory and add them
             // to the zip file by calling addToZipFile(..)
-            Files.walk(directory)
-                    .sorted(Comparator.naturalOrder())
-                    .filter(path -> {
-                        try {
-                            if (path.toFile().getCanonicalPath().contains(backupPath)) {
-                                logger.trace("Ignoring file: " + path.toFile().toString());
+            try (Stream<Path> list = Files.walk(directory)) {
+                list.sorted(Comparator.naturalOrder())
+                        .filter(path -> {
+                            try {
+                                if (path.toFile().getCanonicalPath().contains(backupPath)) {
+                                    logger.trace("Ignoring file: " + path.toFile().toString());
+                                    return false;
+                                }
+                                return true;
+                            } catch (IOException e) {
+                                logger.info(e.getMessage(), e);
                                 return false;
                             }
-                            return true;
-                        } catch (IOException e) {
-                            logger.info(e.getMessage(), e);
-                            return false;
-                        }
 
-                    })
-                    .forEach(path -> addToZipFile(path, zipStream, canonicalPath));
-
+                        })
+                        .forEach(path -> addToZipFile(path, zipStream, canonicalPath));
+            }
             logger.info("Zip file created in " + directory.toFile().getPath());
         } catch (IOException | ZipParsingException e) {
             logger.error("Error while zipping.", e);
@@ -163,9 +164,7 @@ public class ZipFileManager {
                     }
 
                     try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
-
                         byte[] buffer = new byte[BUFFER];
-
                         int location;
 
                         while ((location = zis.read(buffer)) != -1) {

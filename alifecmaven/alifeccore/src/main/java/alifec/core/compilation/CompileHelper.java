@@ -139,10 +139,12 @@ public class CompileHelper {
             Path rootDir = Paths.get(targetFolder);
 
             if (Files.exists(rootDir)) {
-                Stream<File> files = Files.walk(Paths.get(targetFolder)).sorted(Comparator.reverseOrder()).map(Path::toFile);
-
-                files.peek(file -> logger.info("Deleting: " + file)).forEach(File::delete);
-                files.close();
+                try (Stream<Path> files = Files.walk(Paths.get(targetFolder))) {
+                    files.sorted(Comparator.reverseOrder())
+                            .map(Path::toFile)
+                            .peek(file -> logger.info("Deleting: " + file))
+                            .forEach(File::delete);
+                }
             }
 
             Files.createDirectory(rootDir);
@@ -174,6 +176,7 @@ public class CompileHelper {
 
             //the core and the view part of the framework are java modules,
             // so the property jdk.module.path should be set in order to run ALifeC.
+            //todo: check if it is ok by using only one propery or if it is possible to use jdk.module.path;java.class.path
             String modulesPath = System.getProperty("jdk.module.path");
 
             //make an effort to find modules in the class path if the module path was not maintained.

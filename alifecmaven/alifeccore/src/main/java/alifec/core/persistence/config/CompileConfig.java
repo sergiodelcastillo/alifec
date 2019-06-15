@@ -36,10 +36,8 @@ public class CompileConfig {
 
     public CompileConfig(String compilerConfigFile, String compilationTarget, String cppApiFolder, String mosPath) throws CompileConfigException {
         Properties property = new Properties();
-        InputStream is = null;
-        try {
-            is = new FileInputStream(compilerConfigFile);
 
+        try (InputStream is = new FileInputStream(compilerConfigFile)) {
             property.load(is);
 
             for (Object object : property.keySet()) {
@@ -47,16 +45,10 @@ public class CompileConfig {
                     logger.warn("Can not set the property: " + object.toString() + "=" + property.getProperty(object.toString()));
                 }
             }
-
         } catch (IOException e) {
             throw new CompileConfigException("Error loading the config file in path: " + compilerConfigFile, e, this);
-        } finally {
-            try {
-                if (is != null) is.close();
-            } catch (IOException e) {
-                logger.debug("Can not close the InputStream", e);
-            }
         }
+
         try {
             //validate if the configuration is Ok.
             validate();

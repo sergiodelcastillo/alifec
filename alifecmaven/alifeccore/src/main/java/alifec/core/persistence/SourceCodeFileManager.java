@@ -26,13 +26,10 @@ public class SourceCodeFileManager {
      * Returns the name of the files located in MOs folder which ends with .c, .cpp or .h.
      */
     public List<String> listFilenameCpp() throws IOException {
-        Stream<Path> stream = filesCpp();
-
-        List<String> list = stream.map(new FileNameFunction())
-                .collect(Collectors.toList());
-
-        stream.close();
-        return list;
+        try (Stream<Path> stream = filesCpp()) {
+            return stream.map(new FileNameFunction())
+                    .collect(Collectors.toList());
+        }
     }
 
     /**
@@ -50,12 +47,11 @@ public class SourceCodeFileManager {
      * @return list of cpp mos
      */
     public List<String> listCppMOs() throws IOException {
-        Stream<Path> stream = filesCpp();
-
-        List<String> list = stream.map(new CppMOPredicate()).filter(new NotNullPredicate()).collect(Collectors.toList());
-
-        stream.close();
-        return list;
+        try (Stream<Path> stream = filesCpp()) {
+            return stream.map(new CppMOPredicate())
+                    .filter(new NotNullPredicate())
+                    .collect(Collectors.toList());
+        }
     }
 
 
@@ -63,12 +59,10 @@ public class SourceCodeFileManager {
      * List the name of Java MOs which are located in MOs folder
      */
     public List<String> listJavaMOs() throws IOException {
-        Stream<Path> stream = javaFiles();
-
-        List<String> list = stream.map(new JavaFileNameFunction()).collect(Collectors.toList());
-
-        stream.close();
-        return list;
+        try (Stream<Path> stream = javaFiles()) {
+            return stream.map(new JavaFileNameFunction())
+                    .collect(Collectors.toList());
+        }
     }
 
     /**
@@ -77,12 +71,9 @@ public class SourceCodeFileManager {
      * @return list of files that end with java
      */
     public List<Path> listJavaFiles() throws IOException {
-        Stream<Path> stream = javaFiles();
-
-        List<Path> list = stream.collect(Collectors.toList());
-
-        stream.close();
-        return list;
+        try (Stream<Path> stream = javaFiles()) {
+            return stream.collect(Collectors.toList());
+        }
     }
 
     private Stream<Path> javaFiles() throws IOException {
