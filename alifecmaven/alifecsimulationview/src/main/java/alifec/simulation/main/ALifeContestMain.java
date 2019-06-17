@@ -2,9 +2,8 @@ package alifec.simulation.main;
 
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
-import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.InvalidUserDirException;
-import alifec.core.exception.ValidationException;
+import alifec.core.exception.*;
+import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.simulation.controller.ALifeContestController;
 import alifec.simulation.controller.CompilationErrorController;
@@ -19,10 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -41,7 +37,6 @@ public class ALifeContestMain extends Application {
     }
 
     public static void main(String[] args) {
-
         // launch the application
         Application.launch(ALifeContestMain.class, args);
     }
@@ -92,19 +87,15 @@ public class ALifeContestMain extends Application {
             stage.setScene(new Scene(root));
             stage.show();
         }
-        /*String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        Scene scene = new Scene(new StackPane(l), 640, 480);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     private void compileColonies(ContestConfig config) throws IOException {
         CompileHelper compiler = new CompileHelper(config);
         CompilationResult result = compiler.compileMOs();
 
-        if (false &&result.haveErrors()) {
+        //todo: check this part. Not sure if the application should always load and do not alert
+        // or alert every compilation error.
+        if (false && result.haveErrors()) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/CompilationError.fxml"), bundle);
             Stage root = loader.load();
 
@@ -122,50 +113,87 @@ public class ALifeContestMain extends Application {
             root.showAndWait();
         }
     }
- private ContestConfig loadContest() throws IOException {
 
+    private ContestConfig loadContest() {
         ContestConfig config = null;
+
         try {
             config = new ContestConfig(bundle);
-            config.validate();
-
-        } catch (ConfigFileException | ValidationException ex) {
+        } catch (ConfigFileException ex) {
             logger.info("Could not load the configuration file: {}", ex.getMessage());
 
             if (ex instanceof InvalidUserDirException) {
-                logger.error("The default path must be valid.");
+                logger.error(ex.getMessage(), ex);
                 return null;
             }
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ContestLoader.fxml"), bundle);
-            Stage root = loader.load();
-            ContestLoaderController controller = loader.getController();
-
-            controller.setBundle(bundle);
-            if (ex instanceof ConfigFileException) {
-                controller.allowCreateFileOption();
-            } else {
-                controller.allowEditFileOption(config);
+            if (ex instanceof ConfigFileReadException) {
+                logger.error(ex.getMessage(), ex);
+                return null;
             }
 
-            root.showAndWait();
-
-            if (controller.isCancelled()) return null;
-
-            return controller.getUpdatedConfig();
+            if (ex instanceof ConfigFileNotFoundException) {
+                config = createOrSetContest();
+            }
         } catch (Throwable t) {
             logger.error("Unknown error:", t);
             return null;
         }
 
-        logger.info("Config file loaded successfully:" + config.toString());
+        //the config could be null, because the user cancelled the creation.
+        if (config == null) return null;
+
+        try {
+            config.validate();
+            logger.info("Config file loaded successfully:" + config.toString());
+        } catch (ValidationException e) {
+            logger.error(e.getMessage(), e);
+            logger.error("The configuration file is not valid so it will be ignored. " +
+                    "The application will request to create a new contest or set existing one.");
+            config = createOrSetContest();
+        }
 
         return config;
     }
+
+
+    private ContestConfig createOrSetContest() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ContestLoader.fxml"), bundle);
+        Stage root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
+        ContestLoaderController controller = loader.getController();
+
+        controller.init(bundle, root);
+
+        //find contests
+        List<String> contestList;
+        try {
+            contestList = ContestFileManager.listContest();
+        } catch (ConfigFileException | IOException e) {
+            logger.warn(e.getMessage(), e);
+            contestList = new ArrayList<>();
+        }
+        controller.allowCreateFileOption(contestList);
+
+        root.showAndWait();
+
+        if (controller.isCancelledOrFailed()) {
+            return null;
+        }
+
+        return controller.getUpdatedConfig();
+    }
+
 
     @Override
     public void stop() throws Exception {
         super.stop();
         logger.info("Good bye!.");
     }
+
 }

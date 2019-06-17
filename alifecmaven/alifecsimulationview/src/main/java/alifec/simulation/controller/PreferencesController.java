@@ -186,10 +186,10 @@ public class PreferencesController {
             invalidConfiguration = new Alert(Alert.AlertType.ERROR);
             invalidConfiguration.setTitle(bundle.getString("PreferencesController.InvalidConfiguration.title"));
             invalidConfiguration.setHeaderText(bundle.getString("PreferencesController.InvalidConfiguration.header"));
-            invalidConfiguration.setContentText(e.getMessage());
             invalidConfiguration.initOwner(controller.getMainLayout().getScene().getWindow());
         }
 
+        invalidConfiguration.setContentText(e.getMessage());
         invalidConfiguration.showAndWait();
     }
 
@@ -198,10 +198,10 @@ public class PreferencesController {
             saveError = new Alert(Alert.AlertType.ERROR);
             saveError.setTitle(bundle.getString("PreferencesController.saveError.title"));
             saveError.setHeaderText(bundle.getString("PreferencesController.saveError.header"));
-            saveError.setContentText(e.getMessage());
             saveError.initOwner(controller.getMainLayout().getScene().getWindow());
         }
 
+        saveError.setContentText(e.getMessage());
         saveError.showAndWait();
     }
 

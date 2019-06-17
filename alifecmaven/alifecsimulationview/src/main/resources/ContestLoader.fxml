@@ -4,8 +4,6 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.scene.control.cell.TextFieldTableCell?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.Scene?>
 <?import javafx.stage.Stage?>
@@ -18,7 +16,7 @@
        resizable="false">
     <scene>
         <Scene onKeyPressed="#keyHandler">
-            <VBox prefHeight="400.0" prefWidth="600.0">
+            <VBox prefHeight="320.0" prefWidth="600.0">
                 <padding>
                     <Insets left="15" right="15" bottom="15" top="15"/>
                 </padding>
@@ -36,11 +34,9 @@
 
                     <RadioButton fx:id="newContestRadioButton" text="%contest.loader.new.contest.option"
                                  toggleGroup="$option"
-                                 onAction="#discardFile" selected="true"/>
+                                 onAction="#newContest" selected="true"/>
                     <RadioButton fx:id="setExistingContestRadioButton" text="%contest.loader.set.contest.option"
-                                 toggleGroup="$option" onAction="#setExistingContest"/>
-                    <RadioButton fx:id="updateConfigFileRadioButton" text="%contest.loader.update.config.option"
-                                 toggleGroup="$option" onAction="#fixFile"/>
+                                 toggleGroup="$option" onAction="#existingContest"/>
                 </VBox>
 
                 <StackPane>
@@ -57,10 +53,10 @@
 
                             <Label text="%contest.loader.contest.name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                             <TextField disable="true" text="Contest-" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                            <TextField fx:id="contestName" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <TextField fx:id="contestNameField" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
                             <Label text="%contest.loader.contest.path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                            <TextField fx:id="contestPath" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                            <TextField fx:id="contestPathField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"
                                        GridPane.columnSpan="2"/>
 
                             <CheckBox fx:id="loadContest" text="%contest.loader.option.load"
@@ -93,7 +89,7 @@
                             </ComboBox>
 
                             <Label text="%contest.loader.contest.path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                            <TextField fx:id="existingContestPath" disable="true" GridPane.columnIndex="1"
+                            <TextField fx:id="existingContestPathField" disable="true" GridPane.columnIndex="1"
                                        GridPane.rowIndex="1"
                                        GridPane.columnSpan="2"/>
 
@@ -104,37 +100,10 @@
                                       selected="true"/>
                             <CheckBox fx:id="existingGenerateExamples" text="%contest.loader.examples"
                                       GridPane.columnIndex="0"
-                                      GridPane.rowIndex="4" GridPane.columnSpan="2" selected="true"/>
+                                      GridPane.rowIndex="4" GridPane.columnSpan="2" selected="true" visible="false"/>
                         </GridPane>
                     </TitledPane>
 
-                    <TitledPane collapsible="false" fx:id="updateConfigFilePane" text="%contest.loader.update.config">
-                        <TableView fx:id="configPropertiesTable" editable="true">
-                            <columns>
-                                <TableColumn text="Property">
-                                    <cellValueFactory>
-                                        <PropertyValueFactory property="key"/>
-                                    </cellValueFactory>
-                                </TableColumn>
-
-                                <TableColumn text="Value" onEditCommit="#editTableField">
-                                    <cellValueFactory>
-                                        <PropertyValueFactory property="content"/>
-                                    </cellValueFactory>
-
-                                    <cellFactory>
-                                        <TextFieldTableCell fx:factory="forTableColumn"/>
-                                    </cellFactory>
-                                </TableColumn>
-                            </columns>
-
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                </FXCollections>
-                            </items>
-                        </TableView>
-
-                    </TitledPane>
 
                 </StackPane>
 

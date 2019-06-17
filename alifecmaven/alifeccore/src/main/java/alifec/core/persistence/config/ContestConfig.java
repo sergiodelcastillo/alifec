@@ -277,7 +277,6 @@ public class ContestConfig {
                 try {
                     mode = Integer.parseInt(option);
                 } catch (NumberFormatException ex) {
-                    logger.error(ex.getMessage(), ex);
                     return false;
                 }
                 break;
@@ -285,7 +284,6 @@ public class ContestConfig {
                 try {
                     pauseBetweenBattles = Integer.parseInt(option);
                 } catch (NumberFormatException ex) {
-                    logger.error(ex.getMessage(), ex);
                     return false;
                 }
                 break;
@@ -300,10 +298,13 @@ public class ContestConfig {
 
                             if (existsNutrientId(nutrientInt))
                                 nutrients.add(nutrientInt);
-                            else
+                            else{
                                 logger.warn("Nutrient Id unknown: " + nutrientString);
+                                return false;
+                            }
                         } catch (NumberFormatException ex) {
                             logger.warn("Can not interpret Nutrient id : " + nutrientString);
+                            return false;
                         }
                     }
 
@@ -364,12 +365,15 @@ public class ContestConfig {
         return getBaseAppFolder(path);
     }
 
-    public String getBaseAppFolder(String path) {
+    public static String getBaseAppFolder(String path) {
         if (path == null || path.isEmpty()) path = ".";
 
         return path + File.separator + BASE_APP_FOLDER;
     }
 
+    public static String getDefaultBaseAppFolder() throws InvalidUserDirException {
+        return getBaseAppFolder(getDefaultPath());
+    }
     public String getMOsPath() {
         return getContestPath() + File.separator + MOS_FOLDER;
     }

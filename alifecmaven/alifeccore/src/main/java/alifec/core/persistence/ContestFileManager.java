@@ -34,17 +34,13 @@ public class ContestFileManager {
         this.path = Paths.get(folder);
     }
 
-    public static List<String> listContest() {
+    public static List<String> listContest() throws IOException, ConfigFileException {
         try (Stream<Path> list = Files.list(Paths.get(ContestConfig.getDefaultBaseDataFolder()))) {
             return list.filter(new ContestFolderPredicate())
                     .map(new FileNameFunction())
                     .filter(new NotNullPredicate())
                     .collect(Collectors.toList());
-        } catch (ConfigFileException | IOException e) {
-            logger.info("Could not retrieve the contest list: {}", e.getMessage());
         }
-
-        return new ArrayList<>();
     }
 
 
