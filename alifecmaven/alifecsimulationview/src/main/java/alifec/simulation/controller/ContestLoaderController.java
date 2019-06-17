@@ -7,7 +7,6 @@ import alifec.core.exception.ValidationException;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.validation.NewContestFolderValidator;
-import alifec.simulation.util.ConfigProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -101,15 +100,6 @@ public class ContestLoaderController {
         }
     }
 
-    public void editTableField(TableColumn.CellEditEvent event) {
-        System.out.println("edit");
-        //((ConfigProperty) event.getTableView().getItems().get(event.getTablePosition().getRow())).setContent(event.getNewValue().toString());
-
-
-        System.out.println(event.getNewValue());
-
-    }
-
     public ContestConfig getUpdatedConfig() {
         return config;
     }
@@ -160,14 +150,10 @@ public class ContestLoaderController {
         } catch (InvalidUserDirException e) {
             logger.error("Error reading java property user.dir.");
             //todo: alert something!!
-            return;
         } catch (ConfigFileWriteException e) {
             logger.error("Error while updating config file.", e);
             //todo: alert something!
-            return;
         }
-
-
     }
 
     private void doCreateContest(ActionEvent event) {
