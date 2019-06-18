@@ -56,9 +56,8 @@ public class ALifeContestMain extends Application {
             logger.trace("System Properties:");
 
             Properties p = System.getProperties();
-            Enumeration keys = p.keys();
-            while (keys.hasMoreElements()) {
-                String key = (String) keys.nextElement();
+            for (Object o : p.keySet()) {
+                String key = (String) o;
                 String value = (String) p.get(key);
                 logger.trace(" < " + key + ": " + value + " >");
             }

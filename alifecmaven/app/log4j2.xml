@@ -4,7 +4,7 @@
         <File name="compilation" fileName="log/${sys:moFilename:-moFilename}.log" append="false" createOnDemand="true">
             <PatternLayout pattern="%-5p %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1}:%L - %m%n"/>
         </File>
-        <File name="file" fileName="log/alifec.log" append="false">
+        <File name="file" fileName="app/log/alifec.log" append="false">
             <PatternLayout pattern="%-5p %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1}:%L - %m%n"/>
         </File>
         <Console name="stdout" target="SYSTEM_OUT">

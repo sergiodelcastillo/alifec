@@ -28,13 +28,13 @@ class Environment{
 		bool addColony(string name, int id);
 
 		bool delColony(int id){
-			for(unsigned short i = 0; i < colonies.size(); i++)
+			for(unsigned short i = 0; i < colonies.size(); i++){
 				if(colonies[i]->getID()== id){
 					colonies[i]->clear();
 					colonies.erase(colonies.begin()+i);
 					return true;
 				}
-					
+            }
 			return false;
 		}
 		

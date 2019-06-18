@@ -1,14 +1,8 @@
 package alifec.core.simulation;
 
-import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,7 +25,6 @@ public abstract class Colony {
         this.id = id;
         this.path = path;
     }
-
 
     @Override
     public final void finalize() throws Throwable {
