@@ -66,7 +66,7 @@ public class Tournament implements Comparable<Tournament>, Listener {
      * @return the maximum accumulated energy
      */
     public float getMaxEnergy() {
-        return getTournamentStatistics().getMaxEnergy();
+        return getStatistics().getMaxEnergy();
     }
 
     public List<Battle> getBattles() {
@@ -74,6 +74,8 @@ public class Tournament implements Comparable<Tournament>, Listener {
     }
 
     public boolean addBattle(Battle battle) {
+        //todo: throw the exception!! it should be handled outside
+
         try {
             if (config.isCompetitionMode()) {
                 persistence.append(battle);
@@ -120,34 +122,21 @@ public class Tournament implements Comparable<Tournament>, Listener {
         return name.compareTo(o.name);
     }
 
-    public TournamentStatistics getTournamentStatistics() {
-        TournamentStatistics tStats = new TournamentStatistics();
+    public TournamentStatistics getStatistics() {
+        //todo: testssss!!!
+        TournamentStatistics statistics = new TournamentStatistics();
 
         for (Battle b : battles) {
-            tStats.addWinner(b.getWinnerName(), null, null, b.getWinnerEnergy());
+            statistics.addWinner(b.getWinnerName(), null, null, b.getWinnerEnergy());
         }
 
         for (String c : colonies) {
-            tStats.addWinner(c, null, null, 0.0f);
+            statistics.addWinner(c, null, null, 0.0f);
         }
 
-        tStats.calculate();
+        statistics.calculate();
 
-        return tStats;
-    }
-
-    public TournamentStatistics getAccumulatedEnergy() {
-        TournamentStatistics tournamentStatistics = new TournamentStatistics();
-
-        for (Battle b : battles) {
-            tournamentStatistics.addWinner(b.getWinnerName(), null, null, b.getWinnerEnergy());
-        }
-
-        for (String c : colonies) {
-            tournamentStatistics.addWinner(c, null, null, 0.0f);
-        }
-
-        return tournamentStatistics;
+        return statistics;
     }
 
 

@@ -2,8 +2,13 @@ package alifec.simulation.controller;
 
 import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
+import alifec.core.contest.Tournament;
 import alifec.core.contest.oponentInfo.ColonyStatistics;
 import alifec.core.contest.oponentInfo.TournamentStatistics;
+import alifec.core.event.Event;
+import alifec.core.event.EventBus;
+import alifec.core.event.Listener;
+import alifec.core.event.impl.BattleFinishEvent;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.ConfigFileWriteException;
 import alifec.core.exception.CreateContestException;
@@ -29,7 +34,6 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -37,7 +41,7 @@ import java.util.*;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ALifeContestController {
+public class ALifeContestController implements Listener {
     @FXML
     public BorderPane mainLayout;
     @FXML
@@ -107,13 +111,11 @@ public class ALifeContestController {
 
         contest = loadContest(config);
 
-        try {
-            //TODO implement this part
-            initStatisticsPanel(contest);
-            initBattlePanel(contest);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
+
+        //TODO implement this part
+        initStatisticsPanel(contest);
+        initBattlePanel(contest);
+
         battleList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             boolean selection = (newValue == null);
 
@@ -121,6 +123,7 @@ public class ALifeContestController {
             runSelectedBattleButton.setDisable(selection);
         });
 
+        EventBus.register(this);
     }
 
     private void initBattlePanel(Contest contest) {
@@ -495,11 +498,11 @@ public class ALifeContestController {
         System.out.println("create new tournament");
     }
 
-    public void initStatisticsPanel(Contest contest) throws IOException {
+    public void initStatisticsPanel(Contest contest) {
         //clear all items
         tournamentPanel.setText(contest.lastTournament().getName());
         coloniesStatistics.getItems().clear();
-        TournamentStatistics statistics = contest.lastTournament().getTournamentStatistics();
+        TournamentStatistics statistics = contest.lastTournament().getStatistics();
 
         ObservableList<CompetitorView> list = FXCollections.observableArrayList();
 
@@ -557,5 +560,37 @@ public class ALifeContestController {
 
     public BorderPane getMainLayout() {
         return mainLayout;
+    }
+
+    @Override
+    public void handle(Event event) {
+        if (event instanceof BattleFinishEvent) {
+            updateRanking((BattleFinishEvent) event);
+        }
+    }
+
+    private void updateRanking(BattleFinishEvent event) {
+        Tournament tournament = contest.lastTournament();
+        tournament.addBattle(event.getBattle());
+        TournamentStatistics statistics = tournament.getStatistics();
+
+        //todo: improve this!!!
+        //maybe the best way is to have panels per tournament (and show only the selected one)
+        //and update the list of opponents by sorting the current list by energy or points.
+        //check if Platform runLater is neccessary
+        Platform.runLater(() -> {
+            ObservableList<CompetitorView> list = FXCollections.observableArrayList();
+
+            for (ColonyStatistics col : statistics.getColonyStatistics()) {
+                list.addAll(new CompetitorView(col, statistics.getMaxEnergy()));
+            }
+
+            SortedList<CompetitorView> sortedList = new SortedList<>(list, new CompetitorViewComparator());
+
+            coloniesStatistics.getItems().setAll(sortedList);
+
+        });
+
+
     }
 }

@@ -257,7 +257,7 @@ public class Contest implements Listener {
         Ranking ranking = new Ranking();
 
         for (Tournament t : tournaments) {
-            TournamentStatistics ts = t.getTournamentStatistics();
+            TournamentStatistics ts = t.getStatistics();
 
             for (OpponentInfo op : opponentsInfo.getOpponents()) {
                 ts.addOpponentInfo(op.getName(), op.getAuthor(), op.getAffiliation());

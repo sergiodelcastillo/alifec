@@ -1,16 +1,12 @@
 package alifec.simulation.view;
 
 import alifec.core.contest.oponentInfo.ColonyStatistics;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-
-import java.util.Comparator;
 
 /**
  * Created by Sergio Del Castillo on 18/06/18.
@@ -22,6 +18,9 @@ public class CompetitorView extends GridPane {
 
     //todo: add translation
     private String format = "Energy: %.2f, Points: %d";
+
+    private Label opponentsDetails;
+    private ProgressBar opponentsProgress;
 
     public CompetitorView(ColonyStatistics col, float maxEnergy) {
         this.model = col;
@@ -41,24 +40,30 @@ public class CompetitorView extends GridPane {
         opponentName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
         opponentName.setText(col.getName());
 
-        ProgressBar opponentsProgress = new ProgressBar();
+        opponentsProgress = new ProgressBar();
         GridPane.setHgrow(opponentsProgress, Priority.ALWAYS);
         opponentsProgress.setMaxWidth(Double.MAX_VALUE);
-        opponentsProgress.setProgress(col.getAccumulated()/maxEnergy);
         opponentsProgress.setMouseTransparent(true);
 
-        Label opponentsDetails = new Label();
+
+        opponentsDetails = new Label();
         opponentsDetails.setStyle("-fx-font-size: 12");
-        opponentsDetails.setText(String.format(format, col.getAccumulated(), col.getPoints()));
 
         add(opponentName, 0, 0);
         add(opponentsProgress, 1, 0);
         add(opponentsDetails, 1, 1);
+
+        recalculate(maxEnergy);
     }
 
 
 
     public ColonyStatistics getModel(){
         return model;
+    }
+
+    public void recalculate(float maxEnergy){
+        opponentsProgress.setProgress(model.getAccumulated()/maxEnergy);
+        opponentsDetails.setText(String.format(format, model.getAccumulated(), model.getPoints()));
     }
 }

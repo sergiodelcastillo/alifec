@@ -42,31 +42,37 @@ public class TournamentStatistics {
     }
 
     public void calculate() {
+        //todo: test!!
         Collections.sort(list);
         Collections.reverse(list);
 
-        int size = 3;
+        int points = 3;
 
-        for(ColonyStatistics statistics: list){
-            statistics.setPoints(size--);
+        if (list.isEmpty() || list.get(0).getAccumulated() <= 0.0f) return;
 
-            if(size == 0) return;
+        for (ColonyStatistics statistics : list) {
+            if (statistics.getAccumulated() > 0.0f)
+                statistics.setPoints(points);
+
+            --points;
+
+            if (points == 0) return;
         }
     }
 
     public float getMaxEnergy() {
-        if(list.isEmpty()) return 0.0f;
+        if (list.isEmpty()) return 0.0f;
 
         return Collections.max(list).getAccumulated();
     }
 
-    public List<ColonyStatistics> getColonyStatistics(){
+    public List<ColonyStatistics> getColonyStatistics() {
         return list;
     }
 
     public void addOpponentInfo(String name, String author, String affiliation) {
-        for(ColonyStatistics c: list){
-            if(c.getName().equals(name)){
+        for (ColonyStatistics c : list) {
+            if (c.getName().equals(name)) {
                 c.setAuthor(author);
                 c.setAffiliation(affiliation);
             }

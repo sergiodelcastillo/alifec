@@ -2,6 +2,8 @@ package alifec.simulation.simulation;
 
 import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
+import alifec.core.event.EventBus;
+import alifec.core.event.impl.BattleFinishEvent;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.ValidationException;
 import alifec.core.simulation.*;
@@ -111,7 +113,9 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
                     stop();
                     break;
                 case END_BATTLE:
+                    notifyWinner();
                     waitBetweenBattles();
+
                     lastState = State.END_BATTLE;
                     break;
                 case END_SIMULATION:
@@ -124,6 +128,11 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         } catch (MoveMicroorganismException e) {
             e.printStackTrace();
         }
+    }
+
+    private void notifyWinner() {
+        //notify winner
+        EventBus.post(new BattleFinishEvent(environment, environment.getResults()));
     }
 
     private void showEndSimulation() {
