@@ -5,17 +5,19 @@ import alifec.core.event.Event;
 import alifec.core.simulation.Environment;
 
 /**
- * Created by Sergio Del Castillo on 01/11/17.
+ * Created by Sergio Del Castillo on 19/06/19.
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class BattleFinishEvent implements Event {
+public final class BattleEvent implements Event {
     private final Battle battle;
     private final Environment environment;
+    private final Status status;
 
-    public BattleFinishEvent(Environment environment, Battle battle) {
+    public BattleEvent(Environment environment, Battle battle, Status status) {
         this.environment = environment;
         this.battle = battle;
+        this.status = status;
     }
 
     public Battle getBattle() {
@@ -24,5 +26,15 @@ public class BattleFinishEvent implements Event {
 
     public Environment getEnvironment() {
         return environment;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public enum Status {
+        START,
+        MOVEMENT,
+        FINISH
     }
 }

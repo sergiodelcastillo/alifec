@@ -8,7 +8,7 @@ import alifec.core.contest.oponentInfo.TournamentStatistics;
 import alifec.core.event.Event;
 import alifec.core.event.EventBus;
 import alifec.core.event.Listener;
-import alifec.core.event.impl.BattleFinishEvent;
+import alifec.core.event.impl.BattleEvent;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.ConfigFileWriteException;
 import alifec.core.exception.CreateContestException;
@@ -564,12 +564,14 @@ public class ALifeContestController implements Listener {
 
     @Override
     public void handle(Event event) {
-        if (event instanceof BattleFinishEvent) {
-            updateRanking((BattleFinishEvent) event);
+        if (event instanceof BattleEvent) {
+            BattleEvent battleEvent = (BattleEvent) event;
+            if (battleEvent.getStatus() == BattleEvent.Status.FINISH)
+                updateRanking(battleEvent);
         }
     }
 
-    private void updateRanking(BattleFinishEvent event) {
+    private void updateRanking(BattleEvent event) {
         Tournament tournament = contest.lastTournament();
         tournament.addBattle(event.getBattle());
         TournamentStatistics statistics = tournament.getStatistics();

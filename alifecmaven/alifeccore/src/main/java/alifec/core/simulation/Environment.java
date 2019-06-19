@@ -2,9 +2,7 @@ package alifec.core.simulation;
 
 import alifec.core.contest.Battle;
 import alifec.core.event.EventBus;
-import alifec.core.event.impl.BattleFinishEvent;
-import alifec.core.event.impl.BattleMovementEvent;
-import alifec.core.event.impl.BattleStartsEvent;
+import alifec.core.event.impl.BattleEvent;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.OpponentException;
 import alifec.core.persistence.SourceCodeFileManager;
@@ -165,7 +163,7 @@ public class Environment {
 
         liveTime = 0;
 
-        EventBus.post(new BattleStartsEvent(this, b));
+        EventBus.post(new BattleEvent(this, b, BattleEvent.Status.START));
         return true;
 
     }
@@ -240,17 +238,17 @@ public class Environment {
 
         if (c1.isDied()) {
             battle.setWinner(battle.getSecondColonyId(), c2.getEnergy());
-            EventBus.post(new BattleFinishEvent(this, battle));
+            EventBus.post(new BattleEvent(this, battle, BattleEvent.Status.FINISH));
             return true;
         }
 
         if (c2.isDied()) {
             battle.setWinner(battle.getFirstColonyId(), c1.getEnergy());
-            EventBus.post(new BattleFinishEvent(this, battle));
+            EventBus.post(new BattleEvent(this, battle, BattleEvent.Status.FINISH));
             return true;
         }
 
-        EventBus.post(new BattleMovementEvent(this));
+        EventBus.post(new BattleEvent(this, battle, BattleEvent.Status.MOVEMENT));
         return false;
     }
 

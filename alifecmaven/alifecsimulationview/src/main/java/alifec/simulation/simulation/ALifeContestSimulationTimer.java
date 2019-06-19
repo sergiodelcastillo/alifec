@@ -3,7 +3,7 @@ package alifec.simulation.simulation;
 import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
 import alifec.core.event.EventBus;
-import alifec.core.event.impl.BattleFinishEvent;
+import alifec.core.event.impl.BattleEvent;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.ValidationException;
 import alifec.core.simulation.*;
@@ -132,7 +132,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
     private void notifyWinner() {
         //notify winner
-        EventBus.post(new BattleFinishEvent(environment, environment.getResults()));
+        EventBus.post(new BattleEvent(environment, environment.getResults(), BattleEvent.Status.FINISH));
     }
 
     private void showEndSimulation() {

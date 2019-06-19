@@ -3,9 +3,7 @@ package alifec.core.contest;
 import alifec.core.contest.oponentInfo.TournamentStatistics;
 import alifec.core.event.Event;
 import alifec.core.event.Listener;
-import alifec.core.event.impl.BattleFinishEvent;
-import alifec.core.event.impl.BattleMovementEvent;
-import alifec.core.event.impl.BattleStartsEvent;
+import alifec.core.event.impl.BattleEvent;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.TournamentException;
 import alifec.core.persistence.SimulationFileManager;
@@ -283,27 +281,44 @@ public class Tournament implements Comparable<Tournament>, Listener {
     @Override
     public void handle(Event event) {
         try {
-            if (event instanceof BattleStartsEvent) {
-                BattleStartsEvent tmp = (BattleStartsEvent) event;
-                logger.info("Starting battle: " + tmp.getBattle().toString());
+            if (event instanceof BattleEvent) {
+                BattleEvent battleEvent = (BattleEvent) event;
 
-                if (config.isCompetitionMode())
-                    sPersistence.appendInit(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs(), tmp.getBattle());
-            } else if (event instanceof BattleMovementEvent) {
-                if (config.isCompetitionMode()) {
-                    BattleMovementEvent tmp = (BattleMovementEvent) event;
-                    sPersistence.append(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs());
+                switch (battleEvent.getStatus()) {
+                    case START:
+                        handleBattleStart(battleEvent);
+                        break;
+                    case MOVEMENT:
+                        handleBattleMovement(battleEvent);
+                        break;
+                    case FINISH:
+                        handleBattleFinish(battleEvent);
+                        break;
                 }
-            } else if (event instanceof BattleFinishEvent) {
-                BattleFinishEvent tmp = (BattleFinishEvent) event;
-                Battle battle = tmp.getBattle();
-                logger.info("End of the battle. Winner " + battle.getWinnerName() + " with energy " + battle.getWinnerEnergy());
-
-                if (config.isCompetitionMode())
-                    sPersistence.appendFinish(tmp.getEnvironment().getNutrient(), tmp.getEnvironment().getMOs(), battle);
             }
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);
         }
+    }
+
+    private void handleBattleFinish(BattleEvent event) throws IOException {
+        Battle battle = event.getBattle();
+        logger.info("End of the battle. Winner " + battle.getWinnerName() + " with energy " + battle.getWinnerEnergy());
+
+        if (config.isCompetitionMode())
+            sPersistence.appendFinish(event.getEnvironment().getNutrient(), event.getEnvironment().getMOs(), battle);
+    }
+
+    private void handleBattleMovement(BattleEvent event) throws IOException {
+        if (config.isCompetitionMode()) {
+            sPersistence.append(event.getEnvironment().getNutrient(), event.getEnvironment().getMOs());
+        }
+    }
+
+    private void handleBattleStart(BattleEvent event) throws IOException {
+        logger.info("Starting battle: " + event.getBattle().toString());
+
+        if (config.isCompetitionMode())
+            sPersistence.appendInit(event.getEnvironment().getNutrient(), event.getEnvironment().getMOs(), event.getBattle());
     }
 }
