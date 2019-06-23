@@ -9,10 +9,7 @@ import alifec.core.event.Event;
 import alifec.core.event.EventBus;
 import alifec.core.event.Listener;
 import alifec.core.event.impl.BattleEvent;
-import alifec.core.exception.BattleException;
-import alifec.core.exception.ConfigFileWriteException;
-import alifec.core.exception.CreateContestException;
-import alifec.core.exception.ValidationException;
+import alifec.core.exception.*;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
 import alifec.core.simulation.NutrientDistribution;
@@ -34,6 +31,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -483,19 +481,25 @@ public class ALifeContestController implements Listener {
 
 
     public void previousTournament(ActionEvent event) {
-        System.out.println("prev tournament");
+        updateRanking(contest.prev());
     }
 
     public void nextTournament(ActionEvent event) {
-        System.out.println("next tournament");
+        updateRanking(contest.next());
     }
 
     public void deleteTournament(ActionEvent event) {
-        System.out.println("delete tournament");
+        contest.removeSelected(); //TODO: assert result == true
+        updateRanking(contest.getSelected());
     }
 
     public void addTournament(ActionEvent event) {
-        System.out.println("create new tournament");
+        try {
+            contest.newTournament();
+            updateRanking(contest.lastTournament());
+        } catch (TournamentException e) {
+            showDialogSimulationException(null);
+        }
     }
 
     public void initStatisticsPanel(Contest contest) {
@@ -566,21 +570,36 @@ public class ALifeContestController implements Listener {
     public void handle(Event event) {
         if (event instanceof BattleEvent) {
             BattleEvent battleEvent = (BattleEvent) event;
-            if (battleEvent.getStatus() == BattleEvent.Status.FINISH)
+            if (battleEvent.getStatus() == BattleEvent.Status.FINISH) {
+                Battle battle = battleEvent.getBattle();
+                String pattern = bundle.getString("alifec.battle.status." + battleEvent.getStatus().name());
+                String message = MessageFormat.format(pattern, battle.getWinnerName(), battle.getWinnerEnergy());
+                updateMessagePanel(message);
                 updateRanking(battleEvent);
+            }
         }
+    }
+
+    private void updateMessagePanel(String message) {
+        Platform.runLater(() -> {
+            messagePanel.setText(message);
+        });
     }
 
     private void updateRanking(BattleEvent event) {
         Tournament tournament = contest.lastTournament();
         tournament.addBattle(event.getBattle());
-        TournamentStatistics statistics = tournament.getStatistics();
+        updateRanking(tournament);
+    }
 
+    private void updateRanking(Tournament tournament) {
         //todo: improve this!!!
         //maybe the best way is to have panels per tournament (and show only the selected one)
         //and update the list of opponents by sorting the current list by energy or points.
         //check if Platform runLater is neccessary
         Platform.runLater(() -> {
+            tournamentPanel.setText(tournament.getName());
+            TournamentStatistics statistics = tournament.getStatistics();
             ObservableList<CompetitorView> list = FXCollections.observableArrayList();
 
             for (ColonyStatistics col : statistics.getColonyStatistics()) {
@@ -592,7 +611,5 @@ public class ALifeContestController implements Listener {
             coloniesStatistics.getItems().setAll(sortedList);
 
         });
-
-
     }
 }
