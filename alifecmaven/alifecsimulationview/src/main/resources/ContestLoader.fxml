@@ -7,12 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.Scene?>
 <?import javafx.stage.Stage?>
-
 <Stage xmlns="http://javafx.com/javafx"
        xmlns:fx="http://javafx.com/fxml"
        fx:controller="alifec.simulation.controller.ContestLoaderController"
        title="%contest.loader.title"
-       alwaysOnTop="true"
        resizable="false">
     <scene>
         <Scene onKeyPressed="#keyHandler">
