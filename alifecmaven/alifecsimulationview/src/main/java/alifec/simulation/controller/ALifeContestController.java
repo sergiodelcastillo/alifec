@@ -111,7 +111,7 @@ public class ALifeContestController implements Listener {
 
 
         //TODO implement this part
-        initStatisticsPanel(contest);
+        updateRanking(contest.lastTournament());
         initBattlePanel(contest);
 
         battleList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -502,23 +502,6 @@ public class ALifeContestController implements Listener {
         }
     }
 
-    public void initStatisticsPanel(Contest contest) {
-        //clear all items
-        tournamentPanel.setText(contest.lastTournament().getName());
-        coloniesStatistics.getItems().clear();
-        TournamentStatistics statistics = contest.lastTournament().getStatistics();
-
-        ObservableList<CompetitorView> list = FXCollections.observableArrayList();
-
-        for (ColonyStatistics col : statistics.getColonyStatistics()) {
-            list.addAll(new CompetitorView(col, statistics.getMaxEnergy()));
-        }
-
-        SortedList<CompetitorView> sortedList = new SortedList<>(list, new CompetitorViewComparator());
-
-        coloniesStatistics.getItems().addAll(sortedList);
-    }
-
     private Optional<ButtonType> showDuplicatedBattlesDecision() {
         if (duplicatedBattlesDecision == null) {
             duplicatedBattlesDecision = new Alert(Alert.AlertType.CONFIRMATION);
@@ -603,7 +586,7 @@ public class ALifeContestController implements Listener {
             ObservableList<CompetitorView> list = FXCollections.observableArrayList();
 
             for (ColonyStatistics col : statistics.getColonyStatistics()) {
-                list.addAll(new CompetitorView(col, statistics.getMaxEnergy()));
+                list.addAll(new CompetitorView(col, statistics.getMaxEnergy(), bundle));
             }
 
             SortedList<CompetitorView> sortedList = new SortedList<>(list, new CompetitorViewComparator());

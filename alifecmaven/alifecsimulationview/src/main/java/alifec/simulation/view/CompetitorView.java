@@ -1,12 +1,15 @@
 package alifec.simulation.view;
 
 import alifec.core.contest.oponentInfo.ColonyStatistics;
-import javafx.geometry.HPos;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 18/06/18.
@@ -14,49 +17,34 @@ import javafx.scene.layout.Priority;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class CompetitorView extends GridPane {
+
     private final ColonyStatistics model;
+    private final ResourceBundle bundle;
 
-    //todo: add translation
-    private String format = "Energy: %.2f, Points: %d";
+    @FXML
+    public Label opponentName;
+    @FXML
+    public Label opponentsDetails;
+    @FXML
+    public ProgressBar opponentsProgress;
 
-    private Label opponentsDetails;
-    private ProgressBar opponentsProgress;
+    public CompetitorView(ColonyStatistics col, float maxEnergy, ResourceBundle bundle) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/CompetitorView.fxml"), bundle);
 
-    public CompetitorView(ColonyStatistics col, float maxEnergy) {
+        loader.setRoot( this );
+        loader.setController( this );
+
+        try {
+            loader.load();
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
+
+        this.bundle = bundle;
         this.model = col;
-
-        ColumnConstraints constraint1 = new ColumnConstraints();
-        constraint1.setHgrow(Priority.SOMETIMES);
-        constraint1.setPercentWidth(40.0);
-        constraint1.setHalignment(HPos.LEFT);
-
-        ColumnConstraints constraint2 = new ColumnConstraints();
-        constraint2.setHgrow(Priority.SOMETIMES);
-        constraint2.setPercentWidth(60.0);
-
-        getColumnConstraints().addAll(constraint1, constraint2);
-
-        Label opponentName = new Label();
-        opponentName.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
         opponentName.setText(col.getName());
-
-        opponentsProgress = new ProgressBar();
-        GridPane.setHgrow(opponentsProgress, Priority.ALWAYS);
-        opponentsProgress.setMaxWidth(Double.MAX_VALUE);
-        opponentsProgress.setMouseTransparent(true);
-
-
-        opponentsDetails = new Label();
-        opponentsDetails.setStyle("-fx-font-size: 12");
-
-        add(opponentName, 0, 0);
-        add(opponentsProgress, 1, 0);
-        add(opponentsDetails, 1, 1);
-
         recalculate(maxEnergy);
     }
-
-
 
     public ColonyStatistics getModel(){
         return model;
@@ -64,6 +52,7 @@ public class CompetitorView extends GridPane {
 
     public void recalculate(float maxEnergy){
         opponentsProgress.setProgress(model.getAccumulated()/maxEnergy);
-        opponentsDetails.setText(String.format(format, model.getAccumulated(), model.getPoints()));
+        String pattern = bundle.getString("competitor.detail.format");
+        opponentsDetails.setText(MessageFormat.format(pattern, model.getAccumulated(), model.getPoints()));
     }
 }

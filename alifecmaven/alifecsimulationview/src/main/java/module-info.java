@@ -17,6 +17,7 @@ module alifec.simulation.view {
 
     exports alifec.simulation.main;
     exports alifec.simulation.controller;
+    exports alifec.simulation.view;
     exports alifec.simulation.util;
 
 }
