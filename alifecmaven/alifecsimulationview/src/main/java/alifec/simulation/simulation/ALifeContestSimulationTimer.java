@@ -133,10 +133,13 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     private void notifyWinner() {
         //notify winner
         EventBus.post(new BattleEvent(environment, environment.getResults(), BattleEvent.Status.FINISH));
+
+        colonyA = null;
+        colonyB = null;
     }
 
     private void showEndSimulation() {
-        System.out.println("End simulation");
+        System.out.println("Simulation will close");
     }
 
     private void createBattle() {
@@ -159,15 +162,18 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     }
 
     private void waitBetweenBattles() {
+
         System.out.println("wait between battles");
     }
 
     public void endSimulation() {
         //clean everything!
         resetValues();
-        System.out.println("endSimulation");
 
         stop();
+
+
+        System.out.println("timer stopped");
     }
 
     private void showStartSimulation(long seconds) {
@@ -372,9 +378,6 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
             case LIVING_ONE_STEP:
                 return Action.MOVE_COLONIES_ONE_STEP;
             case END_BATTLE:
-                //ver!!
-                colonyA = null;
-                colonyB = null;
                 return battles.isEmpty() ? Action.END_SIMULATION : Action.START_BATTLE;
             case END_SIMULATION:
                 return Action.EXIT;

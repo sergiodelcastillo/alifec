@@ -448,8 +448,8 @@ public class ALifeContestController implements Listener {
         if (config.isProgrammerMode()) {
             if (!battleList.getItems().isEmpty() || !contest.lastTournament().getBattles().isEmpty()) {
                 Optional<ButtonType> optional = showDuplicatedBattlesDecision();
-
-                duplicate = !optional.get().getButtonData().isCancelButton();
+                if (optional.isPresent())
+                    duplicate = !optional.get().getButtonData().isCancelButton();
             }
         }
 

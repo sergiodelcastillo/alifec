@@ -109,14 +109,14 @@ public class ALifeContestSimulationView extends Stage {
 
     public void endSimulation() {
         if (active) {
-            //stop everything!!!
-
             active = false;
             paused = false;
         }
 
         timer.endSimulation();
         this.hide();
+
+        System.out.println("Simulation view : end simulation");
     }
 
     public void pauseSimulation() {

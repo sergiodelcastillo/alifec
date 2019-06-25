@@ -44,8 +44,8 @@ public class ParentTest {
 
     @Before
     public void init() throws IOException {
-        EventBus.setSingleThread();
-        EventBus.reset();
+        /*EventBus.setSingleThread();
+        EventBus.reset();*/
 
         Path rootDir = Paths.get(TEST_ROOT_PATH);
 
@@ -57,6 +57,9 @@ public class ParentTest {
 
     @After
     public void cleanup() throws IOException {
+        //close all threads.
+        EventBus.exit();
+
         Path rootDir = Paths.get(TEST_ROOT_PATH);
 
         if (Files.exists(rootDir)) {

@@ -2,6 +2,7 @@ package alifec.simulation.main;
 
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
+import alifec.core.event.EventBus;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -19,6 +20,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -192,7 +195,14 @@ public class ALifeContestMain extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+
         logger.info("Good bye!.");
+
+        //close the bus to avoid running theads issues.
+        EventBus.exit();
+
+        // close the javafx platform
+        Platform.exit();
     }
 
 }
