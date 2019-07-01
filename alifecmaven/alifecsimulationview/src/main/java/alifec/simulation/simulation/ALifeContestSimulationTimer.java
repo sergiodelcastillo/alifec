@@ -47,11 +47,11 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     private final Contest contest;
     private final Environment environment;
     private final Queue<Battle> battles;
+    private final EnergyHistoryHolder history;
     private State lastState;
     private Battle current;
     private Colony colonyA;
     private Colony colonyB;
-
     //Control information useful for count down.
     private long startNanoTime;
     private long lastCount;
@@ -68,6 +68,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         battles = new LinkedList<>();
         this.contest = contest;
         this.environment = contest.getEnvironment();
+        history = new EnergyHistoryHolder(WIDTH, TREND_HEIGH, MO_SIZE);
 
         resetValues();
     }
@@ -157,6 +158,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         this.colonyA = environment.getFirstOpponent();
         this.colonyB = environment.getSecondOpponent();
 
+        history.clear();
         //todo: agregar logger. battle created: <bla>
 
     }
@@ -283,7 +285,20 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     }
 
     private void drawColoniesTrend() {
-        //todo
+        history.add(environment);
+
+        trend.setFill(COLOR_BACKGROUND);
+        trend.fillRect(0, 0, WIDTH, TREND_HEIGH);
+
+        trend.setStroke(COLOR_COLONY_A);
+        trend.strokePolyline(history.colonyX(), history.colony1(), history.size());
+        trend.setStroke(COLOR_COLONY_B);
+        trend.strokePolyline(history.colonyX(), history.colony2(), history.size());
+
+        trend.setStroke(COLOR_LINE);
+        trend.setLineWidth(2);
+        trend.strokeRect(MO_SIZE, MO_SIZE, WIDTH - 2*MO_SIZE, TREND_HEIGH - 2*MO_SIZE);
+
     }
 
     private void drawColonyLine(Color color, Colony colony, int y) {
@@ -392,6 +407,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         lastState = State.NONE;
         startNanoTime = 0;
         lastCount = -1;
+
     }
 
     public boolean pauseSimulation() {

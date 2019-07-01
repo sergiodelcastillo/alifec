@@ -26,7 +26,7 @@ public class ALifeContestSimulationView extends Stage {
     static final int WIDTH = (3 + Defs.DIAMETER) * MO_SIZE;
     static final int DISH_HEIGH = WIDTH;
     static final int INFO_HEIGH = 60;
-    static final int TREND_HEIGH = 180;
+    static final int TREND_HEIGH = 120;
     static final String COLOR_BACKGROUND_STRING = "#F3F3F3";
 
     private final ResourceBundle bundle;
