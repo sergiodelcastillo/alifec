@@ -55,9 +55,9 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     //Control information useful for count down.
     private long startNanoTime;
     private long lastCount;
-    private long MAX_COUNT = 10;
+    private long MAX_COUNT;
+    private long MAX_START_TIME;
     private long MILLISECONDS = 1000000000L;
-    private long MAX_START_TIME = MAX_COUNT * MILLISECONDS;
 
     public ALifeContestSimulationTimer(ALifeContestSimulationView view, Contest contest) {
         this.view = view;
@@ -70,6 +70,10 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         this.environment = contest.getEnvironment();
         history = new EnergyHistoryHolder(WIDTH, TREND_HEIGH, MO_SIZE);
 
+        if (contest.getConfig().isCountdown()) {
+            MAX_COUNT = contest.getConfig().getCountdownMax();
+            MAX_START_TIME = MAX_COUNT * MILLISECONDS;
+        }
         resetValues();
     }
 
@@ -297,7 +301,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
         trend.setStroke(COLOR_LINE);
         trend.setLineWidth(2);
-        trend.strokeRect(MO_SIZE, MO_SIZE, WIDTH - 2*MO_SIZE, TREND_HEIGH - 2*MO_SIZE);
+        trend.strokeRect(MO_SIZE, MO_SIZE, WIDTH - 2 * MO_SIZE, TREND_HEIGH - 2 * MO_SIZE);
 
     }
 
@@ -382,7 +386,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
         switch (lastState) {
             case NONE:
-                return Action.START_SIMULATION;
+                return contest.getConfig().isCountdown() ? Action.START_SIMULATION : Action.START_BATTLE;
             case THE_BEGINNING:
                 return Action.START_BATTLE;
             case LIVING:

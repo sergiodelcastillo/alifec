@@ -56,16 +56,18 @@ public class ContestConfig {
     public static final int PROGRAMMER_MODE = 0;
     public static final int COMPETITION_MODE = 1;
     public static final int DEFAULT_PAUSE_BETWEEN_BATTLES = 200;
-
+    public static final String SEPARATOR_PATTERN;
     private static final String[] PAUSE_BETWEEN_BATTLES_OPTIONS = {"200", "400", "600", "800", "1000", "1200", "1400", "1600", "1800", "2000"};
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String DATETIME_FORMAT = "yyyyMMdd-HHmmss";
     private static final String BATTLES_RUN_FILE = "battles_run.csv";
     private static final String BATTLES_FILE = "battles.csv";
     private static final String SIMULATION_RUN = "battles.run";
-    private static final String PROPERTY_CONTEST_NAME_KEY = "contest_name";
-    private static final String PROPERTY_PAUSE_BETWEEN_BATTLES_KEY = "pause_between_battles";
-    private static final String PROPERTY_MODE_KEY = "contest_mode";
+    private static final String PROPERTY_CONTEST_NAME_KEY = "contest.name";
+    private static final String PROPERTY_PAUSE_BETWEEN_BATTLES_KEY = "pause.between.battles";
+    private static final String PROPERTY_MODE_KEY = "contest.mode";
+    private static final String PROPERTY_COUNTDOWN_DISPLAY = "countdown.display";
+    private static final String PROPERTY_COUNTDOWN_MAX = "countdown.max";
     private static final String PROPERTY_NUTRIENTS_KEY = "nutrients";
     private static final Integer[] DEFAULT_NUTRIENTS = new Integer[]{
             InclinedPlaneFunction.ID,
@@ -77,8 +79,6 @@ public class ContestConfig {
     };
     static Logger logger = LogManager.getLogger(ContestConfig.class);
     private static Hashtable<Integer, Nutrient> NUTRIENT_OPTIONS;
-
-    public static final String SEPARATOR_PATTERN;
 
     static {
         NUTRIENT_OPTIONS = new Hashtable<>();
@@ -98,28 +98,26 @@ public class ContestConfig {
      * Absolute path of contest.
      */
     private final String path;
+    private final ContestConfigValidator validator = new ContestConfigValidator();
+    private final StringBuilder builder = new StringBuilder();
     /**
      * name of contest
      */
     private String contestName = "";
-
     /**
      * mode of contest:
      * programmer (mode = 0): the competitor should use this mode.
      * competition(mode = 1): reserved for competition.
      */
-    private int mode = 0;
+    private boolean countdown = true;
+    private int countdownMax = 10;
 
+    private int mode = 0;
     /**
      * time (in Milliseconds) between battles.
      */
     private int pauseBetweenBattles = 5;
-
     private List<Integer> nutrients = new ArrayList<>();
-
-    private final ContestConfigValidator validator = new ContestConfigValidator();
-    private final StringBuilder builder = new StringBuilder();
-
     private ResourceBundle bundle;
 
     /**
@@ -220,6 +218,16 @@ public class ContestConfig {
         return null;
     }
 
+    public static String getBaseAppFolder(String path) {
+        if (path == null || path.isEmpty()) path = ".";
+
+        return path + File.separator + BASE_APP_FOLDER;
+    }
+
+    public static String getDefaultBaseAppFolder() throws InvalidUserDirException {
+        return getBaseAppFolder(getDefaultPath());
+    }
+
     public void setDefaults() {
         setMode(ContestConfig.PROGRAMMER_MODE);
         setPauseBetweenBattles(ContestConfig.DEFAULT_PAUSE_BETWEEN_BATTLES);
@@ -233,6 +241,8 @@ public class ContestConfig {
         property.setProperty(PROPERTY_MODE_KEY, Integer.toString(mode));
         property.setProperty(PROPERTY_PAUSE_BETWEEN_BATTLES_KEY, Integer.toString(pauseBetweenBattles));
         property.setProperty(PROPERTY_NUTRIENTS_KEY, String.join(",", nutrientsToString()));
+        property.setProperty(PROPERTY_COUNTDOWN_DISPLAY, Boolean.toString(countdown));
+        property.setProperty(PROPERTY_COUNTDOWN_MAX, Integer.toString(countdownMax));
 
         try {
             String basePath = getBaseAppFolder();
@@ -270,6 +280,20 @@ public class ContestConfig {
             return false;
 
         switch (type) {
+            case PROPERTY_COUNTDOWN_DISPLAY:
+                try {
+                    countdown = Boolean.parseBoolean(option);
+                } catch (Exception ignored) {
+                }
+                break;
+            case PROPERTY_COUNTDOWN_MAX:
+                try {
+                    int countdownMaxTmp = Integer.parseInt(option);
+
+                    if (countdownMaxTmp > 0) countdownMax = countdownMaxTmp;
+                } catch (Exception ignored) {
+                }
+                break;
             case PROPERTY_CONTEST_NAME_KEY:
                 contestName = option;
                 break;
@@ -298,7 +322,7 @@ public class ContestConfig {
 
                             if (existsNutrientId(nutrientInt))
                                 nutrients.add(nutrientInt);
-                            else{
+                            else {
                                 logger.warn("Nutrient Id unknown: " + nutrientString);
                                 return false;
                             }
@@ -365,15 +389,6 @@ public class ContestConfig {
         return getBaseAppFolder(path);
     }
 
-    public static String getBaseAppFolder(String path) {
-        if (path == null || path.isEmpty()) path = ".";
-
-        return path + File.separator + BASE_APP_FOLDER;
-    }
-
-    public static String getDefaultBaseAppFolder() throws InvalidUserDirException {
-        return getBaseAppFolder(getDefaultPath());
-    }
     public String getMOsPath() {
         return getContestPath() + File.separator + MOS_FOLDER;
     }
@@ -464,6 +479,8 @@ public class ContestConfig {
                 ", mode=" + mode +
                 ", pauseBetweenBattles=" + pauseBetweenBattles +
                 ", nutrients=" + nutrientsToString() +
+                ", displayCountDown=" + countdown +
+                ", cowndownMaxValue=" + countdownMax +
                 '}';
     }
 
@@ -490,5 +507,13 @@ public class ContestConfig {
 
     public ResourceBundle getBundle() {
         return bundle;
+    }
+
+    public boolean isCountdown() {
+        return countdown;
+    }
+
+    public int getCountdownMax() {
+        return countdownMax;
     }
 }
