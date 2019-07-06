@@ -12,10 +12,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,9 +54,13 @@ public class ContestFileManager {
     }
 
     public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
-        Path cppResources = Paths.get("app/cpp/");
-        Path examplesResources = Paths.get("app/examples/");
-        buildNewContestFolder(config, createExamples, cppResources, examplesResources);
+        try {
+            Path cppResources = Paths.get(ContestFileManager.class.getResource("/compiler/cpp/").toURI());
+            Path examplesResources = Paths.get(ContestFileManager.class.getResource("/examples/").toURI());
+            buildNewContestFolder(config, createExamples, cppResources, examplesResources);
+        } catch (URISyntaxException e) {
+            throw new CreateContestFolderException("Could not retrieve the config files");
+        }
     }
 
     public static void buildNewContestFolder(ContestConfig config,

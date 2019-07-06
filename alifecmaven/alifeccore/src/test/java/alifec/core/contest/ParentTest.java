@@ -100,8 +100,8 @@ public class ParentTest {
     }
 
     protected void createContest(ContestConfig config) throws IOException, CreateContestFolderException, URISyntaxException {
-        Path cppResources = Paths.get(getClass().getResource("/app/cpp/").toURI());
-        Path examplesResources = Paths.get(getClass().getResource("/app/examples/").toURI());
+        Path cppResources = Paths.get(getClass().getResource("/compiler/cpp/").toURI());
+        Path examplesResources = Paths.get(getClass().getResource("/examples/").toURI());
 
         ContestFileManager.buildNewContestFolder(config, true, cppResources, examplesResources);
 
@@ -115,7 +115,7 @@ public class ParentTest {
         //create the file compiler.properties
         Path compilerProperties = Paths.get(config.getCompilerConfigFile());
         if (Files.notExists(compilerProperties)) {
-            Path compilerConfigFile = Paths.get(getClass().getResource("/app/compiler.properties").toURI());
+            Path compilerConfigFile = Paths.get(getClass().getResource("/compiler/compiler.properties").toURI());
             Files.copy(compilerConfigFile, compilerProperties);
         }
     }

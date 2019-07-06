@@ -20,8 +20,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -31,13 +29,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class ALifeContestMain extends Application {
     private Logger logger = LogManager.getLogger(ALifeContestMain.class.getName());
     private final ResourceBundle bundle;
-
-    static {
-        //it have to be static because other class could have an static logger.
-        if (System.getProperty("log4j.configurationFile") == null) {
-            System.setProperty("log4j.configurationFile", "file:app/log4j2.xml");
-        }
-    }
 
     public static void main(String[] args) {
         // launch the application

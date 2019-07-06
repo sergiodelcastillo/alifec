@@ -4,9 +4,7 @@ alifeccore/target/
 alifeccontestview/target/
 alifecutil/target/
 target/
-contest-01/
-Contest-01/
 app/config
+data/
 log/
-alifecontest-1.0-SNAPSHOT/
 test.out
