@@ -4,6 +4,7 @@ import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.event.EventBus;
 import alifec.core.exception.*;
+import alifec.core.persistence.ALifeCFileManager;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.simulation.controller.ALifeContestController;
@@ -19,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -30,6 +32,21 @@ public class ALifeContestMain extends Application {
     private Logger logger = LogManager.getLogger(ALifeContestMain.class.getName());
     private final ResourceBundle bundle;
 
+    static {
+        try {
+            //it have to be static because other class could have an static logger.
+            if (System.getProperty("log4j.configurationFile") == null) {
+                System.setProperty("log4j.configurationFile", "file:app/log4j2.xml");
+            }
+            //make an effort to have all files and folders
+            //todo: it may be moved to distribution.
+            ALifeCFileManager.build(Paths.get(System.getProperty("user.dir")));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     public static void main(String[] args) {
         // launch the application
         Application.launch(ALifeContestMain.class, args);

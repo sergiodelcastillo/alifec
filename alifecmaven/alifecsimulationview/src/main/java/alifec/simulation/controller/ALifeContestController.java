@@ -559,6 +559,7 @@ public class ALifeContestController implements Listener {
                 String message = MessageFormat.format(pattern, battle.getWinnerName(), battle.getWinnerEnergy());
                 updateMessagePanel(message);
                 updateRanking(battleEvent);
+
             }
         }
     }

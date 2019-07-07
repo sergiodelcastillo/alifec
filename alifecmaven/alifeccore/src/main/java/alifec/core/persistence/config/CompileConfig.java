@@ -5,7 +5,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -14,12 +16,10 @@ import java.util.Properties;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class CompileConfig {
-    static Logger logger = LogManager.getLogger(CompileConfig.class);
-
     private static final String LINUX_ORACLE_KEY = "linux.oracle";
     private static final String LINUX_OPENJDK_KEY = "linux.openjdk";
     private static final String WINDOWS_ORACLE_KEY = "windows.oracle";
-
+    static Logger logger = LogManager.getLogger(CompileConfig.class);
     private final String javaHome;
     private final String jvm;
     private final String os;
@@ -32,11 +32,15 @@ public class CompileConfig {
     private String windowsOracle;
 
 
-    public CompileConfig(String compilationTarget, String cppApiFolder, String mosPath) throws CompileConfigException {
+    public CompileConfig(ContestConfig config) throws CompileConfigException {
+        this(config.getCompilerConfigFile(),config.getCompilationTarget(), config.getCppApiFolder(), config.getMOsPath());
+    }
 
-        loadCompilerProperties();
+    private CompileConfig(String compilerConfigFile, String compilationTarget, String cppApiFolder, String mosPath) throws CompileConfigException {
 
         try {
+            loadCompilerProperties(compilerConfigFile);
+
             //validate if the configuration is Ok.
             validate();
         } catch (CompileConfigException e) {
@@ -52,10 +56,11 @@ public class CompileConfig {
         this.mosPath = mosPath;
     }
 
-    private void loadCompilerProperties() throws CompileConfigException {
+    private void loadCompilerProperties(String compilerConfigFile) throws CompileConfigException {
         Properties property = new Properties();
-        try {
-            property.load(getClass().getResourceAsStream("/compiler/compiler.properties"));
+
+        try (InputStream is = new FileInputStream(compilerConfigFile)) {
+            property.load(is);
 
             for (Object object : property.keySet()) {
                 if (!setProperty(object.toString(), property.getProperty(object.toString()))) {
@@ -65,10 +70,6 @@ public class CompileConfig {
         } catch (IOException e) {
             throw new CompileConfigException("Error loading the config file", e, this);
         }
-    }
-
-    public CompileConfig(ContestConfig config) throws CompileConfigException {
-        this(config.getCompilationTarget(), config.getCppApiFolder(), config.getMOsPath());
     }
 
     private void validate() throws CompileConfigException {

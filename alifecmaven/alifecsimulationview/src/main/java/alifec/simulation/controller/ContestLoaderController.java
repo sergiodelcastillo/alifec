@@ -165,7 +165,7 @@ public class ContestLoaderController {
             newContestValidator.validate(newConfig.getContestPath());
 
             newConfig.save();
-            ContestFileManager.buildNewContestFolder(newConfig, examples);
+            ContestFileManager.buildNewContest(newConfig, examples);
 
             config = newConfig;
             setCancelledOrFailed(false);

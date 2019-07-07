@@ -100,10 +100,7 @@ public class ParentTest {
     }
 
     protected void createContest(ContestConfig config) throws IOException, CreateContestFolderException, URISyntaxException {
-        Path cppResources = Paths.get(getClass().getResource("/compiler/cpp/").toURI());
-        Path examplesResources = Paths.get(getClass().getResource("/examples/").toURI());
-
-        ContestFileManager.buildNewContestFolder(config, true, cppResources, examplesResources);
+        ContestFileManager.buildNewContest(config, true);
 
         //the app folder can exists if this method was already called.
         // The app folder is not contest folder dependent so it have to be created only the first time.

@@ -52,6 +52,14 @@
     </dependencies>
 
     <build>
+
+        <testResources>
+            <!-- Test resources are taken from main/resources so simulate normal runtime and avoid issues during tests-->
+            <testResource>
+                <directory>src/main/resources</directory>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -60,6 +68,17 @@
                 <configuration>
                     <excludes>
                         <exclude>**/CompressionTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/i18n/**</exclude>
+                        <exclude>log4j2.xml</exclude>
                     </excludes>
                 </configuration>
             </plugin>

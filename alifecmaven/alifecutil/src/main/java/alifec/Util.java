@@ -30,7 +30,7 @@ public class Util {
     static {
         //load the configuration first
         if (System.getProperty("log4j.configurationFile") == null) {
-            System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log4j2.xml");
+            System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log/log4j2.xml");
         }
 
         logger = LogManager.getLogger(Util.class);
@@ -114,7 +114,7 @@ public class Util {
             ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
             ContestConfig config = new ContestConfig(bundle, ContestConfig.CONTEST_NAME_PREFIX + name);
             new NewContestFolderValidator().validate(config.getContestPath());
-            ContestFileManager.buildNewContestFolder(config, Boolean.TRUE);
+            ContestFileManager.buildNewContest(config, Boolean.TRUE);
             saveConfigFile(config);
         } catch (CreateContestFolderException | ConfigFileException | ValidationException e) {
             logger.error(e.getMessage());

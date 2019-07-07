@@ -12,14 +12,17 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by Sergio Del Castillo on 06/08/17.
@@ -43,30 +46,10 @@ public class ContestFileManager {
         }
     }
 
+    public static void buildNewContest(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
+        String cppResources = "compiler/cpp/";
+        String exampleResources = "examples/";
 
-    public List<String> listTournaments(String file) throws IOException {
-        try (Stream<Path> list = Files.list(Paths.get(file))) {
-            return list.filter(new TournamentPredicate())
-                    .map(new FileNameFunction())
-                    .filter(new NotNullPredicate())
-                    .collect(Collectors.toList());
-        }
-    }
-
-    public static void buildNewContestFolder(ContestConfig config, boolean createExamples) throws CreateContestFolderException {
-        try {
-            Path cppResources = Paths.get(ContestFileManager.class.getResource("/compiler/cpp/").toURI());
-            Path examplesResources = Paths.get(ContestFileManager.class.getResource("/examples/").toURI());
-            buildNewContestFolder(config, createExamples, cppResources, examplesResources);
-        } catch (URISyntaxException e) {
-            throw new CreateContestFolderException("Could not retrieve the config files");
-        }
-    }
-
-    public static void buildNewContestFolder(ContestConfig config,
-                                             boolean createExamples,
-                                             Path cppResources,
-                                             Path exampleResources) throws CreateContestFolderException {
         createFolder(config.getContestPath());
         createFolder(config.getMOsPath());
         createFolder(config.getReportPath());
@@ -99,16 +82,48 @@ public class ContestFileManager {
         logger.info("Creating folder: " + folder + " [OK]");
     }
 
-    public static void createExamples(Path source, String MOsFolder) {
+    public static void createExamples(String source, String MOsFolder) {
+        if (JarFileManager.isLoadedFromJar())
+            JarFileManager.createFolderFromJar(source, MOsFolder);
+        else
+            createExamplesFromFile(source, MOsFolder);
+    }
+
+    public static void createExamplesFromJar(String path, String MOsFolder) {
+        System.out.println("todo: implementar");
+        //
+        try {
+            CodeSource src = ContestFileManager.class.getProtectionDomain().getCodeSource();
+            if (src != null) {
+                URL jar = src.getLocation();
+                ZipInputStream zip = new ZipInputStream(jar.openStream());
+                ZipEntry e;
+
+                while ((e = zip.getNextEntry()) != null) {
+                    String name = e.getName();
+
+                    if (name.startsWith(path)) {
+                        System.out.println("to add: " + name);
+
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createExamplesFromFile(String path, String MOsFolder) {
         logger.info("Generating examples in folder " + MOsFolder);
+        Path source = getRootPathSourcePath().resolve(path);
 
         try (Stream<Path> list = Files.walk(source)) {
-            list.forEach(path -> {
+            list.forEach(p -> {
                 try {
-                    Path target = Paths.get(MOsFolder + File.separator + path.getFileName()).toAbsolutePath().normalize();
+                    Path target = Paths.get(MOsFolder + File.separator + p.getFileName()).toAbsolutePath().normalize();
 
-                    if (Files.isRegularFile(path))
-                        Files.copy(path, target);
+                    if (Files.isRegularFile(p))
+                        Files.copy(p, target);
                     logger.info("Generated file: " + target.toString());
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
@@ -119,16 +134,34 @@ public class ContestFileManager {
         }
     }
 
-    private static boolean createCppApi(Path source, String targetFolder) {
+    private static boolean createCppApi(String source, String targetFolder) {
+        if (JarFileManager.isLoadedFromJar())
+            return JarFileManager.createFolderFromJar(source, targetFolder);
+        else
+            return createCppApiFromFile(source, targetFolder);
+    }
+
+
+    private static Path getRootPathSourcePath() {
+        String path = ContestFileManager.class.getResource("").toString().replace("file:", "");
+        String packageString = ContestFileManager.class.getPackageName() + ".";
+        String packagePath = packageString.replace(".", File.separator);
+
+        return Paths.get(path.replace(packagePath, ""));
+    }
+
+    private static boolean createCppApiFromFile(String path, String targetFolder) {
         final boolean[] isOK = {true};
 
-        try (Stream<Path> list = Files.walk(source)) {
-            list.forEach(path -> {
-                try {
-                    Path target = Paths.get(targetFolder + File.separator + path.getFileName()).toAbsolutePath().normalize();
+        Path source = getRootPathSourcePath().resolve(path);
 
-                    if (Files.isRegularFile(path)) {
-                        Files.copy(path, target);
+        try (Stream<Path> list = Files.walk(source)) {
+            list.forEach(p -> {
+                try {
+                    Path target = Paths.get(targetFolder + File.separator + p.getFileName()).toAbsolutePath().normalize();
+
+                    if (Files.isRegularFile(p)) {
+                        Files.copy(p, target);
                         logger.info("Copying file: " + target.toAbsolutePath());
                     }
                 } catch (IOException e) {
@@ -142,14 +175,6 @@ public class ContestFileManager {
             logger.error(ex.getMessage(), ex);
             return false;
         }
-    }
-
-    public void delete(String file) throws IOException {
-        Path path = Paths.get(file);
-
-        //remove the file and its folder.
-        Files.deleteIfExists(path);
-        Files.deleteIfExists(path.getParent());
     }
 
     public static String getNextAvailableName(String p) {
@@ -178,5 +203,23 @@ public class ContestFileManager {
 
     public static String getNextAvailableNameWithoutPrefix(String path) {
         return getNextAvailableName(path).replace(ContestConfig.CONTEST_NAME_PREFIX, "");
+    }
+
+
+    public List<String> listTournaments(String file) throws IOException {
+        try (Stream<Path> list = Files.list(Paths.get(file))) {
+            return list.filter(new TournamentPredicate())
+                    .map(new FileNameFunction())
+                    .filter(new NotNullPredicate())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public void delete(String file) throws IOException {
+        Path path = Paths.get(file);
+
+        //remove the file and its folder.
+        Files.deleteIfExists(path);
+        Files.deleteIfExists(path.getParent());
     }
 }

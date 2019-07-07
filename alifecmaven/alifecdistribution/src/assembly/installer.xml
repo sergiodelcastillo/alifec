@@ -44,11 +44,7 @@
                 <exclude>**/*</exclude>
             </excludes>
         </fileSet>
-        <fileSet>
-            <outputDirectory>alifec-${project.version}/log</outputDirectory>
-            <excludes>
-                <exclude>**/*</exclude>
-            </excludes>
-        </fileSet>
+
+
     </fileSets>
 </assembly>
