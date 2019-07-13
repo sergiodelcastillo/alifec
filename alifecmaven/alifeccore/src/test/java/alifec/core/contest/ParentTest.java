@@ -24,7 +24,10 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
@@ -40,7 +43,7 @@ public class ParentTest {
 
     public static String TEST_ROOT_PATH = ROOT_PATH + File.separator + "alifectests";
 
-    private ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
+    private ResourceBundle bundle = null; //ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
 
     @Before
     public void init() throws IOException {
@@ -69,7 +72,8 @@ public class ParentTest {
                     .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     /*.peek(System.out::println)*/
-                    .forEach(File::delete);
+                    .filter(file -> !file.delete())
+                    .forEach(file -> System.out.println(file.getAbsolutePath()));
 
 
             //Files.walk - return all files/directories below rootPath including

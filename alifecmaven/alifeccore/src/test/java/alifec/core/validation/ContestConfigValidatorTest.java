@@ -5,7 +5,6 @@ import alifec.core.persistence.config.ContestConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -19,7 +18,7 @@ public class ContestConfigValidatorTest {
     public void testValidate() {
         //todo: COMPLETE!!
         ContestConfigValidator validator = new ContestConfigValidator();
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
+        ResourceBundle bundle = null; //ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
 
         ContestConfig contestConfig = new ContestConfig(bundle, ".", "");
         contestConfig.setPauseBetweenBattles(-1);
