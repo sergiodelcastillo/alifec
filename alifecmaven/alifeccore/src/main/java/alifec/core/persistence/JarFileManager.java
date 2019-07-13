@@ -1,9 +1,11 @@
 package alifec.core.persistence;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,121 +17,73 @@ import java.util.Map;
  */
 public class JarFileManager {
 
-    static boolean createFolderFromJar(String source, String targetFolder) {
-        //todo: imporove the error handling and logger!!
-        FileSystem filesystem = null;
-        try {
-            File target = new File(targetFolder);
-            System.out.println("target folder: " + target.getAbsolutePath());
+    private static Logger logger = LogManager.getLogger(JarFileManager.class);
 
-            URI uri = JarFileManager.class.getResource("/" + source).toURI();
-            System.out.println("uri: " + uri.toString());
-            //if (uri.toString().startsWith("jar:")) {
+    static boolean createFolderFromJar(String source, String targetFolder) {
+
+        try {
+
+            Path targetPath = Path.of(targetFolder);
+            makeDir(targetPath);
+
             Map<String, String> env = new HashMap<>();
             env.put("create", "true");
-            filesystem = FileSystems.newFileSystem(uri, env);
-            //}
-
-            Path imagesOrg = Paths.get(uri);
-            System.out.println("path to iterate: " + imagesOrg);
-
-
-            if (!target.exists()) {
-                target.mkdirs();
-            }
-
-            System.out.println("before iterate");
-            if (Files.isRegularFile(imagesOrg)) {
-                String targetPath = target.getAbsolutePath() + File.separator + imagesOrg.getFileName().toString();
-                Files.copy(imagesOrg, Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
-            } else {
-                try (DirectoryStream<Path> paths = Files.newDirectoryStream(imagesOrg)) {
-                    System.out.println("iterating");
-                    for (final Path child : paths) {
-                        System.out.println(child);
-                        try {
-                            String targetPath = target.getAbsolutePath() + File.separator + child.getFileName().toString();
-                            System.out.println(targetPath);
-                            Files.copy(child, Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
-                        } catch (Exception e) {
-                            System.out.println("faileing");
-                            e.printStackTrace();
+            URI uri = JarFileManager.class.getResource("/" + source).toURI();
+            try (FileSystem filesystem = FileSystems.newFileSystem(uri, env)) {
+                Path sourcePath = Paths.get(uri);
+                if (Files.isRegularFile(sourcePath)) {
+                    copyFile(targetPath, sourcePath);
+                } else {
+                    try (DirectoryStream<Path> paths = Files.newDirectoryStream(sourcePath)) {
+                        logger.debug("Iterating over {}", uri);
+                        for (final Path child : paths) {
+                            copyFile(targetPath, child);
                         }
                     }
                 }
+                return true;
             }
-            return true;
-
-        } catch (URISyntaxException e) {
-            System.out.println("exception 1");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("exception 2");
-            e.printStackTrace();
-        } finally {
-            try {
-                if (filesystem != null) {
-                    filesystem.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-
-            }
+        } catch (Exception e) {
+            logger.error("Error creating folder from jar", e);
         }
+
         return false;
     }
 
     static boolean createFileFromJar(String source, String targetFolder) {
-        //todo: improve the error handler and logger!!
-        FileSystem filesystem = null;
-        try {
-            File target = new File(targetFolder);
-            System.out.println("target folder: " + target.getAbsolutePath());
-            System.out.println("source: " + source);
 
-            URI uri = JarFileManager.class.getResource("/" + source).toURI();
-            System.out.println("uri: " + uri.toString());
-            //if (uri.toString().startsWith("jar:")) {
+        try {
+            Path targetPath = Path.of(targetFolder);
+            makeDir(targetPath);
+
             Map<String, String> env = new HashMap<>();
             env.put("create", "true");
-            filesystem = FileSystems.newFileSystem(uri, env);
-            //}
-
-            Path imagesOrg = Paths.get(uri);
-            System.out.println("path to iterate: " + imagesOrg);
-
-
-            if (!target.exists()) {
-                target.mkdirs();
+            URI uri = JarFileManager.class.getResource("/" + source).toURI();
+            try (FileSystem filesystem = FileSystems.newFileSystem(uri, env)) {
+                Path sourcePath = Paths.get(uri);
+                copyFile(targetPath, sourcePath);
+                return true;
             }
-
-            System.out.println("before iterate");
-
-            String targetPath = target.getAbsolutePath() + File.separator + imagesOrg.getFileName().toString();
-            Files.copy(imagesOrg, Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
-
-            return true;
-
-        } catch (URISyntaxException e) {
-            System.out.println("exception 1");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("exception 2");
-            e.printStackTrace();
-        } finally {
-            try {
-                if (filesystem != null) {
-                    filesystem.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-
-            }
+        } catch (Exception e) {
+            logger.error("Error creating folder from jar", e);
         }
+
         return false;
     }
 
+    private static void makeDir(Path targetPath) {
+        File targetFile = targetPath.toFile();
+        if (!targetFile.exists()) {
+            logger.info("Creating folder: {}", targetFile.getAbsolutePath());
+            targetFile.mkdirs();
+        }
+    }
 
+    private static void copyFile(Path targetPath, Path sourcePath) throws IOException {
+        Path targetFilePath = targetPath.resolve(sourcePath.getFileName().toString());
+        logger.debug("Copying {}", targetFilePath);
+        Files.copy(sourcePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
+    }
 
     static boolean isLoadedFromJar() {
         return ContestFileManager.class.getResource("JarFileManager.class").toString().startsWith("jar");
