@@ -185,7 +185,7 @@ public class ALifeContestMain extends Application {
         try {
             contestList = ContestFileManager.listContest();
         } catch (ConfigFileException | IOException e) {
-            logger.warn(e.getMessage(), e);
+            logger.warn(e.getMessage());
             contestList = new ArrayList<>();
         }
         controller.allowCreateFileOption(contestList);

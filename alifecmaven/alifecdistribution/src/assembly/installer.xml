@@ -17,34 +17,14 @@
                 <include>alifec:alifec-core:jar</include>
                 <include>alifec:alifec-simulation-view:jar</include>
                 <include>alifec:alifec-util:jar</include>
-
-                <!-- JavaFx dependency -->
-                <include>org.openjfx:javafx-controls:jar</include>
-                <include>org.openjfx:javafx-fxml:jar</include>
-                <include>org.openjfx:javafx-graphics:jar</include>
             </includes>
         </dependencySet>
     </dependencySets>
 
     <fileSets>
         <fileSet>
-            <directory>../app</directory>
-            <excludes>
-                <exclude>config</exclude>
-            </excludes>
-            <outputDirectory>alifec-${project.version}/app</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>bin</directory>
             <outputDirectory>alifec-${project.version}/bin</outputDirectory>
         </fileSet>
-        <fileSet>
-            <outputDirectory>alifec-${project.version}/data</outputDirectory>
-            <excludes>
-                <exclude>**/*</exclude>
-            </excludes>
-        </fileSet>
-
-
     </fileSets>
 </assembly>

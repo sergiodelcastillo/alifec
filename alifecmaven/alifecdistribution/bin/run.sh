@@ -1,8 +1,6 @@
 #!/bin/bash
 
 cd ..
-java --module-path lib/ -m alifec.simulation.view/alifec.simulation.main.ALifeContestMain
+MODULE_PATH=$(find lib -name '*.jar' -printf '%p:' | sed 's/:$//')
 
-# --add-modules javafx.base,javafx.graphics,alifec.simulation.view,alifec.core
-# --add-reads javafx.base=ALL-UNNAMED
-# --add-reads javafx.graphics=ALL-UNNAMED
+java -p $MODULE_PATH -m alifec.simulation.view/alifec.simulation.main.ALifeContestMain
