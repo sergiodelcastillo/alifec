@@ -12,10 +12,7 @@ import alifec.core.simulation.rules.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class Environment {
@@ -137,18 +134,18 @@ public class Environment {
         int nutrientId = b.getNutrientId();
         Nutrient temp = ContestConfig.nutrientOptions().get(nutrientId);
 
-        if (temp == null) {
+        if (Objects.isNull(temp)) {
             logger.error("There is not nutrient distribution with id = " + nutrientId + ".");
             return false;
         }
 
         agar.setNutrient(temp);
 
-        if ((c1 = getColonyById(b.getFirstColonyId())) == null) {
+        if (Objects.isNull(c1 = getColonyById(b.getFirstColonyId()))) {
             return false;
         }
 
-        if ((c2 = getColonyById(b.getSecondColonyId())) == null) {
+        if (Objects.isNull(c2 = getColonyById(b.getSecondColonyId()))) {
             return false;
         }
 
@@ -259,10 +256,10 @@ public class Environment {
     }
 
     public boolean moveMO(int ax, int ay, int bx, int by) {
-        if (microorganism[ax][ay] == null)
+        if (Objects.isNull(microorganism[ax][ay]))
             return false;
 
-        if (microorganism[bx][by] != null)
+        if (Objects.nonNull(microorganism[bx][by]))
             return false;
 
         microorganism[bx][by] = microorganism[ax][ay];
@@ -362,7 +359,7 @@ public class Environment {
     public boolean createMOInstance(int px, int py, float ene, int id) {
         if (!inDish(px, py) ||
                 ene <= 0 || ene > Defs.E_INITIAL ||
-                microorganism[px][py] != null)
+                Objects.nonNull(microorganism[px][py] ))
             return false;
 
         Cell mo = new Cell(id);

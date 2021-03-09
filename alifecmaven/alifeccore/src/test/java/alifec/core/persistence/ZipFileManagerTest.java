@@ -30,9 +30,7 @@ public class ZipFileManagerTest extends ParentTest {
         ZipFileManager zipFileManager = new ZipFileManager(config);
         String zipFile = zipFileManager.zipContest();
 
-        Assert.assertEquals(1, Objects.requireNonNull(new File(config.getBackupFolder()).list((dir, name) -> {
-            return name.equals(zipFile);
-        })).length);
+        Assert.assertEquals(1, Objects.requireNonNull(new File(config.getBackupFolder()).list((dir, name) -> name.equals(zipFile))).length);
 
     }
 

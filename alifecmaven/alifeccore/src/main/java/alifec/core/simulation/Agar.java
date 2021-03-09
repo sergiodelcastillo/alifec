@@ -2,6 +2,8 @@ package alifec.core.simulation;
 
 import alifec.core.simulation.nutrient.Nutrient;
 
+import java.util.Objects;
+
 /**
  * The Agar class contains the nutrients that microorganisms can eat.
  */
@@ -18,7 +20,7 @@ public class Agar {
     }
 
     public void moveRandom() {
-        if (current != null) current.moveRandom();
+        if (Objects.nonNull(current)) current.moveRandom();
     }
 
     /**
@@ -42,7 +44,7 @@ public class Agar {
      * @return the among of nutrient in the position x,y.
      */
     public float getNutrient(int x, int y) {
-        if (current == null) return 0f;
+        if (Objects.isNull(current)) return 0f;
 
         return current.get(x, y);
     }
