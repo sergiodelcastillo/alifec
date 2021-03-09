@@ -19,10 +19,7 @@ import javafx.stage.WindowEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -170,14 +167,21 @@ public class PreferencesController {
 
     public void changePauseBetweenBattles(ActionEvent event) {
         String selected = pauseBetweenBattlesCombobox.getSelectionModel().getSelectedItem();
+
+        if (Objects.isNull(selected)) return;
+
         configTmp.setPauseBetweenBattles(Integer.valueOf(selected));
 
         pauseBetweenBattlesUpdated = true;
     }
 
     public void changeContestMode(ActionEvent event) {
+        KeyBasedModel selectedItem = contestModeCombobox.getSelectionModel().getSelectedItem();
+
+        if(Objects.isNull(selectedItem)) return;
+
+        configTmp.setMode(selectedItem.getKey());
         contestModeUpdated = true;
-        configTmp.setMode(contestModeCombobox.getSelectionModel().getSelectedItem().getKey());
     }
 
     private void showDialogInvalidConfiguration(ValidationException e) {
