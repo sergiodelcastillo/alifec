@@ -34,18 +34,10 @@
             <!-- Logging -->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-iostreams</artifactId>
-                <version>${log4j.version}</version>
+                <artifactId>log4j-bom</artifactId>
+                <version>LATEST</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
 
             <dependency>
