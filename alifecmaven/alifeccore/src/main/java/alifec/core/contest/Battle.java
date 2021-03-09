@@ -104,7 +104,7 @@ public class Battle implements Comparable<Battle> {
     }
 
     public Float getWinnerEnergy() {
-        return (firstEnergy > 0) ? new Float(firstEnergy) : new Float(secondEnergy);
+        return (firstEnergy > 0) ? firstEnergy : secondEnergy;
     }
 
     public int getWinnerId() {
