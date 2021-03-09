@@ -8,24 +8,11 @@ import alifec.core.persistence.config.ContestConfig;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ConfigFileException extends Exception {
-
     private static final long serialVersionUID = 0L;
 
-    public ContestConfig getConfig() {
-        return config;
+    public ConfigFileException(String text, Throwable ex) {
+        super(text, ex);
     }
 
-    private final ContestConfig config;
-
-
-    public ConfigFileException(String s, ContestConfig config) {
-        this(s, null, config);
-    }
-
-    public ConfigFileException(String s, Throwable cause, ContestConfig config) {
-        super(s, cause);
-        this.config = config;
-
-    }
 }
 

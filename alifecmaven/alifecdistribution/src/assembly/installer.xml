@@ -10,12 +10,12 @@
         <dependencySet>
             <unpack>false</unpack>
             <scope>compile</scope>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>alifec-${project.version}/lib</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
             <useTransitiveFiltering>true</useTransitiveFiltering>
             <includes>
                 <include>alifec:alifec-core:jar</include>
-                <include>alifec:alifec-contest-view:jar</include>
+                <include>alifec:alifec-simulation-view:jar</include>
                 <include>alifec:alifec-util:jar</include>
             </includes>
         </dependencySet>
@@ -23,13 +23,8 @@
 
     <fileSets>
         <fileSet>
-            <directory>../app</directory>
-            <excludes>
-                <exclude>config</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
             <directory>bin</directory>
+            <outputDirectory>alifec-${project.version}/bin</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>

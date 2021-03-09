@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Sergio Del Castillo on 28/10/17.
@@ -35,16 +36,17 @@ public class OpponentFileManager {
     }
 
     public List<OpponentInfo> readAll() throws IOException {
-        return Files.lines(path)
-                .map(new OpponentFunction())
-                .filter(new NotNullPredicate())
-                .collect(Collectors.toList());
+        try (Stream<String> list = Files.lines(path)) {
+            return list.map(new OpponentFunction())
+                    .filter(new NotNullPredicate())
+                    .collect(Collectors.toList());
+        }
     }
 
     public void saveAll(List<OpponentInfo> opponents) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Object line : opponents) {
-                writer.write(line.toString() + '\n');
+                writer.write(line.toString() + System.lineSeparator());
             }
         }
     }

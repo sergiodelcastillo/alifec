@@ -1,5 +1,6 @@
 package alifec.core.contest.oponentInfo;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Objects;
  *
  * @email: sergio.jose.delcastillo@gmail.com
  */
-public class ColonyStatistics implements Comparable<ColonyStatistics> {
+public class ColonyStatistics implements Comparable<ColonyStatistics>, Comparator<ColonyStatistics> {
     private String name;
     private String author;
     private String affiliation;
@@ -63,6 +64,12 @@ public class ColonyStatistics implements Comparable<ColonyStatistics> {
     public void addPoints(int point) {
         this.points += point;
     }
+
+    @Override
+    public int compare(ColonyStatistics o1, ColonyStatistics o2) {
+        return o1.compareTo(o2);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

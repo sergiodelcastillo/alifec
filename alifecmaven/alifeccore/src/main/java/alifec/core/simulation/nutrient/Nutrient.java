@@ -40,4 +40,11 @@ public interface Nutrient {
     void init();
 
     String getName();
+
+    float [][] getNutrients();
+
+    int getDx();
+
+    int getDy();
+
 }

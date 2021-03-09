@@ -3,37 +3,15 @@ package alifec.core.simulation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 public class CppColony extends Colony {
 
     static Logger logger = LogManager.getLogger(CppColony.class);
-
-    public static boolean loadLibrary(String path) {
-        try {
-            String os = System.getProperty("os.name").toLowerCase();
-
-            //add the current path to java library path
-            try {
-                addLibraryPath(path);
-            } catch (Exception ex) {
-                logger.warn(ex.getMessage(), ex);
-            }
-
-            //load the library according to the os
-            if (os.contains("linux")) {
-                System.loadLibrary("cppcolonies");
-            } else
-                System.loadLibrary("libcppcolonies");
-
-            return true;
-        } catch (UnsatisfiedLinkError ex) {
-            logger.error(ex.getMessage(), ex);
-            return false;
-        }
-    }
-
-    private String author = "";
-    private String name = "";
-    private String affiliation = "";
+    private String author;
+    private String name;
+    private String affiliation;
 
     CppColony(int index, String colony_name) throws ClassNotFoundException {
         super(index, colony_name);
@@ -41,13 +19,29 @@ public class CppColony extends Colony {
         if (!createColony(index, colony_name))
             throw new ClassNotFoundException("Can't find:" + colony_name);
 
-        createMO(0.0f,-1, -1);
+        createMO(0.0f, -1, -1);
 
         name = getName(index);
         author = getAuthor(index);
         affiliation = getAffiliation(index);
 
         kill(index, 0);
+    }
+
+    public static boolean loadLibrary(String path) {
+
+        try {
+            String absolutePath = Paths.get(path).toAbsolutePath().toString();
+            String os = System.getProperty("os.name").toLowerCase();
+
+            String extension = os.contains("linux") ? "so" : "dll";
+            //Warning: the library file is not released and closed until the JVM is closed.
+            System.load(absolutePath + File.separator + "libcppcolonies." + extension);
+            return true;
+        } catch (UnsatisfiedLinkError ex) {
+            logger.error(ex.getMessage(), ex);
+            return false;
+        }
     }
 
     private native boolean createColony(int id, String name);

@@ -31,7 +31,7 @@ public class ContestNameValidator implements Validator<String> {
         Matcher matcher = pattern.matcher(name);
 
         if (!matcher.matches()) {
-            throw new ValidationException("The contest name does not have the pattern: contest-<NN>.");
+            throw new ValidationException("The contest name does not have the pattern: Contest-<NN>.");
         }
     }
 }

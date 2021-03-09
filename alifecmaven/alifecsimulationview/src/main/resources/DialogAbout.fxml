@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.Scene?>
+<?import javafx.stage.Stage?>
+
+<Stage xmlns="http://javafx.com/javafx"
+       xmlns:fx="http://javafx.com/fxml"
+       fx:controller="alifec.simulation.controller.AboutController"
+       title="%about.title"
+       resizable="false" >
+    <scene>
+        <Scene onKeyPressed="#keyHandler">
+
+            <GridPane prefHeight="280" prefWidth="680.0" hgap="10" vgap="10">
+
+                <padding>
+                    <Insets top="25" right="25" bottom="10" left="25"/>
+                </padding>
+
+                <Text text="%about.welcome"
+                      lineSpacing="10"
+                      style="-fx-font-size: 20px"
+                      GridPane.columnIndex="0"
+                      GridPane.rowIndex="0"
+                      GridPane.columnSpan="2"/>
+
+                <ImageView pickOnBounds="true"
+                           preserveRatio="true"
+                           GridPane.columnIndex="0"
+                           GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets right="25.0"/>
+                    </GridPane.margin>
+                    <Image url="@images/logo.png" requestedHeight="200" preserveRatio="true"/>
+                </ImageView>
+
+                <TextFlow GridPane.columnIndex="1"
+                          GridPane.rowIndex="1">
+                    <Text text="&#10;"/>
+                    <Text text="%about.current.version.text" style="-fx-font-weight: bold"/>
+                    <Text text="%about.current.version.info"/>
+
+                    <Text text="%about.homepage.text" style="-fx-font-weight: bold"/>
+                    <Text text="%about.homepage.info"/>
+
+                    <Text text="%about.development.page.text" style="-fx-font-weight: bold"/>
+                    <Text text="%about.development.page.info"/>
+                    <Text text="%about.collaborators.text" style="-fx-font-weight: bold"/>
+                    <Text text="%about.collaborators.info"/>
+                </TextFlow>
+
+            </GridPane>
+        </Scene>
+    </scene>
+</Stage>

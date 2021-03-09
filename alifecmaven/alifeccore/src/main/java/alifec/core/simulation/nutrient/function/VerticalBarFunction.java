@@ -8,7 +8,8 @@ public class VerticalBarFunction implements Function {
 
     @Override
     public float apply(int x, int y) {
-        return (x > Defs.RADIUS - 5) && (x > Defs.RADIUS + 5) ? Defs.MAX_NUTRI / 4.2f : 0.0f;
+        //return (x > Defs.RADIUS - 5) && (x > Defs.RADIUS + 5) ? Defs.MAX_NUTRI / 4.2f : 0.0f;
+        return (x > Defs.RADIUS + 5) ? Defs.MAX_NUTRI / 4.2f : 0.0f;
     }
 
     @Override

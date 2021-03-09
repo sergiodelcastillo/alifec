@@ -1,7 +1,7 @@
 
 package alifec.core.simulation;
 /**
- * @author Sergio Del Castillo
+ * @author: Sergio Del Castillo
  * @email: sergio.jose.delcastillo@gmail.com
  *
  * This class define the important constant to alifec.

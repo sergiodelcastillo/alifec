@@ -1,18 +1,12 @@
 package alifec.core.simulation;
 
-import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Sergio Del Castillo
+ * @author: Sergio Del Castillo
  * @email sergio.jose.delcastillo@gmail.com
  * <p>
  * It is a generic class which represents the colony of microorganisms.
@@ -31,7 +25,6 @@ public abstract class Colony {
         this.id = id;
         this.path = path;
     }
-
 
     @Override
     public final void finalize() throws Throwable {
@@ -112,7 +105,10 @@ public abstract class Colony {
         moList.clear();
         clearAll();
     }
-
+/*
+* System.load(String filename); to specify the complete path to the native library you want to load, perhaps together
+* with System.mapLibraryName(String) to add the platform specific file ending (e.g. .dll or .so).
+* */
     protected abstract void clearAll();
 
     /**
@@ -140,30 +136,6 @@ public abstract class Colony {
         final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
         newPaths[newPaths.length - 1] = pathToAdd;
         usrPathsField.set(null, newPaths);
-    }
-
-    /**
-     * Sets the java library path to the specified path
-     *
-     * @param s the new library path
-     * @throws Exception
-     */
-   /* protected static void setLibraryPath(String path) throws Exception {
-        System.setProperty("java.library.path", path);
-
-        //set sys_paths to null
-        final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-        sysPathsField.setAccessible(true);
-        sysPathsField.set(null, null);
-    }*/
-    public static void addClassPath(String s) throws Exception {
-        File f = new File(s);
-        URI u = f.toURI();
-        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class<URLClassLoader> urlClass = URLClassLoader.class;
-        Method method = urlClass.getDeclaredMethod("addURL", URL.class);
-        method.setAccessible(true);
-        method.invoke(urlClassLoader, u.toURL());
     }
 
     public int getId() {

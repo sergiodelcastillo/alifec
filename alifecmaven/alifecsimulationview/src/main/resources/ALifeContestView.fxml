@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane fx:id="mainLayout"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="alifec.simulation.controller.ALifeContestController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+
+            <Menu mnemonicParsing="false" text="File">
+                <MenuItem mnemonicParsing="false"
+                          onAction="#newContest"
+                          text="%alifec.menu.file.new.contest"
+                          accelerator="Shortcut+N"/>
+
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false"
+                          onAction="#quit"
+                          text="%alifec.menu.file.quit"
+                          accelerator="ALT+F4"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Tools">
+                <MenuItem mnemonicParsing="false"
+                          onAction="#showDialogStatistics"
+                          text="%alifec.menu.tools.reports"
+                          accelerator="Shortcut+R"/>
+                <MenuItem mnemonicParsing="false"
+                          onAction="#showDialogPreferences"
+                          text="%alifec.menu.tools.preferences"
+                          accelerator="Shortcut+P"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+                <MenuItem mnemonicParsing="false"
+                          onAction="#showDialogHelp"
+                          text="%alifec.menu.help.help"
+                          accelerator="F1"/>
+                <MenuItem mnemonicParsing="false"
+                          onAction="#showDialogAbout"
+                          text="%alifec.menu.help.about"
+                          accelerator="Shortcut+A"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <center>
+
+        <TitledPane fx:id="tournamentPanel" minHeight="400.0" minWidth="400.0" collapsible="false">
+            <padding>
+                <Insets top="6" right="3" bottom="6" left="6"/>
+            </padding>
+            <VBox>
+                <ListView fx:id="coloniesStatistics"/>
+
+                <HBox spacing="10">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+
+                    <Button onAction="#previousTournament">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/previousTournament.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Go to previous tournament."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#nextTournament">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/nextTournament.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Go to next tournament."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#deleteTournament">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/deleteTournament.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Remove this tournament."/>
+                        </tooltip>
+                    </Button>
+
+                    <Button onAction="#addTournament">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/addTournament.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Create new tournament."/>
+                        </tooltip>
+                    </Button>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
+    </center>
+
+    <right>
+        <TitledPane minHeight="400.0" minWidth="500.0" collapsible="false" text="%alifec.battles.title">
+            <padding>
+                <Insets top="6" right="6" bottom="6" left="3"/>
+            </padding>
+
+            <VBox spacing="10">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+
+                    <Label text="%alifec.battles.first.opponent"/>
+                    <ComboBox fx:id="opponentsList1">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                    <Label text="%alifec.battles.second.opponent"/>
+                    <ComboBox fx:id="opponentsList2">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+
+                    <Label text="%alifec.battles.nutrients"/>
+                    <ComboBox fx:id="nutrientsList">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+
+                </HBox>
+
+                <ListView fx:id="battleList">
+                </ListView>
+
+                <HBox spacing="10">
+                    <Button fx:id="deletedSelectedBattlesButton" onAction="#deleteSelectedBattles" disable="true">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/deleteSelectedBattle.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%alifec.battles.delete.selected"/>
+                        </tooltip>
+                    </Button>
+
+                    <Button fx:id="deleteAllBattlesButton" onAction="#deleteAllBattles" disable="true">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/deleteAllBattles.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%alifec.battles.delete.all"/>
+                        </tooltip>
+                    </Button>
+
+                    <Button fx:id="runSelectedBattleButton" onAction="#runSelectedBattle" disable="true">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/runSelectedBattle.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%alifec.battles.run.selected"/>
+                        </tooltip>
+                    </Button>
+
+                    <Button fx:id="runAllBattlesButton" onAction="#runAllBattles" disable="true">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/runAllBattles.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%alifec.battles.run.all"/>
+                        </tooltip>
+                    </Button>
+
+                    <Button fx:id="addBattleButton" onAction="#addBattle">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/addBattle.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%alifec.battles.add"/>
+                        </tooltip>
+                    </Button>
+
+                    <Button fx:id="addAllBattlesButton" onAction="#addAllBattles">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@images/addAllBattles.png"/>
+                            </ImageView>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%alifec.battles.add.all"/>
+                        </tooltip>
+                    </Button>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
+    </right>
+
+    <bottom>
+        <TitledPane text="%alifec.information.title" collapsible="false">
+            <padding>
+                <Insets right="6" left="6" bottom="6"/>
+            </padding>
+            <Label fx:id="messagePanel"
+                   text="Message Panel"
+                   maxWidth="Infinity"
+                   style="-fx-padding: 3 3 3 3; -fx-font-weight: bold"/>
+        </TitledPane>
+    </bottom>
+</BorderPane>

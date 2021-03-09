@@ -1,6 +1,6 @@
 package alifec.core.validation;
 
-import alifec.ParentTest;
+import alifec.core.contest.ParentTest;
 import alifec.core.exception.ValidationException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -80,7 +80,7 @@ public class NewContestFolderValidatorTest extends ParentTest {
         try {
 
             Path file = Paths.get(TEST_ROOT_PATH + File.separator + "contest-01");
-            Files.createDirectory(file);
+            Files.createDirectories(file.toAbsolutePath().normalize());
             validator.validate(TEST_ROOT_PATH + File.separator + "contest-01");
             Assert.fail("It should be non valid.");
         } catch (ValidationException ex) {

@@ -1,6 +1,5 @@
 package alifec.core.contest;
 
-import alifec.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.*;
@@ -11,7 +10,9 @@ import alifec.core.simulation.nutrient.function.FamineFunction;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,18 +24,25 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class TournamentTest extends ParentTest {
-    @Test
-    public void testDelete() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, CreateContestException, TournamentException, BattleException {
+
+    /**
+     * This test method will be invoked by reflection in other JVM run to avoid the issue of the method System.load
+     * which does not release the library until the JVM is closed.
+     */
+    public void testDeleteImpl() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, CreateContestException, TournamentException, BattleException {
         ContestConfig config = createContest("Contest-01");
         //ensure the competition mode
         config.setMode(ContestConfig.COMPETITION_MODE);
         config.save();
+
         CompileHelper compiler = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compiler.compileMOs();
         Assert.assertFalse(result.haveErrors());
 
+
         Contest contest = new Contest(config);
+
         Environment environment = contest.getEnvironment();
 
         List<String> colonies = environment.getOpponentNames();
@@ -46,8 +54,7 @@ public class TournamentTest extends ParentTest {
         BallsNutrient ballsNutrient = new BallsNutrient();
 
         Battle battle1 = new Battle(
-                environment.getColonyIdByName(colonies.get(0)),
-                environment.getColonyIdByName(colonies.get(1)),
+                0, 1,
                 famineFunction.getId(),
                 colonies.get(0),
                 colonies.get(1),
@@ -55,8 +62,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(0, 100f);
 
         Battle battle2 = new Battle(
-                environment.getColonyIdByName(colonies.get(0)),
-                environment.getColonyIdByName(colonies.get(1)),
+                0, 1,
                 ballsNutrient.getId(),
                 colonies.get(0),
                 colonies.get(1),
@@ -64,8 +70,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(0, 10f);
 
         Battle battle3 = new Battle(
-                environment.getColonyIdByName(colonies.get(0)),
-                environment.getColonyIdByName(colonies.get(2)),
+                0, 2,
                 ballsNutrient.getId(),
                 colonies.get(0),
                 colonies.get(2),
@@ -73,8 +78,7 @@ public class TournamentTest extends ParentTest {
         battle1.setWinner(2, 150f);
 
         Battle battle4 = new Battle(
-                environment.getColonyIdByName(colonies.get(0)),
-                environment.getColonyIdByName(colonies.get(2)),
+                0, 2,
                 famineFunction.getId(),
                 colonies.get(0),
                 colonies.get(2),
@@ -110,4 +114,10 @@ public class TournamentTest extends ParentTest {
 
         Assert.assertEquals(names, target);
     }
+
+    @Test
+    public void testDelete() throws InterruptedException, IOException {
+        executeInDifferentVMProcess(this.getClass().getName(), "testDeleteImpl");
+    }
+
 }

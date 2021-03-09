@@ -40,7 +40,7 @@ public class AttackRule implements ColonyRule {
 
         Cell enemy = env.getCell(x, y);
 
-        if (enemy == null || enemy.id == mo.id) {
+        if (enemy == null || enemy.colonyId == mo.colonyId) {
             //delegate to move role.
             return Status.NONE;
         }

@@ -1,23 +1,27 @@
-
 package alifec.core.contest;
 
-import alifec.core.contest.oponentInfo.*;
+import alifec.core.contest.oponentInfo.Opponent;
+import alifec.core.contest.oponentInfo.OpponentInfo;
+import alifec.core.contest.oponentInfo.Ranking;
+import alifec.core.contest.oponentInfo.TournamentStatistics;
+import alifec.core.event.Event;
+import alifec.core.event.EventBus;
+import alifec.core.event.Listener;
 import alifec.core.exception.*;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.ZipFileManager;
 import alifec.core.persistence.config.ContestConfig;
-import alifec.core.simulation.Agar;
 import alifec.core.simulation.Environment;
-import alifec.core.simulation.NutrientDistribution;
-import alifec.core.simulation.nutrient.Nutrient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
-public class Contest {
+public class Contest implements Listener {
 
     private Logger logger = LogManager.getLogger(getClass());
 
@@ -31,7 +35,7 @@ public class Contest {
     /**
      * current tournament.
      */
-    private int selected = -1;
+    private int selected;
 
 
     /**
@@ -68,6 +72,9 @@ public class Contest {
             newTournament();
 
             opponentsInfo.addMissing(environment.getCompetitors());
+
+            //register to listen battle events
+            EventBus.register(this);
 
             //TODO: evaluate the messages
         } catch (TournamentException e) {
@@ -151,32 +158,6 @@ public class Contest {
         return config.getTournamentFilename(tournamentNumber);
     }
 
-    public List<NutrientDistribution> getCurrentNutrients() {
-        List<NutrientDistribution> list = new ArrayList<>();
-
-        List<Integer> current = config.getNutrients();
-        Hashtable<Integer, Nutrient> allNutrients = Agar.getAllNutrient();
-
-        for (int nutrientId : current) {
-            list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
-
-        }
-
-        return list;
-    }
-
-    public List<NutrientDistribution> getAllNutrients() {
-        List<NutrientDistribution> list = new ArrayList<>();
-
-        Hashtable<Integer, Nutrient> allNutrients = Agar.getAllNutrient();
-
-        for (Integer nutrientId : allNutrients.keySet()) {
-            list.add(new NutrientDistribution(nutrientId, allNutrients.get(nutrientId).getName()));
-        }
-
-        return list;
-    }
-
     /**
      * Reload the configuration. If the config is not valid then it is discarded.
      *
@@ -185,9 +166,10 @@ public class Contest {
      */
     public boolean reloadConfig() throws IOException {
         try {
-            config = new ContestConfig(config.getPath());
+            config = new ContestConfig(config.getBundle());
+            config.validate();
             return true;
-        } catch (ConfigFileException ex) {
+        } catch (ConfigFileException | ValidationException ex) {
             logger.error(ex.getMessage(), ex);
             return false;
         }
@@ -197,14 +179,14 @@ public class Contest {
     /**
      * update the config file into the proyect.
      *
-     * @param path  url of contest
      * @param name  name of contest
      * @param mode  mode of contest(programmer or competition)
      * @param pause default pause between battles
      * @return true if is successfully
+     * @deprecated Use the method updateConfigFile(ContestConfig)
      */
-    public boolean updateConfigFile(String path, String name, int mode, int pause, List<Integer> nutrients) {
-        config.setPath(path);
+    @Deprecated
+    public boolean updateConfigFile(String name, int mode, int pause, List<Integer> nutrients) {
         config.setContestName(name);
         config.setMode(mode);
         config.setPauseBetweenBattles(pause);
@@ -212,20 +194,23 @@ public class Contest {
 
         try {
             config.save();
-        } catch (ConfigFileException e) {
+        } catch (ConfigFileWriteException e) {
             logger.error("Error updating config file: " + e.getConfig(), e);
             return false;
         }
         return true;
     }
 
-    public void setMode(int mode) throws IOException {
-        this.config.setMode(mode);
-        if (this.config.isProgrammerMode() &&
-                mode == ContestConfig.COMPETITION_MODE) {
-            lastTournament().save();
-        }
+    public void updateConfigFile(ContestConfig c) throws ConfigFileWriteException {
+        c.save();
 
+        config.setContestName(c.getContestName());
+        config.setMode(c.getMode());
+        config.setPauseBetweenBattles(c.getPauseBetweenBattles());
+        config.setNutrients(c.getNutrients());
+
+        logger.info("Contest configuration updated.");
+        logger.info(config.toString());
     }
 
     /**
@@ -242,14 +227,21 @@ public class Contest {
         return tournaments.get(tournaments.size() - 1);
     }
 
-
     public Environment getEnvironment() {
         return environment;
     }
 
-
     public int getMode() {
         return config.getMode();
+    }
+
+    public void setMode(int mode) throws IOException {
+        this.config.setMode(mode);
+        if (this.config.isProgrammerMode() &&
+                mode == ContestConfig.COMPETITION_MODE) {
+            lastTournament().save();
+        }
+
     }
 
     public String getName() {
@@ -265,7 +257,7 @@ public class Contest {
         Ranking ranking = new Ranking();
 
         for (Tournament t : tournaments) {
-            TournamentStatistics ts = t.getTournamentStatistics();
+            TournamentStatistics ts = t.getStatistics();
 
             for (OpponentInfo op : opponentsInfo.getOpponents()) {
                 ts.addOpponentInfo(op.getName(), op.getAuthor(), op.getAffiliation());
@@ -368,6 +360,11 @@ public class Contest {
 
     public Battle getUnsuccessfulBattle() throws TournamentException {
         return lastTournament().getUnsuccessfulBattle();
+    }
+
+    @Override
+    public void handle(Event event) {
+        lastTournament().handle(event);
     }
 }
 

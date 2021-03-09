@@ -23,17 +23,15 @@ public class NewContestFolderValidator implements Validator<String> {
     @Override
     public void validate(String folder) throws ValidationException {
 
-        if (folder == null || folder.isEmpty())
-            throw new ValidationException("The new contest folder is not a valid contest name: name is empty.");
+        if (folder == null || folder.isEmpty() || folder.trim().isEmpty())
+            throw new ValidationException("The new contest name must not be an empty string.");
 
         Path file = Paths.get(folder);
+        String name = file.normalize().getFileName().toString();
+
+        contestNameValidator.validate(name);
 
         if (Files.exists(file))
             throw new ValidationException("The contest folder already exists.");
-
-        String[] names = file.toFile().getAbsolutePath().split("/");
-        String name = names[names.length - 1];
-
-        contestNameValidator.validate(name);
     }
 }

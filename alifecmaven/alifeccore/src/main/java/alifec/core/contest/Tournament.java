@@ -1,9 +1,13 @@
-
 package alifec.core.contest;
 
 import alifec.core.contest.oponentInfo.TournamentStatistics;
+import alifec.core.event.Event;
+import alifec.core.event.Listener;
+import alifec.core.event.impl.BattleEvent;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.TournamentException;
+import alifec.core.persistence.SimulationFileManager;
+import alifec.core.persistence.SimulationFileManagerList;
 import alifec.core.persistence.TournamentFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
@@ -16,17 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Tournament implements Comparable<Tournament> {
-
-    private Logger logger = LogManager.getLogger(getClass());
-
-    private List<Battle> battles;
-
-    private List<String> colonies;
+public class Tournament implements Comparable<Tournament>, Listener {
 
     private final String name;
-
+    private Logger logger = LogManager.getLogger(getClass());
+    private List<Battle> battles;
+    private List<String> colonies;
     private TournamentFileManager persistence;
+    private SimulationFileManager sPersistence;
 
     private boolean isEnabled = false;
 
@@ -46,6 +47,9 @@ public class Tournament implements Comparable<Tournament> {
                 //load battles
                 loadAllBattles();
             }
+
+            this.sPersistence = new SimulationFileManagerList(config.getSimulationRunFile(name), config.isCompetitionMode());
+
         } catch (IOException e) {
             throw new TournamentException("Can not create the file: " + name, e);
         }
@@ -60,7 +64,7 @@ public class Tournament implements Comparable<Tournament> {
      * @return the maximum accumulated energy
      */
     public float getMaxEnergy() {
-        return getTournamentStatistics().getMaxEnergy();
+        return getStatistics().getMaxEnergy();
     }
 
     public List<Battle> getBattles() {
@@ -68,6 +72,8 @@ public class Tournament implements Comparable<Tournament> {
     }
 
     public boolean addBattle(Battle battle) {
+        //todo: throw the exception!! it should be handled outside
+
         try {
             if (config.isCompetitionMode()) {
                 persistence.append(battle);
@@ -114,34 +120,21 @@ public class Tournament implements Comparable<Tournament> {
         return name.compareTo(o.name);
     }
 
-    public TournamentStatistics getTournamentStatistics() {
-        TournamentStatistics tStats = new TournamentStatistics();
+    public TournamentStatistics getStatistics() {
+        //todo: testssss!!!
+        TournamentStatistics statistics = new TournamentStatistics();
 
         for (Battle b : battles) {
-            tStats.addWinner(b.getWinnerName(), null, null, b.getWinnerEnergy());
+            statistics.addWinner(b.getWinnerName(), null, null, b.getWinnerEnergy());
         }
 
         for (String c : colonies) {
-            tStats.addWinner(c, null, null, 0.0f);
+            statistics.addWinner(c, null, null, 0.0f);
         }
 
-        tStats.calculate();
+        statistics.calculate();
 
-        return tStats;
-    }
-
-    public TournamentStatistics getAccumulatedEnergy() {
-        TournamentStatistics tournamentStatistics = new TournamentStatistics();
-
-        for (Battle b : battles) {
-            tournamentStatistics.addWinner(b.getWinnerName(), null, null, b.getWinnerEnergy());
-        }
-
-        for (String c : colonies) {
-            tournamentStatistics.addWinner(c, null, null, 0.0f);
-        }
-
-        return tournamentStatistics;
+        return statistics;
     }
 
 
@@ -165,14 +158,13 @@ public class Tournament implements Comparable<Tournament> {
         persistence.saveAll(battles);
     }
 
-    public void setEnabled(boolean b) {
-        isEnabled = b;
-    }
-
     public boolean isEnabled() {
         return isEnabled;
     }
 
+    public void setEnabled(boolean b) {
+        isEnabled = b;
+    }
 
     public String getName() {
         return name;
@@ -199,14 +191,14 @@ public class Tournament implements Comparable<Tournament> {
         return persistence.existsFile(config.getBattlesTargetRunFile(name));
     }
 
-    public List<Battle> generateAllBattles(List<Competitor> competitors, List<NutrientDistribution> nutrients, boolean duplicate) {
+    public List<Battle> generateMissingBattles(List<Competitor> competitors, List<NutrientDistribution> nutrients, boolean duplicate) {
         //todo: create tests.
         List<Battle> list = new ArrayList<>();
 
-        for (int i = 0, competitorsSize = competitors.size(); i < competitorsSize; i++) {
+        for (int i = 0; i < competitors.size(); i++) {
             Competitor c1 = competitors.get(i);
-            for (int i1 = i + 1, competitorsSize1 = competitors.size(); i1 < competitorsSize1; i1++) {
-                Competitor c2 = competitors.get(i1);
+            for (int j = i + 1; j < competitors.size(); j++) {
+                Competitor c2 = competitors.get(j);
                 for (NutrientDistribution n : nutrients) {
                     try {
                         Battle battle = new Battle(
@@ -217,8 +209,9 @@ public class Tournament implements Comparable<Tournament> {
                                 c2.getColonyName(),
                                 n.getNutrientName());
 
-                        if (!list.contains(battle))
+                        if (duplicate || !battles.contains(battle)) {
                             list.add(battle);
+                        }
 
                     } catch (BattleException ex) {
                         logger.error(ex.getMessage(), ex);
@@ -227,15 +220,6 @@ public class Tournament implements Comparable<Tournament> {
             }
         }
 
-        //remove already run
-        if (!duplicate) {
-            for (Battle finished : battles) {
-                if (list.contains(finished)) {
-                    logger.warn("Battle already run: (" + battles.toString() + ")");
-                    list.remove(finished);
-                }
-            }
-        }
 
         return list;
 
@@ -290,7 +274,51 @@ public class Tournament implements Comparable<Tournament> {
             return null;
         }
 
-        //the first battle it the one which didn't finish successful
+        //the first battle is the one which didn't finish successful
         return missingRun.get(0);
+    }
+
+    @Override
+    public void handle(Event event) {
+        try {
+            if (event instanceof BattleEvent) {
+                BattleEvent battleEvent = (BattleEvent) event;
+
+                switch (battleEvent.getStatus()) {
+                    case START:
+                        handleBattleStart(battleEvent);
+                        break;
+                    case MOVEMENT:
+                        handleBattleMovement(battleEvent);
+                        break;
+                    case FINISH:
+                        handleBattleFinish(battleEvent);
+                        break;
+                }
+            }
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
+    }
+
+    private void handleBattleFinish(BattleEvent event) throws IOException {
+        Battle battle = event.getBattle();
+        logger.info("End of the battle. Winner " + battle.getWinnerName() + " with energy " + battle.getWinnerEnergy());
+
+        if (config.isCompetitionMode())
+            sPersistence.appendFinish(event.getEnvironment().getNutrient(), event.getEnvironment().getMOs(), battle);
+    }
+
+    private void handleBattleMovement(BattleEvent event) throws IOException {
+        if (config.isCompetitionMode()) {
+            sPersistence.append(event.getEnvironment().getNutrient(), event.getEnvironment().getMOs());
+        }
+    }
+
+    private void handleBattleStart(BattleEvent event) throws IOException {
+        logger.info("Starting battle: " + event.getBattle().toString());
+
+        if (config.isCompetitionMode())
+            sPersistence.appendInit(event.getEnvironment().getNutrient(), event.getEnvironment().getMOs(), event.getBattle());
     }
 }

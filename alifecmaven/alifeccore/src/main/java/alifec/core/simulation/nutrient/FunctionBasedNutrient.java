@@ -75,4 +75,17 @@ public class FunctionBasedNutrient implements Nutrient {
         if (nutrients[xx][yy] < 0f)
             nutrients[xx][yy] = 0f;
     }
+
+    @Override
+    public float [][] getNutrients(){
+        return nutrients;
+    }
+
+    public int getDx() {
+        return rx;
+    }
+
+    public int getDy() {
+        return ry;
+    }
 }

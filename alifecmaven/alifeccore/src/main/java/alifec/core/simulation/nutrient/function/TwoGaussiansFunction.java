@@ -8,15 +8,15 @@ public class TwoGaussiansFunction implements Function {
     @Override
     public float apply(int x, int y) {
         int R = Defs.RADIUS;
-        float s1 = (float) Math.pow(Math.E, -((x - 0.6 * R) / (R / 4)) *
-                ((x - 0.6 * R) / (R / 4)) -
-                ((y - 0.6 * R) / (R / 4)) *
-                        ((y - 0.6 * R) / (R / 4)));
+        float s1 = (float) Math.pow(Math.E, -((x - 0.6f * R) / (R / 4f)) *
+                ((x - 0.6f * R) / (R / 4f)) -
+                ((y - 0.6f * R) / (R / 4f)) *
+                        ((y - 0.6f * R) / (R / 4f)));
 
-        float s2 = (float) Math.pow(Math.E, -((x - 1.4 * R) / (R / 4)) *
-                ((x - 1.4 * R) / (R / 4)) -
-                ((y - 1.4 * R) / (R / 4)) *
-                        ((y - 1.4 * R) / (R / 4)));
+        float s2 = (float) Math.pow(Math.E, -((x - 1.4f * R) / (R / 4f)) *
+                ((x - 1.4f * R) / (R / 4f)) -
+                ((y - 1.4f * R) / (R / 4f)) *
+                        ((y - 1.4f * R) / (R / 4f)));
 
         return Defs.MAX_NUTRI * (s1 + s2);
     }

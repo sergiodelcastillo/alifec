@@ -1,6 +1,6 @@
 package alifec.core.persistence;
 
-import alifec.ParentTest;
+import alifec.core.contest.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
@@ -11,7 +11,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Sergio Del Castillo on 22/08/17.
@@ -28,9 +30,9 @@ public class ZipFileManagerTest extends ParentTest {
         ZipFileManager zipFileManager = new ZipFileManager(config);
         String zipFile = zipFileManager.zipContest();
 
-        Assert.assertEquals(1, new File(config.getBackupFolder()).list((dir, name) -> {
+        Assert.assertEquals(1, Objects.requireNonNull(new File(config.getBackupFolder()).list((dir, name) -> {
             return name.equals(zipFile);
-        }).length);
+        })).length);
 
     }
 
@@ -91,11 +93,11 @@ public class ZipFileManagerTest extends ParentTest {
         ZipFileManager zipFileManager = new ZipFileManager(config);
         String zipFile = zipFileManager.zipContest();
 
-        String outputFolder = TEST_ROOT_PATH + File.separator + "restore";
+        String outputFolder = Paths.get(TEST_ROOT_PATH , File.separator+ "restore").toAbsolutePath().normalize().toString();
 
         Assert.assertTrue(new File(outputFolder).mkdir());
 
-        zipFileManager.unzip(config.getBackupFolder() + File.separator + zipFile, outputFolder);
+        zipFileManager.unzip(config.getBackupFolder() + File.separator+ zipFile, outputFolder);
 
         for (String file : target) {
             Assert.assertTrue(new File(outputFolder + File.separator + file).exists());

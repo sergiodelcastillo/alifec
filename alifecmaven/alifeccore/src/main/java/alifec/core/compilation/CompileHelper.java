@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -52,7 +53,7 @@ public class CompileHelper {
 
         CompilationResult result = new CompilationResult();
 
-        compileJavaFiles( null, result);
+        compileJavaFiles(null, result);
         compileAllCppFiles(result);
 
         return result;
@@ -68,11 +69,11 @@ public class CompileHelper {
                         logger.info(f.toString() + " [OK]");
                     } else {
                         logger.error(f.toString() + " [FAIL]");
-                        result.logJavaError("Could not compileMO " + f.getFileName().toString() + ". For more details see the logs.");
+                        result.logJavaError("Could not compile the Java colony " + f.getFileName().toString() + ".");
                     }
                 }
             }
-        } catch (CompilerException | IOException ex) {
+        } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
             result.logJavaError(ex.getMessage());
         }
@@ -88,12 +89,12 @@ public class CompileHelper {
                 logger.info("Create libcppcolonies: [OK]");
             } else {
                 logger.info("Create libcppcolonies: [FAIL]");
-                result.logCppError("Could not compileMOs one o more microorganisms of C++. For more details see log file.");
+                result.logCppError("Could not compile cpp colonies.");
             }
 
         } else {
             logger.info("Update C++ Files: [FAIL]");
-            result.logCppError("Could not update cpp files. For more details see log file.");
+            result.logCppError("Could not update cpp files.");
         }
     }
 
@@ -138,13 +139,12 @@ public class CompileHelper {
             Path rootDir = Paths.get(targetFolder);
 
             if (Files.exists(rootDir)) {
-                Path dirPath = Paths.get(targetFolder);
-
-                Files.walk(dirPath)
-                        .sorted(Comparator.reverseOrder())
-                        .map(Path::toFile)
-                        .peek(file -> logger.info("Deleting: " + file))
-                        .forEach(File::delete);
+                try (Stream<Path> files = Files.walk(Paths.get(targetFolder))) {
+                    files.sorted(Comparator.reverseOrder())
+                            .map(Path::toFile)
+                            .peek(file -> logger.info("Deleting: " + file))
+                            .forEach(File::delete);
+                }
             }
 
             Files.createDirectory(rootDir);
@@ -164,7 +164,7 @@ public class CompileHelper {
      * @return true if the compilation is successfully
      * @throws CompilerException if can not find the C/C++ compiler
      */
-    boolean javaSourceCodeCompilation(String javaFileFolder, String javaFileName) throws CompilerException {
+    private boolean javaSourceCodeCompilation(String javaFileFolder, String javaFileName) {
         try {
             JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 
@@ -173,7 +173,26 @@ public class CompileHelper {
 
             configureLogFile(javaFileName, config);
             String javaFilePath = javaFileFolder + File.separator + javaFileName;
-            int s = javac.run(null, out, err, "-d", config.getCompilationTarget(), javaFilePath);
+
+            //the core and the view part of the framework are java modules,
+            // so the property jdk.module.path should be set in order to run ALifeC.
+            //todo: check if it is ok by using only one propery or if it is possible to use jdk.module.path;java.class.path
+            String modulesPath = System.getProperty("jdk.module.path");
+            String classPath = System.getProperty("java.class.path");
+
+            logger.debug("jdk.module.path: " + modulesPath);
+            logger.debug("java.class.path: " + classPath);
+
+
+            //make an effort to find modules in the class path if the module path was not maintained.
+            if (modulesPath == null)
+                modulesPath = classPath;
+            else if (classPath != null)
+                modulesPath += File.pathSeparator + classPath;
+
+            logger.debug("complete path: " + modulesPath);
+
+            int s = javac.run(null, out, err, "-cp", modulesPath, "-d", config.getCompilationTarget(), javaFilePath);
 
             return s == 0;
         } catch (Exception ex) {
@@ -191,6 +210,10 @@ public class CompileHelper {
      * @return true if is successfully
      */
     private boolean cppCompilationAllSourceCodes() {
+        Process p = null;
+        BufferedReader readerInputStream = null;
+        BufferedReader readerErrorStream = null;
+
         try {
             CompileConfig compileConfig = new CompileConfig(config);
 
@@ -225,27 +248,24 @@ public class CompileHelper {
             }
 
             logger.trace("Using compile line: " + compileCommand);
-            Process p = Runtime.getRuntime().exec(console);
+
+            p = Runtime.getRuntime().exec(console);
             p.waitFor();
 
             String buffer;
-            BufferedReader readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedReader readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
             configureLogFile("cpp", config);
             while ((buffer = readerInputStream.readLine()) != null) {
                 moLogger.info(buffer);
             }
-            readerInputStream.close();
+
             while ((buffer = readerErrorStream.readLine()) != null) {
                 moLogger.error(buffer);
             }
-            readerErrorStream.close();
-            p.waitFor();
 
-            p.getErrorStream().close();
-            p.getInputStream().close();
-            p.getOutputStream().close();
+            p.waitFor();
 
             return p.exitValue() == 0;
         } catch (IOException ex) {
@@ -258,6 +278,19 @@ public class CompileHelper {
         } catch (CompileConfigException e) {
             logger.trace(e.getMessage(), e);
             return false;
+        } finally {
+            try {
+                if (readerErrorStream != null) readerErrorStream.close();
+                if (readerInputStream != null) readerInputStream.close();
+                if (p != null) {
+                    p.getErrorStream().close();
+                    p.getInputStream().close();
+                    p.getOutputStream().close();
+                }
+            } catch (IOException ex) {
+                logger.error(ex.getMessage(), ex);
+            }
+
         }
     }
 
@@ -282,19 +315,32 @@ public class CompileHelper {
             }
 
             try (BufferedWriter pw = Files.newBufferedWriter(env)) {
-                pw.write("\nbool Environment::addColony(string name, int id){\n");
-                pw.write("	CppColony<Microorganism> *mo = NULL;\n\n");
+                pw.newLine();
+                pw.write("bool Environment::addColony(string name, int id){");
+                pw.newLine();
+                pw.write("	CppColony<Microorganism> *mo = NULL;");
+                pw.newLine();
+                pw.newLine();
 
                 for (String name : names) {
-                    pw.write("	if(name == \"" + name + "\"){\n");
-                    pw.write("	   mo = (CppColony < Microorganism > *) new CppColony< " + name + " >(id);\n");
-                    pw.write("   }\n");
+                    pw.write("	if(name == \"" + name + "\"){");
+                    pw.newLine();
+                    pw.write("	   mo = (CppColony < Microorganism > *) new CppColony< " + name + " >(id);");
+                    pw.newLine();
+                    pw.write("   }");
+                    pw.newLine();
                     logger.trace("Updating Tournament CPP for MO: " + name);
                 }
 
-                pw.write("\n	colonies.push_back(mo);\n\n");
-                pw.write("   return mo != NULL;\n");
-                pw.write("}\n\n");
+                pw.newLine();
+                pw.write("	colonies.push_back(mo);");
+                pw.newLine();
+                pw.newLine();
+                pw.write("   return mo != NULL;");
+                pw.newLine();
+                pw.write("}");
+                pw.newLine();
+                pw.newLine();
             }
 
         } catch (IOException e) {
@@ -322,7 +368,8 @@ public class CompileHelper {
 
             try (BufferedWriter pw = Files.newBufferedWriter(includes)) {
                 for (String n : files) {
-                    pw.write("#include \"" + n + "\"\n");
+                    pw.write("#include \"" + n + "\"");
+                    pw.newLine();
                     logger.trace("Updating include for MO: " + n);
                 }
             }

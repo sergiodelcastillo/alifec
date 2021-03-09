@@ -46,23 +46,24 @@ public class ContestFolderPredicate implements Predicate<Path> {
     @Override
     public boolean test(Path path) {
         String folderName = path.getFileName().toString();
-
+        String basePath = path.getParent().getParent().toString();
         try {
             validator.validate(folderName);
         } catch (ValidationException e) {
             return false;
         }
-        return !checkExistence || checkContestFolder(path.getParent().toString(), folderName);
+        return !checkExistence || checkContestFolder(basePath, folderName);
     }
 
     private boolean checkContestFolder(String path, String name) {
-        if (path == null || path.trim().isEmpty()) {
+        if (path == null || path.trim().isEmpty() ||
+                name == null || name.trim().isEmpty()) {
             return false;
         }
-        if (name == null || path.trim().isEmpty()) {
-            return false;
-        }
-        ContestConfig config = new ContestConfig(path, name);
+        ContestConfig config;
+
+        config = new ContestConfig(null, path, name);
+
 
         Path contestName = Paths.get(config.getContestPath());
         Path MOsFolder = Paths.get(config.getMOsPath());

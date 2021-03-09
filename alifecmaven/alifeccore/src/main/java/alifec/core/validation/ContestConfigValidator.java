@@ -31,11 +31,11 @@ public class ContestConfigValidator implements Validator<ContestConfig> {
         }
 
         if (config.getPath().isEmpty()) {
-            throw new ValidationException("The contest path is an empty string.");
+            throw new ValidationException("The contest path must not be an empty string.");
         }
 
         if (config.getContestName().isEmpty()) {
-            throw new ValidationException("The contest name is an empty string.");
+            throw new ValidationException("The contest name must not be an empty string.");
         }
 
         if (!Files.isDirectory(Paths.get(config.getPath())))

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.Scene?>
+<?import javafx.stage.Stage?>
+<Stage xmlns="http://javafx.com/javafx"
+       xmlns:fx="http://javafx.com/fxml"
+       fx:controller="alifec.simulation.controller.PreferencesController"
+       title="%preferences.title"
+       resizable="false"
+       onShowing="#setPreferences">
+    <scene>
+        <Scene onKeyPressed="#keyHandler">
+            <VBox prefHeight="400.0" prefWidth="600.0">
+
+                <TitledPane collapsible="false" text="%preferences.general.title">
+                    <padding>
+                        <Insets top="6" right="6" bottom="3" left="6"/>
+                    </padding>
+                    <GridPane hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" halignment="LEFT"/>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="45"/>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="25" halignment="RIGHT"/>
+                        </columnConstraints>
+
+                        <Label text="%preferences.current.contest" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="contestName" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Hyperlink text="%preferences.change.contest" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                                   onAction="#changeContest"/>
+                        <Label text="%preferences.contest.path" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="contestPath" editable="false" GridPane.columnIndex="1"
+                                   GridPane.rowIndex="1"
+                                   GridPane.columnSpan="2"/>
+                        <Label text="%preferences.contest.pause" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                               GridPane.columnSpan="2"/>
+                        <ComboBox fx:id="pauseBetweenBattlesCombobox" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS"
+                                  maxWidth="Infinity"
+                                  GridPane.columnSpan="2" onAction="#changePauseBetweenBattles"/>
+                        <Label text="%preferences.contest.mode" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="contestModeCombobox" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                                  GridPane.hgrow="ALWAYS"
+                                  maxWidth="Infinity" GridPane.columnSpan="2" onAction="#changeContestMode"/>
+                    </GridPane>
+                </TitledPane>
+
+                <TitledPane collapsible="false" text="%preferences.nutrients.title">
+                    <padding>
+                        <Insets top="3" right="6" bottom="6" left="6"/>
+                    </padding>
+                    <GridPane fx:id="nutrientsPane" hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0"/>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0"/>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0"/>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0"/>
+                        </columnConstraints>
+                    </GridPane>
+                </TitledPane>
+
+                <TitledPane collapsible="false" text="%preferences.graphics.title">
+                    <padding>
+                        <Insets top="3" right="6" bottom="6" left="6"/>
+                    </padding>
+                    <GridPane alignment="CENTER_RIGHT">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
+                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
+                        </columnConstraints>
+                        <fx:define>
+                            <ToggleGroup fx:id="graphicsGroupPreferences" />
+                        </fx:define>
+                        <RadioButton text="%preferences.simulator.java2d" toggleGroup="$graphicsGroupPreferences"
+                                     GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"
+                                     maxWidth="Infinity" selected="true" disable="true"/>
+                        <RadioButton text="%preferences.simulator.openGL" toggleGroup="$graphicsGroupPreferences"
+                                     GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"
+                                     maxWidth="Infinity" disable="true"/>
+                    </GridPane>
+                </TitledPane>
+
+                <HBox alignment="CENTER" spacing="10">
+                    <Button text="%preferences.accept" onAction="#accept"/>
+                    <Button text="%preferences.cancel" onAction="#cancel"/>
+                </HBox>
+            </VBox>
+        </Scene>
+    </scene>
+</Stage>

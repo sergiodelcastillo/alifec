@@ -11,11 +11,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -31,11 +30,13 @@ public class ZipFileManager {
     private static int BUFFER = 2048;
     private final ContestConfig config;
 
+
     public ZipFileManager(ContestConfig config) {
         //todo: remove the config and use string
         //todo improve use of path
         this.config = config;
     }
+
 
     /**
      * This method creates the zip archive and then goes through
@@ -49,7 +50,7 @@ public class ZipFileManager {
         // the directory to be zipped
         String backupFile = config.getBackupFile();
         Path directory = Paths.get(config.getContestPath());
-        String canonicalPathBackup = Paths.get(config.getBackupFolder()).toFile().getCanonicalPath();
+        String backupPath = Paths.get(config.getBackupFolder()).toFile().getCanonicalPath();
         String canonicalPath = directory.getParent().toFile().getCanonicalPath() + File.separator;
         // the zip file name that we will create
         File zipFile = Paths.get(backupFile).toFile();
@@ -60,23 +61,23 @@ public class ZipFileManager {
 
             // traverse every file in the selected directory and add them
             // to the zip file by calling addToZipFile(..)
-            Files.walk(directory)
-                    .sorted(Comparator.naturalOrder())
-                    .filter(path -> {
-                        try {
-                            if (path.toFile().getCanonicalPath().contains(canonicalPathBackup)) {
-                                logger.trace("Ignoring file: " + path.toFile().toString());
+            try (Stream<Path> list = Files.walk(directory)) {
+                list.sorted(Comparator.naturalOrder())
+                        .filter(path -> {
+                            try {
+                                if (path.toFile().getCanonicalPath().contains(backupPath)) {
+                                    logger.trace("Ignoring file: " + path.toFile().toString());
+                                    return false;
+                                }
+                                return true;
+                            } catch (IOException e) {
+                                logger.info(e.getMessage(), e);
                                 return false;
                             }
-                            return true;
-                        } catch (IOException e) {
-                            logger.info(e.getMessage(), e);
-                            return false;
-                        }
 
-                    })
-                    .forEach(path -> addToZipFile(path, zipStream, canonicalPath));
-
+                        })
+                        .forEach(path -> addToZipFile(path, zipStream, canonicalPath));
+            }
             logger.info("Zip file created in " + directory.toFile().getPath());
         } catch (IOException | ZipParsingException e) {
             logger.error("Error while zipping.", e);
@@ -88,7 +89,7 @@ public class ZipFileManager {
     }
 
     private String getName(String backupFile) {
-        String[] tmp1 = backupFile.split(File.separator);
+        String[] tmp1 = backupFile.split(ContestConfig.SEPARATOR_PATTERN);
 
         return tmp1.length == 1 ? backupFile : tmp1[tmp1.length - 1];
     }
@@ -113,7 +114,9 @@ public class ZipFileManager {
 
             // create a new ZipEntry, which is basically another file
             // within the archive. We omit the path from the filename
-            ZipEntry entry = new ZipEntry(file.toFile().getCanonicalPath().replaceFirst(root, ""));
+            ZipEntry entry = new ZipEntry(file.toFile().getCanonicalPath()
+                    .replace("\\", "/")
+                    .substring(root.length()));
             entry.setCreationTime(FileTime.fromMillis(file.toFile().lastModified()));
 
             //entry.setComment("Created by Alifec");
@@ -161,9 +164,7 @@ public class ZipFileManager {
                     }
 
                     try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
-
                         byte[] buffer = new byte[BUFFER];
-
                         int location;
 
                         while ((location = zis.read(buffer)) != -1) {

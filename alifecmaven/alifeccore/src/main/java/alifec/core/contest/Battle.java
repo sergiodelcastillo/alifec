@@ -2,18 +2,22 @@ package alifec.core.contest;
 
 
 import alifec.core.exception.BattleException;
+import alifec.core.simulation.Competitor;
+import alifec.core.simulation.NutrientDistribution;
 import alifec.core.validation.BattleFromCsvValidator;
 import alifec.core.validation.BattleRuntimeValidator;
 
 import java.util.Objects;
 
 /**
- * @author Sergio Del Castillo
- *         mail@: sergio.jose.delcastillo@gmail.com
- *         <p>
- *         Contains de history of battles.
+ * @author: Sergio Del Castillo
+ * @email: sergio.jose.delcastillo@gmail.com
+ * <p>
+ * Contains de history of battles.
  */
 public class Battle implements Comparable<Battle> {
+    private static final String BATTLE_STRING_FORMAT = "%s vs %s in %s";
+
     private float firstEnergy;
     private String firstName;
     private int firstId = -1;
@@ -24,6 +28,7 @@ public class Battle implements Comparable<Battle> {
 
     private String nutrient;
     private int nutrientId = -1;
+
 
     public Battle(String line) throws BattleException {
         checkLineFromCSV(line);
@@ -52,13 +57,18 @@ public class Battle implements Comparable<Battle> {
         checkRuntime();
     }
 
+    public Battle(Competitor c1, Competitor c2, NutrientDistribution n1) throws BattleException {
+        this(c1.getId(), c2.getId(), n1.getId(), c1.getColonyName(), c2.getColonyName(), n1.getNutrientName());
+    }
+
+
     private void checkLineFromCSV(String line) throws BattleException {
         BattleFromCsvValidator validator = new BattleFromCsvValidator();
 
         try {
             validator.validate(line);
         } catch (Throwable ex) {
-            throw new BattleException("Invalid battle: (" + this.toCsv() + ")", ex);
+            throw new BattleException("Invalid battle line: " + line, ex);
         }
     }
 
@@ -68,7 +78,7 @@ public class Battle implements Comparable<Battle> {
         try {
             runtimeValidator.validate(this);
         } catch (Throwable t) {
-            throw new BattleException("Invalid battle: (" + this.toCsv() + ")", t);
+            throw new BattleException("Invalid battle: " + this.toString(), t);
         }
     }
 
@@ -97,6 +107,10 @@ public class Battle implements Comparable<Battle> {
         return (firstEnergy > 0) ? new Float(firstEnergy) : new Float(secondEnergy);
     }
 
+    public int getWinnerId() {
+        return (firstEnergy > 0) ? firstId : secondId;
+    }
+
     public String getWinnerName() {
         return (firstEnergy > 0) ? firstName : secondName;
     }
@@ -119,14 +133,7 @@ public class Battle implements Comparable<Battle> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(100);
-        builder.append(firstName)
-                .append(" vs ")
-                .append(secondName)
-                .append(" in ")
-                .append(nutrient);
-
-        return builder.toString();
+        return String.format(BATTLE_STRING_FORMAT, firstName, secondName, nutrient);
     }
 
     @Override
@@ -159,27 +166,19 @@ public class Battle implements Comparable<Battle> {
         return secondId;
     }
 
-    public String toCsv() {
-        StringBuilder builder = new StringBuilder(100);
-        builder.append(firstName)
-                .append(',')
-                .append(secondName)
-                .append(',')
-                .append(nutrient)
-                .append(',')
-                .append(firstEnergy)
-                .append(',')
-                .append(secondEnergy);
-
-        return builder.toString();
-    }
-
     public void setWinner(int id, float energy) {
         if (firstId == id)
             this.firstEnergy = energy;
 
         if (secondId == id)
             this.secondEnergy = energy;
+    }
 
+    public float getFirstEnergy() {
+        return firstEnergy;
+    }
+
+    public float getSecondEnergy() {
+        return secondEnergy;
     }
 }

@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 
 /**
- * @author Sergio
+ * @author: Sergio
  * @mail: sergio.jose.delcastillo@gmail.com
  * <p>
  * Lists Source code files.
