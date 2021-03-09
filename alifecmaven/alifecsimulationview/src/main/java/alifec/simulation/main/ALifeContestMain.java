@@ -3,7 +3,11 @@ package alifec.simulation.main;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.event.EventBus;
-import alifec.core.exception.*;
+import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.ConfigFileNotFoundException;
+import alifec.core.exception.ConfigFileReadException;
+import alifec.core.exception.InvalidUserDirException;
+import alifec.core.exception.ValidationException;
 import alifec.core.persistence.ALifeCFileManager;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -21,7 +25,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
