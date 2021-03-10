@@ -11,21 +11,20 @@ import alifec.core.persistence.config.CompileConfig;
 public class CompileConfigException extends Exception {
 
     private static final long serialVersionUID = 0L;
-
-    public CompileConfig getCompileConfig() {
-        return config;
-    }
-
     private final CompileConfig config;
-
 
     public CompileConfigException(String s, CompileConfig config) {
         this(s, null, config);
     }
 
+
     public CompileConfigException(String s, Throwable cause, CompileConfig config) {
         super(s, cause);
         this.config = config;
 
+    }
+
+    public CompileConfig getCompileConfig() {
+        return config;
     }
 }

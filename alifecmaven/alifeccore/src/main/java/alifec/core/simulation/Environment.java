@@ -78,7 +78,7 @@ public class Environment {
             for (String name : helper.listJavaMOs()) {
                 try {
                     //todo: it seems to be unnecessary: JavaColony.addClassPath(config.getCompilationTarget());
-                    colonies.add(new JavaColony(colonies.size(), config.getCompilationTarget(),"MOs." + name));
+                    colonies.add(new JavaColony(colonies.size(), config.getCompilationTarget(), "MOs." + name));
                     logger.info(name + " [OK]");
                 } catch (ClassNotFoundException ex) {
                     logger.warn(ex.getMessage(), ex);
@@ -359,7 +359,7 @@ public class Environment {
     public boolean createMOInstance(int px, int py, float ene, int id) {
         if (!inDish(px, py) ||
                 ene <= 0 || ene > Defs.E_INITIAL ||
-                Objects.nonNull(microorganism[px][py] ))
+                Objects.nonNull(microorganism[px][py]))
             return false;
 
         Cell mo = new Cell(id);

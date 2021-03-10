@@ -4,8 +4,6 @@ import alifec.core.persistence.custom.CppMOPredicate;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.regex.Pattern;
-
 
 /**
  * Created by Sergio Del Castillo on 26/08/17.
@@ -406,7 +404,7 @@ public class SuffixPredicateTest {
     }
 
     @Test
-    public void testall(){
+    public void testall() {
         //@Todo: agregar los test faltantes para completar toda la clase
     }
 }

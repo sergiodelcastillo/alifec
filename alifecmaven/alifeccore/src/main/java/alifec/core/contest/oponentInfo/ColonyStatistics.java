@@ -31,12 +31,24 @@ public class ColonyStatistics implements Comparable<ColonyStatistics>, Comparato
         return author;
     }
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     public String getAffiliation() {
         return affiliation;
     }
 
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
+    }
+
     public int getPoints() {
         return points;
+    }
+
+    public void setPoints(int point) {
+        this.points = point;
     }
 
     public float getAccumulated() {
@@ -52,13 +64,8 @@ public class ColonyStatistics implements Comparable<ColonyStatistics>, Comparato
         return Float.compare(accumulated, o.accumulated);
     }
 
-
     public void addEnergy(float energy) {
         accumulated += energy;
-    }
-
-    public void setPoints(int point) {
-        this.points = point;
     }
 
     public void addPoints(int point) {
@@ -81,13 +88,5 @@ public class ColonyStatistics implements Comparable<ColonyStatistics>, Comparato
     @Override
     public int hashCode() {
         return Objects.hash(name);
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setAffiliation(String affiliation) {
-        this.affiliation = affiliation;
     }
 }

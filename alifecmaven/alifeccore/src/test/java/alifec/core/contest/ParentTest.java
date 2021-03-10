@@ -45,6 +45,15 @@ public class ParentTest {
 
     private ResourceBundle bundle = null; //ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
 
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Class clazz = Class.forName(args[0]);
+        Object object = clazz.getDeclaredConstructor().newInstance();
+        Method method = clazz.getMethod(args[1]);
+
+        System.out.println("Executing by reflection: " + args[0] + "->" + args[1]);
+        method.invoke(object);
+    }
+
     @Before
     public void init() throws IOException {
         /*EventBus.setSingleThread();
@@ -230,14 +239,5 @@ public class ParentTest {
         }
 
         Assert.assertEquals(0, process.waitFor());
-    }
-
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Class clazz = Class.forName(args[0]);
-        Object object = clazz.getDeclaredConstructor().newInstance();
-        Method method = clazz.getMethod(args[1]);
-
-        System.out.println("Executing by reflection: " + args[0] + "->" + args[1]);
-        method.invoke(object);
     }
 }

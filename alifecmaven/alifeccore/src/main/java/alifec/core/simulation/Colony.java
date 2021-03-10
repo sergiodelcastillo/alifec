@@ -14,9 +14,8 @@ import java.util.List;
 public abstract class Colony {
 
     final int id;
-    private final List<Cell> moList = new ArrayList<>();
     final String path;
-
+    private final List<Cell> moList = new ArrayList<>();
     String name = "";
     String author = "";
     String affiliation = "";
@@ -24,6 +23,33 @@ public abstract class Colony {
     Colony(int id, String path) {
         this.id = id;
         this.path = path;
+    }
+
+    /**
+     * Adds the specified path to the java library path
+     *
+     * @param pathToAdd the path to add
+     * @throws Exception
+     */
+    protected static void addLibraryPath(String pathToAdd)
+            throws NoSuchFieldException, IllegalAccessException {
+        final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
+        usrPathsField.setAccessible(true);
+
+        //get array of paths
+        final String[] paths = (String[]) usrPathsField.get(null);
+
+        //check if the path to add is already present
+        for (String path : paths) {
+            if (path.equals(pathToAdd)) {
+                return;
+            }
+        }
+
+        //add the new path
+        final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
+        newPaths[newPaths.length - 1] = pathToAdd;
+        usrPathsField.set(null, newPaths);
     }
 
     @Override
@@ -86,7 +112,6 @@ public abstract class Colony {
 
     public abstract String getAffiliation();
 
-
     public String toString() {
         return getName();
     }
@@ -105,38 +130,12 @@ public abstract class Colony {
         moList.clear();
         clearAll();
     }
-/*
-* System.load(String filename); to specify the complete path to the native library you want to load, perhaps together
-* with System.mapLibraryName(String) to add the platform specific file ending (e.g. .dll or .so).
-* */
+
+    /*
+     * System.load(String filename); to specify the complete path to the native library you want to load, perhaps together
+     * with System.mapLibraryName(String) to add the platform specific file ending (e.g. .dll or .so).
+     * */
     protected abstract void clearAll();
-
-    /**
-     * Adds the specified path to the java library path
-     *
-     * @param pathToAdd the path to add
-     * @throws Exception
-     */
-    protected static void addLibraryPath(String pathToAdd)
-            throws NoSuchFieldException, IllegalAccessException {
-        final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
-        usrPathsField.setAccessible(true);
-
-        //get array of paths
-        final String[] paths = (String[]) usrPathsField.get(null);
-
-        //check if the path to add is already present
-        for (String path : paths) {
-            if (path.equals(pathToAdd)) {
-                return;
-            }
-        }
-
-        //add the new path
-        final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
-        newPaths[newPaths.length - 1] = pathToAdd;
-        usrPathsField.set(null, newPaths);
-    }
 
     public int getId() {
         return this.id;

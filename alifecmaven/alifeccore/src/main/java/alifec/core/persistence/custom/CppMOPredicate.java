@@ -1,15 +1,12 @@
 package alifec.core.persistence.custom;
 
-import alifec.core.contest.Battle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,16 +17,12 @@ import java.util.regex.Pattern;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class CppMOPredicate implements Function<Path, String> {
-    private Logger logger = LogManager.getLogger(CppMOPredicate.class);
-
     private static String MO_PATTERN_STRING = "^([\\s\\S]+class([\\s]+))([\\w_-]+)(\\s)*:([\\s\\S]+)Microorganism[\\s\\S]+\\z";
-
     // got from https://blog.ostermiller.org/find-comment
     private static String COMMENTS_PATTERN_STRING = "(?://.*)|(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)";
-
     private static Pattern moPattern = Pattern.compile(MO_PATTERN_STRING);
     private static Pattern commentsPattern = Pattern.compile(COMMENTS_PATTERN_STRING);
-
+    private Logger logger = LogManager.getLogger(CppMOPredicate.class);
 
     @Override
     public String apply(Path path) {

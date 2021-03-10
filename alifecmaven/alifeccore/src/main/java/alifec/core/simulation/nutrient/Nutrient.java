@@ -4,7 +4,7 @@ package alifec.core.simulation.nutrient;
  * Created by Sergio Del Castillo on 16/10/17.
  *
  * @email: sergio.jose.delcastillo@gmail.com
- *
+ * <p>
  * To generate a Nutrient distribution in the Agar.
  */
 public interface Nutrient {
@@ -31,6 +31,7 @@ public interface Nutrient {
 
     /**
      * eat the nutrient in the position x,y,
+     *
      * @param x
      * @param y
      * @param ene
@@ -41,7 +42,7 @@ public interface Nutrient {
 
     String getName();
 
-    float [][] getNutrients();
+    float[][] getNutrients();
 
     int getDx();
 

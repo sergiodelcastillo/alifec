@@ -60,7 +60,7 @@ public class ZipFileManagerTest extends ParentTest {
         ZipFileManager zipFileManager = new ZipFileManager(config);
         String zipfile = zipFileManager.zipContest();
 
-        List<String> entries = zipFileManager.listEntries(config.getBackupFolder()+ File.separator+zipfile);
+        List<String> entries = zipFileManager.listEntries(config.getBackupFolder() + File.separator + zipfile);
 
         Assert.assertThat(entries, Matchers.containsInAnyOrder(target));
     }
@@ -91,11 +91,11 @@ public class ZipFileManagerTest extends ParentTest {
         ZipFileManager zipFileManager = new ZipFileManager(config);
         String zipFile = zipFileManager.zipContest();
 
-        String outputFolder = Paths.get(TEST_ROOT_PATH , File.separator+ "restore").toAbsolutePath().normalize().toString();
+        String outputFolder = Paths.get(TEST_ROOT_PATH, File.separator + "restore").toAbsolutePath().normalize().toString();
 
         Assert.assertTrue(new File(outputFolder).mkdir());
 
-        zipFileManager.unzip(config.getBackupFolder() + File.separator+ zipFile, outputFolder);
+        zipFileManager.unzip(config.getBackupFolder() + File.separator + zipFile, outputFolder);
 
         for (String file : target) {
             Assert.assertTrue(new File(outputFolder + File.separator + file).exists());

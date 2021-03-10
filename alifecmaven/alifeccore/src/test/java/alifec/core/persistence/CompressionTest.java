@@ -1,9 +1,9 @@
 package alifec.core.persistence;
 
-import alifec.core.contest.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.contest.Contest;
+import alifec.core.contest.ParentTest;
 import alifec.core.exception.*;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
@@ -27,20 +27,6 @@ import java.util.List;
  */
 public class CompressionTest extends ParentTest {
 
-    class CompressResult {
-        private int liveTime;
-        int compressedSize;
-        int originalSize;
-        long compressTime;
-
-        public CompressResult(int compressedSize, int originalSize) {
-            this.compressedSize = compressedSize;
-            this.originalSize = originalSize;
-            this.compressTime = 0;
-            this.liveTime = 0;
-        }
-    }
-
     public Nutrient[] getNutrients() {
         return new Nutrient[]{
                 //todo: ver porque no anda con el balls
@@ -54,8 +40,7 @@ public class CompressionTest extends ParentTest {
         };
     }
 
-
-  //  @Test
+    //  @Test
     public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException, CreateContestException {
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");
@@ -81,7 +66,7 @@ public class CompressionTest extends ParentTest {
             for (int j = i + 1; j < competitors.size() && nBattles < numberOfBattles; j++) {
                 for (int index = 0; index < nutrients.length && nBattles++ < numberOfBattles; index++) {
                     Nutrient n = nutrients[index];
-                    if(!(n instanceof FunctionBasedNutrient) ) continue;
+                    if (!(n instanceof FunctionBasedNutrient)) continue;
                     createBattle(environment, i, j, n.getId(), n.getName());
 
                     while (!environment.moveColonies()) {
@@ -113,6 +98,20 @@ public class CompressionTest extends ParentTest {
 
         System.out.println("Livetime = " + finalStats.liveTime);
 
+    }
+
+    class CompressResult {
+        int compressedSize;
+        int originalSize;
+        long compressTime;
+        private int liveTime;
+
+        public CompressResult(int compressedSize, int originalSize) {
+            this.compressedSize = compressedSize;
+            this.originalSize = originalSize;
+            this.compressTime = 0;
+            this.liveTime = 0;
+        }
     }
 
 /*

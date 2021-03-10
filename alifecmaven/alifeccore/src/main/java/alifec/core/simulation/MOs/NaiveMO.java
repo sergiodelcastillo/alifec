@@ -10,9 +10,10 @@ import alifec.core.simulation.Movement;
  */
 public class NaiveMO extends Microorganism {
 
-    public NaiveMO(){
+    public NaiveMO() {
 
     }
+
     @Override
     public void move(Movement mov) {
 

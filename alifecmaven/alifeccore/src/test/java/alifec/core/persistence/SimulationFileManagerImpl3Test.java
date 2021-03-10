@@ -1,7 +1,7 @@
 package alifec.core.persistence;
 
-import alifec.core.contest.ParentTest;
 import alifec.core.contest.Battle;
+import alifec.core.contest.ParentTest;
 import alifec.core.exception.BattleException;
 import alifec.core.persistence.dto.FinishedBattle;
 import alifec.core.persistence.dto.RunningBattle;
@@ -40,7 +40,34 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
     private Map<Integer, Microorganism> mos;
     private List<Cell> cells;
 
+    public static String compress(String s) {
+        Deflater def = new Deflater(Deflater.BEST_COMPRESSION);
+        byte[] sbytes = s.getBytes(StandardCharsets.UTF_8);
+        def.setInput(sbytes);
+        def.finish();
+        byte[] buffer = new byte[sbytes.length];
+        int n = def.deflate(buffer);
+        return new String(buffer, 0, n, StandardCharsets.ISO_8859_1)
+                + "*" + sbytes.length;
+    }
 
+    public static String decompress(String s) {
+        int pos = s.lastIndexOf('*');
+        int len = Integer.parseInt(s.substring(pos + 1));
+        s = s.substring(0, pos);
+
+        Inflater inf = new Inflater();
+        byte[] buffer = s.getBytes(StandardCharsets.ISO_8859_1);
+        byte[] decomp = new byte[len];
+        inf.setInput(buffer);
+        try {
+            inf.inflate(decomp, 0, len);
+            inf.end();
+        } catch (DataFormatException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return new String(decomp, StandardCharsets.UTF_8);
+    }
 
     @Test
     public void testCompressStartBattle() throws BattleException, IOException {
@@ -128,14 +155,14 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
             while ((buffer = is.read()) != -1 && buffer != 10) {
                 list.put((byte) buffer);
             }
-            byte [] uncompressed = Base64.getDecoder().decode(Arrays.copyOf(list.array(), list.position()));
+            byte[] uncompressed = Base64.getDecoder().decode(Arrays.copyOf(list.array(), list.position()));
             Inflater inflater = new Inflater();
             inflater.setInput(uncompressed);
-            byte [] result = new byte[10000];
+            byte[] result = new byte[10000];
             int size = inflater.inflate(result, 0, result.length);
             inflater.end();
-            byte [] rfinal = Arrays.copyOf(result, size);
-            char firstCharacter  = (char) rfinal[0];
+            byte[] rfinal = Arrays.copyOf(result, size);
+            char firstCharacter = (char) rfinal[0];
             System.out.println(firstCharacter);
 
         } catch (DataFormatException e) {
@@ -143,34 +170,5 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
         }
 
 
-    }
-
-    public static String compress(String s) {
-        Deflater def = new Deflater(Deflater.BEST_COMPRESSION);
-        byte[] sbytes = s.getBytes(StandardCharsets.UTF_8);
-        def.setInput(sbytes);
-        def.finish();
-        byte[] buffer = new byte[sbytes.length];
-        int n = def.deflate(buffer);
-        return new String(buffer, 0, n, StandardCharsets.ISO_8859_1)
-                + "*" + sbytes.length;
-    }
-
-    public static String decompress(String s) {
-        int pos = s.lastIndexOf('*');
-        int len = Integer.parseInt(s.substring(pos + 1));
-        s = s.substring(0, pos);
-
-        Inflater inf = new Inflater();
-        byte[] buffer = s.getBytes(StandardCharsets.ISO_8859_1);
-        byte[] decomp = new byte[len];
-        inf.setInput(buffer);
-        try {
-            inf.inflate(decomp, 0, len);
-            inf.end();
-        } catch (DataFormatException e) {
-            throw new IllegalArgumentException(e);
-        }
-        return new String(decomp, StandardCharsets.UTF_8);
     }
 }

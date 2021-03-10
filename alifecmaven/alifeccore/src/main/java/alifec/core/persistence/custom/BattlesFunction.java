@@ -1,11 +1,9 @@
 package alifec.core.persistence.custom;
 
 import alifec.core.contest.Battle;
-import alifec.core.exception.BattleException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.nio.file.Path;
 import java.util.function.Function;
 
 /**

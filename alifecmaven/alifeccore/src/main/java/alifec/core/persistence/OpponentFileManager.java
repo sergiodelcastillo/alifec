@@ -1,6 +1,5 @@
 package alifec.core.persistence;
 
-import alifec.core.contest.Battle;
 import alifec.core.contest.oponentInfo.OpponentInfo;
 import alifec.core.persistence.custom.NotNullPredicate;
 import alifec.core.persistence.custom.OpponentFunction;

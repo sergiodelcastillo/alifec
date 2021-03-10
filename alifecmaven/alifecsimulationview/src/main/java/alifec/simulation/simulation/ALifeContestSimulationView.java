@@ -12,6 +12,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.ResourceBundle;
@@ -22,6 +24,7 @@ import java.util.ResourceBundle;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestSimulationView extends Stage {
+    private static Logger logger = LogManager.getLogger(ALifeContestSimulationView.class);
     static final int MO_SIZE = 8;
     static final int WIDTH = (3 + Defs.DIAMETER) * MO_SIZE;
     static final int DISH_HEIGH = WIDTH;
@@ -116,7 +119,7 @@ public class ALifeContestSimulationView extends Stage {
         timer.endSimulation();
         this.hide();
 
-        System.out.println("Simulation view : end simulation");
+        logger.debug("Simulation ended. bye :)");
     }
 
     public void pauseSimulation() {

@@ -7,5 +7,5 @@ package alifec.core.event;
  */
 public interface Listener {
 
-    void handle (Event event);
+    void handle(Event event);
 }

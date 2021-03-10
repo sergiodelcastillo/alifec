@@ -1,7 +1,5 @@
 package alifec.core.exception;
 
-import alifec.core.persistence.config.ContestConfig;
-
 /**
  * Created by Sergio Del Castillo on 23/06/18.
  *

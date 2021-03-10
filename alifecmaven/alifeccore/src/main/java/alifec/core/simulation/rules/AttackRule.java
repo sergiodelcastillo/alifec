@@ -1,6 +1,9 @@
 package alifec.core.simulation.rules;
 
-import alifec.core.simulation.*;
+import alifec.core.simulation.Cell;
+import alifec.core.simulation.Defs;
+import alifec.core.simulation.Environment;
+import alifec.core.simulation.Movement;
 
 import java.util.Random;
 
@@ -11,6 +14,7 @@ import java.util.Random;
 
 public class AttackRule implements ColonyRule {
     private static final Random random = new Random();
+
     /**
      * The current MO and its opponent will fight if:
      * 1) The destination of the MO is an opponent position.
@@ -47,7 +51,7 @@ public class AttackRule implements ColonyRule {
 
         mo.ene -= Defs.LESS_MOVE;
 
-        if (Float.compare(enemy.ene , mo.ene) == 0) {
+        if (Float.compare(enemy.ene, mo.ene) == 0) {
             mo.ene += (0.001f * (random.nextInt(2) == 0 ? 1 : -1));
         }
 

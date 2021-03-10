@@ -33,7 +33,7 @@ public class CompileConfig {
 
 
     public CompileConfig(ContestConfig config) throws CompileConfigException {
-        this(config.getCompilerConfigFile(),config.getCompilationTarget(), config.getCppApiFolder(), config.getMOsPath());
+        this(config.getCompilerConfigFile(), config.getCompilationTarget(), config.getCppApiFolder(), config.getMOsPath());
     }
 
     private CompileConfig(String compilerConfigFile, String compilationTarget, String cppApiFolder, String mosPath) throws CompileConfigException {

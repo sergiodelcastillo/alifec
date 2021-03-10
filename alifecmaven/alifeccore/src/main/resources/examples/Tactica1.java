@@ -8,11 +8,6 @@ package MOs;
 import alifec.core.simulation.*;
 
 
-import alifec.core.simulation.Microorganism;
-import alifec.core.simulation.Movement;
-import alifec.core.simulation.Position;
-
-
 public class Tactica1 extends Microorganism {
     Petri petri = Petri.getInstance();
 
