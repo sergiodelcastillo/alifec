@@ -4,6 +4,7 @@ import alifec.core.contest.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class ZipFileManagerTest extends ParentTest {
 
         List<String> entries = zipFileManager.listEntries(config.getBackupFolder() + File.separator + zipfile);
 
-        Assert.assertThat(entries, Matchers.containsInAnyOrder(target));
+        MatcherAssert.assertThat(entries, Matchers.containsInAnyOrder(target));
     }
 
     @Test
