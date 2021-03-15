@@ -1,7 +1,10 @@
 package alifec.core.persistence;
 
-import alifec.core.persistence.custom.*;
-
+import alifec.core.persistence.custom.CppMOPredicate;
+import alifec.core.persistence.custom.FileNameFunction;
+import alifec.core.persistence.custom.JavaFileNameFunction;
+import alifec.core.persistence.custom.NotNullPredicate;
+import alifec.core.persistence.custom.SuffixPredicate;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

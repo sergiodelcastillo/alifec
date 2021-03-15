@@ -1,6 +1,10 @@
 package alifec.simulation.simulation;
 
-import org.apache.logging.log4j.Level;
+import alifec.core.simulation.Cell;
+import alifec.core.simulation.Colony;
+import alifec.core.simulation.Defs;
+import alifec.core.simulation.Environment;
+import alifec.core.simulation.Petri;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import alifec.core.contest.Battle;
@@ -9,18 +13,21 @@ import alifec.core.event.EventBus;
 import alifec.core.event.impl.BattleEvent;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.ValidationException;
-import alifec.core.simulation.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import static alifec.simulation.simulation.ALifeContestSimulationView.*;
+import static alifec.simulation.simulation.ALifeContestSimulationView.COLOR_BACKGROUND_STRING;
+import static alifec.simulation.simulation.ALifeContestSimulationView.DISH_HEIGH;
+import static alifec.simulation.simulation.ALifeContestSimulationView.INFO_HEIGH;
+import static alifec.simulation.simulation.ALifeContestSimulationView.MO_SIZE;
+import static alifec.simulation.simulation.ALifeContestSimulationView.TREND_HEIGH;
+import static alifec.simulation.simulation.ALifeContestSimulationView.WIDTH;
 
 /**
  * Created by Sergio Del Castillo on 09/07/18.

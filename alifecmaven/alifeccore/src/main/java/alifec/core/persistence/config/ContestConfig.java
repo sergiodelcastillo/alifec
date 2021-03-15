@@ -1,19 +1,39 @@
 package alifec.core.persistence.config;
 
-import alifec.core.exception.*;
+import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.ConfigFileNotFoundException;
+import alifec.core.exception.ConfigFileReadException;
+import alifec.core.exception.ConfigFileWriteException;
+import alifec.core.exception.InvalidUserDirException;
+import alifec.core.exception.ValidationException;
 import alifec.core.simulation.nutrient.BallsNutrient;
 import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.Nutrient;
-import alifec.core.simulation.nutrient.function.*;
+import alifec.core.simulation.nutrient.function.FamineFunction;
+import alifec.core.simulation.nutrient.function.InclinedPlaneFunction;
+import alifec.core.simulation.nutrient.function.LatticeFunction;
+import alifec.core.simulation.nutrient.function.RingsFunction;
+import alifec.core.simulation.nutrient.function.TwoGaussiansFunction;
+import alifec.core.simulation.nutrient.function.VerticalBarFunction;
 import alifec.core.validation.ContestConfigValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 05/08/17.
