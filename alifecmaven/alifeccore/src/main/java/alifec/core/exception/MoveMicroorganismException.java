@@ -1,4 +1,3 @@
-
 package alifec.core.exception;
 
 public class MoveMicroorganismException extends Exception {

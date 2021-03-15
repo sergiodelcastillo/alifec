@@ -24,7 +24,7 @@ public class ContestPathValidator implements Validator<String> {
         if (!Files.isDirectory(path))
             throw new ValidationException("The contest path is not a directory or not exists.");
 
-        Path configFile = path.resolve(ContestConfig.BASE_APP_FOLDER+ File.separator+ContestConfig.CONFIG_FILE);
+        Path configFile = path.resolve(ContestConfig.BASE_APP_FOLDER + File.separator + ContestConfig.CONFIG_FILE);
         if (!Files.isRegularFile(configFile))
             throw new ValidationException("The contest does not have a valid config file.");
     }

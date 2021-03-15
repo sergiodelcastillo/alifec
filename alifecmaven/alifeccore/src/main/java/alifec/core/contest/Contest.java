@@ -7,7 +7,13 @@ import alifec.core.contest.oponentInfo.TournamentStatistics;
 import alifec.core.event.Event;
 import alifec.core.event.EventBus;
 import alifec.core.event.Listener;
-import alifec.core.exception.*;
+import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.ConfigFileWriteException;
+import alifec.core.exception.CreateContestException;
+import alifec.core.exception.CreateRankingException;
+import alifec.core.exception.OpponentException;
+import alifec.core.exception.TournamentException;
+import alifec.core.exception.ValidationException;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.ZipFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -366,5 +372,6 @@ public class Contest implements Listener {
     public void handle(Event event) {
         lastTournament().handle(event);
     }
+
 }
 

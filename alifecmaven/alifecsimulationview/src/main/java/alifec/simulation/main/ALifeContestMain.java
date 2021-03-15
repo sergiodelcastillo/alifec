@@ -25,11 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -55,6 +51,7 @@ public class ALifeContestMain extends Application {
         }
 
     }
+
     public static void main(String[] args) {
         // launch the application
         Application.launch(ALifeContestMain.class, args);

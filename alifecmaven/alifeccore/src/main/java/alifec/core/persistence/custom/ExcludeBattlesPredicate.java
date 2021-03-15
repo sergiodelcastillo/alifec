@@ -14,8 +14,8 @@ import java.util.function.Predicate;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ExcludeBattlesPredicate implements Predicate<String> {
-    private Logger logger = LogManager.getLogger(ExcludeBattlesPredicate.class);
     private final List<Battle> battles;
+    private Logger logger = LogManager.getLogger(ExcludeBattlesPredicate.class);
 
     public ExcludeBattlesPredicate(List<Battle> battles) {
         this.battles = battles;

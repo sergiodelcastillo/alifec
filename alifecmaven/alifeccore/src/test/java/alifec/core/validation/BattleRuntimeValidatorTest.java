@@ -2,7 +2,6 @@ package alifec.core.validation;
 
 import alifec.core.contest.Battle;
 import alifec.core.exception.BattleException;
-import alifec.core.exception.BattleException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +22,7 @@ public class BattleRuntimeValidatorTest {
         }
 
         try {
-            Battle b= new Battle(-1, 1, 1, "c1", "c2", "n");
+            Battle b = new Battle(-1, 1, 1, "c1", "c2", "n");
             Assert.fail("It should fail.");
         } catch (BattleException e) {
         }

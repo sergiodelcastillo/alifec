@@ -1,11 +1,13 @@
 package alifec.core.simulation.rules;
 
-import alifec.core.contest.ParentTest;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
+import alifec.core.contest.ParentTest;
 import alifec.core.persistence.config.ContestConfig;
-import alifec.core.simulation.*;
-
+import alifec.core.simulation.Cell;
+import alifec.core.simulation.Defs;
+import alifec.core.simulation.Environment;
+import alifec.core.simulation.Movement;
 import alifec.core.simulation.nutrient.function.FamineFunction;
 import org.junit.Assert;
 import org.junit.Test;

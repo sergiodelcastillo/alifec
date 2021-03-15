@@ -12,17 +12,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.CodeSource;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * Created by Sergio Del Castillo on 06/08/17.
@@ -89,32 +85,9 @@ public class ContestFileManager {
             createExamplesFromFile(source, MOsFolder);
     }
 
-    public static void createExamplesFromJar(String path, String MOsFolder) {
-        System.out.println("todo: implementar");
-        //
-        try {
-            CodeSource src = ContestFileManager.class.getProtectionDomain().getCodeSource();
-            if (src != null) {
-                URL jar = src.getLocation();
-                ZipInputStream zip = new ZipInputStream(jar.openStream());
-                ZipEntry e;
-
-                while ((e = zip.getNextEntry()) != null) {
-                    String name = e.getName();
-
-                    if (name.startsWith(path)) {
-                        System.out.println("to add: " + name);
-
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void createExamplesFromFile(String path, String MOsFolder) {
-        logger.info("Generating examples in folder " + MOsFolder);
+        logger.info("Generating examples in folder: " + MOsFolder);
         Path source = getRootPathSourcePath().resolve(path);
 
         try (Stream<Path> list = Files.walk(source)) {

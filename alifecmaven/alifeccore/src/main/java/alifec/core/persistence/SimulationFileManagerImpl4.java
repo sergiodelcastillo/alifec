@@ -105,7 +105,7 @@ public class SimulationFileManagerImpl4 implements SimulationFileManager {
     private void calculateDiff(float[][] newNutri) {
         for (int x = 0; x < Defs.DIAMETER; x++) {
             for (int y = 0; y < Defs.DIAMETER; y++) {
-                difference[x][y] =  newNutri[x][y];
+                difference[x][y] = newNutri[x][y];
                 if (0.0001f < difference[x][y] && difference[x][y] > -0.001f)
                     difference[x][y] = 0f;
                 nutrients[x][y] = newNutri[x][y];
@@ -140,7 +140,9 @@ public class SimulationFileManagerImpl4 implements SimulationFileManager {
         }
 
         return byteBuffer.array();
-    }private byte[] toByteArray(short[][] values) {
+    }
+
+    private byte[] toByteArray(short[][] values) {
         byteBuffer.clear();
 
         for (short[] values1 : values) {

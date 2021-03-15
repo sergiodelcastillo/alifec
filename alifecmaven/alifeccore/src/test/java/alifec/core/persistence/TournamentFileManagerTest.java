@@ -1,7 +1,7 @@
 package alifec.core.persistence;
 
-import alifec.core.contest.ParentTest;
 import alifec.core.contest.Battle;
+import alifec.core.contest.ParentTest;
 import alifec.core.exception.BattleException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -90,7 +90,7 @@ public class TournamentFileManagerTest extends ParentTest {
         Assert.assertEquals(0, result.size());
 
         //deleteFromBattlesFile the first
-         manager.saveAll(path, list.subList(0, 2));
+        manager.saveAll(path, list.subList(0, 2));
         manager.deleteFromBattlesFile(Collections.singletonList(list.get(0)));
         result = manager.readAll(path);
         Assert.assertEquals(1, result.size());
@@ -98,7 +98,7 @@ public class TournamentFileManagerTest extends ParentTest {
 
         //deleteFromBattlesFile in the middle, the first and the last
         manager.saveAll(path, list.subList(0, 5));
-        manager.deleteFromBattlesFile( Arrays.asList(list.get(0), list.get(2), list.get(4)));
+        manager.deleteFromBattlesFile(Arrays.asList(list.get(0), list.get(2), list.get(4)));
         result = manager.readAll(path);
         Assert.assertEquals(2, result.size());
         Assert.assertEquals(list.get(1), result.get(0));

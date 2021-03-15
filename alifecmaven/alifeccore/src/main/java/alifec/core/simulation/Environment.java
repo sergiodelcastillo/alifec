@@ -8,13 +8,19 @@ import alifec.core.exception.OpponentException;
 import alifec.core.persistence.SourceCodeFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.nutrient.Nutrient;
-import alifec.core.simulation.rules.*;
+import alifec.core.simulation.rules.AttackRule;
+import alifec.core.simulation.rules.ColonyRule;
+import alifec.core.simulation.rules.EatRule;
+import alifec.core.simulation.rules.LifeRule;
+import alifec.core.simulation.rules.LoveRule;
+import alifec.core.simulation.rules.MoveRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -81,7 +87,7 @@ public class Environment {
             for (String name : helper.listJavaMOs()) {
                 try {
                     //todo: it seems to be unnecessary: JavaColony.addClassPath(config.getCompilationTarget());
-                    colonies.add(new JavaColony(colonies.size(), config.getCompilationTarget(),"MOs." + name));
+                    addJavaColony(config, name);
                     logger.info(name + " [OK]");
                 } catch (ClassNotFoundException ex) {
                     logger.warn(ex.getMessage(), ex);
@@ -100,7 +106,7 @@ public class Environment {
                 for (String name : helper.listCppMOs()) {
                     try {
                         // to initialise the name of colony
-                        colonies.add(new CppColony(colonies.size(), name));
+                        addCppColony(name);
                         logger.info(name + " [OK]");
                     } catch (ClassNotFoundException ex) {
                         logger.warn(name + " [FAIL]");
@@ -116,14 +122,27 @@ public class Environment {
         Petri.getInstance().setEnvironment(this);
     }
 
-    public boolean delete(String name) {
+    private void addCppColony(String name) throws ClassNotFoundException {
+        addColony(new CppColony(colonies.size(), name));
+    }
+
+    private void addJavaColony(ContestConfig config, String name) throws ClassNotFoundException, MalformedURLException {
+        addColony(new JavaColony(colonies.size(), config.getCompilationTarget(), "MOs." + name));
+    }
+
+    private void addColony(Colony colony){
+        colonies.add(colony);
+    }
+
+   /* TODO: it seems to be unnecessary
+       public boolean delete(String name) {
         for (Colony c : colonies) {
             if (name.equals(c.getName())) {
                 return colonies.remove(c);
             }
         }
         return false;
-    }
+    }*/
 
     /*
      * Initialize the two colonies and the agar to fight.
@@ -137,18 +156,18 @@ public class Environment {
         int nutrientId = b.getNutrientId();
         Nutrient temp = ContestConfig.nutrientOptions().get(nutrientId);
 
-        if (temp == null) {
+        if (Objects.isNull(temp)) {
             logger.error("There is not nutrient distribution with id = " + nutrientId + ".");
             return false;
         }
 
         agar.setNutrient(temp);
 
-        if ((c1 = getColonyById(b.getFirstColonyId())) == null) {
+        if (Objects.isNull(c1 = getColonyById(b.getFirstColonyId()))) {
             return false;
         }
 
-        if ((c2 = getColonyById(b.getSecondColonyId())) == null) {
+        if (Objects.isNull(c2 = getColonyById(b.getSecondColonyId()))) {
             return false;
         }
 
@@ -259,10 +278,10 @@ public class Environment {
     }
 
     public boolean moveMO(int ax, int ay, int bx, int by) {
-        if (microorganism[ax][ay] == null)
+        if (Objects.isNull(microorganism[ax][ay]))
             return false;
 
-        if (microorganism[bx][by] != null)
+        if (Objects.nonNull(microorganism[bx][by]))
             return false;
 
         microorganism[bx][by] = microorganism[ax][ay];
@@ -362,7 +381,7 @@ public class Environment {
     public boolean createMOInstance(int px, int py, float ene, int id) {
         if (!inDish(px, py) ||
                 ene <= 0 || ene > Defs.E_INITIAL ||
-                microorganism[px][py] != null)
+                Objects.nonNull(microorganism[px][py]))
             return false;
 
         Cell mo = new Cell(id);

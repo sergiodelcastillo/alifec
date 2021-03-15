@@ -37,7 +37,7 @@ public class ALifeCFileManager {
             JarFileManager.createFileFromJar(fileInternalLocation, basePath.toString());
         } else {
             if (!Files.exists(file)) {
-                Files.copy(Paths.get(ALifeCFileManager.class.getResource("/"+fileInternalLocation).toURI()), file);
+                Files.copy(Paths.get(ALifeCFileManager.class.getResource("/" + fileInternalLocation).toURI()), file);
             }
         }
         return file;

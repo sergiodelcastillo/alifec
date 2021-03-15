@@ -46,18 +46,17 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
     private static final byte[] NUTRIENT_PREFIX_BYTES = NUTRIENT_PREFIX.getBytes();
     private static final byte[] MICROORGANISM_PREFIX_BYTES = MICROORGANISM_PREFIX.getBytes();
     private static final byte[] END_PREFIX_BYTES = END_PREFIX.getBytes();
-
-    Logger logger = LogManager.getLogger(getClass());
     // assumed that the data size will never be higher than buffer size. The compressed data should be shorter than
     //the size of the original size 4*50*50.
     private final int BUFFER_SIZE = 4 * Defs.DIAMETER * Defs.DIAMETER;
+    private final LiveInstanceValidator validator;
+    Logger logger = LogManager.getLogger(getClass());
     private Path file;
     private StringBuilder builder;
     private ByteBuffer byteBuffer;
     private float[][] nutrients;
     private byte[] buffer;
     private Deflater deflater;
-    private final LiveInstanceValidator validator;
     private Base64.Encoder encoder;
     private Base64.Decoder decoder;
 

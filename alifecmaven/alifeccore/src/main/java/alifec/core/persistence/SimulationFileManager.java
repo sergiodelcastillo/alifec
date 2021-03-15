@@ -16,12 +16,6 @@ import java.util.List;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public interface SimulationFileManager {
-    interface Consumer {
-        void consume(StartBattle line);
-        void consume(RunningBattle line);
-        void consume(FinishedBattle line);
-    }
-
     void appendInit(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException;
 
     void append(Nutrient nutri, List<Cell> mos) throws IOException;
@@ -29,4 +23,12 @@ public interface SimulationFileManager {
     void appendFinish(Nutrient nutri, List<Cell> mos, Battle battle) throws IOException;
 
     void iterateAll(Consumer consumer) throws IOException;
+
+    interface Consumer {
+        void consume(StartBattle line);
+
+        void consume(RunningBattle line);
+
+        void consume(FinishedBattle line);
+    }
 }

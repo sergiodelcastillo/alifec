@@ -117,8 +117,6 @@ public class SimulationFileManagerImpl6 implements SimulationFileManager {
                 nutrients[x][y] = ntmp[x][y];
             }
         }
-        //      System.out.println(count);
-
     }
 
 

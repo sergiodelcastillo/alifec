@@ -1,5 +1,8 @@
 package alifec.simulation.simulation;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
 import alifec.core.event.EventBus;
@@ -25,7 +28,7 @@ import static alifec.simulation.simulation.ALifeContestSimulationView.*;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestSimulationTimer extends AnimationTimer {
-
+    private static Logger logger = LogManager.getLogger(ALifeContestSimulationTimer.class);
     //COLORS
     private static Color COLOR_LINE = Color.GRAY;
     private static Color COLOR_COLONY_A = Color.RED;
@@ -144,11 +147,11 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     }
 
     private void showEndSimulation() {
-        System.out.println("Simulation will close");
+        logger.debug("Simulation will close");
     }
 
     private void createBattle() {
-        System.out.println("create battle");
+        logger.debug("Creating battle ...");
         if (battles.isEmpty()) return;
 
         current = battles.poll();
@@ -156,7 +159,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
         //todo: improve create battle definition, it should throw exceptions intead of boolean result.
         if (!environment.createBattle(current)) {
-            System.out.println("someting wrong!!!!");
+            logger.error("Something went wrong during the creation of a battle");
         }
 
         this.colonyA = environment.getFirstOpponent();
@@ -168,8 +171,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     }
 
     private void waitBetweenBattles() {
-
-        System.out.println("wait between battles");
+        logger.debug("Waiting between battles");
     }
 
     public void endSimulation() {
@@ -178,8 +180,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
         stop();
 
-
-        System.out.println("timer stopped");
+        logger.debug("Simulation ending, the timer will stop.");
     }
 
     private void showStartSimulation(long seconds) {
@@ -190,8 +191,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
             String text2 = String.valueOf(MAX_COUNT - seconds);
             centeredText(text1, text2);
 
-            //todo: improve logging
-            System.out.println("start=" + (MAX_COUNT - seconds));
+            logger.debug("start=" + (MAX_COUNT - seconds));
         }
     }
 

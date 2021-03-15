@@ -12,6 +12,7 @@ public class CreateContestFolderException extends Exception {
         super(s);
 
     }
+
     public CreateContestFolderException(String s, Throwable ex) {
         super(s, ex);
 

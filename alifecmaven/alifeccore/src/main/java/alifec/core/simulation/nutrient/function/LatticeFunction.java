@@ -10,7 +10,7 @@ public class LatticeFunction implements Function {
         int D = Defs.DIAMETER;
 
         return (x + y) % (D / 4) <= 1 || Math.abs(y - x) % (D / 3) <= 1 ?
-                Math.min(1.277f * Defs.MAX_NUTRI * (D - x) * (D - y) / (D * D)  , Defs.MAX_NUTRI) : 0f;
+                Math.min(1.277f * Defs.MAX_NUTRI * (D - x) * (D - y) / (D * D), Defs.MAX_NUTRI) : 0f;
     }
 
     @Override

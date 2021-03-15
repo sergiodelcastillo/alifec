@@ -10,7 +10,6 @@ package MOs;
 import alifec.core.simulation.Defs;
 import alifec.core.simulation.Microorganism;
 import alifec.core.simulation.Movement;
-import alifec.core.simulation.Position;
 import alifec.core.simulation.Petri;
 
 public class Tactica2 extends Microorganism {

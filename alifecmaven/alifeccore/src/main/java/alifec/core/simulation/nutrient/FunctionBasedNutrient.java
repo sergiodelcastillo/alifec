@@ -7,9 +7,8 @@ import alifec.core.simulation.nutrient.function.Function;
 import java.util.Random;
 
 public class FunctionBasedNutrient implements Nutrient {
-    private Function function;
     private static final Random random = new Random();
-
+    private Function function;
     private float[][] nutrients;
     private int rx = random.nextInt(Defs.DIAMETER);
     private int ry = random.nextInt(Defs.DIAMETER);
@@ -77,7 +76,7 @@ public class FunctionBasedNutrient implements Nutrient {
     }
 
     @Override
-    public float [][] getNutrients(){
+    public float[][] getNutrients() {
         return nutrients;
     }
 

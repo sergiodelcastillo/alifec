@@ -1,9 +1,9 @@
-
 package alifec.core.simulation;
+
 /**
  * @author: Sergio Del Castillo
  * @email: sergio.jose.delcastillo@gmail.com
- *
+ * <p>
  * This class define the important constant to alifec.
  * A player can use them.
  */
