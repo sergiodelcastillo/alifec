@@ -52,12 +52,6 @@ public abstract class Colony {
         usrPathsField.set(null, newPaths);
     }
 
-    @Override
-    public final void finalize() throws Throwable {
-        end();
-        super.finalize();
-    }
-
     public final boolean equals(Colony c1) {
         return c1 != null &&
                 getName().equalsIgnoreCase(c1.getName()) &&
@@ -84,7 +78,7 @@ public abstract class Colony {
 
     protected abstract void kill(int indexMO);
 
-    protected abstract void end();
+    public abstract void end();
 
     protected abstract Movement move(int indexMO);
 

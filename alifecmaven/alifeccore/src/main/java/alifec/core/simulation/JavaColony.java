@@ -42,7 +42,8 @@ public class JavaColony extends Colony {
     }
 
     @Override
-    protected void end() {
+    public void end() {
+        logger.info("Ending resources of colony {}", getName());
         instances = null;
     }
 

@@ -8,11 +8,20 @@ import alifec.core.exception.OpponentException;
 import alifec.core.persistence.SourceCodeFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.nutrient.Nutrient;
-import alifec.core.simulation.rules.*;
+import alifec.core.simulation.rules.AttackRule;
+import alifec.core.simulation.rules.ColonyRule;
+import alifec.core.simulation.rules.EatRule;
+import alifec.core.simulation.rules.LifeRule;
+import alifec.core.simulation.rules.LoveRule;
+import alifec.core.simulation.rules.MoveRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.*;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 
 public class Environment {
@@ -78,7 +87,7 @@ public class Environment {
             for (String name : helper.listJavaMOs()) {
                 try {
                     //todo: it seems to be unnecessary: JavaColony.addClassPath(config.getCompilationTarget());
-                    colonies.add(new JavaColony(colonies.size(), config.getCompilationTarget(), "MOs." + name));
+                    addJavaColony(config, name);
                     logger.info(name + " [OK]");
                 } catch (ClassNotFoundException ex) {
                     logger.warn(ex.getMessage(), ex);
@@ -97,7 +106,7 @@ public class Environment {
                 for (String name : helper.listCppMOs()) {
                     try {
                         // to initialise the name of colony
-                        colonies.add(new CppColony(colonies.size(), name));
+                        addCppColony(name);
                         logger.info(name + " [OK]");
                     } catch (ClassNotFoundException ex) {
                         logger.warn(name + " [FAIL]");
@@ -113,14 +122,27 @@ public class Environment {
         Petri.getInstance().setEnvironment(this);
     }
 
-    public boolean delete(String name) {
+    private void addCppColony(String name) throws ClassNotFoundException {
+        addColony(new CppColony(colonies.size(), name));
+    }
+
+    private void addJavaColony(ContestConfig config, String name) throws ClassNotFoundException, MalformedURLException {
+        addColony(new JavaColony(colonies.size(), config.getCompilationTarget(), "MOs." + name));
+    }
+
+    private void addColony(Colony colony){
+        colonies.add(colony);
+    }
+
+   /* TODO: it seems to be unnecessary
+       public boolean delete(String name) {
         for (Colony c : colonies) {
             if (name.equals(c.getName())) {
                 return colonies.remove(c);
             }
         }
         return false;
-    }
+    }*/
 
     /*
      * Initialize the two colonies and the agar to fight.

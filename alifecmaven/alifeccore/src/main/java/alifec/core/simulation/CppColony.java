@@ -63,6 +63,7 @@ public class CppColony extends Colony {
 
     @Override
     public void end() {
+        logger.info("Ending resources of colony {}", getName());
         end(id);
     }
 

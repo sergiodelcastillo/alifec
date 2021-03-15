@@ -180,7 +180,6 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
         stop();
 
-
         logger.debug("Simulation ending, the timer will stop.");
     }
 
