@@ -9,7 +9,11 @@ import alifec.core.event.Event;
 import alifec.core.event.EventBus;
 import alifec.core.event.Listener;
 import alifec.core.event.impl.BattleEvent;
-import alifec.core.exception.*;
+import alifec.core.exception.BattleException;
+import alifec.core.exception.ConfigFileWriteException;
+import alifec.core.exception.CreateContestException;
+import alifec.core.exception.TournamentException;
+import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
 import alifec.core.simulation.NutrientDistribution;
@@ -24,7 +28,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -32,7 +42,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 10/06/18.

@@ -1,6 +1,10 @@
 package alifec.core.simulation.rules;
 
-import alifec.core.simulation.*;
+import alifec.core.simulation.Agar;
+import alifec.core.simulation.Cell;
+import alifec.core.simulation.Defs;
+import alifec.core.simulation.Environment;
+import alifec.core.simulation.Movement;
 
 /**
  * @author: Sergio Del Castillo

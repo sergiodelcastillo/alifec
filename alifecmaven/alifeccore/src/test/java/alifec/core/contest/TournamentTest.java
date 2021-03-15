@@ -2,14 +2,17 @@ package alifec.core.contest;
 
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
-import alifec.core.exception.*;
+import alifec.core.exception.BattleException;
+import alifec.core.exception.ConfigFileException;
+import alifec.core.exception.CreateContestException;
+import alifec.core.exception.CreateContestFolderException;
+import alifec.core.exception.TournamentException;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrient.BallsNutrient;
 import alifec.core.simulation.nutrient.function.FamineFunction;
 import org.junit.Assert;
 import org.junit.Test;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
