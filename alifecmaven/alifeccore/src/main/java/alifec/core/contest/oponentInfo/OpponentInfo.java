@@ -2,6 +2,7 @@ package alifec.core.contest.oponentInfo;
 
 import alifec.core.exception.OpponentException;
 import alifec.core.exception.ValidationException;
+import alifec.core.persistence.config.ContestConfig;
 import alifec.core.validation.OpponentInfoLineValidator;
 import alifec.core.validation.OpponentInfoValidator;
 
@@ -11,7 +12,6 @@ public class OpponentInfo {
     private final String name;
     private final String author;
     private final String affiliation;
-    private StringBuilder builder;
 
     public OpponentInfo(String n, String au, String af) throws OpponentException {
         this.name = n;
@@ -19,7 +19,6 @@ public class OpponentInfo {
         this.affiliation = af;
         try {
             checkOpponentInfo(this);
-            init();
         } catch (Throwable t) {
             throw new OpponentException(t.getMessage(), t);
         }
@@ -35,14 +34,9 @@ public class OpponentInfo {
             author = info[1];
             affiliation = info[2];
             checkOpponentInfo(this);
-            init();
         } catch (Throwable t) {
             throw new OpponentException(t.getMessage(), t);
         }
-    }
-
-    private void init() {
-        builder = new StringBuilder();
     }
 
     private void checkOpponentInfo(OpponentInfo info) throws ValidationException {
@@ -71,15 +65,7 @@ public class OpponentInfo {
 
     @Override
     public String toString() {
-        builder.delete(0, builder.length());
-
-        builder.append(name)
-                .append(',')
-                .append(author)
-                .append(',')
-                .append(affiliation);
-
-        return builder.toString();
+        return String.format(ContestConfig.getOpponentInfoCsvFormat(), name, author, affiliation);
     }
 
     @Override

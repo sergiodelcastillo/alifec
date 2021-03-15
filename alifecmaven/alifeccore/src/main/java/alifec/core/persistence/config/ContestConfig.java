@@ -42,40 +42,45 @@ import java.util.ResourceBundle;
  */
 public class ContestConfig {
     public static final String BASE_APP_FOLDER = "app";
-    public static final String BASE_DATA_FOLDER = "data";
+    private static final String BASE_DATA_FOLDER = "data";
+
+    /**
+     * Opponents Info configuration
+     * */
+    private static String OPPONENT_INFO_CSV_FORMAT = "%s,%s,%s";
     /**
      * Folder of source colonies.
      */
-    public static final String MOS_FOLDER = "MOs";
-    public static final String CPP_API_FOLDER = "cpp";
-    public static final String REPORT_FOLDER = "Report";
-    public static final String REPORT_FILENAME_TXT = "report-%s.txt";
-    public static final String REPORT_FILENAME_CSV = "report-%s.csv";
+    private static final String MOS_FOLDER = "MOs";
+    private static final String CPP_API_FOLDER = "cpp";
+    private static final String REPORT_FOLDER = "Report";
+    private static final String REPORT_FILENAME_TXT = "report-%s.txt";
+    private static final String REPORT_FILENAME_CSV = "report-%s.csv";
     public static final String REPORT_TXT_FORMAT = "%-20s%-20s%-20s%-20s" + System.lineSeparator();
     public static final String REPORT_CSV_FORMAT = "%s,%s,%s,%s,%s";
-    public static final String COMPETITORS_FILE = "competitors";
+    private static final String COMPETITORS_FILE = "competitors";
     /**
      * Log Folder.
      */
-    public static final String LOG_FOLDER = "Log";
+    private static final String LOG_FOLDER = "Log";
     /**
      * Configuration file.
      */
     public static final String CONFIG_FILE = "config";
-    public static final String COMPILER_CONFIG_FILE = "compiler.properties";
-    public static final String COMPILATION_TARGET_FOLDER = "compiled";
-    public static final String COMPILATION_LOG_FILENAME = "log-%s-%s";
+    private static final String COMPILER_CONFIG_FILE = "compiler.properties";
+    private static final String COMPILATION_TARGET_FOLDER = "compiled";
+    private static final String COMPILATION_LOG_FILENAME = "log-%s-%s";
     /**
      * back up file
      */
-    public static final String BACKUP_FOLDER = "Backup";
-    public static final String BACKUP_FILENAME_ZIP = "backup-%s.zip";
+    private static final String BACKUP_FOLDER = "Backup";
+    private static final String BACKUP_FILENAME_ZIP = "backup-%s.zip";
     public static final String CONTEST_NAME_PREFIX = "Contest-";
     public static final String TOURNAMENT_PREFIX = "Tournament-";
-    public static final String TOURNAMENT_FILENAME = "Tournament-%03d";
+    private static final String TOURNAMENT_FILENAME = "Tournament-%03d";
     public static final int PROGRAMMER_MODE = 0;
     public static final int COMPETITION_MODE = 1;
-    public static final int DEFAULT_PAUSE_BETWEEN_BATTLES = 200;
+    private static final int DEFAULT_PAUSE_BETWEEN_BATTLES = 200;
     public static final String SEPARATOR_PATTERN;
     private static final String[] PAUSE_BETWEEN_BATTLES_OPTIONS = {"200", "400", "600", "800", "1000", "1200", "1400", "1600", "1800", "2000"};
     private static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -535,5 +540,9 @@ public class ContestConfig {
 
     public int getCountdownMax() {
         return countdownMax;
+    }
+
+    public static String getOpponentInfoCsvFormat(){
+        return OPPONENT_INFO_CSV_FORMAT;
     }
 }
