@@ -1,33 +1,26 @@
 package alifec.simulation.simulation;
 
-import alifec.core.simulation.Cell;
-import alifec.core.simulation.Colony;
-import alifec.core.simulation.Defs;
-import alifec.core.simulation.Environment;
-import alifec.core.simulation.Petri;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import alifec.core.contest.Battle;
 import alifec.core.contest.Contest;
 import alifec.core.event.EventBus;
 import alifec.core.event.impl.BattleEvent;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.exception.ValidationException;
+import alifec.core.simulation.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 
-import static alifec.simulation.simulation.ALifeContestSimulationView.COLOR_BACKGROUND_STRING;
-import static alifec.simulation.simulation.ALifeContestSimulationView.DISH_HEIGH;
-import static alifec.simulation.simulation.ALifeContestSimulationView.INFO_HEIGH;
-import static alifec.simulation.simulation.ALifeContestSimulationView.MO_SIZE;
-import static alifec.simulation.simulation.ALifeContestSimulationView.TREND_HEIGH;
-import static alifec.simulation.simulation.ALifeContestSimulationView.WIDTH;
+import static alifec.simulation.simulation.ALifeContestSimulationView.*;
 
 /**
  * Created by Sergio Del Castillo on 09/07/18.
@@ -210,10 +203,10 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         dish.setFont(new Font(Font.getDefault().getName(), 16));
         dish.setFill(COLOR_LINE);
 
-        if (text1 != null && !text1.isEmpty())
+        if (Objects.nonNull(text1) && !text1.isEmpty())
             dish.fillText(text1, view.getPetriDishWidth() / 2, 150);
 
-        if (text2 != null && !text2.isEmpty())
+        if (Objects.nonNull(text2) && !text2.isEmpty())
             dish.fillText(text2, view.getPetriDishWidth() / 2, 200);
     }
 
@@ -350,7 +343,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
     }
 
     public void startSimulation(List<Battle> simulation) throws ValidationException {
-        if (simulation == null || simulation.isEmpty())
+        if (Objects.isNull(simulation) || simulation.isEmpty())
             throw new ValidationException("The battle list is empty so it is not possible to run a simulation.");
 
         //set initial state!

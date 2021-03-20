@@ -23,6 +23,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.Deflater;
 
 /**
@@ -202,7 +203,7 @@ public class SimulationFileManagerImpl3 implements SimulationFileManager {
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             String line;
 
-            while ((line = reader.readLine()) != null) {
+            while (Objects.nonNull(line = reader.readLine())) {
                 try {
                     validator.validate(line);
 

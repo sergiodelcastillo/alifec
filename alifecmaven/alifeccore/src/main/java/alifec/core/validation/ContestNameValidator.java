@@ -3,6 +3,7 @@ package alifec.core.validation;
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,8 +25,8 @@ public class ContestNameValidator implements Validator<String> {
     }
 
     @Override
-    public void validate(String name) throws ValidationException {
-        if (name == null || name.trim().isEmpty())
+    public String validate(String name) throws ValidationException {
+        if (Objects.isNull(name) || name.trim().isEmpty())
             throw new ValidationException("The contest name must not be null");
 
         Matcher matcher = pattern.matcher(name);
@@ -33,5 +34,7 @@ public class ContestNameValidator implements Validator<String> {
         if (!matcher.matches()) {
             throw new ValidationException("The contest name does not have the pattern: Contest-<NN>.");
         }
+
+        return name;
     }
 }

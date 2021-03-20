@@ -16,7 +16,7 @@ import java.util.List;
  * Manager of Microorganisms which are implemented in Java Language.
  */
 public class JavaColony extends Colony {
-    org.apache.logging.log4j.Logger logger = LogManager.getLogger(getClass());
+    private org.apache.logging.log4j.Logger logger = LogManager.getLogger(getClass());
 
     private Constructor<Microorganism> constructor;
     private List<Microorganism> instances = new ArrayList<>();

@@ -15,16 +15,15 @@ public class Opponent {
     private Logger logger = LogManager.getLogger(getClass());
 
     private List<OpponentInfo> opponents = new ArrayList<>();
-    private ContestConfig config;
+    private boolean isCompetitionMode;
     private OpponentFileManager persistence;
 
-    public Opponent(ContestConfig config) throws OpponentException {
-        this.config = config;
-
+    public Opponent(String competitorsFile, boolean isCompetitionMode) throws OpponentException {
+        this.isCompetitionMode = isCompetitionMode;
         try {
-            this.persistence = new OpponentFileManager(config.getCompetitorsFile(), config.isCompetitionMode());
+            this.persistence = new OpponentFileManager(competitorsFile, isCompetitionMode);
 
-            if (config.isCompetitionMode()) {
+            if (isCompetitionMode) {
                 opponents.addAll(persistence.readAll());
             }
         } catch (Throwable t) {
@@ -43,7 +42,7 @@ public class Opponent {
                     opponents.add(comp.getInfo());
             }
 
-            if (config.isCompetitionMode()) {
+            if (isCompetitionMode) {
                 persistence.saveAll(opponents);
             }
         } catch (Throwable t) {

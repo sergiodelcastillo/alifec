@@ -1,10 +1,8 @@
 package alifec.core.simulation.rules;
 
-import alifec.core.simulation.Cell;
-import alifec.core.simulation.Defs;
-import alifec.core.simulation.Environment;
-import alifec.core.simulation.Movement;
-import alifec.core.simulation.Position;
+import alifec.core.simulation.*;
+
+import java.util.Objects;
 
 
 public class MoveRule implements ColonyRule {
@@ -39,7 +37,7 @@ public class MoveRule implements ColonyRule {
 
         Cell cell = env.getCell(newPos.x, newPos.y);
 
-        if (cell != null && cell.colonyId != mo.colonyId) {
+        if (Objects.nonNull(cell) && cell.colonyId != mo.colonyId) {
             // delegate to  attack rule
             return Status.NONE;
         }

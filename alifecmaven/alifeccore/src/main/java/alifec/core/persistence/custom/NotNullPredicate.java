@@ -1,5 +1,6 @@
 package alifec.core.persistence.custom;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -10,6 +11,6 @@ import java.util.function.Predicate;
 public class NotNullPredicate implements Predicate<Object> {
     @Override
     public boolean test(Object t) {
-        return t != null;
+        return Objects.nonNull(t);
     }
 }

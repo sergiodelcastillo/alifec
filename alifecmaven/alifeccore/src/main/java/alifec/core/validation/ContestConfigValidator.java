@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 public class ContestConfigValidator implements Validator<ContestConfig> {
 
     @Override
-    public void validate(ContestConfig config) throws ValidationException {
+    public ContestConfig validate(ContestConfig config) throws ValidationException {
 
         if (config.getPauseBetweenBattles() < 0) {
             throw new ValidationException("property pause_between_battles must have a positive integer.");
@@ -44,5 +44,7 @@ public class ContestConfigValidator implements Validator<ContestConfig> {
         if (config.getNutrients().isEmpty()) {
             throw new ValidationException("Please specify one or more distribution of nutrients.");
         }
+
+        return config;
     }
 }

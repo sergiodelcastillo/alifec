@@ -1,6 +1,8 @@
 package alifec.core.simulation;
 
 
+import java.util.Objects;
+
 public class Petri {
     /**
      * reference to single instance.
@@ -22,12 +24,12 @@ public class Petri {
      * Create a static instance. This instance is unique.
      */
     private static synchronized void createInstance() {
-        if (INSTANCE == null)
+        if (Objects.isNull(INSTANCE))
             INSTANCE = new Petri();
     }
 
     public static Petri getInstance() {
-        if (INSTANCE == null)
+        if (Objects.isNull(INSTANCE))
             createInstance();
 
         return INSTANCE;
@@ -39,7 +41,7 @@ public class Petri {
      * @return return the  Colony identifier in the position x,y. return -1 if the position is empty.
      */
     public int getOpponent(int x, int y) {
-        if (env.getCell(x, y) == null)
+        if (Objects.isNull(env.getCell(x, y)))
             return -1;  // cant
 
         return env.getCell(x, y).colonyId;
@@ -51,7 +53,7 @@ public class Petri {
      * @return the microorganism's energy in the position <b> x,y</b>. 0.0f if the position is empty.
      */
     public float getEnergy(int x, int y) {
-        if (env.getCell(x, y) == null)
+        if (Objects.isNull(env.getCell(x, y)))
             return 0.0f;
         return env.getCell(x, y).ene;
     }
@@ -75,12 +77,9 @@ public class Petri {
      * @return true if both the microorganism in the position x1,y1 and x2,y2, have different identifiers:
      */
     public boolean canCompete(int x1, int y1, int x2, int y2) {
-
-        return env.getCell(x1, y1) != null &&
-                env.getCell(x2, y2) != null &&
-                env.getCell(x1, y1) !=
-                        env.getCell(x2, y2);
-
+        return Objects.nonNull(env.getCell(x1, y1)) &&
+                Objects.nonNull(env.getCell(x2, y2)) &&
+                env.getCell(x1, y1) != env.getCell(x2, y2);
     }
 
     /**

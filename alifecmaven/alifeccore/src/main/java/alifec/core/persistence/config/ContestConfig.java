@@ -1,39 +1,19 @@
 package alifec.core.persistence.config;
 
-import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.ConfigFileNotFoundException;
-import alifec.core.exception.ConfigFileReadException;
-import alifec.core.exception.ConfigFileWriteException;
-import alifec.core.exception.InvalidUserDirException;
-import alifec.core.exception.ValidationException;
+import alifec.core.exception.*;
 import alifec.core.simulation.nutrient.BallsNutrient;
 import alifec.core.simulation.nutrient.FunctionBasedNutrient;
 import alifec.core.simulation.nutrient.Nutrient;
-import alifec.core.simulation.nutrient.function.FamineFunction;
-import alifec.core.simulation.nutrient.function.InclinedPlaneFunction;
-import alifec.core.simulation.nutrient.function.LatticeFunction;
-import alifec.core.simulation.nutrient.function.RingsFunction;
-import alifec.core.simulation.nutrient.function.TwoGaussiansFunction;
-import alifec.core.simulation.nutrient.function.VerticalBarFunction;
+import alifec.core.simulation.nutrient.function.*;
 import alifec.core.validation.ContestConfigValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 05/08/17.
@@ -42,12 +22,18 @@ import java.util.ResourceBundle;
  */
 public class ContestConfig {
     public static final String BASE_APP_FOLDER = "app";
-    private static final String BASE_DATA_FOLDER = "data";
-
+    public static final String REPORT_TXT_FORMAT = "%-20s%-20s%-20s%-20s" + System.lineSeparator();
+    public static final String REPORT_CSV_FORMAT = "%s,%s,%s,%s,%s";
     /**
-     * Opponents Info configuration
-     * */
-    private static String OPPONENT_INFO_CSV_FORMAT = "%s,%s,%s";
+     * Configuration file.
+     */
+    public static final String CONFIG_FILE = "config";
+    public static final String CONTEST_NAME_PREFIX = "Contest-";
+    public static final String TOURNAMENT_PREFIX = "Tournament-";
+    public static final int PROGRAMMER_MODE = 0;
+    public static final int COMPETITION_MODE = 1;
+    public static final String SEPARATOR_PATTERN;
+    private static final String BASE_DATA_FOLDER = "data";
     /**
      * Folder of source colonies.
      */
@@ -56,17 +42,11 @@ public class ContestConfig {
     private static final String REPORT_FOLDER = "Report";
     private static final String REPORT_FILENAME_TXT = "report-%s.txt";
     private static final String REPORT_FILENAME_CSV = "report-%s.csv";
-    public static final String REPORT_TXT_FORMAT = "%-20s%-20s%-20s%-20s" + System.lineSeparator();
-    public static final String REPORT_CSV_FORMAT = "%s,%s,%s,%s,%s";
     private static final String COMPETITORS_FILE = "competitors";
     /**
      * Log Folder.
      */
     private static final String LOG_FOLDER = "Log";
-    /**
-     * Configuration file.
-     */
-    public static final String CONFIG_FILE = "config";
     private static final String COMPILER_CONFIG_FILE = "compiler.properties";
     private static final String COMPILATION_TARGET_FOLDER = "compiled";
     private static final String COMPILATION_LOG_FILENAME = "log-%s-%s";
@@ -75,13 +55,8 @@ public class ContestConfig {
      */
     private static final String BACKUP_FOLDER = "Backup";
     private static final String BACKUP_FILENAME_ZIP = "backup-%s.zip";
-    public static final String CONTEST_NAME_PREFIX = "Contest-";
-    public static final String TOURNAMENT_PREFIX = "Tournament-";
     private static final String TOURNAMENT_FILENAME = "Tournament-%03d";
-    public static final int PROGRAMMER_MODE = 0;
-    public static final int COMPETITION_MODE = 1;
     private static final int DEFAULT_PAUSE_BETWEEN_BATTLES = 200;
-    public static final String SEPARATOR_PATTERN;
     private static final String[] PAUSE_BETWEEN_BATTLES_OPTIONS = {"200", "400", "600", "800", "1000", "1200", "1400", "1600", "1800", "2000"};
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String DATETIME_FORMAT = "yyyyMMdd-HHmmss";
@@ -103,6 +78,10 @@ public class ContestConfig {
             FamineFunction.ID
     };
     static Logger logger = LogManager.getLogger(ContestConfig.class);
+    /**
+     * Opponents Info configuration
+     */
+    private static String OPPONENT_INFO_CSV_FORMAT = "%s,%s,%s";
     private static Hashtable<Integer, Nutrient> NUTRIENT_OPTIONS;
 
     static {
@@ -223,8 +202,8 @@ public class ContestConfig {
 
 
     public static boolean existsNutrientId(Integer id) {
-        return id != null && NUTRIENT_OPTIONS.get(id) != null;
-
+        return Objects.nonNull(id) &&
+                Objects.nonNull(NUTRIENT_OPTIONS.get(id));
     }
 
     public static Hashtable<Integer, Nutrient> nutrientOptions() {
@@ -244,13 +223,17 @@ public class ContestConfig {
     }
 
     public static String getBaseAppFolder(String path) {
-        if (path == null || path.isEmpty()) path = ".";
+        if (Objects.isNull(path) || path.isEmpty()) path = ".";
 
         return path + File.separator + BASE_APP_FOLDER;
     }
 
     public static String getDefaultBaseAppFolder() throws InvalidUserDirException {
         return getBaseAppFolder(getDefaultPath());
+    }
+
+    public static String getOpponentInfoCsvFormat() {
+        return OPPONENT_INFO_CSV_FORMAT;
     }
 
     public void setDefaults() {
@@ -296,7 +279,7 @@ public class ContestConfig {
     }
 
     private boolean setProperty(String type, String option) {
-        if (type == null || option == null) return false;
+        if (Objects.isNull(type) || Objects.isNull(option)) return false;
 
         type = type.trim().toLowerCase();
         option = option.trim();
@@ -540,9 +523,5 @@ public class ContestConfig {
 
     public int getCountdownMax() {
         return countdownMax;
-    }
-
-    public static String getOpponentInfoCsvFormat(){
-        return OPPONENT_INFO_CSV_FORMAT;
     }
 }

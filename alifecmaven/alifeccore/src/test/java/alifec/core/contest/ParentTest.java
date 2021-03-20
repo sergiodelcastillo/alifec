@@ -24,10 +24,7 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
@@ -216,7 +213,7 @@ public class ParentTest {
 
         String path = modulePath;
 
-        if (path == null)
+        if (Objects.isNull(path))
             path = classPath;
         else
             path += File.pathSeparator + classPath;
@@ -228,13 +225,13 @@ public class ParentTest {
         Process process = builder.start();
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String s = null;
-        while ((s = stdInput.readLine()) != null) {
+        while (Objects.nonNull(s = stdInput.readLine())) {
             System.out.println(s);
         }
 
         BufferedReader errInput = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String e = null;
-        while ((e = errInput.readLine()) != null) {
+        while (Objects.nonNull(e = errInput.readLine())) {
             System.out.println(e);
         }
 

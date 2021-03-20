@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -86,7 +87,7 @@ public class NewContestController {
         //todo: improve it
         File directory = chooser.showDialog(parent);
         try {
-            if (directory != null)
+            if (Objects.nonNull(directory))
                 contestPath.setText(directory.getCanonicalPath());
         } catch (IOException e) {
             e.printStackTrace();

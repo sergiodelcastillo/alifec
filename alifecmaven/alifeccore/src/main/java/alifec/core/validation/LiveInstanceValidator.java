@@ -2,6 +2,8 @@ package alifec.core.validation;
 
 import alifec.core.exception.ValidationException;
 
+import java.util.Objects;
+
 /**
  * Created by Sergio Del Castillo on 14/11/17.
  *
@@ -9,8 +11,8 @@ import alifec.core.exception.ValidationException;
  */
 public class LiveInstanceValidator implements Validator<String> {
     @Override
-    public void validate(String line) throws ValidationException {
-        if (line == null || line.trim().isEmpty())
+    public String validate(String line) throws ValidationException {
+        if (Objects.isNull(line) || line.trim().isEmpty())
             throw new ValidationException("The line is null");
 
         if (line.trim().length() < 3) {
@@ -22,5 +24,7 @@ public class LiveInstanceValidator implements Validator<String> {
         if (c != 'b' && c != 'n' && c != 'm' && c != 'e') {
             throw new ValidationException("The line must start with character: b, n, m or e.");
         }
+
+        return line;
     }
 }

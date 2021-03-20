@@ -9,5 +9,5 @@ import alifec.core.exception.ValidationException;
  */
 public interface Validator<T> {
 
-    void validate(T object) throws ValidationException;
+    T validate(T object) throws ValidationException;
 }

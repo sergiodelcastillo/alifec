@@ -299,7 +299,7 @@ public class Environment {
         Cell mo = microorganism[x][y];
 
         microorganism[x][y] = null;
-        return mo != null && ((mo.colonyId == c1.id) ? c1.kill(mo) : c2.kill(mo));
+        return Objects.nonNull(mo) && ((mo.colonyId == c1.id) ? c1.kill(mo) : c2.kill(mo));
     }
 
 

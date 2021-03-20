@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: Sergio Del Castillo
@@ -53,7 +54,7 @@ public abstract class Colony {
     }
 
     public final boolean equals(Colony c1) {
-        return c1 != null &&
+        return Objects.nonNull(c1) &&
                 getName().equalsIgnoreCase(c1.getName()) &&
                 getAuthor().equalsIgnoreCase(c1.getAuthor()) &&
                 getAffiliation().equalsIgnoreCase(c1.getAffiliation());
@@ -68,7 +69,6 @@ public abstract class Colony {
     protected abstract boolean createMO(float ene, int x, int y);
 
     public final boolean kill(Cell mo) {
-
         int indexMO = moList.indexOf(mo);
         if (indexMO >= 0)
             kill(indexMO);

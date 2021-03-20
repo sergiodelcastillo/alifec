@@ -2,6 +2,7 @@ package alifec.core.compilation;
 
 import alifec.core.exception.CompileConfigException;
 import alifec.core.exception.CompilerException;
+import alifec.core.exception.UnsupportedJVMException;
 import alifec.core.persistence.SourceCodeFileManager;
 import alifec.core.persistence.config.CompileConfig;
 import alifec.core.persistence.config.ContestConfig;
@@ -9,18 +10,17 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
+
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 
@@ -67,7 +67,7 @@ public class CompileHelper {
 
         try {
             for (Path f : persistence.listJavaFiles()) {
-                if (mo == null || f.getFileName().toString().equals(mo + ".java")) {
+                if (Objects.isNull(mo) || f.getFileName().toString().equals(mo + ".java")) {
                     if (javaSourceCodeCompilation(f.getParent().toString(), f.getFileName().toString())) {
                         logger.info(f.toString() + " [OK]");
                     } else {
@@ -171,7 +171,7 @@ public class CompileHelper {
         try {
             JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 
-            if (javac == null)
+            if (Objects.isNull(javac))
                 throw new CompilerException();
 
             configureLogFile(javaFileName, config);
@@ -188,9 +188,9 @@ public class CompileHelper {
 
 
             //make an effort to find modules in the class path if the module path was not maintained.
-            if (modulesPath == null)
+            if (Objects.isNull(modulesPath))
                 modulesPath = classPath;
-            else if (classPath != null)
+            else if (Objects.nonNull(classPath))
                 modulesPath += File.pathSeparator + classPath;
 
             logger.debug("complete path: " + modulesPath);
@@ -214,64 +214,22 @@ public class CompileHelper {
      */
     private boolean cppCompilationAllSourceCodes() {
         Process p = null;
-        BufferedReader readerInputStream = null;
-        BufferedReader readerErrorStream = null;
 
         try {
             CompileConfig compileConfig = new CompileConfig(config);
+            String[] console = buildCommandLine(compileConfig);
 
-            String[] console = {""};
-            String compileCommand = null;
-
-            if (compileConfig.isLinux()) {
-                if (compileConfig.isOpenJDKJVM()) {
-                    compileCommand = compileConfig.getLinuxOpenJdkLine();
-                } else if (compileConfig.isOracleJVM()) {
-                    compileCommand = compileConfig.getLinuxOracleLine();
-                }
-                if (null == compileCommand) {
-                    //throw new UnsupportedJVMException("");
-                    logger.error("Unsupported JVM on GNU/Linux: " + compileConfig.getJvm());
-                    return false;
-                }
-                console = new String[]{"/bin/bash", "-c", compileCommand};
-
-            } else if (compileConfig.isWindows()) {
-                if (compileConfig.isOpenJDKJVM()) {
-                    //todo: add support to OpenJDK on windows
-                } else if (compileConfig.isOracleJVM()) {
-                    compileCommand = compileConfig.getWindowsOracleLine();
-                }
-                if (null == compileCommand) {
-                    //throw new UnsupportedJVMException("");
-                    logger.error("Unsupported JVM on Windows: " + compileConfig.getJvm());
-                    return false;
-                }
-                console = new String[]{"cmd.exe", "/C", compileCommand};
-            }
-
-            logger.trace("Using compile line: " + compileCommand);
+            logger.trace("Using compile line: " + Arrays.toString(console));
 
             p = Runtime.getRuntime().exec(console);
+            //todo: check waitfor!!!
             p.waitFor();
 
-            String buffer;
-            readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-
-            configureLogFile("cpp", config);
-            while ((buffer = readerInputStream.readLine()) != null) {
-                moLogger.info(buffer);
-            }
-
-            while ((buffer = readerErrorStream.readLine()) != null) {
-                moLogger.error(buffer);
-            }
-
+            processOutputOfCommand(p);
             p.waitFor();
 
             return p.exitValue() == 0;
-        } catch (IOException ex) {
+        } catch (IOException | UnsupportedJVMException ex) {
             logger.error(ex.getMessage(), ex);
             return false;
         } catch (InterruptedException e) {
@@ -283,9 +241,8 @@ public class CompileHelper {
             return false;
         } finally {
             try {
-                if (readerErrorStream != null) readerErrorStream.close();
-                if (readerInputStream != null) readerInputStream.close();
-                if (p != null) {
+                //TODO: use try with resources!
+                if (Objects.nonNull(p)) {
                     p.getErrorStream().close();
                     p.getInputStream().close();
                     p.getOutputStream().close();
@@ -295,6 +252,53 @@ public class CompileHelper {
             }
 
         }
+    }
+
+    private void processOutputOfCommand(Process p) throws IOException {
+        try (BufferedReader readerInputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
+             BufferedReader readerErrorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        ) {
+            String buffer;
+
+            configureLogFile("cpp", config);
+
+            while (Objects.nonNull(buffer = readerInputStream.readLine())) {
+                moLogger.info(buffer);
+            }
+
+            while (Objects.nonNull(buffer = readerErrorStream.readLine())) {
+                moLogger.error(buffer);
+            }
+        }
+    }
+
+    private String[] buildCommandLine(CompileConfig config) throws UnsupportedJVMException {
+        String compileCommand = null;
+
+        if (config.isLinux()) {
+            if (config.isOpenJDKJVM()) {
+                compileCommand = config.getLinuxOpenJdkLine();
+            } else if (config.isOracleJVM()) {
+                compileCommand = config.getLinuxOracleLine();
+            }
+            if (Objects.isNull(compileCommand)) {
+                throw new UnsupportedJVMException("Unsupported JVM on GNU/Linux: " + config.getJvm());
+            }
+            return new String[]{"/bin/bash", "-c", compileCommand};
+
+        } else if (config.isWindows()) {
+            if (config.isOpenJDKJVM()) {
+                //todo: add support to OpenJDK on windows
+            } else if (config.isOracleJVM()) {
+                compileCommand = config.getWindowsOracleLine();
+            }
+            if (Objects.isNull(compileCommand)) {
+                throw new UnsupportedJVMException("Unsupported JVM on Windows: " + config.getJvm());
+            }
+            return new String[]{"cmd.exe", "/C", compileCommand};
+        }
+
+        throw new UnsupportedJVMException("Unsupported JVM on Platform: " + config.getOs());
     }
 
     private void configureLogFile(String fileName, ContestConfig config) {
@@ -382,6 +386,4 @@ public class CompileHelper {
         }
         return true;
     }
-
-
 }

@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
@@ -29,7 +30,7 @@ public class Util {
 
     static {
         //load the configuration first
-        if (System.getProperty("log4j.configurationFile") == null) {
+        if (Objects.isNull(System.getProperty("log4j.configurationFile"))) {
             System.setProperty("log4j.configurationFile", "file:app" + File.separator + "log/log4j2.xml");
         }
 
@@ -150,7 +151,7 @@ public class Util {
         } catch (ConfigFileException | ValidationException ex) {
             if (ex.getCause() instanceof FileNotFoundException) {
                 ContestConfig config = tryToLoadContest();
-                if (config != null) {
+                if (Objects.nonNull(config)) {
                     return config;
                 }
             }

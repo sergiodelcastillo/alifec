@@ -15,7 +15,7 @@ public class Competitor {
 
     public Competitor(int i, String name, String author, String affiliation) throws OpponentException {
         this.index = i;
-        this.info = new OpponentInfo(name, author, affiliation);
+        this.info = OpponentInfo.build(name, author, affiliation);
     }
 
     public int getId() {

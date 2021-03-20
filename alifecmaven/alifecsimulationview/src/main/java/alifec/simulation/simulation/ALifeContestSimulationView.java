@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -24,14 +25,13 @@ import java.util.ResourceBundle;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestSimulationView extends Stage {
-    private static Logger logger = LogManager.getLogger(ALifeContestSimulationView.class);
     static final int MO_SIZE = 8;
     static final int WIDTH = (3 + Defs.DIAMETER) * MO_SIZE;
     static final int DISH_HEIGH = WIDTH;
     static final int INFO_HEIGH = 60;
     static final int TREND_HEIGH = 120;
     static final String COLOR_BACKGROUND_STRING = "#F3F3F3";
-
+    private static Logger logger = LogManager.getLogger(ALifeContestSimulationView.class);
     private final ResourceBundle bundle;
 
     private boolean active;
@@ -44,7 +44,7 @@ public class ALifeContestSimulationView extends Stage {
     public ALifeContestSimulationView(Parent father, Contest contest, ResourceBundle bundle) {
         super();
 
-        if (father != null) {
+        if (Objects.nonNull(father)) {
             initOwner(father.getScene().getWindow());
         }
 

@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -33,14 +34,14 @@ public class Usage {
     private String loadUsage() {
         try {
             InputStream usage = Util.class.getClassLoader().getResourceAsStream(USAGE_FILE);
-            if (usage != null) {
+            if (Objects.nonNull(usage)) {
                 return read(usage);
             }
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);
         }
 
-        logger.error("Could not load " + USAGE_FILE + " file");
+        logger.error("Could not load file: " + USAGE_FILE);
         return null;
     }
 

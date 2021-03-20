@@ -18,7 +18,7 @@ import java.nio.file.Paths;
  */
 public class ContestPathValidator implements Validator<String> {
     @Override
-    public void validate(String rootFolder) throws ValidationException {
+    public String validate(String rootFolder) throws ValidationException {
 
         Path path = Paths.get(rootFolder);
         if (!Files.isDirectory(path))
@@ -27,5 +27,7 @@ public class ContestPathValidator implements Validator<String> {
         Path configFile = path.resolve(ContestConfig.BASE_APP_FOLDER + File.separator + ContestConfig.CONFIG_FILE);
         if (!Files.isRegularFile(configFile))
             throw new ValidationException("The contest does not have a valid config file.");
+
+        return rootFolder;
     }
 }

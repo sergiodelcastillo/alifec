@@ -3,11 +3,7 @@ package alifec.simulation.main;
 import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.event.EventBus;
-import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.ConfigFileNotFoundException;
-import alifec.core.exception.ConfigFileReadException;
-import alifec.core.exception.InvalidUserDirException;
-import alifec.core.exception.ValidationException;
+import alifec.core.exception.*;
 import alifec.core.persistence.ALifeCFileManager;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -25,11 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -37,13 +29,10 @@ import java.util.ResourceBundle;
  * @email: sergio.jose.delcastillo@gmail.com
  */
 public class ALifeContestMain extends Application {
-    private Logger logger = LogManager.getLogger(ALifeContestMain.class.getName());
-    private final ResourceBundle bundle;
-
     static {
         try {
             //it have to be static because other class could have an static logger.
-            if (System.getProperty("log4j.configurationFile") == null) {
+            if (Objects.isNull(System.getProperty("log4j.configurationFile"))) {
                 System.setProperty("log4j.configurationFile", "file:app/log4j2.xml");
             }
             //make an effort to have all files and folders
@@ -56,11 +45,8 @@ public class ALifeContestMain extends Application {
 
     }
 
-    public static void main(String[] args) {
-        // launch the application
-        Application.launch(ALifeContestMain.class, args);
-    }
-
+    private final ResourceBundle bundle;
+    private Logger logger = LogManager.getLogger(ALifeContestMain.class.getName());
 
     public ALifeContestMain() {
         logProperties();
@@ -69,6 +55,11 @@ public class ALifeContestMain extends Application {
         //TODO: set the default locale from configuration or load english instead.
 
         bundle = ResourceBundle.getBundle("i18n/messages", currentLocale);
+    }
+
+    public static void main(String[] args) {
+        // launch the application
+        Application.launch(ALifeContestMain.class, args);
     }
 
     private void logProperties() {
@@ -89,7 +80,7 @@ public class ALifeContestMain extends Application {
         //load and existing contest or create a new one.
         ContestConfig config = loadContest();
 
-        if (config == null) {
+        if (Objects.isNull(config)) {
             logger.fatal("The contest file was not loaded. Application wont start.");
             Platform.exit();
         } else {
@@ -160,7 +151,7 @@ public class ALifeContestMain extends Application {
         }
 
         //the config could be null, because the user cancelled the creation.
-        if (config == null) return null;
+        if (Objects.isNull(config)) return null;
 
         try {
             config.validate();

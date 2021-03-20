@@ -6,6 +6,7 @@ import alifec.core.simulation.Movement;
 import alifec.core.simulation.Position;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -30,7 +31,7 @@ public class LoveRule implements ColonyRule {
 
         for (int i = mo.x - 1; i <= mo.x + 1; i++) {
             for (int j = mo.y - 1; j <= mo.y + 1; j++) {
-                if (env.inDish(i, j) && env.getCell(i, j) == null) {
+                if (env.inDish(i, j) && Objects.isNull(env.getCell(i, j))) {
                     posRel.add(new Position(i, j));
                 }
             }

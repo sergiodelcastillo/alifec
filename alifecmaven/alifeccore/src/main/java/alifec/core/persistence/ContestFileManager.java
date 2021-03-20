@@ -154,7 +154,7 @@ public class ContestFileManager {
         String dataFolder = ContestConfig.getBaseDataFolder(p);
         Calendar calendar = Calendar.getInstance();
         Integer year = calendar.get(Calendar.YEAR);
-        Integer count = 0;
+        int count = 0;
         String contestName = String.format(ContestConfig.CONTEST_NAME_PREFIX + "%d", year);
         String nextFolder = String.format("%s%s%s", dataFolder, File.separator, contestName);
 

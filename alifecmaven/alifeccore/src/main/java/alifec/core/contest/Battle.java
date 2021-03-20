@@ -117,7 +117,7 @@ public class Battle implements Comparable<Battle> {
 
     @Override
     public boolean equals(Object o) {
-        if (o != null && o instanceof Battle) {
+        if (Objects.nonNull(o) && o instanceof Battle) {
             Battle b = (Battle) o;
 
             return ((firstName.equals(b.firstName) && secondName.equals(b.secondName)) ||

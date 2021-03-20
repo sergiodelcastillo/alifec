@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +33,7 @@ public class CppMOPredicate implements Function<Path, String> {
 
             String nameOfCppMO = getNameOfMOCpp(line);
 
-            if (nameOfCppMO != null && !nameOfCppMO.trim().isEmpty()) {
+            if (Objects.nonNull(nameOfCppMO) && !nameOfCppMO.trim().isEmpty()) {
                 return nameOfCppMO;
             }
         } catch (IOException e) {
@@ -49,7 +50,7 @@ public class CppMOPredicate implements Function<Path, String> {
         if (matcher.find()) {
             String moName = matcher.group(3);
 
-            if (moName == null) return null;
+            if (Objects.isNull(moName)) return null;
             return moName.trim();
         }
 

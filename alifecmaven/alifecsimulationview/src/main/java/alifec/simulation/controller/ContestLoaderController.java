@@ -12,13 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -26,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -193,7 +188,7 @@ public class ContestLoaderController {
     }
 
     private void showDialogCreateContestException(CreateContestFolderException e) {
-        if (createContestException == null) {
+        if (Objects.isNull(createContestException)) {
             createContestException = new Alert(Alert.AlertType.ERROR);
             createContestException.setTitle(bundle.getString("Create contest failed"));
             createContestException.setHeaderText(bundle.getString("Could not create the contest"));
@@ -206,7 +201,7 @@ public class ContestLoaderController {
 
 
     private void showDialogInvalidConfiguration(ValidationException e) {
-        if (invalidConfiguration == null) {
+        if (Objects.isNull(invalidConfiguration)) {
             invalidConfiguration = new Alert(Alert.AlertType.ERROR);
             invalidConfiguration.setTitle(bundle.getString("contest.loader.validation.title"));
             invalidConfiguration.setHeaderText(bundle.getString("contest.loader.validation.header"));

@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -154,7 +155,7 @@ public class ZipFileManager {
 
             ZipEntry entry = zis.getNextEntry();
 
-            while (entry != null) {
+            while (Objects.nonNull(entry)) {
 
                 File file = new File(out, entry.getName());
 

@@ -18,7 +18,7 @@ public class OpponentFunction implements Function<String, OpponentInfo> {
     @Override
     public OpponentInfo apply(String s) {
         try {
-            return new OpponentInfo(s);
+            return OpponentInfo.buildFromCSVLine(s);
         } catch (OpponentException e) {
             logger.error(e.getMessage(), e);
         }

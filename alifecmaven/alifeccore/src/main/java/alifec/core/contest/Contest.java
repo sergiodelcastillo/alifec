@@ -61,7 +61,7 @@ public class Contest implements Listener {
             this.zipPersistence = new ZipFileManager(config);
 
             this.environment = new Environment(config);
-            this.opponentsInfo = new Opponent(config);
+            this.opponentsInfo = new Opponent(config.getCompetitorsFile(), config.isCompetitionMode());
 
             this.tournaments = new ArrayList<>();
 

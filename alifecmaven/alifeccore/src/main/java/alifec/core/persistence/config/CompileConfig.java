@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -73,18 +74,18 @@ public class CompileConfig {
     }
 
     private void validate() throws CompileConfigException {
-        if (linuxOracle == null || linuxOracle.isEmpty())
+        if (Objects.isNull(linuxOracle) || linuxOracle.isEmpty())
             throw new CompileConfigException("The property for java on GNU/Linux using Oracle JVM was not set.", this);
 
-        if (linuxOpenJdk == null || linuxOpenJdk.isEmpty())
+        if (Objects.isNull(linuxOpenJdk) || linuxOpenJdk.isEmpty())
             throw new CompileConfigException("The property for java on GNU/Linux using OpenJDK JVM was not set.", this);
 
-        if (windowsOracle == null || windowsOracle.isEmpty())
+        if (Objects.isNull(windowsOracle) || windowsOracle.isEmpty())
             throw new CompileConfigException("The property for java on Windows using Oracle JVM was not set.", this);
     }
 
     private boolean setProperty(String type, String option) {
-        if (type == null || option == null) return false;
+        if (Objects.isNull(type) || Objects.isNull(option)) return false;
 
         type = type.trim().toLowerCase();
         option = option.trim();

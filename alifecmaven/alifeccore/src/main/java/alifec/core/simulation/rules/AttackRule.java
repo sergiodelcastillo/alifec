@@ -5,6 +5,7 @@ import alifec.core.simulation.Defs;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.Movement;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -44,7 +45,7 @@ public class AttackRule implements ColonyRule {
 
         Cell enemy = env.getCell(x, y);
 
-        if (enemy == null || enemy.colonyId == mo.colonyId) {
+        if (Objects.isNull(enemy) || enemy.colonyId == mo.colonyId) {
             //delegate to move role.
             return Status.NONE;
         }

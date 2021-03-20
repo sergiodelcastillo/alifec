@@ -7,6 +7,7 @@ import alifec.core.validation.ContestNameValidator;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 
@@ -56,8 +57,8 @@ public class ContestFolderPredicate implements Predicate<Path> {
     }
 
     private boolean checkContestFolder(String path, String name) {
-        if (path == null || path.trim().isEmpty() ||
-                name == null || name.trim().isEmpty()) {
+        if (Objects.isNull(path) || path.trim().isEmpty() ||
+                Objects.isNull(name) || name.trim().isEmpty()) {
             return false;
         }
         ContestConfig config;

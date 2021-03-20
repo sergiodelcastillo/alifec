@@ -6,13 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
 

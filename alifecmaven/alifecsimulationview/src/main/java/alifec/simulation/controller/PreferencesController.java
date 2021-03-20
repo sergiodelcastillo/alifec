@@ -18,11 +18,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.WindowEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 14/06/18.
@@ -181,15 +178,14 @@ public class PreferencesController {
     public void changeContestMode(ActionEvent event) {
         KeyBasedModel selectedItem = contestModeCombobox.getSelectionModel().getSelectedItem();
 
-        if(Objects.isNull(selectedItem)) return;
+        if (Objects.isNull(selectedItem)) return;
 
         configTmp.setMode(selectedItem.getKey());
         contestModeUpdated = true;
     }
 
     private void showDialogInvalidConfiguration(ValidationException e) {
-        if (invalidConfiguration == null) {
-
+        if (Objects.isNull(invalidConfiguration)) {
             invalidConfiguration = new Alert(Alert.AlertType.ERROR);
             invalidConfiguration.setTitle(bundle.getString("PreferencesController.InvalidConfiguration.title"));
             invalidConfiguration.setHeaderText(bundle.getString("PreferencesController.InvalidConfiguration.header"));
@@ -201,7 +197,7 @@ public class PreferencesController {
     }
 
     private void showDialogSaveError(ConfigFileWriteException e) {
-        if (saveError == null) {
+        if (Objects.isNull(saveError)) {
             saveError = new Alert(Alert.AlertType.ERROR);
             saveError.setTitle(bundle.getString("PreferencesController.saveError.title"));
             saveError.setHeaderText(bundle.getString("PreferencesController.saveError.header"));

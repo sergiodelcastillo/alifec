@@ -9,46 +9,50 @@ import alifec.core.validation.OpponentInfoValidator;
 import java.util.Objects;
 
 public class OpponentInfo {
+    //validators
+    private static OpponentInfoValidator opponentInfoValidator = new OpponentInfoValidator();
+    private static OpponentInfoLineValidator opponentInfoLineValidator = new OpponentInfoLineValidator();
+
     private final String name;
     private final String author;
     private final String affiliation;
 
-    public OpponentInfo(String n, String au, String af) throws OpponentException {
+    private OpponentInfo(String n, String au, String af) {
         this.name = n;
         this.author = au;
         this.affiliation = af;
+    }
+
+    public static OpponentInfo buildFromCSVLine(String line) throws OpponentException {
+        checkLineFromCSV(line);
+
+        String[] info = line.trim().split(",");
+
+        OpponentInfo obj = new OpponentInfo(info[0], info[1], info[2]);
+
+        return checkOpponentInfo(obj);
+    }
+
+    public static OpponentInfo build(String n, String au, String af) throws OpponentException {
+        OpponentInfo obj = new OpponentInfo(n, au, af);
+
+        return checkOpponentInfo(obj);
+    }
+
+    private static OpponentInfo checkOpponentInfo(OpponentInfo info) throws OpponentException {
         try {
-            checkOpponentInfo(this);
-        } catch (Throwable t) {
+            return opponentInfoValidator.validate(info);
+        } catch (ValidationException t) {
             throw new OpponentException(t.getMessage(), t);
         }
     }
 
-    public OpponentInfo(String line) throws OpponentException {
+    private static String checkLineFromCSV(String line) throws OpponentException {
         try {
-            checkLineFromCSV(line);
-
-            String[] info = line.trim().split(",");
-
-            name = info[0];
-            author = info[1];
-            affiliation = info[2];
-            checkOpponentInfo(this);
-        } catch (Throwable t) {
+            return opponentInfoLineValidator.validate(line);
+        } catch (ValidationException t) {
             throw new OpponentException(t.getMessage(), t);
         }
-    }
-
-    private void checkOpponentInfo(OpponentInfo info) throws ValidationException {
-        OpponentInfoValidator validator = new OpponentInfoValidator();
-
-        validator.validate(info);
-    }
-
-    private void checkLineFromCSV(String line) throws ValidationException {
-        OpponentInfoLineValidator validator = new OpponentInfoLineValidator();
-
-        validator.validate(line);
     }
 
     public String getAffiliation() {

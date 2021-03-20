@@ -9,11 +9,7 @@ import alifec.core.event.Event;
 import alifec.core.event.EventBus;
 import alifec.core.event.Listener;
 import alifec.core.event.impl.BattleEvent;
-import alifec.core.exception.BattleException;
-import alifec.core.exception.ConfigFileWriteException;
-import alifec.core.exception.CreateContestException;
-import alifec.core.exception.TournamentException;
-import alifec.core.exception.ValidationException;
+import alifec.core.exception.*;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Competitor;
 import alifec.core.simulation.NutrientDistribution;
@@ -28,13 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -42,11 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Sergio Del Castillo on 10/06/18.
@@ -129,7 +115,7 @@ public class ALifeContestController implements Listener {
         initBattlePanel(contest);
 
         battleList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            boolean selection = (newValue == null);
+            boolean selection = Objects.isNull(newValue);
 
             deletedSelectedBattlesButton.setDisable(selection);
             runSelectedBattleButton.setDisable(selection);
@@ -156,7 +142,7 @@ public class ALifeContestController implements Listener {
         /* todo: implement this part!!
         Battle failed = contest.getUnsuccessfulBattle();
 
-        if (failed != null) {
+        if (Objects.nonNull(failed)) {
             UnsuccessfulColoniesSolverUI solver = new UnsuccessfulColoniesSolverUI(this, failed.getFirstColony(), failed.getSecondColony());
             solver.setVisible(true);
 
@@ -171,7 +157,7 @@ public class ALifeContestController implements Listener {
 
     public void newContest(ActionEvent ignored) {
         try {
-            if (dialogNewContest == null) {
+            if (Objects.isNull(dialogNewContest)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogNewContest.fxml"), bundle);
                 dialogNewContest = loader.load();
                 dialogNewContest.initOwner(mainLayout.getScene().getWindow());
@@ -202,7 +188,7 @@ public class ALifeContestController implements Listener {
 
     public void showDialogStatistics(ActionEvent ignored) {
         try {
-            if (dialogStatistics == null) {
+            if (Objects.isNull(dialogStatistics)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogStatistics.fxml"), bundle);
                 dialogStatistics = loader.load();
                 dialogStatistics.initOwner(mainLayout.getScene().getWindow());
@@ -220,7 +206,7 @@ public class ALifeContestController implements Listener {
 
     public void showDialogPreferences(ActionEvent ignored) {
         try {
-            if (dialogPreferences == null) {
+            if (Objects.isNull(dialogPreferences)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogPreferences.fxml"), bundle);
                 dialogPreferences = loader.load();
                 dialogPreferences.initOwner(mainLayout.getScene().getWindow());
@@ -237,7 +223,7 @@ public class ALifeContestController implements Listener {
     }
 
     public void showDialogHelp(ActionEvent ignored) {
-        if (help == null) {
+        if (Objects.isNull(help)) {
             help = new Alert(Alert.AlertType.INFORMATION);
             help.setTitle(bundle.getString("ALifeContestController.help.title"));
             help.setHeaderText(bundle.getString("ALifeContestController.help.header"));
@@ -250,7 +236,7 @@ public class ALifeContestController implements Listener {
 
     private void showDialogSimulationException(ValidationException ex) {
         //todo: improve the alert in order to show the exception in the alert.
-        if (simulationException == null) {
+        if (Objects.isNull(simulationException)) {
             simulationException = new Alert(Alert.AlertType.ERROR);
             simulationException.setTitle(bundle.getString("ALifeContestController.simulation.title"));
             simulationException.setHeaderText(bundle.getString("ALifeContestController.simulation.header"));
@@ -263,7 +249,7 @@ public class ALifeContestController implements Listener {
 
     public void showDialogNotSupportedYet() {
 
-        if (notSupportedYet == null) {
+        if (Objects.isNull(notSupportedYet)) {
             notSupportedYet = new Alert(Alert.AlertType.INFORMATION);
             notSupportedYet.setTitle(bundle.getString("ALifeContestController.notSupported.title"));
             notSupportedYet.setHeaderText(bundle.getString("ALifeContestController.notSupported.header"));
@@ -276,7 +262,7 @@ public class ALifeContestController implements Listener {
 
     public void showDialogAbout(ActionEvent ignored) {
         try {
-            if (dialogAbout == null) {
+            if (Objects.isNull(dialogAbout)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DialogAbout.fxml"), bundle);
                 dialogAbout = loader.load();
                 dialogAbout.initOwner(mainLayout.getScene().getWindow());
@@ -375,7 +361,7 @@ public class ALifeContestController implements Listener {
     public void runSelectedBattle(ActionEvent event) {
         Battle battle = battleList.getSelectionModel().getSelectedItem();
 
-        if (dialogSimulation == null) {
+        if (Objects.isNull(dialogSimulation)) {
             dialogSimulation = new ALifeContestSimulationView(mainLayout, contest, bundle);
         }
 
@@ -391,7 +377,7 @@ public class ALifeContestController implements Listener {
     public void runAllBattles(ActionEvent event) {
         List<Battle> battles = battleList.getItems();
 
-        if (dialogSimulation == null) {
+        if (Objects.isNull(dialogSimulation)) {
             dialogSimulation = new ALifeContestSimulationView(mainLayout, contest, bundle);
         }
 
@@ -517,7 +503,7 @@ public class ALifeContestController implements Listener {
     }
 
     private Optional<ButtonType> showDuplicatedBattlesDecision() {
-        if (duplicatedBattlesDecision == null) {
+        if (Objects.isNull(duplicatedBattlesDecision)) {
             duplicatedBattlesDecision = new Alert(Alert.AlertType.CONFIRMATION);
             duplicatedBattlesDecision.setTitle(bundle.getString("ALifeContestController.duplicated.battles.alert.title"));
             duplicatedBattlesDecision.setHeaderText(bundle.getString("ALifeContestController.duplicated.battles.alert.header"));
@@ -528,7 +514,7 @@ public class ALifeContestController implements Listener {
     }
 
     private void showCreateBattleAlert(BattleException ex) {
-        if (createBattleAlert == null) {
+        if (Objects.isNull(createBattleAlert)) {
             createBattleAlert = new Alert(Alert.AlertType.ERROR);
             createBattleAlert.setTitle(bundle.getString("ALifeContestController.create.battle.alert.title"));
             createBattleAlert.setHeaderText(bundle.getString("ALifeContestController.create.battle.alert.header"));
@@ -545,7 +531,7 @@ public class ALifeContestController implements Listener {
     }
 
     private void showExistingBattleAlert() {
-        if (existingBattleAlert == null) {
+        if (Objects.isNull(existingBattleAlert)) {
             existingBattleAlert = new Alert(Alert.AlertType.ERROR);
             existingBattleAlert.setTitle(bundle.getString("ALifeContestController.existing.battle.alert.title"));
             existingBattleAlert.setHeaderText(bundle.getString("ALifeContestController.existing.battle.alert.header"));

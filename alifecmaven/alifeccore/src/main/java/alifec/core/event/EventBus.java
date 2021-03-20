@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,7 +44,7 @@ public enum EventBus {
      * This method should the call when closing JavaFx in order to ensure all threads are closed properly.
      */
     public static void exit() {
-        if (instance.executor != null) {
+        if (Objects.nonNull(instance.executor)) {
             instance.executor.shutdown();
             instance.executor = null;
         }
@@ -52,7 +53,7 @@ public enum EventBus {
     }
 
     private ExecutorService getExecutor() {
-        if (executor == null) {
+        if (Objects.isNull(executor)) {
             executor = Executors.newSingleThreadExecutor();
         }
         return executor;
