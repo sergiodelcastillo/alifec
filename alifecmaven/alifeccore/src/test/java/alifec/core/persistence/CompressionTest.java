@@ -6,7 +6,7 @@ import alifec.core.contest.Contest;
 import alifec.core.contest.ParentTest;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.CreateContestException;
+import alifec.core.exception.ContestException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.persistence.config.ContestConfig;
@@ -49,7 +49,7 @@ public class CompressionTest extends ParentTest {
     }
 
     //  @Test
-    public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException, CreateContestException {
+    public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException, ContestException {
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");
         config.setMode(ContestConfig.COMPETITION_MODE);

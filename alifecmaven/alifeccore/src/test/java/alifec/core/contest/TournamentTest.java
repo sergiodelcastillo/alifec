@@ -4,7 +4,7 @@ import alifec.core.compilation.CompilationResult;
 import alifec.core.compilation.CompileHelper;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.CreateContestException;
+import alifec.core.exception.ContestException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.TournamentException;
 import alifec.core.persistence.config.ContestConfig;
@@ -30,7 +30,7 @@ public class TournamentTest extends ParentTest {
      * This test method will be invoked by reflection in other JVM run to avoid the issue of the method System.load
      * which does not release the library until the JVM is closed.
      */
-    public void testDeleteImpl() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, CreateContestException, TournamentException, BattleException {
+    public void testDeleteImpl() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, ContestException, TournamentException, BattleException {
         ContestConfig config = createContest("Contest-01");
         //ensure the competition mode
         config.setMode(ContestConfig.COMPETITION_MODE);

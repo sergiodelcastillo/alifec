@@ -24,15 +24,30 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * Created by Sergio Del Castillo on 10/06/18.
@@ -96,9 +111,9 @@ public class ALifeContestController implements Listener {
     private Alert help;
     private Alert simulationException;
     private Alert notSupportedYet;
+    private Alert stackTraceViewer;
 
-
-    public void init(ResourceBundle bundle, Stage root, ContestConfig config) throws CreateContestException {
+    public void init(ResourceBundle bundle, Stage root, ContestConfig config) throws ContestException {
         this.bundle = bundle;
         this.root = root;
         this.config = config;
@@ -134,7 +149,7 @@ public class ALifeContestController implements Listener {
         updateNutrientsList();
     }
 
-    private Contest loadContest(ContestConfig config) throws CreateContestException {
+    private Contest loadContest(ContestConfig config) throws ContestException {
 
         //create an instance of the contest
         Contest contest = new Contest(config);
@@ -235,20 +250,70 @@ public class ALifeContestController implements Listener {
     }
 
     private void showDialogSimulationException(ValidationException ex) {
-        //todo: improve the alert in order to show the exception in the alert.
         if (Objects.isNull(simulationException)) {
             simulationException = new Alert(Alert.AlertType.ERROR);
             simulationException.setTitle(bundle.getString("ALifeContestController.simulation.title"));
             simulationException.setHeaderText(bundle.getString("ALifeContestController.simulation.header"));
-            simulationException.setContentText(bundle.getString("ALifeContestController.simulation.contentText"));
+            //simulationException.setContentText(bundle.getString("ALifeContestController.simulation.contentText"));
             simulationException.initOwner(mainLayout.getScene().getWindow());
         }
+
+        buildStackTraceViewer(ex, simulationException);
 
         simulationException.showAndWait();
     }
 
-    public void showDialogNotSupportedYet() {
+    private void showException(Exception ex) {
+        //Do not show the dialog in case there is no exception to display.
+        if (Objects.isNull(ex)) return;
 
+        if (Objects.isNull(stackTraceViewer)) {
+            stackTraceViewer = new Alert(Alert.AlertType.ERROR);
+            stackTraceViewer.setTitle(bundle.getString("stack.trace.viewer.title"));
+            stackTraceViewer.setHeaderText(bundle.getString("stack.trace.viewer.header"));
+            stackTraceViewer.initOwner(mainLayout.getScene().getWindow());
+        }
+
+        buildStackTraceViewer(ex, stackTraceViewer);
+
+        stackTraceViewer.showAndWait();
+    }
+
+    private void buildStackTraceViewer(Exception ex, Alert alert) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/StackTraceViewer.fxml"), bundle);
+        String errorMessage = MessageFormat.format(bundle.getString("stack.trace.viewer.label"), ex.getMessage());
+        String stackTraceContent = exceptionToString(ex);
+
+        try {
+            GridPane pane = loader.load();
+            Label label = (Label) pane.lookup("#stackTraceLabel");
+            if (Objects.nonNull(label)) {
+                label.setText(errorMessage);
+            }
+
+            TextArea textArea = (TextArea) pane.lookup("#stackTraceContent");
+            if (Objects.nonNull(textArea)) {
+                textArea.setText(stackTraceContent);
+            }
+
+            alert.getDialogPane().setExpandableContent(pane);
+            alert.getDialogPane().setExpanded(true);
+        } catch (IOException e) {
+            //todo: improve logging.
+            logger.error("Error loading the FXML file: StackTraceViewer.fxml", e);
+            alert.setContentText(errorMessage);
+        }
+    }
+
+    private String exceptionToString(Exception ex) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        ex.printStackTrace(pw);
+
+        return sw.toString();
+    }
+
+    public void showDialogNotSupportedYet() {
         if (Objects.isNull(notSupportedYet)) {
             notSupportedYet = new Alert(Alert.AlertType.INFORMATION);
             notSupportedYet.setTitle(bundle.getString("ALifeContestController.notSupported.title"));
@@ -489,8 +554,12 @@ public class ALifeContestController implements Listener {
     }
 
     public void deleteTournament(ActionEvent event) {
-        contest.removeSelected(); //TODO: assert result == true
-        updateRanking(contest.getSelected());
+        try {
+            contest.removeSelected();
+            updateRanking(contest.getSelected());
+        } catch (ContestException ex) {
+            showException(ex);
+        }
     }
 
     public void addTournament(ActionEvent event) {
@@ -559,7 +628,6 @@ public class ALifeContestController implements Listener {
                 String message = MessageFormat.format(pattern, battle.getWinnerName(), battle.getWinnerEnergy());
                 updateMessagePanel(message);
                 updateRanking(battleEvent);
-
             }
         }
     }
