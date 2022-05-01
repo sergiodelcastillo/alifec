@@ -73,7 +73,6 @@
                     <workingDirectory>../</workingDirectory>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
     -->
