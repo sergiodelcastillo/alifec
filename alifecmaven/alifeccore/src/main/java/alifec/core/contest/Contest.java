@@ -7,13 +7,7 @@ import alifec.core.contest.oponentInfo.TournamentStatistics;
 import alifec.core.event.Event;
 import alifec.core.event.EventBus;
 import alifec.core.event.Listener;
-import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.ConfigFileWriteException;
-import alifec.core.exception.CreateContestException;
-import alifec.core.exception.CreateRankingException;
-import alifec.core.exception.OpponentException;
-import alifec.core.exception.TournamentException;
-import alifec.core.exception.ValidationException;
+import alifec.core.exception.*;
 import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.ZipFileManager;
 import alifec.core.persistence.config.ContestConfig;
@@ -25,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Contest implements Listener {
@@ -54,7 +49,7 @@ public class Contest implements Listener {
     private ContestFileManager persistence;
     private ZipFileManager zipPersistence;
 
-    public Contest(ContestConfig config) throws CreateContestException {
+    public Contest(ContestConfig config) throws ContestException {
         try {
             this.config = config;
             this.persistence = new ContestFileManager(config.getContestPath());
@@ -84,11 +79,11 @@ public class Contest implements Listener {
 
             //TODO: evaluate the messages
         } catch (TournamentException e) {
-            throw new CreateContestException("Error creating the contest: " + e.getMessage(), e);
+            throw new ContestException("Error creating the contest: " + e.getMessage(), e);
         } catch (IOException e) {
-            throw new CreateContestException("Error creating the contest: Can load opponents information, please check the log for further details.", e);
+            throw new ContestException("Error creating the contest: Can load opponents information, please check the log for further details.", e);
         } catch (OpponentException e) {
-            throw new CreateContestException("Can not load opponents information.", e);
+            throw new ContestException("Can not load opponents information.", e);
         }
     }
 
@@ -100,8 +95,10 @@ public class Contest implements Listener {
 
             t.setEnabled(true);
 
-            if (selected >= 0)
-                tournaments.get(selected).setEnabled(false);
+            Tournament selectedTournament = getSelected();
+
+            if (Objects.nonNull(selectedTournament))
+                selectedTournament.setEnabled(false);
 
             tournaments.add(t);
             selected = tournaments.indexOf(t);
@@ -116,20 +113,33 @@ public class Contest implements Listener {
      *
      * @return true if the current tournament can be removed!
      */
-    public boolean removeSelected() {
-        try {
-            if (config.isCompetitionMode()) {
-                persistence.delete(config.getBattlesFile(getSelected().getName()));
-                tournaments.remove(selected);
-
-                if (selected >= tournaments.size())
-                    selected = tournaments.size() - 1;
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            return false;
+    public void removeSelected() throws ContestException {
+        //TOdO: revisar el tema de los errores.
+        if (tournaments.isEmpty()) {
+            throw new ContestException("The Tournament list is empty.");
         }
-        return true;
+
+        if (config.isCompetitionMode()) {
+            try {
+                persistence.delete(config.getBattlesFile(getSelected().getName()));
+            } catch (IOException e) {
+                throw new ContestException("The battles file can not be deleted.", e);
+            }
+        }
+
+        tournaments.remove(selected);
+
+        //ensure at least one tournament
+        if (tournaments.isEmpty()) {
+            try {
+                newTournament();
+            } catch (TournamentException e) {
+                throw new ContestException("It is not possible to create a new empty tournament.", e);
+            }
+        } else {
+            if (selected >= tournaments.size())
+                selected = tournaments.size() - 1;
+        }
     }
 
     /**
@@ -137,12 +147,13 @@ public class Contest implements Listener {
      */
 
     public Tournament getSelected() {
-        try {
-            return tournaments.get(selected);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
+        if (tournaments.isEmpty() ||
+                selected < 0 ||
+                selected >= tournaments.size()) {
+            return null;
         }
-        return null;
+
+        return tournaments.get(selected);
     }
 
     /**

@@ -6,7 +6,7 @@ import alifec.core.contest.Contest;
 import alifec.core.contest.ParentTest;
 import alifec.core.exception.BattleException;
 import alifec.core.exception.ConfigFileException;
-import alifec.core.exception.CreateContestException;
+import alifec.core.exception.ContestException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.MoveMicroorganismException;
 import alifec.core.persistence.config.ContestConfig;
@@ -21,7 +21,8 @@ import alifec.core.simulation.nutrient.function.LatticeFunction;
 import alifec.core.simulation.nutrient.function.RingsFunction;
 import alifec.core.simulation.nutrient.function.TwoGaussiansFunction;
 import alifec.core.simulation.nutrient.function.VerticalBarFunction;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -49,14 +50,14 @@ public class CompressionTest extends ParentTest {
     }
 
     //  @Test
-    public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException, CreateContestException {
+    public void test2() throws URISyntaxException, ConfigFileException, CreateContestFolderException, IOException, BattleException, MoveMicroorganismException, ContestException {
         //create the contest and the folder structure
         ContestConfig config = createContest("Contest-01");
         config.setMode(ContestConfig.COMPETITION_MODE);
         CompileHelper compileHelper = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compileHelper.compileMOs();
-        Assert.assertFalse(result.haveErrors());
+        Assertions.assertFalse(result.haveErrors());
 
         //create the environment
         Contest contest = new Contest(config);

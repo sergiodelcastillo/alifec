@@ -4,8 +4,9 @@ import alifec.core.contest.ParentTest;
 import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.exception.ValidationException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,7 +24,7 @@ public class ContestPathValidatorTest extends ParentTest {
 
         try {
             validator.validate(TEST_ROOT_PATH);
-            Assert.fail("It should be non valid.");
+            Assertions.fail("It should be non valid.");
         } catch (ValidationException ex) {
         }
 
@@ -31,7 +32,7 @@ public class ContestPathValidatorTest extends ParentTest {
         try {
             validator.validate(TEST_ROOT_PATH);
         } catch (ValidationException ex) {
-            Assert.fail("It should be valid.");
+            Assertions.fail("It should be valid.");
         }
     }
 

@@ -1,8 +1,8 @@
 package alifec.core.persistence.filter;
 
 import alifec.core.persistence.custom.CppMOPredicate;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -70,7 +70,7 @@ public class SuffixPredicateTest {
         };
 
         for (String[] line : lines) {
-            Assert.assertEquals(line[1], predicate.getNameOfMOCpp(line[0]));
+            Assertions.assertEquals(line[1], predicate.getNameOfMOCpp(line[0]));
 
         }
     }
@@ -135,7 +135,7 @@ public class SuffixPredicateTest {
 
 
         for (String[] line : lines) {
-            Assert.assertEquals(line[1], predicate.getNameOfMOCpp(line[0]));
+            Assertions.assertEquals(line[1], predicate.getNameOfMOCpp(line[0]));
 
         }
     }
@@ -234,7 +234,7 @@ public class SuffixPredicateTest {
         };
 
         for (String[] line : lines) {
-            Assert.assertEquals(line[1], predicate.removeComments(line[0]));
+            Assertions.assertEquals(line[1], predicate.removeComments(line[0]));
         }
     }
 
@@ -337,7 +337,7 @@ public class SuffixPredicateTest {
         for (String[] line : lines) {
             String out = predicate.removeComments(line[0]);
 
-            Assert.assertEquals(line[1], out);
+            Assertions.assertEquals(line[1], out);
         }
 
     }
@@ -350,7 +350,7 @@ public class SuffixPredicateTest {
         String lineSource = "someString = \"An example comment: /* example */";
         String lineExpected = "someString = \"An example comment: /* example */";
 
-        Assert.assertEquals(lineExpected, predicate.removeComments(lineSource));
+        Assertions.assertEquals(lineExpected, predicate.removeComments(lineSource));
 
     }
 
@@ -360,7 +360,7 @@ public class SuffixPredicateTest {
         String source = "// /* \nsome_code();\n// */";
         String target = "\nsome_code();\n";
 
-        Assert.assertEquals(target, predicate.removeComments(source));
+        Assertions.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
@@ -368,7 +368,7 @@ public class SuffixPredicateTest {
         CppMOPredicate predicate = new CppMOPredicate();
         String source = "/* First comment\nfirst comment—line two*/";
         String target = "";
-        Assert.assertEquals(target, predicate.removeComments(source));
+        Assertions.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
@@ -376,7 +376,7 @@ public class SuffixPredicateTest {
         CppMOPredicate predicate = new CppMOPredicate();
         String source = "/* Second comment */";
         String target = "";
-        Assert.assertEquals(target, predicate.removeComments(source));
+        Assertions.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
@@ -384,7 +384,7 @@ public class SuffixPredicateTest {
         CppMOPredicate predicate = new CppMOPredicate();
         String source = "start_code();\n/* First comment */\nmore_code();\n/* Second comment */\nend_code();";
         String target = "start_code();\n\nmore_code();\n\nend_code();";
-        Assert.assertEquals(target, predicate.removeComments(source));
+        Assertions.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
@@ -392,7 +392,7 @@ public class SuffixPredicateTest {
         CppMOPredicate predicate = new CppMOPredicate();
         String source = "/*\n* Common multi-line comment style.\n*/\n/* Second comment */\n";
         String target = "\n\n";
-        Assert.assertEquals(target, predicate.removeComments(source));
+        Assertions.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test
@@ -400,7 +400,7 @@ public class SuffixPredicateTest {
         CppMOPredicate predicate = new CppMOPredicate();
         String source = "start_code();\n/****\n * Common multi-line comment style.\n ****/\n        more_code();\n/*\n * Another common multi-line comment style.\n */\n        end_code();";
         String target = "start_code();\n\n        more_code();\n\n        end_code();";
-        Assert.assertEquals(target, predicate.removeComments(source));
+        Assertions.assertEquals(target, predicate.removeComments(source));
     }
 
     @Test

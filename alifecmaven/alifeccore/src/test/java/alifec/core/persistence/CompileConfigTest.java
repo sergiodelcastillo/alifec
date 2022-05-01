@@ -6,8 +6,8 @@ import alifec.core.exception.ConfigFileException;
 import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.CompileConfig;
 import alifec.core.persistence.config.ContestConfig;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -29,9 +29,9 @@ public class CompileConfigTest extends ParentTest {
         //it will ensure that the config is valid.
         CompileConfig compileConfig = new CompileConfig(config);
 
-        Assert.assertEquals(LINUX_OPENJDK_COMPILATION_LINE, compileConfig.getLinuxOpenJdk());
-        Assert.assertEquals(LINUX_ORACLE_COMPILATION_LINE, compileConfig.getLinuxOracle());
-        Assert.assertEquals(WINDOWS_ORACLE_COMPILATION_LINE, compileConfig.getWindowsOracle());
+        Assertions.assertEquals(LINUX_OPENJDK_COMPILATION_LINE, compileConfig.getLinuxOpenJdk());
+        Assertions.assertEquals(LINUX_ORACLE_COMPILATION_LINE, compileConfig.getLinuxOracle());
+        Assertions.assertEquals(WINDOWS_ORACLE_COMPILATION_LINE, compileConfig.getWindowsOracle());
 
     }
 }

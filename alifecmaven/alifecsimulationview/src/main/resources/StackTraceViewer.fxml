@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        vgap="10" hgap="10" GridPane.hgrow="ALWAYS" maxWidth="Infinity">
+
+    <Label fx:id="stackTraceLabel" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextArea fx:id="stackTraceContent" editable="false" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+</GridPane>
