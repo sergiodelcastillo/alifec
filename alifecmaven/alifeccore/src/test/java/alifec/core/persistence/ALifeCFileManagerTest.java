@@ -1,8 +1,8 @@
 package alifec.core.persistence;
 
 import alifec.core.contest.ParentTest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +22,8 @@ public class ALifeCFileManagerTest extends ParentTest {
     @Test
     public void testCreateFiles() throws IOException, URISyntaxException {
         //Files do not exists
-        Assert.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
-        Assert.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
+        Assertions.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
+        Assertions.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
 
         //create files
         Path basePath = Paths.get(TEST_ROOT_PATH);
@@ -31,33 +31,33 @@ public class ALifeCFileManagerTest extends ParentTest {
         ALifeCFileManager.build(basePath);
 
         //Files should exists
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "log4j2.xml")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "log4j2.xml")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
 
         ALifeCFileManager.build(basePath);
         //should be the same
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "log4j2.xml")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "log4j2.xml")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
 
         Files.delete(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties"));
 
         //only one file is missing
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
-        Assert.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "log4j2.xml")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
+        Assertions.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "log4j2.xml")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
 
         ALifeCFileManager.build(basePath);
 
         //everything should exists again
         //should be the same
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "log4j2.xml")));
-        Assert.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "compiler.properties")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "app" + File.separator + "log4j2.xml")));
+        Assertions.assertTrue(Files.exists(Paths.get(TEST_ROOT_PATH + File.separator + "data")));
     }
 }

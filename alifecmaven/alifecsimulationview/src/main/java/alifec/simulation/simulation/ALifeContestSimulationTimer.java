@@ -71,7 +71,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         battles = new LinkedList<>();
         this.contest = contest;
         this.environment = contest.getEnvironment();
-        history = new EnergyHistoryHolder(WIDTH, TREND_HEIGH, MO_SIZE);
+        history = new EnergyHistoryHolder(WIDTH, TREND_HEIGHT, MO_SIZE);
 
         if (contest.getConfig().isCountdown()) {
             MAX_COUNT = contest.getConfig().getCountdownMax();
@@ -213,7 +213,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
     private void clearDish() {
         dish.setFill(COLOR_BACKGROUND);
-        dish.fillOval(0, 0, WIDTH, DISH_HEIGH);
+        dish.fillOval(0, 0, WIDTH, DISH_HEIGHT);
     }
 
     private boolean live() throws MoveMicroorganismException {
@@ -276,7 +276,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
         //clear the old information
         info.setFill(COLOR_BACKGROUND);
-        info.fillRect(0, 0, WIDTH, INFO_HEIGH);
+        info.fillRect(0, 0, WIDTH, INFO_HEIGHT);
 
         info.setFont(FONT_COLONIES);
         info.setStroke(COLOR_LINE);
@@ -292,7 +292,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
         history.add(environment);
 
         trend.setFill(COLOR_BACKGROUND);
-        trend.fillRect(0, 0, WIDTH, TREND_HEIGH);
+        trend.fillRect(0, 0, WIDTH, TREND_HEIGHT);
 
         trend.setStroke(COLOR_COLONY_A);
         trend.strokePolyline(history.colonyX(), history.colony1(), history.size());
@@ -301,7 +301,7 @@ public class ALifeContestSimulationTimer extends AnimationTimer {
 
         trend.setStroke(COLOR_LINE);
         trend.setLineWidth(2);
-        trend.strokeRect(MO_SIZE, MO_SIZE, WIDTH - 2 * MO_SIZE, TREND_HEIGH - 2 * MO_SIZE);
+        trend.strokeRect(MO_SIZE, MO_SIZE, WIDTH - 2 * MO_SIZE, TREND_HEIGHT - 2 * MO_SIZE);
 
     }
 

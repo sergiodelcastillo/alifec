@@ -21,7 +21,8 @@ import alifec.core.simulation.nutrient.function.LatticeFunction;
 import alifec.core.simulation.nutrient.function.RingsFunction;
 import alifec.core.simulation.nutrient.function.TwoGaussiansFunction;
 import alifec.core.simulation.nutrient.function.VerticalBarFunction;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -56,7 +57,7 @@ public class CompressionTest extends ParentTest {
         CompileHelper compileHelper = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compileHelper.compileMOs();
-        Assert.assertFalse(result.haveErrors());
+        Assertions.assertFalse(result.haveErrors());
 
         //create the environment
         Contest contest = new Contest(config);

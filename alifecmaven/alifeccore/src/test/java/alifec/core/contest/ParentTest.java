@@ -8,9 +8,9 @@ import alifec.core.persistence.ContestFileManager;
 import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Colony;
 import alifec.core.simulation.Environment;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
+
 
 /**
  * Created by Sergio Del Castillo on 07/08/17.
@@ -51,7 +53,7 @@ public class ParentTest {
         method.invoke(object);
     }
 
-    @Before
+    @BeforeEach
     public void init() throws IOException {
         /*EventBus.setSingleThread();
         EventBus.reset();*/
@@ -64,7 +66,7 @@ public class ParentTest {
         }
     }
 
-    @After
+    @AfterEach
     public void cleanup() throws IOException {
         //close all threads.
         EventBus.exit();
@@ -92,7 +94,7 @@ public class ParentTest {
 
         //Ensure everything is removed!!
 
-        Assert.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH)));
+        Assertions.assertFalse(Files.exists(Paths.get(TEST_ROOT_PATH)));
     }
 
     protected ContestConfig createContest(String name) throws IOException, CreateContestFolderException, URISyntaxException, ConfigFileException {
@@ -235,6 +237,6 @@ public class ParentTest {
             System.out.println(e);
         }
 
-        Assert.assertEquals(0, process.waitFor());
+        Assertions.assertEquals(0, process.waitFor());
     }
 }

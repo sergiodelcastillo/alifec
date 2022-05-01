@@ -11,8 +11,9 @@ import alifec.core.simulation.Microorganism;
 import alifec.core.simulation.TestMicroorganism;
 import alifec.core.simulation.nutrient.Nutrient;
 import alifec.core.simulation.nutrient.TestNutrient;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +33,6 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Sergio Del Castillo on 14/11/17.
@@ -88,20 +88,20 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
         fileManager.iterateAll(new SimulationFileManager.Consumer() {
             @Override
             public void consume(StartBattle line) {
-                assertEquals(1, line.getFirstColonyId());
-                assertEquals(mos.get(1).getName(), line.getFirstColony());
-                assertEquals(2, line.getSecondColonyId());
-                assertEquals(mos.get(2).getName(), line.getSecondColony());
+                Assertions.assertEquals(1, line.getFirstColonyId());
+                Assertions.assertEquals(mos.get(1).getName(), line.getFirstColony());
+                Assertions.assertEquals(2, line.getSecondColonyId());
+                Assertions.assertEquals(mos.get(2).getName(), line.getSecondColony());
             }
 
             @Override
             public void consume(RunningBattle line) {
-                Assert.fail("should not be called");
+                Assertions.fail("should not be called");
             }
 
             @Override
             public void consume(FinishedBattle line) {
-                Assert.fail("should not be called");
+                Assertions.fail("should not be called");
             }
         });
     }
@@ -172,7 +172,5 @@ public class SimulationFileManagerImpl3Test extends ParentTest {
         } catch (DataFormatException e) {
             e.printStackTrace();
         }
-
-
     }
 }

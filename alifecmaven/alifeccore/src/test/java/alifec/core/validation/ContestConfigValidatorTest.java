@@ -2,8 +2,8 @@ package alifec.core.validation;
 
 import alifec.core.exception.ValidationException;
 import alifec.core.persistence.config.ContestConfig;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ResourceBundle;
 
@@ -24,7 +24,7 @@ public class ContestConfigValidatorTest {
         contestConfig.setPauseBetweenBattles(-1);
         try {
             validator.validate(contestConfig);
-            Assert.fail("it should fail");
+            Assertions.fail("it should fail");
         } catch (ValidationException ignored) {
 
         }

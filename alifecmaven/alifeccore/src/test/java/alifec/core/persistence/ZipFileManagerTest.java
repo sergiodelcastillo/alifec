@@ -6,8 +6,8 @@ import alifec.core.exception.CreateContestFolderException;
 import alifec.core.persistence.config.ContestConfig;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class ZipFileManagerTest extends ParentTest {
         ZipFileManager zipFileManager = new ZipFileManager(config);
         String zipFile = zipFileManager.zipContest();
 
-        Assert.assertEquals(1, Objects.requireNonNull(new File(config.getBackupFolder()).list((dir, name) -> name.equals(zipFile))).length);
+        Assertions.assertEquals(1, Objects.requireNonNull(new File(config.getBackupFolder()).list((dir, name) -> name.equals(zipFile))).length);
 
     }
 
@@ -94,12 +94,12 @@ public class ZipFileManagerTest extends ParentTest {
 
         String outputFolder = Paths.get(TEST_ROOT_PATH, File.separator + "restore").toAbsolutePath().normalize().toString();
 
-        Assert.assertTrue(new File(outputFolder).mkdir());
+        Assertions.assertTrue(new File(outputFolder).mkdir());
 
         zipFileManager.unzip(config.getBackupFolder() + File.separator + zipFile, outputFolder);
 
         for (String file : target) {
-            Assert.assertTrue(new File(outputFolder + File.separator + file).exists());
+            Assertions.assertTrue(new File(outputFolder + File.separator + file).exists());
         }
     }
 }

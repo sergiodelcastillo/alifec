@@ -9,8 +9,8 @@ import alifec.core.simulation.Defs;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.Movement;
 import alifec.core.simulation.nutrient.function.FamineFunction;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -31,7 +31,7 @@ public class EatRuleTest extends ParentTest {
         CompileHelper compileHelper = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compileHelper.compileMOs();
-        Assert.assertFalse(result.haveErrors());
+        Assertions.assertFalse(result.haveErrors());
 
         //create the environment
         Environment environment = new Environment(config);
@@ -43,15 +43,15 @@ public class EatRuleTest extends ParentTest {
         Movement mov = new Movement(0, 0);
 
         EatRule rule = new EatRule();
-        Assert.assertEquals(Defs.E_INITIAL, mo.ene, 0.00001);
+        Assertions.assertEquals(Defs.E_INITIAL, mo.ene, 0.00001);
         float nutriInitial = environment.getAgar().getNutrient(mo.x, mo.y);
-        Assert.assertEquals(ColonyRule.Status.NONE, rule.apply(environment, mo, mov, false));
+        Assertions.assertEquals(ColonyRule.Status.NONE, rule.apply(environment, mo, mov, false));
 
         //validate energy of the mo. It should be last energy + 0.01* nutrient
-        Assert.assertEquals(mo.ene, Defs.E_INITIAL + nutriInitial * (Defs.EAT_PERCENT), 0.00001);
+        Assertions.assertEquals(mo.ene, Defs.E_INITIAL + nutriInitial * (Defs.EAT_PERCENT), 0.00001);
 
         //validate that the nutrient have decreased 1%
-        Assert.assertEquals(nutriInitial * (1 - Defs.EAT_PERCENT), environment.getAgar().getNutrient(mo.x, mo.y), 0.00001);
+        Assertions.assertEquals(nutriInitial * (1 - Defs.EAT_PERCENT), environment.getAgar().getNutrient(mo.x, mo.y), 0.00001);
     }
 
     @Test

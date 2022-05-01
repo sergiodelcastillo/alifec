@@ -11,8 +11,9 @@ import alifec.core.persistence.config.ContestConfig;
 import alifec.core.simulation.Environment;
 import alifec.core.simulation.nutrient.BallsNutrient;
 import alifec.core.simulation.nutrient.function.FamineFunction;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class TournamentTest extends ParentTest {
         CompileHelper compiler = new CompileHelper(config);
         //compile MOs
         CompilationResult result = compiler.compileMOs();
-        Assert.assertFalse(result.haveErrors());
+        Assertions.assertFalse(result.haveErrors());
 
 
         Contest contest = new Contest(config);
@@ -48,7 +49,7 @@ public class TournamentTest extends ParentTest {
 
         List<String> colonies = environment.getOpponentNames();
         contest.newTournament();
-        Assert.assertEquals("Colonies list must have 6", 6, colonies.size());
+        Assertions.assertEquals(6, colonies.size(), "Colonies list must have 6");
 
         List<Battle> battles = new ArrayList<>();
         FamineFunction famineFunction = new FamineFunction();
@@ -94,8 +95,8 @@ public class TournamentTest extends ParentTest {
 
         contest.lastTournament().delete(colonies.get(2));
 
-        Assert.assertEquals(contest.lastTournament().getBattles().size(), 2);
-        Assert.assertEquals(contest.lastTournament().getColonyNames().size(), 5);
+        Assertions.assertEquals(contest.lastTournament().getBattles().size(), 2);
+        Assertions.assertEquals(contest.lastTournament().getColonyNames().size(), 5);
 
         //   Assert.assertTrue(contest.lastTournament().size() == 2);
 
@@ -111,9 +112,9 @@ public class TournamentTest extends ParentTest {
         Collections.sort(target);
         Collections.sort(names);
 
-        Assert.assertEquals(5, names.size());
+        Assertions.assertEquals(5, names.size());
 
-        Assert.assertEquals(names, target);
+        Assertions.assertEquals(names, target);
     }
 
     @Test
